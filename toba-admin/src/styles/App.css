@@ -1,0 +1,139 @@
+.admin-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0D1A0D;
+}
+
+.main-viewport {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 30px;
+  background: rgba(13, 26, 13, 0.88);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 100; /* ← TINGGI agar di atas daun */
+  isolation: isolate; /* ← buat stacking context baru */
+}
+
+/* ── FOOTER PLANK ─────────────────────────── */
+.footer-plank-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 30px;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+  pointer-events: none; /* ← footer tidak block klik */
+}
+
+.wooden-plank-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #7a5530, #4a2e14, #5c3b26);
+  border: 2px solid #6b442d;
+  padding: 12px 90px;
+  border-radius: 50px;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,0.06),
+    inset 0 -2px 8px rgba(0,0,0,0.5),
+    0 8px 0 #2d1a0a,
+    0 12px 0 #1a0f06,
+    0 16px 30px rgba(0,0,0,0.6);
+  min-width: 650px;
+  pointer-events: none; /* ← tidak block klik */
+}
+
+.plank-text-content {
+  color: #F5F5DC;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: 3px;
+  text-shadow: 1px 1px 0 #2d1a0a, 2px 2px 4px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+
+.plank-text-content span {
+  color: var(--gold-toba);
+  margin: 0 15px;
+}
+
+.plank-leaf {
+  position: absolute;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none !important; /* ← WAJIB */
+}
+
+.plank-leaf.left  { left: -50px;  top: -15px; }
+.plank-leaf.right { right: -50px; top: -15px; transform: scaleX(-1); }
+
+/* ── WOOD PANEL ───────────────────────────── */
+.wood-panel {
+  background: linear-gradient(145deg, #5c3b26, #321e14);
+  border: 2px solid var(--wood-border);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow:
+    var(--inner-shadow),
+    0 15px 35px rgba(0,0,0,0.6),
+    0 20px 0 -4px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 2; /* ← pastikan di atas daun */
+}
+
+.wood-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── PANEL HEAD ───────────────────────────── */
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(212,175,55,0.2);
+  padding-bottom: 10px;
+}
+
+.panel-head h3 {
+  font-size: 1rem;
+  color: #D4AF37;
+}
+
+/* ── DASHBOARD CONTAINER ──────────────────── */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── FLOATING FOOTER (lama) ───────────────── */
+.floating-footer {
+  text-align: center;
+  padding: 20px 0;
+  color: #D4AF37;
+  font-weight: bold;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  pointer-events: none;
+}

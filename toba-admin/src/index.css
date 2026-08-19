@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+:root {
+  --wood-bg: #1A0F0A;
+  --wood-panel: #4E2F1C;
+  --wood-border: #6B442D;
+  --gold-toba: #D4AF37;
+  --text-cream: #F5F5DC;
+  --inner-shadow: inset 0 2px 15px rgba(0,0,0,0.6);
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  color: var(--text-cream);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #0D1A0D;
+  background: linear-gradient(rgba(13, 26, 13, 0.8), rgba(13, 26, 13, 0.85)), 
+              url('./assets/banner-toba.jpg') no-repeat center center fixed;
+  background-size: cover;
+  overflow: hidden;
+  height: 100vh;
+  position: relative;
+}
+
+/* ── ANIMASI GOYANG ANGIN (WIND SWAY) ── */
+@keyframes leafSway {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg) scale(1.02); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes leafSwayRight {
+  0% { transform: scaleX(-1) rotate(0deg); }
+  50% { transform: scaleX(-1) rotate(3deg) scale(1.02); }
+  100% { transform: scaleX(-1) rotate(0deg); }
+}
+
+/* ── DAUN KIRI ATAS ── */
+body::before {
+  content: "";
+  position: fixed;
+  top: -15px; 
+  left: -15px;
+  width: 220px; 
+  height: 220px;
+  background: url('./assets/leaves.png') no-repeat;
+  background-size: contain;
+  z-index: 9999; /* ← kembalikan tinggi agar terlihat */
+  pointer-events: none !important; /* ← KUNCI: tidak block klik */
+  opacity: 0.9;
+  animation: leafSway 4s ease-in-out infinite;
+}
+
+/* Reaksi saat kursor di atas daun kiri */
+body::before:hover {
+  transform: rotate(10deg) scale(1.1);
+  filter: brightness(1.2) drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+}
+
+/* ── DAUN KANAN ATAS ── */
+body::after {
+  content: "";
+  position: fixed;
+  top: -15px; 
+  right: -15px; 
+  width: 220px; 
+  height: 220px;
+  background: url('./assets/leaves.png') no-repeat;
+  background-size: contain;
+  z-index: 9999; /* ← kembalikan tinggi agar terlihat */
+  pointer-events: none !important; /* ← KUNCI: tidak block klik */
+  opacity: 0.8;
+  animation: leafSwayRight 4.5s ease-in-out infinite;
+}
+
+/* Reaksi saat kursor di atas daun kanan */
+body::after:hover {
+  /* scaleX(-1) tetap harus ada agar gambar tidak berbalik arah saat hover */
+  transform: scaleX(-1) rotate(10deg) scale(1.1);
+  filter: brightness(1.2) drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+}
+
+/* ── SISA STYLE (TETAP KONSISTEN) ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--gold-toba); border-radius: 10px; }
+
+.wood-panel {
+  background: linear-gradient(145deg, #5c3b26, #321e14);
+  border: 2px solid var(--wood-border);
+  border-radius: 20px;
+  box-shadow: var(--inner-shadow), 0 15px 35px rgba(0,0,0,0.6);
+}
+
+h1, h2, h3, h4, h5, h6, p, span, div, small { color: inherit; }
+
+/* ── EFEK 3D GLOBAL ──────────────────────────────────── */
+
+/* Semua panel dapat efek 3D saat hover */
+.stat-card-luxury,
+.action-btn-luxury {
+  transform-style: preserve-3d;
+}
+
+/* Efek glass shimmer pada card */
+.stat-card-luxury::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06) 0%,
+    transparent 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Badge 3D */
+.badge {
+  box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.3);
+}
+
+/* Efek tombol umum 3D */
+button {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
+/* Glow kuning emas pada elemen aktif */
+.nav-item.active,
+.stat-card-luxury:hover {
+  position: relative;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  background: #D4AF37;
+  border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 8px #D4AF37;
+}
+
+/* Hover glow tabel row */
+.toba-table-luxury tbody tr {
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.toba-table-luxury tbody tr:hover {
+  background: rgba(212,175,55,0.06);
+  transform: translateX(3px);
+}
+
+/* Scrollbar styling konsisten */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D4AF37 transparent;
+}
+
+*::-webkit-scrollbar { width: 5px; height: 5px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 10px; }

@@ -1,0 +1,196 @@
+/* CONTAINER UTAMA */
+.dashboard-container { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px; 
+}
+
+/* 1. WELCOME BANNER (MODIFIKASI: KUNCI TAMPILAN) */
+.welcome-header-luxury {
+  height: 150px; /* Kunci tinggi banner agar tidak meledak */
+  width: 100%;
+  border-radius: 20px;
+  border: 2px solid var(--gold-toba);
+  position: relative;
+  overflow: hidden; /* Memotong gambar yang keluar kotak */
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Layer Background Pemandangan */
+.banner-bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 1; /* Di paling belakang */
+}
+
+/* Layer Gelap agar Teks Terbaca */
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(26, 15, 10, 0.95), rgba(0,0,0,0.3));
+  z-index: 2;
+}
+
+/* Profil & Mascot (Sisi Kiri) */
+.welcome-profile { 
+  position: relative;
+  z-index: 3; /* Muncul di atas background */
+  display: flex; 
+  align-items: center; 
+  gap: 20px; 
+}
+
+/* KUNCI UKURAN AVATAR/MASCOT AGAR TIDAK MELEDAK */
+.avatar-luxury { 
+  width: 85px !important; 
+  height: 85px !important; 
+  object-fit: cover;
+  border-radius: 15px; 
+  border: 2px solid var(--gold-toba);
+  background: var(--wood-panel);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.welcome-profile .text h2 {
+  font-size: 1.6rem;
+  color: var(--gold-toba);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  margin: 0;
+}
+
+/* Bagian Kanan Header (Notif & Admin Pill) */
+.header-right-luxury {
+  position: relative;
+  z-index: 3;
+  margin-left: auto;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.admin-pill { 
+  background: rgba(0,0,0,0.5); 
+  padding: 5px 15px; 
+  border-radius: 12px; 
+  border: 1px solid #5C3B26; 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  cursor: pointer; 
+}
+
+.admin-pill img { 
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%; 
+  object-fit: cover;
+}
+
+/* 2. STATS GRID 5 KOLOM (PERTAHANKAN) */
+.stats-grid-luxury { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+
+.stat-card-luxury { 
+  padding: 15px; border-radius: 15px; border: 2px solid #5C3B26; 
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); 
+  display: flex; align-items: center; gap: 12px; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card-luxury.green { background: linear-gradient(135deg, #2d4d1d, #1a2d11); border-bottom: 4px solid #4CAF50; }
+.stat-card-luxury.blue { background: linear-gradient(135deg, #1d364d, #111f2d); border-bottom: 4px solid #2196F3; }
+.stat-card-luxury.purple { background: linear-gradient(135deg, #3d1d4d, #24112d); border-bottom: 4px solid #9C27B0; }
+.stat-card-luxury.orange { background: linear-gradient(135deg, #4d361d, #2d1f11); border-bottom: 4px solid #FF9800; }
+.stat-card-luxury.red { background: linear-gradient(135deg, #4d1d1d, #2d1111); border-bottom: 4px solid #F44336; }
+
+.stat-icon-wrap { 
+  width: 45px; height: 45px; background: rgba(0,0,0,0.3); 
+  border-radius: 50%; display: flex; align-items: center; 
+  justify-content: center; color: #D4AF37; 
+}
+
+.stat-data h2 { font-size: 1.8rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.stat-data span { font-size: 0.65rem; opacity: 0.8; font-weight: bold; letter-spacing: 1px; }
+
+/* 3. LAYOUT COLUMNS (PERTAHANKAN 6.5 / 3.5) */
+.middle-row, .bottom-row { display: grid; grid-template-columns: 6.5fr 3.5fr; gap: 20px; }
+
+.panel-head { 
+  display: flex; justify-content: space-between; align-items: center; 
+  margin-bottom: 15px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+  padding-bottom: 10px; 
+}
+
+.panel-head h3 { font-size: 1rem; color: #D4AF37; }
+
+/* 4. FEED & ACTIONS (PERTAHANKAN) */
+.feed-list { display: flex; flex-direction: column; gap: 15px; }
+
+.feed-item { 
+  display: flex; align-items: center; gap: 12px; 
+  background: rgba(0,0,0,0.2); padding: 10px; 
+  border-radius: 8px; font-size: 0.8rem; 
+}
+
+.feed-time { margin-left: auto; opacity: 0.5; font-size: 0.7rem; }
+
+.action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.action-btn-luxury { 
+  background: linear-gradient(145deg, #422a1a, #28180e); 
+  border: 1px solid #5C3B26; padding: 15px 5px; 
+  border-radius: 12px; text-align: center; 
+  cursor: pointer; transition: 0.2s; 
+}
+
+.action-btn-luxury:hover { 
+  transform: translateY(-4px); 
+  border-color: #D4AF37; 
+  box-shadow: 0 6px 20px rgba(212,175,55,0.2);
+}
+
+.action-btn-luxury span { font-size: 0.65rem; display: block; margin-top: 5px; }
+
+/* 5. TABLE (PERTAHANKAN) */
+.toba-table-luxury { width: 100%; border-collapse: collapse; }
+
+.toba-table-luxury th { 
+  text-align: left; padding: 10px; color: #D4AF37; 
+  font-size: 0.75rem; border-bottom: 1px solid rgba(212, 175, 55, 0.3); 
+}
+
+.toba-table-luxury td { padding: 12px 10px; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+.badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+.badge.blue { background: #1e88e5; }
+.badge.green { background: #43a047; }
+.badge.orange { background: #fb8c00; }
+
+/* 6. ANIMASI & HOVER (PERTAHANKAN) */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card-luxury:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5), inset 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.toba-table-luxury tbody tr:hover {
+  background: rgba(212,175,55,0.05);
+  transition: background 0.2s;
+}
+
+/* SIDEBAR LOGO FIX (KUNCI LOGO SIDEBAR) */
+.sidebar-main-img {
+  width: 90px !important;
+  height: 90px !important;
+  object-fit: contain;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+}

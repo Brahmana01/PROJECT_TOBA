@@ -1,0 +1,24 @@
+# Go binary
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test binary
+*.test
+
+# Go coverage
+*.out
+
+# Vendor
+vendor/
+
+# Environment (JANGAN commit .env!)
+.env
+
+# Upload folder (file gambar & musik yang diupload admin)
+uploads/
+
+# Build output
+dist/
