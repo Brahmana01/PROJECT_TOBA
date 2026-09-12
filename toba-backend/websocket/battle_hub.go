@@ -38,10 +38,11 @@ type JoinPayload struct {
 }
 
 type AnswerPayload struct {
-	PlayerID         int  `json:"player_id"`
-	QuestionID       int  `json:"question_id"`
-	SelectedOptionID int  `json:"selected_option_id"`
-	IsCorrect        bool `json:"is_correct"`
+	PlayerID         int   `json:"player_id"`
+	QuestionID       int   `json:"question_id"`
+	SelectedOptionID int   `json:"selected_option_id"`
+	IsCorrect        bool  `json:"is_correct"`
+	AnswerTimeMs     int64 `json:"answer_time_ms"`
 }
 
 type ScorePayload struct {
@@ -72,6 +73,7 @@ type Client struct {
 func (c *Client) SafeSend(msg []byte) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
 	select {
 	case c.Send <- msg:
 	default:
@@ -95,6 +97,7 @@ type BattleRoomWS struct {
 func (r *BattleRoomWS) Broadcast(msg []byte) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+
 	if r.Host != nil {
 		r.Host.SafeSend(msg)
 	}
@@ -106,6 +109,7 @@ func (r *BattleRoomWS) Broadcast(msg []byte) {
 func (r *BattleRoomWS) SendToOther(senderID int, msg []byte) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+
 	if r.Host != nil && r.Host.PlayerID != senderID {
 		r.Host.SafeSend(msg)
 	}
@@ -149,24 +153,27 @@ var Hub = &BattleHub{
 
 func (h *BattleHub) Run() {
 	log.Println("🔌 WebSocket BattleHub berjalan...")
+
 	for {
 		select {
-
 		case reg := <-h.Register:
 			h.mu.Lock()
+
 			room, exists := h.Rooms[reg.RoomCode]
 			if !exists {
 				room = &BattleRoomWS{RoomCode: reg.RoomCode}
 				h.Rooms[reg.RoomCode] = room
 			}
+
 			if reg.IsHost {
 				room.Host = reg.Client
 			} else {
 				room.Guest = reg.Client
-				// Kedua player sudah join → broadcast START
+
 				if room.IsFull() {
 					h.mu.Unlock()
 					room.StartedAt = time.Now()
+
 					startMsg := buildMsg(MsgTypeStart, map[string]interface{}{
 						"message": "Battle dimulai!",
 					})
@@ -174,24 +181,24 @@ func (h *BattleHub) Run() {
 					continue
 				}
 			}
+
 			h.mu.Unlock()
 
 		case unreg := <-h.Unregister:
 			h.mu.Lock()
+
 			room, exists := h.Rooms[unreg.RoomCode]
 			if exists {
 				var winnerID int
 				var winnerName string
 
 				if room.Host != nil && room.Host.PlayerID == unreg.PlayerID {
-					// Host disconnect → guest menang
 					room.Host = nil
 					if room.Guest != nil {
 						winnerID = room.Guest.PlayerID
 						winnerName = room.Guest.PlayerName
 					}
 				} else if room.Guest != nil && room.Guest.PlayerID == unreg.PlayerID {
-					// Guest disconnect → host menang
 					room.Guest = nil
 					if room.Host != nil {
 						winnerID = room.Host.PlayerID
@@ -208,11 +215,11 @@ func (h *BattleHub) Run() {
 					room.Broadcast(finishMsg)
 				}
 
-				// Cleanup room jika sudah kosong
 				if room.Host == nil && room.Guest == nil {
 					delete(h.Rooms, unreg.RoomCode)
 				}
 			}
+
 			h.mu.Unlock()
 
 		case clientMsg := <-h.Message:
@@ -237,18 +244,33 @@ func (h *BattleHub) handleMessage(cm *ClientMessage) {
 	}
 
 	switch msg.Type {
-
 	case MsgTypePing:
-		pong := buildMsg(MsgTypePong, nil)
-		cm.Client.SafeSend(pong)
+		cm.Client.SafeSend(buildMsg(MsgTypePong, nil))
 
 	case MsgTypeAnswer:
 		var payload AnswerPayload
 		if err := json.Unmarshal(msg.Payload, &payload); err != nil {
+			log.Printf("WS answer parse error: %v", err)
+			return
+		}
+
+		// Pastikan player pada payload sama dengan client WS.
+		if payload.PlayerID != cm.Client.PlayerID {
+			log.Printf("[ANTI-CHEAT] PlayerID mismatch: client=%d payload=%d",
+				cm.Client.PlayerID, payload.PlayerID)
+			return
+		}
+
+		// Soal memiliki batas waktu 15 detik di client.
+		// Tolak waktu tidak valid / tidak masuk akal.
+		if payload.AnswerTimeMs <= 0 || payload.AnswerTimeMs > 15000 {
+			log.Printf("[ANTI-CHEAT] Invalid answer_time_ms: player=%d question=%d time=%dms",
+				payload.PlayerID, payload.QuestionID, payload.AnswerTimeMs)
 			return
 		}
 
 		room.mu.Lock()
+
 		if payload.IsCorrect {
 			if cm.Client.IsHost {
 				room.HostScore++
@@ -256,11 +278,11 @@ func (h *BattleHub) handleMessage(cm *ClientMessage) {
 				room.GuestScore++
 			}
 		}
+
 		hostScore := room.HostScore
 		guestScore := room.GuestScore
 		room.mu.Unlock()
 
-		// Broadcast update skor ke semua
 		scoreMsg := buildMsg(MsgTypeScoreUpdate, ScorePayload{
 			HostScore:  hostScore,
 			GuestScore: guestScore,
@@ -292,7 +314,6 @@ func (h *BattleHub) handleMessage(cm *ClientMessage) {
 		})
 		room.Broadcast(finishMsg)
 
-		// Hapus room
 		h.mu.Lock()
 		delete(h.Rooms, cm.Client.RoomCode)
 		h.mu.Unlock()

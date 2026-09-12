@@ -49,6 +49,7 @@ func autoMigrate() {
 		&models.Character{},
 		&models.Title{},
 		&models.Admin{},
+		&models.AdminSession{},
 		&models.Player{},
 		&models.PlayerSession{},
 		&models.Location{},
@@ -71,5 +72,7 @@ func autoMigrate() {
 		&models.Achievement{},
 		&models.PlayerAchievement{},
 		&models.GameSetting{},
+		&models.WeeklyChallenge{},
+		&models.PlayerChallengeProgress{},
 	)
 }

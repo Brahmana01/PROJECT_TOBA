@@ -8,13 +8,12 @@ public class SoundManager : MonoBehaviour
     private AudioSource bgmSource;
     private AudioSource sfxSource;
 
-    // Volume settings
-    private float bgmVolume = 0.5f;
-    private float sfxVolume = 0.8f;
-    private bool isMuted = false;
+    private float bgmVolume  = 0.55f;
+    private float sfxVolume  = 0.85f;
+    private bool  isMuted    = false;
 
-    // Cache audio clips yang sudah di-generate
-    private Dictionary<string, AudioClip> clipCache = new Dictionary<string, AudioClip>();
+    private Dictionary<string, AudioClip> _cache =
+        new Dictionary<string, AudioClip>();
 
     void Awake()
     {
@@ -22,190 +21,161 @@ public class SoundManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            SetupAudioSources();
-            LoadVolumeSettings();
+            SetupSources();
+            LoadSettings();
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        else Destroy(gameObject);
     }
 
-    void SetupAudioSources()
+    void SetupSources()
     {
-        // BGM Source
-        GameObject bgmObj = new GameObject("BGM_Source");
-        bgmObj.transform.SetParent(transform);
-        bgmSource = bgmObj.AddComponent<AudioSource>();
-        bgmSource.loop = true;
-        bgmSource.playOnAwake = false;
-        bgmSource.volume = bgmVolume;
+        var bgmGO = new GameObject("BGM"); bgmGO.transform.SetParent(transform);
+        bgmSource = bgmGO.AddComponent<AudioSource>();
+        bgmSource.loop = true; bgmSource.playOnAwake = false;
 
-        // SFX Source
-        GameObject sfxObj = new GameObject("SFX_Source");
-        sfxObj.transform.SetParent(transform);
-        sfxSource = sfxObj.AddComponent<AudioSource>();
-        sfxSource.loop = false;
-        sfxSource.playOnAwake = false;
-        sfxSource.volume = sfxVolume;
+        var sfxGO = new GameObject("SFX"); sfxGO.transform.SetParent(transform);
+        sfxSource = sfxGO.AddComponent<AudioSource>();
+        sfxSource.loop = false; sfxSource.playOnAwake = false;
     }
 
-    void LoadVolumeSettings()
+    void LoadSettings()
     {
-        bgmVolume  = PlayerPrefs.GetFloat("BGMVolume", 0.5f);
-        sfxVolume  = PlayerPrefs.GetFloat("SFXVolume", 0.8f);
-        isMuted    = PlayerPrefs.GetInt("IsMuted", 0) == 1;
-
-        if (bgmSource != null) bgmSource.volume = isMuted ? 0 : bgmVolume;
-        if (sfxSource != null) sfxSource.volume = isMuted ? 0 : sfxVolume;
+        bgmVolume = PlayerPrefs.GetFloat("BGMVol", 0.55f);
+        sfxVolume = PlayerPrefs.GetFloat("SFXVol", 0.85f);
+        isMuted   = PlayerPrefs.GetInt("Muted", 0) == 1;
+        ApplyVolume();
     }
 
-    // ── BGM ──────────────────────────────────────────────────
-
-    public void PlayBGM(string clipName)
+    void ApplyVolume()
     {
-        // Coba load dari Resources dulu
-        AudioClip clip = Resources.Load<AudioClip>(clipName);
-
-        // Kalau tidak ada, generate sintetis
-        if (clip == null)
-            clip = GetOrGenerateClip(clipName, true);
-
-        if (bgmSource != null && clip != null)
-        {
-            bgmSource.clip = clip;
-            bgmSource.volume = isMuted ? 0 : bgmVolume;
-            bgmSource.Play();
-            Debug.Log("[Sound] BGM: " + clipName);
-        }
+        if (bgmSource) bgmSource.volume = isMuted ? 0 : bgmVolume;
+        if (sfxSource) sfxSource.volume = isMuted ? 0 : sfxVolume;
     }
 
-    public void StopBGM()
+    // ── BGM ───────────────────────────────────────────────
+    public void PlayBGM(string name)
     {
-        if (bgmSource != null) bgmSource.Stop();
+        AudioClip clip = Resources.Load<AudioClip>(name)
+                      ?? GetOrGenerate(name, true);
+        if (bgmSource == null || clip == null) return;
+        if (bgmSource.clip == clip && bgmSource.isPlaying) return;
+        bgmSource.clip   = clip;
+        bgmSource.volume = isMuted ? 0 : bgmVolume;
+        bgmSource.Play();
     }
 
-    public void PauseBGM()
-    {
-        if (bgmSource != null) bgmSource.Pause();
-    }
+    public void StopBGM()  => bgmSource?.Stop();
+    public void PauseBGM() => bgmSource?.Pause();
+    public void ResumeBGM()=> bgmSource?.UnPause();
 
-    public void ResumeBGM()
-    {
-        if (bgmSource != null) bgmSource.UnPause();
-    }
-
-    // ── SFX ──────────────────────────────────────────────────
-
-    public void PlaySFX(string clipName)
+    // ── SFX ───────────────────────────────────────────────
+    public void PlaySFX(string name)
     {
         if (isMuted) return;
-
-        // Coba load dari Resources dulu
-        AudioClip clip = Resources.Load<AudioClip>(clipName);
-        if (clip == null)
-            clip = GetOrGenerateClip(clipName, false);
-
-        if (sfxSource != null && clip != null)
-            sfxSource.PlayOneShot(clip, sfxVolume);
+        AudioClip clip = Resources.Load<AudioClip>(name)
+                      ?? GetOrGenerate(name, false);
+        if (sfxSource == null || clip == null) return;
+        sfxSource.PlayOneShot(clip, sfxVolume);
     }
 
-    // ── VOLUME CONTROL ────────────────────────────────────────
-
-    public void SetBGMVolume(float volume)
+    // ── VOLUME ────────────────────────────────────────────
+    public void SetBGMVolume(float v)
     {
-        bgmVolume = Mathf.Clamp01(volume);
-        if (bgmSource != null) bgmSource.volume = isMuted ? 0 : bgmVolume;
-        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
+        bgmVolume = Mathf.Clamp01(v);
+        if (bgmSource) bgmSource.volume = isMuted ? 0 : bgmVolume;
+        PlayerPrefs.SetFloat("BGMVol", bgmVolume);
     }
 
-    public void SetSFXVolume(float volume)
+    public void SetSFXVolume(float v)
     {
-        sfxVolume = Mathf.Clamp01(volume);
-        if (sfxSource != null) sfxSource.volume = sfxVolume;
-        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        sfxVolume = Mathf.Clamp01(v);
+        if (sfxSource) sfxSource.volume = sfxVolume;
+        PlayerPrefs.SetFloat("SFXVol", sfxVolume);
     }
 
     public void ToggleMute()
     {
         isMuted = !isMuted;
-        if (bgmSource != null) bgmSource.volume = isMuted ? 0 : bgmVolume;
-        if (sfxSource != null) sfxSource.volume = isMuted ? 0 : sfxVolume;
-        PlayerPrefs.SetInt("IsMuted", isMuted ? 1 : 0);
+        ApplyVolume();
+        PlayerPrefs.SetInt("Muted", isMuted ? 1 : 0);
     }
 
-    public bool IsMuted() => isMuted;
+    public bool IsMuted()       => isMuted;
     public float GetBGMVolume() => bgmVolume;
     public float GetSFXVolume() => sfxVolume;
 
-    // ── PROCEDURAL AUDIO (tanpa file audio asset) ─────────────
-    // Generate clip sintetis agar tidak error saat file tidak ada
-
-    AudioClip GetOrGenerateClip(string name, bool isLong)
+    // ── PROCEDURAL AUDIO ──────────────────────────────────
+    AudioClip GetOrGenerate(string name, bool isLong)
     {
-        if (clipCache.ContainsKey(name)) return clipCache[name];
-
-        AudioClip clip = isLong
-            ? GenerateBGMClip(name)
-            : GenerateSFXClip(name);
-
-        clipCache[name] = clip;
+        if (_cache.TryGetValue(name, out var cached)) return cached;
+        var clip = isLong ? GenBGM(name) : GenSFX(name);
+        _cache[name] = clip;
         return clip;
     }
 
-    AudioClip GenerateSFXClip(string name)
+    AudioClip GenSFX(string name)
     {
-        int sampleRate = 44100;
-        float duration = 0.15f;
-        int samples = Mathf.RoundToInt(sampleRate * duration);
-        AudioClip clip = AudioClip.Create(name, samples, 1, sampleRate, false);
-
-        float[] data = new float[samples];
-        float freq = 880f; // Default frequency
-
-        switch (name)
+        int sr = 44100;
+        // Definisi SFX: (freq, durationSec, type)
+        // type: 0=sine, 1=square, 2=sweep
+        var sfxMap = new Dictionary<string, (float freq, float dur, int type)>
         {
-            case "sfx_click":    freq = 1200f; duration = 0.08f; break;
-            case "sfx_correct":  freq = 1400f; duration = 0.2f;  break;
-            case "sfx_wrong":    freq = 300f;  duration = 0.3f;  break;
-            case "sfx_win":      freq = 1600f; duration = 0.4f;  break;
-            case "sfx_unlock":   freq = 1000f; duration = 0.25f; break;
-            case "sfx_achieve":  freq = 1800f; duration = 0.35f; break;
-            case "sfx_levelup":  freq = 2000f; duration = 0.5f;  break;
-        }
+            ["sfx_click"]         = (1200f, 0.08f, 0),
+            ["sfx_correct"]       = (1450f, 0.22f, 0),
+            ["sfx_wrong"]         = (280f,  0.30f, 0),
+            ["sfx_win"]           = (1600f, 0.45f, 0),
+            ["sfx_lose"]          = (250f,  0.40f, 0),
+            ["sfx_star"]          = (1800f, 0.18f, 0),
+            ["sfx_levelup"]       = (2000f, 0.55f, 2),
+            ["sfx_achievement"]   = (1700f, 0.38f, 0),
+            ["sfx_unlock"]        = (1000f, 0.28f, 2),
+            ["sfx_timer_warning"] = (600f,  0.12f, 1),
+            ["sfx_swipe"]         = (800f,  0.10f, 2),
+            ["sfx_pop"]           = (1100f, 0.09f, 0),
+        };
+
+        sfxMap.TryGetValue(name, out var p);
+        float freq = p.freq > 0 ? p.freq : 900f;
+        float dur  = p.dur  > 0 ? p.dur  : 0.12f;
+        int   type = p.type;
+
+        int samples = Mathf.RoundToInt(sr * dur);
+        var clip = AudioClip.Create(name, samples, 1, sr, false);
+        var data = new float[samples];
 
         for (int i = 0; i < samples; i++)
         {
-            float t = (float)i / sampleRate;
-            float envelope = 1f - (t / duration);
-            envelope = Mathf.Clamp01(envelope);
-            data[i] = Mathf.Sin(2 * Mathf.PI * freq * t) * envelope * 0.5f;
+            float t    = (float)i / sr;
+            float env  = Mathf.Clamp01(1f - t / dur);
+            float wave = type switch
+            {
+                1 => Mathf.Sign(Mathf.Sin(2 * Mathf.PI * freq * t)),
+                2 => Mathf.Sin(2 * Mathf.PI * (freq + (freq * 0.5f * t / dur)) * t),
+                _ => Mathf.Sin(2 * Mathf.PI * freq * t)
+            };
+            data[i] = wave * env * 0.5f;
         }
-
         clip.SetData(data, 0);
         return clip;
     }
 
-    AudioClip GenerateBGMClip(string name)
+    AudioClip GenBGM(string name)
     {
-        // BGM sintetis sederhana (loop pendek)
-        int sampleRate = 44100;
-        float duration = 2f;
-        int samples = Mathf.RoundToInt(sampleRate * duration);
-        AudioClip clip = AudioClip.Create(name, samples, 1, sampleRate, false);
+        int sr = 44100;
+        float dur = 3f;
+        int samples = Mathf.RoundToInt(sr * dur);
+        var clip = AudioClip.Create(name, samples, 1, sr, false);
+        var data = new float[samples];
 
-        float[] data = new float[samples];
-        float[] freqs = { 261f, 329f, 392f, 523f }; // C, E, G, C (chord natural)
-
+        float[] freqs = { 261f, 329f, 392f, 523f };
         for (int i = 0; i < samples; i++)
         {
-            float t = (float)i / sampleRate;
-            float sample = 0f;
+            float t = (float)i / sr;
+            float s = 0f;
             foreach (float f in freqs)
-                sample += Mathf.Sin(2 * Mathf.PI * f * t) * 0.1f;
-            data[i] = sample;
+                s += Mathf.Sin(2 * Mathf.PI * f * t) * 0.08f;
+            data[i] = s;
         }
-
         clip.SetData(data, 0);
         return clip;
     }

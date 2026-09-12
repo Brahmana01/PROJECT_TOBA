@@ -6,198 +6,196 @@ using System.Collections;
 public class QuizResultScreen : BaseScreen
 {
     private LocationData locationData;
-    private int correctCount;
-    private int totalQuestions;
+    private int  correctCount;
+    private int  totalQuestions;
     private bool isSubmitted = false;
 
-    // UI
     private TextMeshProUGUI statusTxt;
     private TextMeshProUGUI xpTxt;
     private TextMeshProUGUI starsTxt;
     private TextMeshProUGUI scoreTxt;
-    private GameObject loadingObj;
+    private GameObject      loadingObj;
 
-    public QuizResultScreen(Transform parent, LocationData loc, int correct, int total)
+    // Untuk share
+    private int _starsEarned = 0;
+
+    public QuizResultScreen(Transform parent, LocationData loc,
+        int correct, int total)
         : base(parent, "QuizResult")
     {
-        locationData = loc;
-        correctCount = correct;
+        locationData   = loc;
+        correctCount   = correct;
         totalQuestions = total;
     }
 
     public override void Show()
     {
         SetBackground(TOBATheme.BGDark);
-        Sprite bgSprite = TOBATheme.LoadSprite("bg_toba");
-        UIBuilder.CreateBackground(screenObj.transform, bgSprite);
+        Sprite bg = TOBATheme.LoadSprite("bg_toba");
+        UIBuilder.CreateBackground(screenObj.transform, bg);
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0, 0, 0, 0.5f), Vector2.zero, Vector2.one);
 
         HeaderBar.Create(screenObj.transform, "HASIL TANTANGAN", null);
 
-        Sprite panelSprite = TOBATheme.LoadSprite("panel_wood");
-        Sprite btnSprite   = TOBATheme.LoadSprite("btn_gold");
+        bool isPass = correctCount >= locationData.minimum_correct;
+        _starsEarned = CalculateStars();
 
-        // Card hasil utama
-        GameObject resultCard = new GameObject("ResultCard");
-        resultCard.transform.SetParent(screenObj.transform, false);
-        RectTransform rtRC = resultCard.AddComponent<RectTransform>();
-        rtRC.anchorMin = rtRC.anchorMax = new Vector2(0.5f, 0.5f);
-        rtRC.sizeDelta = new Vector2(960, 940);
-        rtRC.anchoredPosition = new Vector2(0, 80f);
+        Sprite wp = TOBATheme.LoadSprite("panel_wood");
 
-        Image rcImg = resultCard.AddComponent<Image>();
-        rcImg.sprite = panelSprite ?? UIBuilder.GetDefaultSprite();
-        rcImg.type   = panelSprite != null ? Image.Type.Sliced : Image.Type.Simple;
-        rcImg.color  = panelSprite != null
+        // ── CARD HASIL ────────────────────────────────────
+        GameObject card = new GameObject("ResultCard");
+        card.transform.SetParent(screenObj.transform, false);
+        RectTransform rtC = card.AddComponent<RectTransform>();
+        rtC.anchorMin = rtC.anchorMax = new Vector2(0.5f, 0.5f);
+        rtC.sizeDelta = new Vector2(960, 950);
+        rtC.anchoredPosition = new Vector2(0, 75f);
+
+        Image cardImg = card.AddComponent<Image>();
+        cardImg.sprite = wp ?? UIBuilder.GetDefaultSprite();
+        cardImg.type   = wp != null ? Image.Type.Sliced : Image.Type.Simple;
+        cardImg.color  = wp != null
             ? new Color(0.92f, 0.82f, 0.65f, 0.98f)
             : TOBATheme.CardBG;
-        rcImg.raycastTarget = false;
+        cardImg.raycastTarget = false;
 
-        Outline rcOl = resultCard.AddComponent<Outline>();
-        rcOl.effectColor    = TOBATheme.BatakGold;
-        rcOl.effectDistance = new Vector2(6, 6);
+        Outline ol = card.AddComponent<Outline>();
+        ol.effectColor    = TOBATheme.BatakGold;
+        ol.effectDistance = new Vector2(6, 6);
+        card.AddComponent<Shadow>().effectDistance = new Vector2(8, -8);
+        ((Shadow)card.GetComponents<Component>()[^1]).effectColor =
+            new Color(0, 0, 0, 0.6f);
+        ScreenManager.Instance.StartCoroutine(
+            UIBuilder.AnimateScaleIn(card.transform, 0.3f));
 
-        Shadow rcSh = resultCard.AddComponent<Shadow>();
-        rcSh.effectColor    = new Color(0, 0, 0, 0.6f);
-        rcSh.effectDistance = new Vector2(8, -8);
-
-        // Status teks
-        statusTxt = UIBuilder.CreateTextSized(resultCard.transform,
+        // Status
+        statusTxt = UIBuilder.CreateTextSized(card.transform,
             "Menilai...", 70, TOBATheme.WoodDark, TextAlignmentOptions.Center,
-            new Vector2(900, 110), new Vector2(0, 360f))
+            new Vector2(900, 110), new Vector2(0, 365f))
             .GetComponent<TextMeshProUGUI>();
         statusTxt.raycastTarget = false;
 
         // Bintang animasi
-        int starEarned = CalculateStars();
         ScreenManager.Instance.StartCoroutine(
-            StarRating.CreateAnimated(resultCard.transform, starEarned, 3,
-                new Vector2(0, 215f), 150f));
+            StarRating.CreateAnimated(card.transform, _starsEarned, 3,
+                new Vector2(0, 215f), 155f));
 
-        // Garis pembatas
-        UIBuilder.CreatePanelSized(resultCard.transform, "Divider",
-            TOBATheme.BatakGold, new Vector2(820, 4), new Vector2(0, 80f))
+        // Garis
+        UIBuilder.CreatePanelSized(card.transform, "Line",
+            TOBATheme.BatakGold, new Vector2(820, 4), new Vector2(0, 82f))
             .GetComponent<Image>().raycastTarget = false;
 
         // Skor
-        scoreTxt = UIBuilder.CreateTextSized(resultCard.transform,
+        scoreTxt = UIBuilder.CreateTextSized(card.transform,
             "Benar : " + correctCount + " / " + totalQuestions,
             42, TOBATheme.TextDark, TextAlignmentOptions.Center,
-            new Vector2(700, 65), new Vector2(0, 20f))
+            new Vector2(700, 65), new Vector2(0, 22f))
             .GetComponent<TextMeshProUGUI>();
-        scoreTxt.fontStyle    = FontStyles.Normal;
-        scoreTxt.raycastTarget = false;
+        scoreTxt.fontStyle = FontStyles.Normal; scoreTxt.raycastTarget = false;
 
-        // XP reward
-        xpTxt = UIBuilder.CreateTextSized(resultCard.transform,
+        xpTxt = UIBuilder.CreateTextSized(card.transform,
             "✨ XP Diperoleh : +0",
             40, TOBATheme.TextDark, TextAlignmentOptions.Center,
-            new Vector2(820, 65), new Vector2(0, -60f))
+            new Vector2(820, 65), new Vector2(0, -62f))
             .GetComponent<TextMeshProUGUI>();
-        xpTxt.fontStyle    = FontStyles.Normal;
-        xpTxt.raycastTarget = false;
+        xpTxt.fontStyle = FontStyles.Normal; xpTxt.raycastTarget = false;
 
-        // Bintang reward
-        starsTxt = UIBuilder.CreateTextSized(resultCard.transform,
+        starsTxt = UIBuilder.CreateTextSized(card.transform,
             "⭐ Bintang Diperoleh : +0",
             40, TOBATheme.TextDark, TextAlignmentOptions.Center,
-            new Vector2(820, 65), new Vector2(0, -135f))
+            new Vector2(820, 65), new Vector2(0, -138f))
             .GetComponent<TextMeshProUGUI>();
-        starsTxt.fontStyle    = FontStyles.Normal;
-        starsTxt.raycastTarget = false;
+        starsTxt.fontStyle = FontStyles.Normal; starsTxt.raycastTarget = false;
 
-        // Loading submit
-        loadingObj = UIBuilder.CreateTextSized(resultCard.transform,
-            "Menyimpan hasil...", 30, TOBATheme.TextGray, TextAlignmentOptions.Center,
-            new Vector2(800, 50), new Vector2(0, -205f));
+        loadingObj = UIBuilder.CreateTextSized(card.transform,
+            "Menyimpan hasil...", 30, TOBATheme.TextGray,
+            TextAlignmentOptions.Center, new Vector2(800, 50),
+            new Vector2(0, -210f));
         loadingObj.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Normal;
         loadingObj.GetComponent<TextMeshProUGUI>().raycastTarget = false;
 
         // Karakter ekspresi
-        bool isPass = correctCount >= locationData.minimum_correct;
-        int charID  = PlayerPrefs.GetInt("SelectedCharacterID", 1);
-        string baseName = charID == 1 ? "ucok" : "butet";
-        string exprPath = "gambar/" + baseName + (isPass ? "_senang" : "_salah");
-        Sprite exprSprite = TOBATheme.LoadSprite(exprPath)
-                        ?? TOBATheme.LoadSprite(charID == 1 ? "char_ucok" : "char_butet");
-        if (exprSprite != null)
+        int charID = PlayerPrefs.GetInt("SelectedCharacterID", 1);
+        string b   = charID == 1 ? "ucok" : "butet";
+        Sprite exprSp = TOBATheme.LoadSprite("gambar/" + b + (isPass ? "_senang" : "_salah"))
+                      ?? TOBATheme.LoadSprite(charID == 1 ? "char_ucok" : "char_butet");
+        if (exprSp != null)
         {
-            GameObject charGO = UIBuilder.CreateImage(screenObj.transform,
-                "Character", exprSprite,
-                new Vector2(260, 360), new Vector2(460f, -480f));
-            charGO.GetComponent<Image>().preserveAspect = true;
+            GameObject ch = UIBuilder.CreateImage(screenObj.transform,
+                "Character", exprSp, new Vector2(255, 355), new Vector2(458f, -475f));
+            ch.GetComponent<Image>().preserveAspect = true;
         }
 
-        // Tombol aksi
-        CreateActionButtons();
+        // Haptic sesuai hasil
+        HapticManager.Instance?.Vibrate(isPass ? HapticType.Success : HapticType.Medium);
+        SoundManager.Instance?.PlaySFX(isPass ? "sfx_win" : "sfx_lose");
 
-        // Submit
+        CreateActionButtons(isPass);
         SubmitResult();
     }
 
     int CalculateStars()
     {
-        float ratio = (float)correctCount / totalQuestions;
-        if (ratio >= 1f) return 3;
-        if (ratio >= 0.6f) return 2;
-        if (ratio >= 0.4f) return 1;
+        float r = totalQuestions > 0 ? (float)correctCount / totalQuestions : 0f;
+        if (r >= 1f)   return 3;
+        if (r >= 0.6f) return 2;
+        if (r >= 0.4f) return 1;
         return 0;
     }
 
-    void CreateActionButtons()
+    void CreateActionButtons(bool isPass)
     {
-        bool isPass = correctCount >= locationData.minimum_correct;
+        float yLanjut  = -568f;
+        float ykembali = -700f;
 
         if (isPass)
         {
-            // Tombol Lanjut ke lokasi berikutnya
-            GameObject btnLanjut = UIBuilder.CreateButton(screenObj.transform,
+            // Lanjut
+            UIBuilder.CreateButton(screenObj.transform,
                 "BtnLanjut", "LANJUT ▶",
-                new Vector2(800, 130), TOBATheme.BtnPrimary, () => {
-                    SoundManager.Instance.PlaySFX("sfx_click");
+                new Vector2(800, 132), TOBATheme.BtnPrimary, () => {
+                    SoundManager.Instance?.PlaySFX("sfx_click");
                     ScreenManager.Instance.ChangeScreen(new MapScreen(container));
-                });
-            btnLanjut.GetComponent<RectTransform>().anchorMin =
-                btnLanjut.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-            btnLanjut.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -560f);
-
-            // Tombol Kembali ke Peta
-            GameObject btnPeta = UIBuilder.CreateButton(screenObj.transform,
-                "BtnPeta", "KEMBALI KE PETA",
-                new Vector2(800, 100), TOBATheme.BtnSecondary, () => {
-                    SoundManager.Instance.PlaySFX("sfx_click");
-                    ScreenManager.Instance.ChangeScreen(new MapScreen(container));
-                });
-            btnPeta.GetComponent<RectTransform>().anchorMin =
-                btnPeta.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-            btnPeta.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -690f);
+                }).GetComponent<RectTransform>().anchoredPosition =
+                    new Vector2(0, yLanjut);
         }
         else
         {
-            // Tombol Ulangi
-            GameObject btnUlangi = UIBuilder.CreateButton(screenObj.transform,
+            // Ulangi
+            UIBuilder.CreateButton(screenObj.transform,
                 "BtnUlangi", "🔄 ULANGI",
-                new Vector2(800, 130), TOBATheme.Warning, () => {
-                    SoundManager.Instance.PlaySFX("sfx_click");
+                new Vector2(800, 132), TOBATheme.Warning, () => {
+                    SoundManager.Instance?.PlaySFX("sfx_click");
                     ScreenManager.Instance.ChangeScreen(
                         new QuizScreen(container, locationData));
-                });
-            btnUlangi.GetComponent<RectTransform>().anchorMin =
-                btnUlangi.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-            btnUlangi.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -560f);
-
-            // Tombol Kembali ke Peta
-            GameObject btnPeta = UIBuilder.CreateButton(screenObj.transform,
-                "BtnPeta", "KEMBALI KE PETA",
-                new Vector2(800, 100), TOBATheme.BtnSecondary, () => {
-                    SoundManager.Instance.PlaySFX("sfx_click");
-                    ScreenManager.Instance.ChangeScreen(new MapScreen(container));
-                });
-            btnPeta.GetComponent<RectTransform>().anchorMin =
-                btnPeta.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-            btnPeta.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -690f);
+                }).GetComponent<RectTransform>().anchoredPosition =
+                    new Vector2(0, yLanjut);
         }
+
+        // Kembali ke peta
+        UIBuilder.CreateButton(screenObj.transform,
+            "BtnPeta", "KEMBALI KE PETA",
+            new Vector2(800, 105), TOBATheme.BtnSecondary, () => {
+                SoundManager.Instance?.PlaySFX("sfx_click");
+                ScreenManager.Instance.ChangeScreen(new MapScreen(container));
+            }).GetComponent<RectTransform>().anchoredPosition =
+                new Vector2(0, ykembali);
+
+        // Tombol Share
+        GameObject btnShare = UIBuilder.CreateSmallButton(screenObj.transform,
+            "BtnShare", "📤 BAGIKAN",
+            new Vector2(380, 90), new Color(0.1f, 0.3f, 0.5f, 0.9f),
+            Color.white, OnShare);
+        btnShare.GetComponent<RectTransform>().anchoredPosition =
+            new Vector2(0, -810f);
+    }
+
+    void OnShare()
+    {
+        SoundManager.Instance?.PlaySFX("sfx_click");
+        HapticManager.Instance?.Vibrate(HapticType.Light);
+        ShareManager.ShareQuizResult(
+            locationData.name, correctCount, totalQuestions, _starsEarned);
     }
 
     void SubmitResult()
@@ -206,59 +204,148 @@ public class QuizResultScreen : BaseScreen
         isSubmitted = true;
 
         int playerID = PlayerPrefs.GetInt("PlayerID");
-        bool isPass = correctCount >= locationData.minimum_correct;
 
-        SubmitQuizRequest req = new SubmitQuizRequest
+        var req = new SubmitQuizRequest
         {
-            player_id = playerID,
-            location_id = locationData.id,
+            player_id     = playerID,
+            location_id   = locationData.id,
             correct_count = correctCount
         };
 
-        string json = JsonUtility.ToJson(req);
+        string jsonPayload = JsonUtility.ToJson(req);
 
-        APIManager.Instance.PostRequest("/locations/submit", json, (response) => {
-            if (screenObj == null) return;
+        // ── Coba submit online dulu ──────────────────────────
+        APIManager.Instance.PostRequest(
+            "/locations/submit",
+            jsonPayload,
 
-            SubmitQuizResponse res = JsonUtility.FromJson<SubmitQuizResponse>(response);
-
-            // Update status
-            if (statusTxt != null)
+            // SUCCESS
+            (response) =>
             {
-                statusTxt.text = isPass ? "🎉 LUAR BIASA!" : "😔 BELUM LULUS";
-                statusTxt.color = isPass ? TOBATheme.BtnPrimary : TOBATheme.Error;
-            }
+                if (screenObj == null) return;
 
-            // Update XP & bintang
-            if (xpTxt != null)
-                xpTxt.text = "✨ XP Diperoleh : +" + res.xp;
+                // Berhasil → hapus antrian offline
+                PlayerPrefs.DeleteKey("OfflineSubmitQueue");
+                PlayerPrefs.DeleteKey("OfflineSubmitEndpoint");
+                PlayerPrefs.Save();
 
-            if (starsTxt != null)
-                starsTxt.text = "⭐ Bintang Diperoleh : +" + res.stars;
+                HandleSubmitResponse(response);
+            },
 
-            // Simpan data terbaru ke PlayerPrefs
-            if (res.level > 0)
-                PlayerPrefs.SetInt("PlayerLevel", res.level);
-
-            // Hapus loading
-            if (loadingObj != null) Object.Destroy(loadingObj);
-
-            Debug.Log("[QuizResult] Submit berhasil. Status: " + res.status);
-
-        }, (err) => {
-            if (screenObj == null) return;
-
-            if (statusTxt != null)
+            // ERROR / OFFLINE
+            (err) =>
             {
-                statusTxt.text = isPass ? "🎉 LUAR BIASA!" : "😔 BELUM LULUS";
-                statusTxt.color = isPass ? TOBATheme.BtnPrimary : TOBATheme.Error;
+                if (screenObj == null) return;
+
+                // Gagal → simpan hasil ke antrian offline
+                PlayerPrefs.SetString("OfflineSubmitQueue", jsonPayload);
+                PlayerPrefs.SetString(
+                    "OfflineSubmitEndpoint",
+                    "/locations/submit"
+                );
+                PlayerPrefs.Save();
+
+                NetworkManager.Instance?.ShowToast(
+                    "Offline: hasil disimpan, akan dikirim saat online.",
+                    false
+                );
+
+                // Tetap tampilkan hasil ke pemain
+                HandleOfflineResult();
             }
-
-            if (xpTxt != null) xpTxt.text = "✨ XP Diperoleh : (offline)";
-            if (starsTxt != null) starsTxt.text = "⭐ Bintang : (offline)";
-            if (loadingObj != null) Object.Destroy(loadingObj);
-
-            Debug.LogWarning("[QuizResult] Submit gagal: " + err);
-        });
+        );
     }
+
+
+    void HandleSubmitResponse(string response)
+    {
+        if (screenObj == null) return;
+
+        bool isPass = correctCount >= locationData.minimum_correct;
+        int playerID = PlayerPrefs.GetInt("PlayerID");
+
+        SubmitQuizResponse res =
+            JsonUtility.FromJson<SubmitQuizResponse>(response);
+
+        if (statusTxt)
+        {
+            statusTxt.text = isPass
+                ? "🎉 LUAR BIASA!"
+                : "😔 BELUM LULUS";
+
+            statusTxt.color = isPass
+                ? TOBATheme.BtnPrimary
+                : TOBATheme.Error;
+        }
+
+        if (xpTxt)
+            xpTxt.text = "✨ XP Diperoleh : +" + res.xp;
+
+        if (starsTxt)
+            starsTxt.text = "⭐ Bintang Diperoleh : +" + res.stars;
+
+        if (loadingObj)
+            Object.Destroy(loadingObj);
+
+        if (res.level > PlayerPrefs.GetInt("PlayerLevel", 1))
+        {
+            PlayerPrefs.SetInt("PlayerLevel", res.level);
+            SoundManager.Instance?.PlaySFX("sfx_levelup");
+            HapticManager.Instance?.Vibrate(HapticType.Success);
+
+            LevelUpPopup.Show(
+                screenObj.transform,
+                res.level,
+                ""
+            );
+        }
+
+        APIManager.Instance.GetRequest(
+            "/check-achievements/" + playerID,
+            (achRes) =>
+            {
+                if (screenObj == null) return;
+
+                NewAchievementResponse ach =
+                    JsonUtility.FromJson<NewAchievementResponse>(achRes);
+
+                if (ach?.count > 0)
+                {
+                    SoundManager.Instance?.PlaySFX("sfx_achievement");
+
+                    AchievementPopup.Show(
+                        screenObj.transform,
+                        ach.newly_unlocked[0]
+                    );
+                }
+            },
+            (_) => { }
+        );
+    }
+
+    void HandleOfflineResult()
+    {
+        bool isPass = correctCount >= locationData.minimum_correct;
+
+        if (statusTxt)
+        {
+            statusTxt.text = isPass
+                ? "🎉 LUAR BIASA!"
+                : "😔 BELUM LULUS";
+
+            statusTxt.color = isPass
+                ? TOBATheme.BtnPrimary
+                : TOBATheme.Error;
+        }
+
+        if (xpTxt)
+            xpTxt.text = "✨ XP : (offline)";
+
+        if (starsTxt)
+            starsTxt.text = "⭐ Bintang : (offline)";
+
+        if (loadingObj)
+            Object.Destroy(loadingObj);
+    }
+
 }

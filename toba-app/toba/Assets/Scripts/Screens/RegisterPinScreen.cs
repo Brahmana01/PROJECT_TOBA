@@ -1615,7 +1615,9 @@ public class RegisterPinScreen : BaseScreen
 
     void OnDaftarPressed()
     {
-        SoundManager.Instance.PlaySFX("sfx_click");
+        SoundManager.Instance.PlaySFX(
+            "sfx_click"
+        );
 
         string pin =
             pinInput != null
@@ -1627,19 +1629,20 @@ public class RegisterPinScreen : BaseScreen
                 ? pinConfirmInput.text.Trim()
                 : "";
 
-        if (pin.Length != 6)
-        {
-            ShowStatus(
-                "PIN harus tepat 6 digit angka."
+        // ========================================================
+        // VALIDASI PIN
+        // ========================================================
+
+        var pinCheck =
+            ValidationHelper.ValidatePinMatch(
+                pin,
+                pinConfirm
             );
 
-            return;
-        }
-
-        if (pin != pinConfirm)
+        if (!pinCheck.ok)
         {
             ShowStatus(
-                "PIN tidak cocok. Periksa kembali."
+                pinCheck.error
             );
 
             return;
@@ -1742,7 +1745,6 @@ public class RegisterPinScreen : BaseScreen
             }
         );
     }
-
     void ShowStatus(
         string message,
         bool isError = true)

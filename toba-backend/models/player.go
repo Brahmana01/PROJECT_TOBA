@@ -17,6 +17,7 @@ type Player struct {
 	LastLogin   *time.Time `json:"last_login,omitempty"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
+	FCMToken string `gorm:"column:fcm_token" json:"fcm_token,omitempty"`
 }
 
 type PlayerSession struct {

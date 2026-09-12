@@ -63,3 +63,12 @@ type Admin struct {
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
+
+type AdminSession struct {
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	AdminID   uint      `json:"admin_id"`
+	Token     string    `gorm:"uniqueIndex" json:"-"`
+	IsActive  bool      `json:"is_active"`
+	LastLogin time.Time `json:"last_login"`
+	CreatedAt time.Time `json:"created_at"`
+}

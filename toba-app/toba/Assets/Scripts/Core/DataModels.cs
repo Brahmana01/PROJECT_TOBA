@@ -279,6 +279,7 @@ public class SubmitBattleAnswerRequest
     public int player_id;
     public int question_id;
     public int selected_option_id;
+    public long answer_time_ms; 
 }
 
 [Serializable]
@@ -404,4 +405,91 @@ public class LeaderboardEntryData
 public class LeaderboardListResponse
 {
     public List<LeaderboardEntryData> entries;
+}
+
+// ── FIREBASE ──────────────────────────────────────────────
+[System.Serializable]
+public class FCMTokenRequest
+{
+    public int    player_id;
+    public string fcm_token;
+}
+
+
+// ── MATCHMAKING ───────────────────────────────────────────
+[System.Serializable]
+public class MatchmakeRequest
+{
+    public int    player_id;
+    public int    level;
+    public string player_name;
+}
+
+[System.Serializable]
+public class MatchmakeResponse
+{
+    public string status;
+    public string room_code;
+    public int    room_id;
+    public string opponent_name;
+    public bool   is_host;
+    public bool   is_bot;        // ← TAMBAH
+    public string bot_name;      // ← TAMBAH
+    public int    bot_level;     // ← TAMBAH
+    public int    waited;        // ← TAMBAH (detik sudah menunggu)
+    public int    bot_in;        // ← TAMBAH (detik lagi vs bot)
+    public string message;
+}
+
+// ── GAME SETTINGS ─────────────────────────────────────────
+[System.Serializable]
+public class GameSettingData
+{
+    public int    id;
+    public string setting_key;
+    public string setting_value;
+    public string description;
+}
+
+
+[System.Serializable]
+public class ChallengeData
+{
+    public int    id;
+    public string title;
+    public string description;
+    public string game_type;
+    public int    reward_xp;
+    public int    reward_stars;
+    public string data_json;
+}
+
+[System.Serializable]
+public class ActiveChallengeResponse
+{
+    public bool          has_challenge;
+    public bool          is_completed;
+    public ChallengeData challenge;
+}
+
+[System.Serializable]
+public class SubmitChallengeRequest
+{
+    public int player_id;
+    public int challenge_id;
+    public int score;
+}
+
+[System.Serializable]
+public class MatchPair { public string batak; public string indo; }
+[System.Serializable]   
+public class MatchingData { public List<MatchPair> pairs; }
+
+[System.Serializable]
+public class VersionResponse
+{
+    public string latest_version;
+    public string min_version;
+    public bool   force_update;
+    public string update_message;
 }

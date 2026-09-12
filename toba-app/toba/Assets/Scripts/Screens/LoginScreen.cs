@@ -1658,6 +1658,12 @@ public class LoginScreen : BaseScreen
                 ? pinInput.text.Trim()
                 : "";
 
+        var userCheck = ValidationHelper.ValidateUsername(usernameInput.text.Trim());
+        if (!userCheck.ok) { ShowStatus(userCheck.error); return; }
+
+        var pinCheck = ValidationHelper.ValidatePin(pinInput.text.Trim());
+        if (!pinCheck.ok)  { ShowStatus(pinCheck.error); return; }
+
         if (string.IsNullOrEmpty(username))
         {
             ShowStatus(
@@ -1735,6 +1741,8 @@ public class LoginScreen : BaseScreen
                     );
 
                     PlayerPrefs.Save();
+
+                    FirebaseManager.Instance?.SendTokenToBackend(res.GetValidID());
 
                     SoundManager.Instance.PlaySFX(
                         "sfx_win"

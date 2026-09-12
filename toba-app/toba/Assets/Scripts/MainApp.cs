@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class MainApp : MonoBehaviour
 {
@@ -14,21 +15,53 @@ public class MainApp : MonoBehaviour
 
     void Start()
     {
+
+        // Cek antrian offline saat online kembali
+        StartCoroutine(ProcessOfflineQueue());
+
+        IEnumerator ProcessOfflineQueue()
+        {
+            yield return new WaitForSecondsRealtime(5f);
+
+            string pendingData     = PlayerPrefs.GetString("OfflineSubmitQueue", "");
+            string pendingEndpoint = PlayerPrefs.GetString("OfflineSubmitEndpoint", "");
+
+            if (!string.IsNullOrEmpty(pendingData) && NetworkManager.Instance.IsOnline)
+            {
+                APIManager.Instance.PostRequest(pendingEndpoint, pendingData,
+                    (r) => {
+                        PlayerPrefs.DeleteKey("OfflineSubmitQueue");
+                        PlayerPrefs.DeleteKey("OfflineSubmitEndpoint");
+                        NetworkManager.Instance?.ShowToast(
+                            "Hasil offline berhasil disinkronkan!", false);
+                    },
+                    (e) => { /* coba lagi nanti */ });
+            }
+        }
+
         ScreenManager.Instance.canvasTransform = canvas.transform;
         SoundManager.Instance.PlayBGM("bgm_main");
 
-        // CEK SESSION (UNLIMITED LOGIN)
-        if (PlayerPrefs.HasKey("UserToken") && PlayerPrefs.HasKey("SavedUsername"))
-        {
-            // Jika token ada, langsung ke Main Menu
-            Debug.Log("Session ditemukan. Selamat datang kembali!");
+        NetworkManager.Instance.Init(
+            canvas.transform,
+            APIManager.Instance.GetBaseUrl() + "/");
+
+        FirebaseManager.Instance?.Initialize();
+
+        #if FIREBASE_ENABLED
+        Firebase.Crashlytics.Crashlytics.ReportUncaughtExceptionsAsCrashes = true;
+        #endif
+
+        bool hasSession  = PlayerPrefs.HasKey("UserToken")
+                        && PlayerPrefs.HasKey("SavedUsername");
+        bool doneOnboard = PlayerPrefs.GetInt("OnboardingDone", 0) == 1;
+
+        if (hasSession)
             ScreenManager.Instance.ChangeScreen(new MainMenuScreen(canvas.transform));
-        }
+        else if (!doneOnboard)
+            ScreenManager.Instance.ChangeScreen(new OnboardingScreen(canvas.transform));
         else
-        {
-            // Jika tidak ada, mulai dari Splash
             ScreenManager.Instance.ChangeScreen(new SplashScreen(canvas.transform));
-        }
     }
 
     void SetupManagers()
@@ -37,11 +70,16 @@ public class MainApp : MonoBehaviour
         if (core == null)
         {
             core = new GameObject("TOBA_CORE");
-            core.AddComponent<ScreenManager>();
-            core.AddComponent<APIManager>();
-            core.AddComponent<SoundManager>();
             DontDestroyOnLoad(core);
         }
+
+        if (!core.GetComponent<ScreenManager>())   core.AddComponent<ScreenManager>();
+        if (!core.GetComponent<APIManager>())      core.AddComponent<APIManager>();
+        if (!core.GetComponent<SoundManager>())    core.AddComponent<SoundManager>();
+        if (!core.GetComponent<HapticManager>())   core.AddComponent<HapticManager>();
+        if (!core.GetComponent<NetworkManager>())  core.AddComponent<NetworkManager>();
+        if (!core.GetComponent<FirebaseManager>()) core.AddComponent<FirebaseManager>();
+        if (!core.GetComponent<BackHandler>())     core.AddComponent<BackHandler>();
     }
 
     void SetupCanvas()
@@ -61,4 +99,5 @@ public class MainApp : MonoBehaviour
             DontDestroyOnLoad(es);
         }
     }
+
 }
