@@ -1,10 +1,45 @@
+# ============================================================
 # OS
+# ============================================================
 .DS_Store
 Thumbs.db
 desktop.ini
 
+# ============================================================
 # Editor
+# ============================================================
 .vscode/
 .idea/
 *.suo
 *.user
+
+# ============================================================
+# Unity Generated / Cache
+# ============================================================
+toba-app/toba/.utmp/
+toba-app/toba/Library/
+toba-app/toba/Temp/
+toba-app/toba/Logs/
+toba-app/toba/Obj/
+
+toba-app/toba/Assets/_Recovery/
+toba-app/toba/Assets/_Recovery.meta
+
+toba-app/toba/Assets/GeneratedLocalRepo/
+toba-app/toba/Assets/GeneratedLocalRepo.meta
+
+# ============================================================
+# Node / React
+# ============================================================
+toba-admin/node_modules/
+toba-admin/dist/
+
+# ============================================================
+# Backend
+# ============================================================
+toba-backend/uploads/
+
+# Environment files
+.env
+.env.*
+!.env.example

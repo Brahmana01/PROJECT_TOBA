@@ -1937,32 +1937,25 @@ public class RegisterNameScreen : BaseScreen
                 ? nameInput.text.Trim()
                 : "";
 
-        if (string.IsNullOrEmpty(name))
+        // ========================================================
+        // VALIDASI NAMA
+        // ========================================================
+
+        var nameCheck =
+            ValidationHelper.ValidateName(name);
+
+        if (!nameCheck.ok)
         {
             ShowStatus(
-                "Nama tidak boleh kosong!"
+                nameCheck.error
             );
 
             return;
         }
 
-        if (name.Length < 2)
-        {
-            ShowStatus(
-                "Nama minimal 2 karakter."
-            );
-
-            return;
-        }
-
-        if (name.Length > 50)
-        {
-            ShowStatus(
-                "Nama maksimal 50 karakter."
-            );
-
-            return;
-        }
+        // ========================================================
+        // SIMPAN NAMA
+        // ========================================================
 
         PlayerPrefs.SetString(
             "RegisterName",
@@ -1972,6 +1965,10 @@ public class RegisterNameScreen : BaseScreen
         SoundManager.Instance.PlaySFX(
             "sfx_click"
         );
+
+        // ========================================================
+        // LANJUT KE REGISTER PIN
+        // ========================================================
 
         ScreenManager.Instance.ChangeScreen(
             new RegisterPinScreen(

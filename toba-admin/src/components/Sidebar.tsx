@@ -9,6 +9,7 @@ import '../styles/Sidebar.css';
 import logoToba     from '../assets/logo-toba.png';
 import houseSidebar from '../assets/house-sidebar.png';
 
+
 const Sidebar: React.FC = () => {
   const navigate    = useNavigate();
   const location    = useLocation();
@@ -23,6 +24,7 @@ const Sidebar: React.FC = () => {
     { name: 'Achievement', icon: <Trophy size={18}/>,          path: '/achievements' },
     { name: 'Pengaturan',  icon: <Settings size={18}/>,        path: '/settings'     },
     { name: 'Musik & Audio', icon: <Music size={18}/>, path: '/music' },
+    { name: 'Tantangan', icon: <Trophy size={18}/>, path: '/challenges' },
   ];
 
   return (

@@ -16,6 +16,13 @@ public class SplashScreen : BaseScreen
 
     public override void Show()
     {
+        TextMeshProUGUI verTmp = UIBuilder.CreateTextSized(screenObj.transform,
+            "v1.0.0", 24, TOBATheme.TextGray, TextAlignmentOptions.Right,
+            new Vector2(200, 40), new Vector2(430f, -870f))
+            .GetComponent<TextMeshProUGUI>();
+        verTmp.fontStyle    = FontStyles.Normal;
+        verTmp.raycastTarget = false;
+
         SetBackground(TOBATheme.BGDark);
 
         // ============================================================
@@ -1473,6 +1480,24 @@ public class SplashScreen : BaseScreen
             yield return null;
         }
 
+        void ShowForceUpdateDialog(string message)
+        {
+            ConfirmDialog.Show(
+                screenObj.transform,
+                "Update Diperlukan",
+                string.IsNullOrEmpty(message)
+                    ? "Versi aplikasi ini sudah tidak didukung. Silakan update terlebih dahulu."
+                    : message,
+                "UPDATE",
+                () =>
+                {
+                    Application.OpenURL(
+                        "https://play.google.com/store/apps/details?id=com.toba.budayabatak"
+                    );
+                }
+            );
+        }
+
 
         // ============================================================
         // NEXT SCREEN
@@ -1482,6 +1507,17 @@ public class SplashScreen : BaseScreen
             ScreenManager.Instance != null &&
             screenObj != null)
         {
+            APIManager.Instance.GetRequest("/version", (response) => {
+                VersionResponse ver = JsonUtility.FromJson<VersionResponse>(response);
+                string currentVersion = "1.0.0"; // sesuaikan dengan versi APK
+
+                if (ver.force_update && ver.min_version != currentVersion)
+                {
+                    // Tampilkan dialog wajib update
+                    LoadingOverlay.Hide();
+                    ShowForceUpdateDialog(ver.update_message);
+                }
+            }, (_) => { /* skip kalau gagal */ });
             ScreenManager.Instance.ChangeScreen(
                 new WelcomeScreen(
                     container

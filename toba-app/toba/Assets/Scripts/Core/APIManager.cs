@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
-using System.Collections.Generic;
 using NativeWebSocket;
 
 public class APIManager : MonoBehaviour
 {
     public static APIManager Instance;
 
+    [Header("URLs")]
     private string BASE_URL = "http://localhost:8080/api";
     private string WS_URL   = "ws://localhost:8080/ws";
 
@@ -15,238 +15,216 @@ public class APIManager : MonoBehaviour
     private WebSocket battleSocket;
     private bool wsConnected = false;
 
-    private List<System.Action<string>> wsMessageHandlers =
-        new List<System.Action<string>>();
-
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
             Debug.Log("[API] URL: " + BASE_URL);
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        else Destroy(gameObject);
     }
 
     void Update()
     {
 #if !UNITY_WEBGL || UNITY_EDITOR
-        if (battleSocket != null)
-            battleSocket.DispatchMessageQueue();
+        battleSocket?.DispatchMessageQueue();
 #endif
     }
 
-    // ============================================================
-    // GET
-    // ============================================================
+    // ── URL CONFIG ────────────────────────────────────────
+    public string GetBaseUrl() => BASE_URL;
+    public string GetWsUrl()   => WS_URL;
 
-    public void GetRequest(
-        string endpoint,
+    // ── GET REQUEST ───────────────────────────────────────
+    public void GetRequest(string endpoint,
         System.Action<string> onSuccess,
         System.Action<string> onError)
     {
-        StartCoroutine(
-            SendGet(
-                BASE_URL + endpoint,
-                onSuccess,
-                onError
-            )
-        );
+        StartCoroutine(SendGet(BASE_URL + endpoint, onSuccess, onError));
     }
 
-    IEnumerator SendGet(
-        string url,
+    // GET dengan cache offline
+    public void GetRequestWithCache(string endpoint, string cachedData,
         System.Action<string> onSuccess,
         System.Action<string> onError)
     {
-        using (UnityWebRequest req = UnityWebRequest.Get(url))
+        StartCoroutine(SendGetWithCache(BASE_URL + endpoint, cachedData,
+            onSuccess, onError));
+    }
+
+    // Tambahkan di APIManager.cs
+    public void GetRequestWithRetry(string endpoint, Transform canvas,
+        System.Action<string> onSuccess,
+        System.Action<string> onError,
+        int maxRetry = 3)
+    {
+        StartCoroutine(RetryCoroutine(endpoint, canvas, onSuccess, onError, maxRetry));
+    }
+
+    IEnumerator RetryCoroutine(string endpoint, Transform canvas,
+        System.Action<string> onSuccess,
+        System.Action<string> onError, int maxRetry)
+    {
+        int attempt = 0;
+        while (attempt < maxRetry)
         {
-            req.timeout = 10;
+            bool done = false;
+            string result = null;
+            bool success = false;
 
-            req.SetRequestHeader(
-                "Content-Type",
-                "application/json"
-            );
+            GetRequest(endpoint,
+                (r) => { result = r; success = true; done = true; },
+                (e) => { result = e; done = true; });
 
-            yield return req.SendWebRequest();
+            yield return new WaitUntil(() => done);
 
-            string response =
-                req.downloadHandler != null
-                    ? req.downloadHandler.text
-                    : "";
-
-            // Berhasil
-            if (
-                req.result ==
-                UnityWebRequest.Result.Success
-            )
+            if (success)
             {
-                onSuccess?.Invoke(response);
+                onSuccess?.Invoke(result);
                 yield break;
             }
 
-            // HTTP error dari server:
-            // 400, 401, 403, 404, 409, 422, 500, dst.
-            // Kirim BODY response ke caller.
-            if (
-                req.responseCode >= 400 &&
-                req.responseCode <= 599
-            )
+            attempt++;
+            if (attempt < maxRetry)
             {
-                Debug.LogWarning(
-                    "[API] GET HTTP " +
-                    req.responseCode +
-                    " -> " +
-                    response
-                );
+                NetworkManager.Instance?.ShowToast(
+                    $"Gagal, mencoba ulang... ({attempt}/{maxRetry})", true);
 
-                onError?.Invoke(response);
-                yield break;
+                yield return new WaitForSecondsRealtime(2f);
             }
+        }
 
-            // Benar-benar error koneksi.
-            Debug.LogWarning(
-                "[API] GET Network Error -> " +
-                req.error
-            );
+        onError?.Invoke("Gagal setelah " + maxRetry + " percobaan.");
+    }
 
-            onError?.Invoke(
-                "NETWORK_ERROR"
-            );
+    IEnumerator SendGet(string url,
+        System.Action<string> onSuccess,
+        System.Action<string> onError)
+    {
+        using var req = UnityWebRequest.Get(url);
+        req.timeout = 10;
+
+        // ── AUTH TOKEN ──────────────────────────────────
+        string token = PlayerPrefs.GetString("UserToken", "");
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            req.SetRequestHeader("Authorization", "Bearer " + token);
+        }
+
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.Success)
+            onSuccess?.Invoke(req.downloadHandler.text);
+        else
+        {
+            string errMsg = GetFriendlyError(req.result, req.error);
+            onError?.Invoke(errMsg);
         }
     }
 
-    // ============================================================
-    // POST
-    // ============================================================
-
-    public void PostRequest(
-        string endpoint,
-        string jsonData,
+    IEnumerator SendGetWithCache(string url, string cachedData,
         System.Action<string> onSuccess,
         System.Action<string> onError)
     {
-        StartCoroutine(
-            SendPost(
-                BASE_URL + endpoint,
-                jsonData,
-                onSuccess,
-                onError
-            )
-        );
-    }
+        using var req = UnityWebRequest.Get(url);
+        req.timeout = 8;
 
-    IEnumerator SendPost(
-        string url,
-        string jsonData,
-        System.Action<string> onSuccess,
-        System.Action<string> onError)
-    {
-        using (
-            UnityWebRequest req =
-            new UnityWebRequest(
-                url,
-                "POST"
-            )
-        )
+        // ── AUTH TOKEN ──────────────────────────────────
+        string token = PlayerPrefs.GetString("UserToken", "");
+
+        if (!string.IsNullOrEmpty(token))
         {
-            byte[] body =
-                System.Text.Encoding.UTF8.GetBytes(
-                    jsonData
-                );
+            req.SetRequestHeader("Authorization", "Bearer " + token);
+        }
 
-            req.uploadHandler =
-                new UploadHandlerRaw(body);
+        yield return req.SendWebRequest();
 
-            req.downloadHandler =
-                new DownloadHandlerBuffer();
+        if (req.result == UnityWebRequest.Result.Success)
+        {
+            onSuccess?.Invoke(req.downloadHandler.text);
+        }
+        else if (!string.IsNullOrEmpty(cachedData))
+        {
+            Debug.Log("[API] Offline — menggunakan data cache.");
 
-            req.SetRequestHeader(
-                "Content-Type",
-                "application/json"
-            );
+            NetworkManager.Instance?.ShowToast(
+                "Mode offline: menampilkan data terakhir tersimpan.", false);
 
-            req.timeout = 10;
-
-            yield return req.SendWebRequest();
-
-            string response =
-                req.downloadHandler != null
-                    ? req.downloadHandler.text
-                    : "";
-
-            // ====================================================
-            // SUCCESS
-            // ====================================================
-
-            if (
-                req.result ==
-                UnityWebRequest.Result.Success
-            )
-            {
-                Debug.Log(
-                    "[API] POST SUCCESS: " +
-                    url
-                );
-
-                onSuccess?.Invoke(response);
-                yield break;
-            }
-
-            // ====================================================
-            // HTTP ERROR DARI BACKEND
-            // ====================================================
-
-            if (
-                req.responseCode >= 400 &&
-                req.responseCode <= 599
-            )
-            {
-                Debug.LogWarning(
-                    "[API] POST HTTP " +
-                    req.responseCode +
-                    " -> " +
-                    response
-                );
-
-                // PENTING:
-                // Jangan kirim req.error.
-                // Kirim JSON/body dari backend.
-                onError?.Invoke(response);
-
-                yield break;
-            }
-
-            // ====================================================
-            // TRUE NETWORK ERROR
-            // ====================================================
-
-            Debug.LogWarning(
-                "[API] POST NETWORK ERROR -> " +
-                req.error
-            );
-
-            onError?.Invoke(
-                "NETWORK_ERROR"
-            );
+            onSuccess?.Invoke(cachedData);
+        }
+        else
+        {
+            string errMsg = GetFriendlyError(req.result, req.error);
+            onError?.Invoke(errMsg);
         }
     }
 
-    // ============================================================
-    // WEBSOCKET BATTLE
-    // TIDAK DIUBAH
-    // ============================================================
+    // ── POST REQUEST ──────────────────────────────────────
+    public void PostRequest(string endpoint, string jsonData,
+        System.Action<string> onSuccess,
+        System.Action<string> onError)
+    {
+        StartCoroutine(SendPost(BASE_URL + endpoint, jsonData, onSuccess, onError));
+    }
 
-    public async void ConnectBattleWS(
-        string roomCode,
-        int playerID,
-        string playerName,
-        bool isHost,
+    IEnumerator SendPost(string url, string jsonData,
+        System.Action<string> onSuccess,
+        System.Action<string> onError)
+    {
+        using var req = new UnityWebRequest(url, "POST");
+
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(jsonData);
+
+        req.uploadHandler   = new UploadHandlerRaw(body);
+        req.downloadHandler = new DownloadHandlerBuffer();
+
+        req.SetRequestHeader("Content-Type", "application/json");
+
+        // ── AUTH TOKEN ──────────────────────────────────
+        string token = PlayerPrefs.GetString("UserToken", "");
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            req.SetRequestHeader("Authorization", "Bearer " + token);
+        }
+
+        req.timeout = 10;
+
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.Success)
+            onSuccess?.Invoke(req.downloadHandler.text);
+        else
+        {
+            string errMsg = GetFriendlyError(req.result, req.error);
+            onError?.Invoke(errMsg);
+        }
+    }
+
+    // ── ERROR MESSAGE RAMAH ───────────────────────────────
+    string GetFriendlyError(UnityWebRequest.Result result, string raw)
+    {
+        return result switch
+        {
+            UnityWebRequest.Result.ConnectionError =>
+                "Tidak dapat terhubung ke server. Periksa koneksi internet kamu.",
+
+            UnityWebRequest.Result.ProtocolError =>
+                "Server merespons dengan error. Coba lagi nanti.",
+
+            UnityWebRequest.Result.DataProcessingError =>
+                "Terjadi kesalahan memproses data.",
+
+            _ => "Terjadi kesalahan: " + raw
+        };
+    }
+
+    // ── WEBSOCKET BATTLE ──────────────────────────────────
+    public async void ConnectBattleWS(string roomCode, int playerID,
+        string playerName, bool isHost,
         System.Action<string> onMessage,
         System.Action onConnected,
         System.Action onDisconnected)
@@ -254,57 +232,36 @@ public class APIManager : MonoBehaviour
         if (battleSocket != null)
             await battleSocket.Close();
 
-        string isHostStr =
-            isHost ? "true" : "false";
+        string isHostStr = isHost ? "true" : "false";
 
         string url =
             $"{WS_URL}/battle/{roomCode}/{playerID}/{playerName}/{isHostStr}";
 
-        battleSocket =
-            new WebSocket(url);
+        battleSocket = new WebSocket(url);
 
         battleSocket.OnOpen += () =>
         {
             wsConnected = true;
 
-            Debug.Log(
-                "[WS] Battle connected: " +
-                url
-            );
+            Debug.Log("[WS] Connected: " + url);
 
             onConnected?.Invoke();
         };
 
         battleSocket.OnMessage += (bytes) =>
         {
-            string msg =
-                System.Text.Encoding.UTF8
-                    .GetString(bytes);
-
-            Debug.Log(
-                "[WS] Received: " +
-                msg
-            );
-
+            string msg = System.Text.Encoding.UTF8.GetString(bytes);
             onMessage?.Invoke(msg);
         };
 
         battleSocket.OnError += (err) =>
-        {
-            Debug.LogWarning(
-                "[WS] Error: " +
-                err
-            );
-        };
+            Debug.LogWarning("[WS] Error: " + err);
 
         battleSocket.OnClose += (code) =>
         {
             wsConnected = false;
 
-            Debug.Log(
-                "[WS] Disconnected. Code: " +
-                code
-            );
+            Debug.Log("[WS] Closed. Code: " + code);
 
             onDisconnected?.Invoke();
         };
@@ -312,36 +269,25 @@ public class APIManager : MonoBehaviour
         await battleSocket.Connect();
     }
 
-    public async void SendBattleWSMessage(
-        string jsonMsg)
+    public async void SendBattleWSMessage(string json)
     {
-        if (
-            battleSocket != null &&
-            wsConnected
-        )
-        {
-            await battleSocket.SendText(
-                jsonMsg
-            );
-        }
+        if (battleSocket != null && wsConnected)
+            await battleSocket.SendText(json);
     }
 
     public async void DisconnectBattleWS()
     {
-        if (battleSocket != null)
-        {
-            wsConnected = false;
+        if (battleSocket == null)
+            return;
 
-            await battleSocket.Close();
+        wsConnected = false;
 
-            battleSocket = null;
-        }
+        await battleSocket.Close();
+
+        battleSocket = null;
     }
 
-    public bool IsWSConnected()
-    {
-        return wsConnected;
-    }
+    public bool IsWSConnected() => wsConnected;
 
     async void OnApplicationQuit()
     {

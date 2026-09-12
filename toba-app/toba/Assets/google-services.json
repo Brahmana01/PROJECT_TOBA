@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "201831170321",
+    "project_id": "toba-game-edukasi",
+    "storage_bucket": "toba-game-edukasi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201831170321:android:dda6c061b2207c25394cb0",
+        "android_client_info": {
+          "package_name": "com.toba.budayabatak"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4KAwZjSHldkAHglPj5Q8ltaJk3zizMqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

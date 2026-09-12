@@ -803,13 +803,23 @@ func seedGameSettings() {
 // ============================================================
 func seedAdmins() {
 	hash, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
-	admin := models.Admin{
-		Fullname:     "Super Admin TOBA",
-		Username:     "admin",
-		PasswordHash: string(hash),
-		Role:         "SUPER_ADMIN",
+
+	var admin models.Admin
+	if config.DB.Where("username = ?", "admin").First(&admin).Error != nil {
+		admin = models.Admin{
+			Fullname:     "Super Admin TOBA",
+			Username:     "admin",
+			PasswordHash: string(hash),
+			Role:         "SUPER_ADMIN",
+		}
+		config.DB.Create(&admin)
+	} else {
+		admin.PasswordHash = string(hash)
+		admin.Fullname = "Super Admin TOBA"
+		admin.Role = "SUPER_ADMIN"
+		config.DB.Save(&admin)
 	}
-	config.DB.FirstOrCreate(&admin, models.Admin{Username: "admin"})
+
 	log.Println("  ✓ Admin (username: admin, password: admin123)")
 }
 

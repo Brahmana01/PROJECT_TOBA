@@ -120,6 +120,7 @@ public class MainMenuScreen : BaseScreen
         // ============================================================
 
         FetchProfile();
+        FloatingChallengeButton.CheckAndShow(screenObj.transform);
     }
 
 

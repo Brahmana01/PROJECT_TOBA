@@ -159,72 +159,68 @@ public class MapScreen : BaseScreen
 
     private void FetchData()
     {
-        int playerID =
-            PlayerPrefs.GetInt("PlayerID");
+        int playerID = PlayerPrefs.GetInt("PlayerID");
+
+        if (screenObj != null)
+        {
+            Transform emptyState = screenObj.transform.Find("EmptyState");
+            if (emptyState != null) UnityEngine.Object.Destroy(emptyState.gameObject);
+        }
 
         APIManager.Instance.GetRequest(
             "/locations",
-            (locationResponse) =>
-            {
-                if (screenObj == null)
-                    return;
+            (locationResponse) => {
+                if (screenObj == null) return;
 
-                LocationListResponse locations =
-                    JsonUtility.FromJson<LocationListResponse>(
-                        "{\"locations\":" +
-                        locationResponse +
-                        "}"
-                    );
+                LocationListResponse locations = JsonUtility.FromJson<LocationListResponse>(
+                    "{\"locations\":" + locationResponse + "}"
+                );
 
-                if (
-                    locations != null &&
-                    locations.locations != null
-                )
+                locationList = locations?.locations ?? new List<LocationData>();
+
+                if (locationList.Count == 0)
                 {
-                    locationList =
-                        locations.locations;
+                    EmptyState.Show(
+                        screenObj.transform,
+                        "🗺️",
+                        "Belum ada lokasi tersedia",
+                        "Hubungi admin untuk menambahkan lokasi"
+                    );
+                    return;
                 }
 
                 APIManager.Instance.GetRequest(
-                    "/player/" +
-                    playerID +
-                    "/progress",
-                    (progressResponse) =>
-                    {
-                        if (screenObj == null)
-                            return;
+                    "/player/" + playerID + "/progress",
+                    (progressResponse) => {
+                        if (screenObj == null) return;
 
-                        PlayerProgressResponse progress =
-                            JsonUtility.FromJson<PlayerProgressResponse>(
-                                "{\"progress\":" +
-                                progressResponse +
-                                "}"
-                            );
+                        PlayerProgressResponse progress = JsonUtility.FromJson<PlayerProgressResponse>(
+                            "{\"progress\":" + progressResponse + "}"
+                        );
 
-                        if (
-                            progress != null &&
-                            progress.progress != null
-                        )
-                        {
-                            progressList =
-                                progress.progress;
-                        }
+                        if (progress?.progress != null)
+                            progressList = progress.progress;
 
                         BuildMap();
                     },
-                    (_) =>
-                    {
-                        BuildMap();
-                    }
+                    (_) => BuildMap()
                 );
             },
-            (_) =>
-            {
-                Debug.LogWarning(
-                    "[Map] Gagal mengambil locations."
-                );
+            (err) => {
+                if (screenObj == null) return;
 
-                BuildMap();
+                Transform loading = screenObj.transform.Find("Loading");
+                if (loading != null) UnityEngine.Object.Destroy(loading.gameObject);
+
+                Debug.LogWarning("[Map] Gagal mengambil locations.");
+
+                EmptyState.Show(
+                    screenObj.transform,
+                    "🗺️",
+                    "Gagal memuat peta",
+                    "Periksa koneksi internet",
+                    () => FetchData()
+                );
             }
         );
     }

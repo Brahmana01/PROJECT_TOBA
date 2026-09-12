@@ -29,15 +29,59 @@ const LocationModal = ({ loc, onClose, onSave }: {
   const [activeLoc, setActiveLoc] = useState<Location | null>(null);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]; if (!file) return;
-    setUploading(true);
-    try {
-      const res = await adminUploadLocationImage(file);
-      setForm(f => ({ ...f, image: res.data.filename }));
-      setMsg('Gambar berhasil diupload!');
-    } catch { setMsg('Gagal upload gambar.'); }
-    finally { setUploading(false); }
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Compress sebelum upload
+      const compressed = await compressImage(file, 800, 0.8);
+      setUploading(true);
+      try {
+          const res = await adminUploadLocationImage(compressed);
+          setForm(f => ({ ...f, image: res.data.filename }));
+          setMsg('Gambar berhasil diupload!');
+      } catch {
+          setMsg('Gagal upload gambar.');
+      } finally {
+          setUploading(false);
+      }
   };
+
+
+  //helper function ini di luar component:
+  async function compressImage(file: File, maxWidth: number,
+      quality: number): Promise<File> {
+      return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (e) => {
+              const img = new Image();
+              img.src = e.target?.result as string;
+              img.onload = () => {
+                  const canvas = document.createElement('canvas');
+                  let { width, height } = img;
+
+                  if (width > maxWidth) {
+                      height = (height * maxWidth) / width;
+                      width = maxWidth;
+                  }
+
+                  canvas.width = width;
+                  canvas.height = height;
+                  const ctx = canvas.getContext('2d')!;
+                  ctx.drawImage(img, 0, 0, width, height);
+
+                  canvas.toBlob((blob) => {
+                      if (blob) {
+                          resolve(new File([blob], file.name,
+                              { type: 'image/jpeg' }));
+                      } else {
+                          resolve(file); // fallback
+                      }
+                  }, 'image/jpeg', quality);
+              };
+          };
+      });
+  }  
 
   const handleSave = async () => {
     if (!form.name || !form.description) { setMsg('Nama dan deskripsi wajib diisi.'); return; }
