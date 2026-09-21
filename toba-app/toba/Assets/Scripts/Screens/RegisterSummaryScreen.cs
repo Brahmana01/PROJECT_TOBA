@@ -6,6 +6,7 @@ using System.Collections;
 public class RegisterSummaryScreen : BaseScreen
 {
     private AuthResponse authData;
+    private bool isStarting = false;
 
     public RegisterSummaryScreen(
         Transform parent,
@@ -480,28 +481,7 @@ public class RegisterSummaryScreen : BaseScreen
                     145f
                 ),
                 TOBATheme.BatakGold,
-                () =>
-                {
-                    SoundManager.Instance.PlaySFX(
-                        "sfx_win"
-                    );
-
-                    PlayerPrefs.DeleteKey(
-                        "RegisterName"
-                    );
-
-                    PlayerPrefs.DeleteKey(
-                        "SelectedCharacterID"
-                    );
-
-                    PlayerPrefs.Save();
-
-                    ScreenManager.Instance.ChangeScreen(
-                        new MainMenuScreen(
-                            container
-                        )
-                    );
-                }
+                () => { }
             );
 
         button.GetComponent<RectTransform>()
@@ -518,20 +498,11 @@ public class RegisterSummaryScreen : BaseScreen
 
         if (label != null)
         {
-            label.fontSize =
-                38;
-
-            label.fontStyle =
-                FontStyles.Bold;
-
-            label.color =
-                TOBATheme.WoodDark;
-
-            label.characterSpacing =
-                1f;
-
-            label.raycastTarget =
-                false;
+            label.fontSize = 38;
+            label.fontStyle = FontStyles.Bold;
+            label.color = TOBATheme.WoodDark;
+            label.characterSpacing = 1f;
+            label.raycastTarget = false;
         }
 
         CreateRocket(
@@ -554,9 +525,21 @@ public class RegisterSummaryScreen : BaseScreen
             btn.onClick.AddListener(
                 () =>
                 {
+                    if (isStarting)
+                        return;
+
+                    isStarting = true;
+
+                    btn.interactable = false;
+
+                    SoundManager.Instance.PlaySFX(
+                        "sfx_win"
+                    );
+
                     ScreenManager.Instance.StartCoroutine(
-                        ButtonPress(
-                            button.transform
+                        ButtonPressAndNavigate(
+                            button.transform,
+                            btn
                         )
                     );
                 }
@@ -870,8 +853,9 @@ public class RegisterSummaryScreen : BaseScreen
     // BUTTON PRESS
     // ============================================================
 
-    IEnumerator ButtonPress(
-        Transform target)
+    IEnumerator ButtonPressAndNavigate(
+        Transform target,
+        Button btn)
     {
         if (target == null)
             yield break;
@@ -886,6 +870,9 @@ public class RegisterSummaryScreen : BaseScreen
             .08f
         );
 
+        if (target == null)
+            yield break;
+
         target.localScale =
             original * 1.03f;
 
@@ -893,8 +880,33 @@ public class RegisterSummaryScreen : BaseScreen
             .07f
         );
 
+        if (target == null)
+            yield break;
+
         target.localScale =
             original;
+
+        // Simpan/bersihkan data registrasi
+        PlayerPrefs.DeleteKey(
+            "RegisterName"
+        );
+
+        PlayerPrefs.DeleteKey(
+            "SelectedCharacterID"
+        );
+
+        PlayerPrefs.Save();
+
+        // Setelah animasi selesai,
+        // baru pindah ke Main Menu
+        if (ScreenManager.Instance == null)
+            yield break;
+
+        ScreenManager.Instance.ChangeScreen(
+            new MainMenuScreen(
+                container
+            )
+        );
     }
 
     // ============================================================
