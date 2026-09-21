@@ -13,19 +13,46 @@ public class TriviaMenuScreen : BaseScreen
 
     public override void Show()
     {
-        SetBackground(TOBATheme.ForestGreen);
+        SetPhotoBackground();
 
         HeaderBar.Create(screenObj.transform, "TRIVIA BUDAYA", () => {
             ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
         });
 
-        UIBuilder.CreateTextSized(
-            screenObj.transform, "Pilih Kategori", 42, TOBATheme.BatakGold,
-            TextAlignmentOptions.Center, new Vector2(900, 70), new Vector2(0, 680f)
-        );
+        BuildTriviaVisual();
 
         ShowLoading();
         FetchCategories();
+    }
+
+    private void SetPhotoBackground()
+    {
+        GameObject bg = new GameObject("Background");
+        bg.transform.SetParent(screenObj.transform, false);
+
+        RectTransform rect = bg.AddComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = bg.AddComponent<Image>();
+
+        Sprite sprite = Resources.Load<Sprite>("Backgrounds/trivia_bg");
+
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = false;
+        }
+        else
+        {
+            Debug.LogWarning("Background trivia_bg tidak ditemukan!");
+            image.color = TOBATheme.ForestGreen;
+        }
+
+        bg.transform.SetAsFirstSibling();
     }
 
     private void ShowLoading()
@@ -87,7 +114,7 @@ public class TriviaMenuScreen : BaseScreen
                     return;
                 }
 
-                BuildCategoryList();
+                BuildCategoryButtons();
             },
             (err) => {
                 if (screenObj == null) return;
@@ -111,6 +138,97 @@ public class TriviaMenuScreen : BaseScreen
         );
     }
 
+    private void BuildCategoryButtons()
+{
+    if (screenObj == null) return;
+
+    Transform parent = screenObj.transform;
+
+    float cardWidth = 480f;
+    float cardHeight = 430f;
+
+    float leftX = -260f;
+    float rightX = 260f;
+
+    float topY = 250f;
+    float bottomY = -250f;
+
+    for (int i = 0; i < categories.Count && i < 4; i++)
+    {
+        TriviaCategoryData cat = categories[i];
+
+        float x;
+        float y;
+
+        if (i == 0)
+        {
+            x = leftX;
+            y = topY;
+        }
+        else if (i == 1)
+        {
+            x = rightX;
+            y = topY;
+        }
+        else if (i == 2)
+        {
+            x = leftX;
+            y = bottomY;
+        }
+        else
+        {
+            x = rightX;
+            y = bottomY;
+        }
+
+        CreateInvisibleCategoryButton(
+            parent,
+            cat,
+            new Vector2(cardWidth, cardHeight),
+            new Vector2(x, y)
+        );
+    }
+}
+
+    private void CreateInvisibleCategoryButton(
+    Transform parent,
+    TriviaCategoryData cat,
+    Vector2 size,
+    Vector2 position)
+{
+    GameObject buttonObj = new GameObject("CategoryButton_" + cat.id);
+
+    buttonObj.transform.SetParent(parent, false);
+
+    RectTransform rect = buttonObj.AddComponent<RectTransform>();
+
+    rect.anchorMin = new Vector2(0.5f, 0.5f);
+    rect.anchorMax = new Vector2(0.5f, 0.5f);
+
+    rect.pivot = new Vector2(0.5f, 0.5f);
+
+    rect.sizeDelta = size;
+    rect.anchoredPosition = position;
+
+    Image image = buttonObj.AddComponent<Image>();
+
+    // Transparan
+    image.color = new Color(1f, 1f, 1f, 0f);
+
+    Button button = buttonObj.AddComponent<Button>();
+
+    button.targetGraphic = image;
+
+    button.onClick.AddListener(() =>
+    {
+        SoundManager.Instance.PlaySFX("sfx_click");
+
+        ScreenManager.Instance.ChangeScreen(
+            new TriviaQuizScreen(container, cat)
+        );
+    });
+}
+
     private void RetryFetchCategories()
     {
         ClearEmptyState();
@@ -118,28 +236,51 @@ public class TriviaMenuScreen : BaseScreen
         FetchCategories();
     }
 
-    private void BuildCategoryList()
+    private void BuildTriviaVisual()
+{
+    if (screenObj == null)
     {
-        if (screenObj == null) return;
-
-        ScrollRect scroll = UIBuilder.CreateScrollView(
-            screenObj.transform, "CategoryScroll",
-            new Vector2(0, 0.1f), new Vector2(1, 0.82f)
-        );
-
-        Transform content = scroll.content;
-        float cardHeight = 220f;
-        float totalHeight = categories.Count * cardHeight + 60f;
-        scroll.content.sizeDelta = new Vector2(0, totalHeight);
-
-        for (int i = 0; i < categories.Count; i++)
-        {
-            TriviaCategoryData cat = categories[i];
-            float yPos = -(i * cardHeight) - 110f;
-            CreateCategoryCard(content, cat, yPos);
-        }
+        Debug.LogError("[Trivia] screenObj NULL!");
+        return;
     }
 
+    GameObject bg = new GameObject("TriviaVisual");
+    bg.transform.SetParent(screenObj.transform, false);
+
+    RectTransform rect = bg.AddComponent<RectTransform>();
+
+    rect.anchorMin = new Vector2(0.5f, 0.5f);
+    rect.anchorMax = new Vector2(0.5f, 0.5f);
+    rect.pivot = new Vector2(0.5f, 0.5f);
+
+    rect.sizeDelta = new Vector2(1080f, 1080f);
+    rect.anchoredPosition = new Vector2(0f, -40f);
+
+    Image image = bg.AddComponent<Image>();
+
+    Sprite sprite = Resources.Load<Sprite>("Trivia/trivia_menu");
+
+    if (sprite == null)
+    {
+        Debug.LogError(
+            "[Trivia] GAGAL LOAD GAMBAR! " +
+            "Pastikan file ada di " +
+            "Assets/Resources/Trivia/trivia_menu.png"
+        );
+
+        return;
+    }
+
+    image.sprite = sprite;
+    image.type = Image.Type.Simple;
+    image.preserveAspect = true;
+
+    // Background dibuat terlebih dahulu.
+    // TriviaVisual harus berada DI ATAS Background.
+    bg.transform.SetSiblingIndex(1);
+
+    Debug.Log("[Trivia] Gambar trivia berhasil dimuat!");
+}
     private void CreateCategoryCard(Transform parent, TriviaCategoryData cat, float yPos)
     {
         GameObject card = UIBuilder.CreatePanelSized(

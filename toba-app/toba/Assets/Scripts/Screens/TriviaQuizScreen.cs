@@ -32,7 +32,8 @@ public class TriviaQuizScreen : BaseScreen
 
     public override void Show()
     {
-        SetBackground(TOBATheme.ForestGreen);
+        SetPhotoBackground();
+
 
         // Header tanpa tombol back (tidak bisa keluar saat kuis)
         HeaderBar.Create(screenObj.transform, categoryData.name.ToUpper(), null);
@@ -49,6 +50,36 @@ public class TriviaQuizScreen : BaseScreen
         // Fetch soal
         FetchQuiz();
     }
+
+        private void SetPhotoBackground()
+    {
+        GameObject bg = new GameObject("Background");
+        bg.transform.SetParent(screenObj.transform, false);
+
+        RectTransform rect = bg.AddComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image image = bg.AddComponent<Image>();
+
+        Sprite sprite = Resources.Load<Sprite>("Backgrounds/trivia_bg");
+
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+            image.type = Image.Type.Simple;
+            image.preserveAspect = false;
+        }
+        else
+        {
+            Debug.LogWarning("Background trivia_bg tidak ditemukan!");
+            image.color = TOBATheme.ForestGreen;
+        }
+
+        bg.transform.SetAsFirstSibling();
+    }   
 
     void CreateProgressArea()
     {
