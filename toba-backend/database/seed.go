@@ -1,1339 +1,825 @@
 package database
 
 import (
+	"errors"
+	"fmt"
 	"log"
+	"time"
 	"toba-backend/config"
 	"toba-backend/models"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func SeedAll() {
-	log.Println("🌱 Memulai seeding database...")
-	seedCharacters()
-	seedTitles()
-	seedLocations()
-	seedLocationFacts()
-	seedTriviaCategories()
-	seedTriviaQuestions()
-	seedBattleQuestions()
-	seedAchievements()
-	seedGameSettings()
-	seedAdmins()
-	seedLocationQuestions()
-	log.Println("✅ Seeding selesai!")
+	SeedCharacters()
+	SeedTitles()
+	SeedLocations()
+	SeedLocationFacts()
+	SeedLocationQuestions()
+	SeedTriviaCategories()
+	SeedTriviaQuestions()
+	SeedBattleQuestions()
+	SeedAchievements()
+	SeedGalleryCards()
+	SeedGameSettings()
+	SeedWeeklyChallenges()
+	SeedAdmin()
+	log.Println("✅ Semua seed data berhasil!")
 }
 
 // ============================================================
-func seedCharacters() {
+// CHARACTERS
+// ============================================================
+func SeedCharacters() {
+	var count int64
+	config.DB.Model(&models.Character{}).Count(&count)
+	if count > 0 {
+		log.Println("ℹ️  Characters sudah ada, skip")
+		return
+	}
 	characters := []models.Character{
-		{Name: "Ucok", Image: "ucok", Description: "Karakter laki-laki Batak Toba"},
-		{Name: "Butet", Image: "butet", Description: "Karakter perempuan Batak Toba"},
+		{ID: 1, Name: "Ucok", Image: "char_ucok.png", Description: "Anak laki-laki Batak yang cerdas dan pemberani"},
+		{ID: 2, Name: "Butet", Image: "char_butet.png", Description: "Anak perempuan Batak yang ceria dan pintar"},
 	}
 	for _, c := range characters {
-		config.DB.FirstOrCreate(&c, models.Character{Name: c.Name})
+		config.DB.Create(&c)
 	}
-	log.Println("  ✓ Characters")
+	log.Println("✅ Characters selesai")
 }
 
 // ============================================================
-func seedTitles() {
+// TITLES — sesuai field Title: TitleName, MinimumLevel
+// ============================================================
+func SeedTitles() {
+	var count int64
+	config.DB.Model(&models.Title{}).Count(&count)
+	if count > 0 {
+		log.Println("ℹ️  Titles sudah ada, skip")
+		return
+	}
 	titles := []models.Title{
-		{TitleName: "Wisatawan", MinimumLevel: 1},
-		{TitleName: "Penjelajah Toba", MinimumLevel: 5},
-		{TitleName: "Sahabat Budaya", MinimumLevel: 10},
-		{TitleName: "Duta Budaya", MinimumLevel: 15},
-		{TitleName: "Maestro Budaya Batak", MinimumLevel: 20},
+		{ID: 1, TitleName: "Wisatawan Pemula", MinimumLevel: 1},
+		{ID: 2, TitleName: "Penjelajah Budaya", MinimumLevel: 5},
+		{ID: 3, TitleName: "Sahabat Budaya", MinimumLevel: 10},
+		{ID: 4, TitleName: "Ahli Budaya", MinimumLevel: 15},
+		{ID: 5, TitleName: "Maestro Budaya", MinimumLevel: 20},
 	}
 	for _, t := range titles {
-		config.DB.FirstOrCreate(&t, models.Title{MinimumLevel: t.MinimumLevel})
+		config.DB.Create(&t)
 	}
-	log.Println("  ✓ Titles")
+	log.Println("✅ Titles selesai")
 }
 
 // ============================================================
-func seedLocations() {
+// LOCATIONS
+// ============================================================
+func SeedLocations() {
 	locations := []models.Location{
-		{
-			Name:           "IT Del",
-			Description:    "Institut Teknologi Del adalah perguruan tinggi yang terletak di Laguboti, Toba. Didirikan oleh Luhut Binsar Pandjaitan dan diresmikan oleh Susilo Bambang Yudhoyono pada 2012.",
-			Image:          "itdel",
-			RewardXP:       100,
-			RewardStars:    3,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     1,
-			IsActive:       true,
-		},
-		{
-			Name:           "Pantai Bulbul",
-			Description:    "Pantai Bulbul adalah salah satu pantai indah di Danau Toba yang terletak di Balige. Terkenal dengan pasir putihnya dan pemandangan Danau Toba yang menakjubkan.",
-			Image:          "pantaibulbul",
-			RewardXP:       120,
-			RewardStars:    3,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     2,
-			IsActive:       true,
-		},
-		{
-			Name:           "Museum Batak",
-			Description:    "Museum Batak TB Silalahi Center terletak di Balige, menyimpan ribuan koleksi benda budaya Batak Toba mulai dari pakaian adat, senjata tradisional, hingga peralatan rumah tangga.",
-			Image:          "museumbatak",
-			RewardXP:       140,
-			RewardStars:    3,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     3,
-			IsActive:       true,
-		},
-		{
-			Name:           "Huta Siallagan",
-			Description:    "Huta Siallagan adalah desa tradisional Batak Toba di Pulau Samosir. Terkenal dengan Batu Kursi Raja Siallagan yang digunakan untuk mengadili penjahat pada zaman dahulu.",
-			Image:          "hutasiallagan",
-			RewardXP:       160,
-			RewardStars:    4,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     4,
-			IsActive:       true,
-		},
-		{
-			Name:           "Bukit Holbung",
-			Description:    "Bukit Holbung atau Bukit Teletubbies adalah bukit hijau yang terletak di Kabupaten Samosir. Dari puncaknya, pengunjung dapat menikmati pemandangan Danau Toba yang spektakuler.",
-			Image:          "bukitholbung",
-			RewardXP:       180,
-			RewardStars:    4,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     5,
-			IsActive:       true,
-		},
-		{
-			Name:           "Desa Tomok",
-			Description:    "Desa Tomok adalah salah satu desa tertua di Pulau Samosir. Terkenal dengan Makam Raja Sidabutar yang merupakan situs bersejarah penting bagi masyarakat Batak Toba.",
-			Image:          "desatomok",
-			RewardXP:       200,
-			RewardStars:    4,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     6,
-			IsActive:       true,
-		},
-		{
-			Name:           "Batu Gantung",
-			Description:    "Batu Gantung adalah formasi batu unik yang menggantung di tepi Danau Toba, Parapat. Legenda masyarakat setempat menyebutkan batu ini berasal dari seorang putri yang bersedih.",
-			Image:          "batugantung",
-			RewardXP:       220,
-			RewardStars:    4,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     7,
-			IsActive:       true,
-		},
-		{
-			Name:           "Menara Tele",
-			Description:    "Menara Tele adalah menara pandang yang terletak di Desa Tele, Samosir. Dari menara ini pengunjung dapat melihat panorama Danau Toba dan hamparan sawah yang indah.",
-			Image:          "menaratele",
-			RewardXP:       240,
-			RewardStars:    5,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     8,
-			IsActive:       true,
-		},
-		{
-			Name:           "Air Terjun Situmurun",
-			Description:    "Air Terjun Situmurun atau Binangalom adalah air terjun yang langsung mengalir ke Danau Toba di Kabupaten Toba. Merupakan salah satu air terjun paling indah di kawasan Danau Toba.",
-			Image:          "situmurun",
-			RewardXP:       260,
-			RewardStars:    5,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     9,
-			IsActive:       true,
-		},
-		{
-			Name:           "Sigale-gale",
-			Description:    "Sigale-gale adalah patung boneka kayu yang dapat bergerak dan menari dalam upacara adat Batak Toba. Patung ini merupakan simbol penting dalam ritual pemakaman adat Batak.",
-			Image:          "sigalegale",
-			RewardXP:       300,
-			RewardStars:    5,
-			QuestionCount:  5,
-			MinimumCorrect: 3,
-			LevelOrder:     10,
-			IsActive:       true,
-		},
+		{ID: 1, Name: "IT Del", LevelOrder: 1, Description: "Institut Teknologi Del adalah kampus asri di Laguboti, Kabupaten Toba. Berdiri di tepi Danau Toba, kampus ini menjadi simbol pendidikan teknologi terbaik di Sumatera Utara.", Image: "itdel.png", RewardXP: 50, RewardStars: 1, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 2, Name: "Taman Eden 100", LevelOrder: 2, Description: "Kawasan wisata alam di Kabupaten Toba yang menawarkan hutan tropis, air terjun, dan pemandangan alam yang memukau. Paru-paru hijau kawasan Danau Toba.", Image: "tamaneden.png", RewardXP: 60, RewardStars: 1, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 3, Name: "Kaldera Toba", LevelOrder: 3, Description: "Supervolcano terbesar di dunia yang kini menjadi danau vulkanik terbesar. Kawasan ini sering menjadi tempat pelaksanaan upacara adat penting masyarakat Batak Toba.", Image: "kalderatoba.png", RewardXP: 70, RewardStars: 1, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 4, Name: "Parapat", LevelOrder: 4, Description: "Kota wisata di tepi Danau Toba yang terkenal dengan kuliner khas Batak, souvenir, dan pemandangan danau yang memukau. Pintu gerbang utama menuju Pulau Samosir.", Image: "parapat.png", RewardXP: 80, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 5, Name: "Ajibata", LevelOrder: 5, Description: "Pelabuhan utama di sisi Parapat yang menghubungkan Sumatera dengan Pulau Samosir melalui kapal ferry. Pemandangan Danau Toba dari sini sangat memesona.", Image: "ajibata.png", RewardXP: 90, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 6, Name: "Tomok", LevelOrder: 6, Description: "Desa wisata di Pulau Samosir terkenal dengan pasar souvenir khas Batak dan pertunjukan tari Sigale-gale. Terdapat pula makam Raja Sidabutar yang bersejarah.", Image: "tomok.png", RewardXP: 100, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 7, Name: "Tuktuk", LevelOrder: 7, Description: "Semenanjung di Pulau Samosir dengan pemandangan Danau Toba yang spektakuler. Pusat wisata dengan berbagai penginapan, restoran, dan budaya lokal yang kaya.", Image: "tuktuk.png", RewardXP: 110, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 8, Name: "Batuhoda", LevelOrder: 8, Description: "Pantai indah di Pulau Samosir dengan pasir putih bersih dan air danau yang jernih. Cocok untuk berenang dan menikmati keindahan Danau Toba.", Image: "batuhoda.png", RewardXP: 120, RewardStars: 3, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 9, Name: "Tanah Ponggol", LevelOrder: 9, Description: "Kawasan di Samosir dengan jembatan ikonik penghubung daratan ke Pulau Samosir. Dari sini wisatawan bisa memasuki pulau tanpa naik kapal ferry.", Image: "tanahponggol.png", RewardXP: 130, RewardStars: 3, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 10, Name: "Sibea-bea", LevelOrder: 10, Description: "Destinasi ikonik di Pulau Samosir dengan patung Yesus Kristus setinggi 61 meter. Pemandangan Danau Toba dari ketinggian ini sangat memukau wisatawan.", Image: "sibeabea.png", RewardXP: 150, RewardStars: 3, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
 	}
-	for _, loc := range locations {
-		config.DB.FirstOrCreate(&loc, models.Location{LevelOrder: loc.LevelOrder})
-	}
-	log.Println("  ✓ Locations (10 lokasi)")
-}
-
-// ============================================================
-func seedLocationFacts() {
-	type factSeed struct {
-		LocationOrder int
-		Facts         []string
-	}
-
-	facts := []factSeed{
-		{1, []string{
-			"IT Del merupakan singkatan dari Inpres Toba Development.",
-			"IT Del didirikan oleh Luhut Binsar Pandjaitan pada tahun 2001.",
-			"IT Del terletak di tepi Danau Toba, Laguboti, Sumatera Utara.",
-			"IT Del menjadi salah satu kampus teknologi terbaik di Sumatera.",
-		}},
-		{2, []string{
-			"Pantai Bulbul memiliki pasir putih yang halus khas Danau Toba.",
-			"Pantai Bulbul berlokasi di Balige, ibu kota Kabupaten Toba.",
-			"Danau Toba adalah danau vulkanik terbesar di dunia.",
-			"Danau Toba terbentuk akibat letusan supervulkan sekitar 74.000 tahun lalu.",
-		}},
-		{3, []string{
-			"Museum Batak menyimpan lebih dari 1.000 koleksi benda budaya Batak.",
-			"TB Silalahi adalah tokoh militer dan politisi asal Batak Toba.",
-			"Ulos adalah kain tradisional Batak yang memiliki makna filosofis mendalam.",
-			"Gorga adalah ukiran khas Batak yang biasa menghiasi rumah adat.",
-		}},
-		{4, []string{
-			"Huta Siallagan berasal dari nama marga Siallagan yang mendiami desa ini.",
-			"Batu kursi di Huta Siallagan digunakan sebagai tempat pengadilan adat.",
-			"Pulau Samosir adalah pulau terbesar di dalam danau di dunia.",
-			"Samosir memiliki luas sekitar 630 kilometer persegi.",
-		}},
-		{5, []string{
-			"Bukit Holbung mendapat julukan Bukit Teletubbies karena bentuknya yang bergelombang hijau.",
-			"Dari Bukit Holbung terlihat panorama Danau Toba 360 derajat.",
-			"Ketinggian Bukit Holbung sekitar 1.000 meter di atas permukaan laut.",
-			"Bukit Holbung ramai dikunjungi saat matahari terbit dan terbenam.",
-		}},
-		{6, []string{
-			"Makam Raja Sidabutar di Desa Tomok berusia lebih dari 500 tahun.",
-			"Sigale-gale pertama kali dibuat di Desa Tomok.",
-			"Desa Tomok terkenal sebagai pusat kerajinan tangan Batak Toba.",
-			"Kain ulos dari Tomok dikenal sebagai salah satu yang terbaik.",
-		}},
-		{7, []string{
-			"Batu Gantung terletak di Parapat, Kabupaten Simalungun.",
-			"Legenda Batu Gantung bercerita tentang seorang gadis bernama Seruni.",
-			"Batu Gantung dapat dilihat dari kapal feri yang melintasi Danau Toba.",
-			"Lokasi Batu Gantung menjadi salah satu ikon wisata Parapat.",
-		}},
-		{8, []string{
-			"Menara Tele berdiri di ketinggian sekitar 1.300 meter di atas permukaan laut.",
-			"Dari Menara Tele terlihat hamparan sawah dan Danau Toba sekaligus.",
-			"Tele adalah nama desa yang menjadi gerbang masuk Pulau Samosir dari darat.",
-			"Jalan Tele dikenal sebagai salah satu jalur pegunungan terindah di Sumatera Utara.",
-		}},
-		{9, []string{
-			"Air Terjun Situmurun memiliki ketinggian sekitar 70 meter.",
-			"Situmurun berarti turun bertahap dalam bahasa Batak Toba.",
-			"Air terjun ini langsung jatuh ke perairan Danau Toba.",
-			"Wisatawan bisa berenang di kolam alami di bawah air terjun ini.",
-		}},
-		{10, []string{
-			"Sigale-gale dibuat sebagai pengganti anak bagi raja yang tidak memiliki keturunan.",
-			"Sigale-gale dapat bergerak dengan mekanisme tali yang dikendalikan manusia.",
-			"Upacara Sigale-gale biasanya disertai musik gondang.",
-			"Gondang adalah alat musik perkusi tradisional Batak Toba.",
-		}},
-	}
-
-	for _, fs := range facts {
-		var loc models.Location
-		config.DB.Where("level_order = ?", fs.LocationOrder).First(&loc)
-		if loc.ID == 0 {
+	for _, l := range locations {
+		var existing models.Location
+		result := config.DB.Where("level_order = ?", l.LevelOrder).First(&existing)
+		if result.Error == nil {
+			log.Printf("ℹ️  Location sudah ada: %s", l.Name)
 			continue
 		}
-		for _, factText := range fs.Facts {
-			fact := models.LocationFact{
-				LocationID: loc.ID,
-				Fact:       factText,
-			}
-			config.DB.FirstOrCreate(&fact, models.LocationFact{
-				LocationID: loc.ID,
-				Fact:       factText,
-			})
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek location %s: %v", l.Name, result.Error)
+			continue
 		}
+		if err := config.DB.Create(&l).Error; err != nil {
+			log.Printf("❌ Gagal seed location %s: %v", l.Name, err)
+			continue
+		}
+		log.Printf("✅ Location ditambahkan: %s", l.Name)
 	}
-	log.Println("  ✓ Location Facts")
+	log.Println("✅ Locations selesai")
 }
 
 // ============================================================
-func seedTriviaCategories() {
-	categories := []models.TriviaCategory{
-		{Name: "Makanan Tradisional", Description: "Kuliner khas Batak Toba", QuestionCount: 10, MinimumQuestion: 10, DisplayOrder: 1, IsActive: true},
-		{Name: "Pakaian Adat", Description: "Busana tradisional Batak Toba", QuestionCount: 10, MinimumQuestion: 10, DisplayOrder: 2, IsActive: true},
-		{Name: "Musik Tradisional", Description: "Alat musik dan lagu Batak Toba", QuestionCount: 10, MinimumQuestion: 10, DisplayOrder: 3, IsActive: true},
-		{Name: "Tempat Wisata", Description: "Destinasi wisata di kawasan Toba", QuestionCount: 10, MinimumQuestion: 10, DisplayOrder: 4, IsActive: true},
-		{Name: "Adat Istiadat", Description: "Tradisi dan budaya Batak Toba", QuestionCount: 10, MinimumQuestion: 10, DisplayOrder: 5, IsActive: true},
+// LOCATION FACTS (3 fakta per lokasi = 30 total)
+// ============================================================
+func SeedLocationFacts() {
+	facts := []models.LocationFact{
+		// IT Del
+		{LocationID: 1, Fact: "IT Del didirikan pada tahun 2001 atas inisiatif BJ Habibie sebagai wujud kepedulian terhadap pendidikan di kawasan Danau Toba."},
+		{LocationID: 1, Fact: "Kampus IT Del terletak di Laguboti, Kabupaten Toba, tepat di tepi Danau Toba yang memiliki pemandangan spektakuler."},
+		{LocationID: 1, Fact: "IT Del adalah singkatan dari Institut Teknologi Del, perguruan tinggi swasta berbasis teknologi di Sumatera Utara."},
+		// Taman Eden 100
+		{LocationID: 2, Fact: "Taman Eden 100 memiliki lebih dari 100 hektar hutan tropis yang dijaga kelestariannya oleh masyarakat lokal Batak."},
+		{LocationID: 2, Fact: "Di Taman Eden 100 terdapat beragam flora dan fauna endemik Sumatera yang langka dan dilindungi."},
+		{LocationID: 2, Fact: "Kawasan ini dikenal dengan program konservasi hutan yang melibatkan aktif masyarakat Batak setempat."},
+		// Kaldera Toba
+		{LocationID: 3, Fact: "Danau Toba terbentuk dari letusan supervulcano sekitar 74.000 tahun lalu, salah satu letusan terbesar dalam sejarah Bumi."},
+		{LocationID: 3, Fact: "Kaldera Toba adalah kaldera terbesar di dunia dengan panjang 100 km, lebar 30 km, dan kedalaman hingga 505 meter."},
+		{LocationID: 3, Fact: "Di tengah Danau Toba terdapat Pulau Samosir yang merupakan pulau vulkanik terbesar di dunia yang berada di dalam danau."},
+		// Parapat
+		{LocationID: 4, Fact: "Parapat berjarak sekitar 176 km dari Medan dan bisa ditempuh dalam waktu 4-5 jam perjalanan darat."},
+		{LocationID: 4, Fact: "Pelabuhan Parapat adalah titik keberangkatan utama kapal ferry menuju Pulau Samosir yang beroperasi setiap hari."},
+		{LocationID: 4, Fact: "Mie Gomak adalah kuliner khas Parapat yang sering disebut spaghetti-nya orang Batak karena bentuk mienya yang tebal."},
+		// Ajibata
+		{LocationID: 5, Fact: "Pelabuhan Ajibata adalah pelabuhan terbesar di sisi Parapat yang melayani penyeberangan ferry ke Pulau Samosir."},
+		{LocationID: 5, Fact: "Dari Ajibata, perjalanan naik ferry ke Tomok di Pulau Samosir memakan waktu sekitar 30-45 menit."},
+		{LocationID: 5, Fact: "Di kawasan Ajibata terdapat berbagai rumah makan yang menyajikan ikan bakar khas Danau Toba yang lezat."},
+		// Tomok
+		{LocationID: 6, Fact: "Tomok adalah desa pertama yang dikunjungi wisatawan saat tiba di Pulau Samosir dari Pelabuhan Ajibata."},
+		{LocationID: 6, Fact: "Di Tomok terdapat makam Raja Sidabutar, raja pertama Tomok, yang diperkirakan berusia lebih dari 500 tahun."},
+		{LocationID: 6, Fact: "Pertunjukan Sigale-gale di Tomok adalah atraksi boneka kayu yang bisa menari mengikuti irama musik Batak."},
+		// Tuktuk
+		{LocationID: 7, Fact: "Tuktuk adalah semenanjung berbentuk unik di Pulau Samosir yang dikelilingi Danau Toba dari hampir semua sisi."},
+		{LocationID: 7, Fact: "Kawasan Tuktuk menjadi pusat akomodasi dan pariwisata di Pulau Samosir dengan banyak hotel dan resort tepi danau."},
+		{LocationID: 7, Fact: "Dari Tuktuk wisatawan bisa menyewa sepeda motor atau sepeda untuk mengelilingi Pulau Samosir yang indah."},
+		// Batuhoda
+		{LocationID: 8, Fact: "Batuhoda berasal dari kata Batu dan Hoda (kuda dalam Bahasa Batak) karena ada batu berbentuk kuda di kawasan ini."},
+		{LocationID: 8, Fact: "Pantai Batuhoda memiliki air danau yang sangat jernih dan dangkal sehingga sangat aman untuk berenang keluarga."},
+		{LocationID: 8, Fact: "Aksara Batak Toba memiliki 19 huruf induk yang masing-masing memiliki bunyi vokal a secara default."},
+		// Tanah Ponggol
+		{LocationID: 9, Fact: "Jembatan Tanah Ponggol menghubungkan daratan Kabupaten Samosir dengan Pulau Samosir sepanjang sekitar 100 meter."},
+		{LocationID: 9, Fact: "Melalui Tanah Ponggol wisatawan bisa mencapai Pulau Samosir dengan kendaraan tanpa harus naik kapal ferry."},
+		{LocationID: 9, Fact: "Upacara adat pernikahan Batak Toba disebut pesta unjuk yang melibatkan banyak tahapan dan kedua keluarga besar."},
+		// Sibea-bea
+		{LocationID: 10, Fact: "Patung Yesus Kristus di Sibea-bea setinggi 61 meter menjadikannya salah satu patung Yesus tertinggi di Asia Tenggara."},
+		{LocationID: 10, Fact: "Dari Sibea-bea wisatawan bisa menikmati panorama Danau Toba 360 derajat yang sangat memukau dari ketinggian."},
+		{LocationID: 10, Fact: "Tulila adalah alat musik tiup tradisional Batak Toba yang terbuat dari bambu dan menghasilkan suara lembut dan merdu."},
 	}
-	for _, c := range categories {
-		config.DB.FirstOrCreate(&c, models.TriviaCategory{Name: c.Name})
+	for _, f := range facts {
+		var existing models.LocationFact
+		result := config.DB.Where("location_id = ? AND fact = ?", f.LocationID, f.Fact).First(&existing)
+		if result.Error == nil {
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek fact: %v", result.Error)
+			continue
+		}
+		if err := config.DB.Create(&f).Error; err != nil {
+			log.Printf("❌ Gagal seed fact: %v", err)
+			continue
+		}
 	}
-	log.Println("  ✓ Trivia Categories")
+	log.Println("✅ Location Facts selesai (30 fakta)")
 }
 
 // ============================================================
-func seedTriviaQuestions() {
-	type qSeed struct {
-		CategoryName string
-		Question     string
-		Explanation  string
-		Options      []struct {
-			Text      string
-			IsCorrect bool
-		}
+// LOCATION QUESTIONS (15 soal per lokasi = 150 total)
+// Sesuai soal yang diberikan + dummy untuk melengkapi
+// ============================================================
+func SeedLocationQuestions() {
+
+	type Opt struct {
+		Text    string
+		Correct bool
+	}
+	type Q struct {
+		LocID       uint
+		Question    string
+		Explanation string
+		Opts        []Opt
 	}
 
-	questions := []qSeed{
-		// MAKANAN
-		{"Makanan Tradisional", "Apa nama masakan khas Batak Toba yang terbuat dari daging babi dicampur darah?",
-			"Saksang adalah masakan ritual Batak Toba yang biasa disajikan dalam acara adat.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Saksang", true}, {"Rendang", false}, {"Gulai", false}, {"Arsik", false}}},
-		{"Makanan Tradisional", "Masakan ikan yang dimasak dengan bumbu kuning khas Batak disebut?",
-			"Arsik adalah masakan ikan mas dengan bumbu kunyit dan andaliman khas Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Arsik", true}, {"Pindang", false}, {"Pepes", false}, {"Saksang", false}}},
-		{"Makanan Tradisional", "Bumbu rempah khas Batak yang menyerupai merica dengan rasa getir disebut?",
-			"Andaliman adalah rempah khas Batak Toba yang tumbuh di kawasan Danau Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Andaliman", true}, {"Kemiri", false}, {"Ketumbar", false}, {"Jintan", false}}},
-		{"Makanan Tradisional", "Minuman tradisional Batak yang terbuat dari fermentasi beras adalah?",
-			"Tuak adalah minuman fermentasi tradisional yang sering hadir dalam upacara adat Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Tuak", true}, {"Brem", false}, {"Arak", false}, {"Tape", false}}},
-		{"Makanan Tradisional", "Kue tradisional Batak yang dibungkus daun pisang dan dipanggang disebut?",
-			"Itak Gurgur adalah kue tradisional Batak berbahan tepung beras yang khas.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Itak Gurgur", true}, {"Lemang", false}, {"Lepat", false}, {"Nagasari", false}}},
-		{"Makanan Tradisional", "Sayur khas Batak yang terbuat dari daun singkong direbus dengan santan disebut?",
-			"Sayur daun singkong dengan santan adalah lauk pendamping yang umum dalam masakan Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Daun Singkong Santan", true}, {"Gulai Pakis", false}, {"Lodeh", false}, {"Urap", false}}},
-		{"Makanan Tradisional", "Makanan Batak yang dibuat dari nasi dipadatkan dan dibakar dalam bambu adalah?",
-			"Naniura adalah hidangan ikan mentah yang diasinkan dengan bumbu khas Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Naniura", true}, {"Lemang", false}, {"Lontong", false}, {"Ketupat", false}}},
-		{"Makanan Tradisional", "Ikan mas dalam masakan Batak Toba dikenal sebagai simbol?",
-			"Ikan mas atau dekke mas dalam adat Batak melambangkan berkat dan kemakmuran.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Kemakmuran dan berkat", true}, {"Kesedihan", false}, {"Keberanian", false}, {"Kecantikan", false}}},
-		{"Makanan Tradisional", "Cara memasak arsik yang khas adalah dengan?",
-			"Arsik dimasak tanpa air tambahan, mengandalkan kandungan air dari bumbu dan bahan.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Tanpa air, hanya bumbu", true}, {"Digoreng dalam minyak", false}, {"Dikukus dalam bambu", false}, {"Dibakar di atas bara", false}}},
-		{"Makanan Tradisional", "Daging yang paling sering digunakan dalam saksang adalah?",
-			"Saksang paling umum menggunakan daging babi atau daging anjing dalam tradisi Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Babi", true}, {"Sapi", false}, {"Kambing", false}, {"Ayam", false}}},
+	questions := []Q{
+		// ══════════════════════════════════════════════════════
+		// LOKASI 1: IT DEL (15 soal)
+		// ══════════════════════════════════════════════════════
+		{1, "'Au lao tu IT Del'. Kata 'lao' dalam Bahasa Batak berarti...", "'Lao' berarti 'pergi'. Kalimat tersebut artinya Saya pergi ke IT Del.", []Opt{{"Berasal", false}, {"Pergi", true}, {"Suka", false}, {"Senang", false}}},
+		{1, "Pilih kata yang tepat untuk 'belajar' dalam Bahasa Batak:", "'Marsiajar' adalah kata Bahasa Batak yang berarti belajar.", []Opt{{"Marsiajar", true}, {"Marsitopak", false}, {"Mangalehon", false}, {"Manggokhon", false}}},
+		{1, "Kata 'sikolla' dalam Bahasa Batak berarti...", "'Sikolla' dalam Bahasa Batak berarti sekolah.", []Opt{{"Pasar", false}, {"Danau", false}, {"Sekolah", true}, {"Sawah", false}}},
+		{1, "Pilih kata yang tepat untuk 'menulis' dalam Bahasa Batak:", "'Manurat' adalah kata Bahasa Batak yang berarti menulis.", []Opt{{"Manjaha", false}, {"Manurat", true}, {"Manirat", false}, {"Manapu", false}}},
+		{1, "Apa arti dari kata 'ulos'?", "Ulos adalah kain tradisional tenun khas Batak Toba yang memiliki nilai budaya dan spiritual tinggi.", []Opt{{"Topi", false}, {"Sarung", false}, {"Kain tradisional", true}, {"Sepatu", false}}},
+		{1, "Kata 'marhusip' dalam Bahasa Batak berarti...", "'Marhusip' berarti berbisik atau berbicara pelan dalam Bahasa Batak.", []Opt{{"Berlari", false}, {"Berbisik", true}, {"Bernyanyi", false}, {"Berteriak", false}}},
+		{1, "Pilih kata yang tepat untuk 'membaca' dalam Bahasa Batak:", "'Manjaha' adalah kata Bahasa Batak yang berarti membaca.", []Opt{{"Manjaha", true}, {"Manurat", false}, {"Marsiajar", false}, {"Mandok", false}}},
+		{1, "Kata 'guru' dalam Bahasa Batak disebut...", "Dalam Bahasa Batak, guru disebut 'guru' atau 'pangajari' yang berarti orang yang mengajar.", []Opt{{"Guru", true}, {"Parsikola", false}, {"Panuturi", false}, {"Parjolo", false}}},
+		{1, "Pilih kata yang tepat untuk 'pintar' dalam Bahasa Batak:", "'Malo' adalah kata Bahasa Batak yang berarti pintar atau cerdas.", []Opt{{"Timbo", false}, {"Malo", true}, {"Uli", false}, {"Torop", false}}},
+		{1, "Apa arti kata 'bagas' dalam Bahasa Batak?", "'Bagas' dalam Bahasa Batak berarti rumah. Bagas adalah tempat tinggal keluarga Batak.", []Opt{{"Sawah", false}, {"Rumah", true}, {"Hutan", false}, {"Danau", false}}},
+		{1, "Kata 'parjolo' dalam Bahasa Batak berarti...", "'Parjolo' berarti yang pertama atau terdepan dalam Bahasa Batak.", []Opt{{"Terakhir", false}, {"Pertama", true}, {"Tengah", false}, {"Terbesar", false}}},
+		{1, "Pilih kata yang tepat untuk 'teman' dalam Bahasa Batak:", "'Dongan' adalah kata Bahasa Batak yang berarti teman atau kawan.", []Opt{{"Hula", false}, {"Dongan", true}, {"Boru", false}, {"Amang", false}}},
+		{1, "Apa arti dari kata 'lomo' dalam Bahasa Batak?", "'Lomo' dalam Bahasa Batak berarti suka atau senang terhadap sesuatu.", []Opt{{"Tidak suka", false}, {"Suka/Senang", true}, {"Sedih", false}, {"Marah", false}}},
+		{1, "Kata 'naeng' dalam Bahasa Batak berarti...", "'Naeng' dalam Bahasa Batak berarti mau atau ingin.", []Opt{{"Tidak mau", false}, {"Mau/Ingin", true}, {"Sudah", false}, {"Belum", false}}},
+		{1, "Pilih kata yang tepat untuk 'cepat' dalam Bahasa Batak:", "'Sura-sura' atau 'longang' dalam Bahasa Batak berarti cepat.", []Opt{{"Lambat", false}, {"Longang", true}, {"Timbo", false}, {"Torop", false}}},
 
-		// PAKAIAN ADAT
-		{"Pakaian Adat", "Kain tradisional Batak Toba yang diberikan sebagai simbol kasih sayang disebut?",
-			"Ulos adalah kain tenun tradisional Batak yang memiliki makna filosofis dan spiritual mendalam.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Ulos", true}, {"Batik", false}, {"Songket", false}, {"Tenun", false}}},
-		{"Pakaian Adat", "Ulos yang digunakan dalam upacara pernikahan Batak Toba disebut?",
-			"Ulos Ragi Hotang adalah ulos yang khusus diberikan kepada pengantin dalam adat Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Ragi Hotang", true}, {"Sadum", false}, {"Bintang Maratur", false}, {"Ragi Idup", false}}},
-		{"Pakaian Adat", "Hiasan kepala pria dalam adat Batak Toba disebut?",
-			"Sabe-sabe atau ikat kepala adalah aksesori kepala tradisional pria Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Sabe-sabe", true}, {"Destar", false}, {"Blangkon", false}, {"Tanjak", false}}},
-		{"Pakaian Adat", "Warna yang dominan dalam ulos Batak Toba adalah?",
-			"Merah, hitam, dan putih adalah tiga warna utama dalam tenun ulos Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Merah, hitam, putih", true}, {"Biru, hijau, kuning", false}, {"Ungu, orange, merah", false}, {"Kuning, hijau, biru", false}}},
-		{"Pakaian Adat", "Ulos yang diberikan kepada orang yang sedang berduka disebut?",
-			"Ulos Sibolang diberikan kepada keluarga yang sedang berduka sebagai ungkapan belasungkawa.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Sibolang", true}, {"Ragi Hotang", false}, {"Sadum", false}, {"Ragi Idup", false}}},
-		{"Pakaian Adat", "Proses menenun ulos secara tradisional menggunakan alat yang disebut?",
-			"Alat tenun tradisional Batak disebut ATBM atau gedogan yang dioperasikan dengan tangan.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Gedogan", true}, {"Tombak", false}, {"Hasapi", false}, {"Gordang", false}}},
-		{"Pakaian Adat", "Ulos yang memiliki makna kehidupan dan harapan disebut?",
-			"Ulos Ragi Idup melambangkan kehidupan dan harapan yang terus berkembang.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Ragi Idup", true}, {"Sibolang", false}, {"Bintang Maratur", false}, {"Mangiring", false}}},
-		{"Pakaian Adat", "Dalam adat Batak, pemberian ulos disebut?",
-			"Mangulosi adalah ritual pemberian ulos yang memiliki makna penting dalam adat Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Mangulosi", true}, {"Marhata", false}, {"Martarombo", false}, {"Marpadan", false}}},
-		{"Pakaian Adat", "Ulos yang digunakan oleh penari tortor biasanya berwarna?",
-			"Penari tortor biasanya mengenakan ulos dengan warna merah sebagai simbol semangat.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Merah dan hitam", true}, {"Putih dan biru", false}, {"Hijau dan kuning", false}, {"Ungu dan emas", false}}},
-		{"Pakaian Adat", "Perhiasan khas wanita Batak Toba yang terbuat dari perak disebut?",
-			"Subang atau anting-anting perak adalah perhiasan tradisional wanita Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Subang", true}, {"Gelang Kana", false}, {"Kalung Emas", false}, {"Mahkota", false}}},
+		// ══════════════════════════════════════════════════════
+		// LOKASI 2: TAMAN EDEN 100 (15 soal)
+		// ══════════════════════════════════════════════════════
+		{2, "Kata 'harangan' dalam Bahasa Batak berarti...", "'Harangan' berarti hutan. Taman Eden 100 memiliki kawasan harangan yang sangat luas.", []Opt{{"Gunung", false}, {"Hutan", true}, {"Lembah", false}, {"Bukit", false}}},
+		{2, "Pilih kata yang tepat untuk 'indah' dalam Bahasa Batak:", "'Uli' dalam Bahasa Batak berarti indah. Pemandangan Taman Eden sangat uli!", []Opt{{"Uli", true}, {"Jempek", false}, {"Timbo", false}, {"Bidang", false}}},
+		{2, "Kata 'mangombak' dalam Bahasa Batak berarti...", "'Mangombak' dalam Bahasa Batak berarti mencangkul, bukan ombak seperti yang terdengar.", []Opt{{"Ombak", false}, {"Angin", false}, {"Mencangkul", true}, {"Menenun", false}}},
+		{2, "Pilih kata yang tepat untuk 'berenang' dalam Bahasa Batak:", "'Marlange' adalah kata Bahasa Batak yang berarti berenang.", []Opt{{"Marmeam", false}, {"Marlange", true}, {"Marsiajar", false}, {"Marlojong", false}}},
+		{2, "Apa nama tarian khas dari adat Batak?", "Tari Tortor adalah tarian tradisional khas Batak Toba yang ditampilkan dalam berbagai upacara adat.", []Opt{{"Tari Piring", false}, {"Serampang Dua Belas", false}, {"Tari Tortor", true}, {"Tari Topeng", false}}},
+		{2, "Kata 'dolok' dalam Bahasa Batak berarti...", "'Dolok' dalam Bahasa Batak berarti gunung atau bukit yang tinggi.", []Opt{{"Danau", false}, {"Gunung", true}, {"Sungai", false}, {"Lembah", false}}},
+		{2, "Pilih kata yang tepat untuk 'air' dalam Bahasa Batak:", "'Aek' adalah kata Bahasa Batak yang berarti air.", []Opt{{"Tao", false}, {"Aek", true}, {"Dolok", false}, {"Harangan", false}}},
+		{2, "Kata 'tao' dalam Bahasa Batak berarti...", "'Tao' dalam Bahasa Batak berarti danau. Danau Toba disebut Tao Toba.", []Opt{{"Sungai", false}, {"Laut", false}, {"Danau", true}, {"Rawa", false}}},
+		{2, "Pilih kata yang tepat untuk 'burung' dalam Bahasa Batak:", "'Manuk-manuk' adalah kata Bahasa Batak yang berarti burung.", []Opt{{"Lombu", false}, {"Manuk-manuk", true}, {"Horbo", false}, {"Biang", false}}},
+		{2, "Kata 'marlojong' dalam Bahasa Batak berarti...", "'Marlojong' dalam Bahasa Batak berarti berlari atau lari-lari.", []Opt{{"Berjalan", false}, {"Berlari", true}, {"Berenang", false}, {"Terbang", false}}},
+		{2, "Apa arti kata 'timbo' dalam Bahasa Batak?", "'Timbo' dalam Bahasa Batak berarti tinggi.", []Opt{{"Pendek", false}, {"Tinggi", true}, {"Panjang", false}, {"Lebar", false}}},
+		{2, "Pilih kata yang tepat untuk 'besar' dalam Bahasa Batak:", "'Bontar' dalam Bahasa Batak berarti putih, sedangkan 'godang' berarti besar.", []Opt{{"Otik", false}, {"Godang", true}, {"Bontar", false}, {"Birong", false}}},
+		{2, "Kata 'hosa' dalam Bahasa Batak berarti...", "'Hosa' dalam Bahasa Batak berarti napas atau bernafas.", []Opt{{"Makan", false}, {"Napas", true}, {"Tidur", false}, {"Berjalan", false}}},
+		{2, "Pilih kata untuk 'pohon' dalam Bahasa Batak:", "'Hau' dalam Bahasa Batak berarti pohon atau kayu.", []Opt{{"Rura", false}, {"Hau", true}, {"Aek", false}, {"Tano", false}}},
+		{2, "Kata 'tano' dalam Bahasa Batak berarti...", "'Tano' dalam Bahasa Batak berarti tanah atau bumi.", []Opt{{"Air", false}, {"Tanah", true}, {"Api", false}, {"Angin", false}}},
 
-		// MUSIK TRADISIONAL
-		{"Musik Tradisional", "Alat musik petik tradisional Batak Toba yang terbuat dari kayu disebut?",
-			"Hasapi adalah alat musik petik tradisional Batak Toba yang menyerupai kecapi.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Hasapi", true}, {"Gitar", false}, {"Sitar", false}, {"Kecapi", false}}},
-		{"Musik Tradisional", "Ensemble musik tradisional Batak Toba disebut?",
-			"Gondang Sabangunan adalah ensemble musik tradisional Batak Toba yang lengkap.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Gondang Sabangunan", true}, {"Gamelan", false}, {"Kolintang", false}, {"Talempong", false}}},
-		{"Musik Tradisional", "Alat musik tiup tradisional Batak Toba disebut?",
-			"Sarune Bolon adalah alat musik tiup tradisional Batak Toba yang menghasilkan suara nyaring.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Sarune Bolon", true}, {"Seruling", false}, {"Suling", false}, {"Terompet", false}}},
-		{"Musik Tradisional", "Tari tradisional Batak Toba yang diiringi musik gondang disebut?",
-			"Tortor adalah tari tradisional Batak Toba yang diiringi gondang dan memiliki makna spiritual.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Tortor", true}, {"Saman", false}, {"Kecak", false}, {"Piring", false}}},
-		{"Musik Tradisional", "Alat musik perkusi utama dalam gondang Batak Toba adalah?",
-			"Taganing adalah seperangkat drum yang menjadi alat musik utama dalam gondang Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Taganing", true}, {"Kendang", false}, {"Bedug", false}, {"Rebana", false}}},
-		{"Musik Tradisional", "Lagu daerah Batak Toba yang paling terkenal adalah?",
-			"Sinanggar Tulo adalah salah satu lagu daerah Batak Toba yang paling populer.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Sinanggar Tulo", true}, {"Batak Na Uli", false}, {"Sialang Bungkuk", false}, {"Si Patokaan", false}}},
-		{"Musik Tradisional", "Alat musik gesek tradisional Batak Toba disebut?",
-			"Arbab adalah alat musik gesek tradisional Batak Toba yang terbuat dari tempurung kelapa.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Arbab", true}, {"Rebab", false}, {"Violin", false}, {"Erhu", false}}},
-		{"Musik Tradisional", "Gondang dalam adat Batak Toba berfungsi sebagai?",
-			"Gondang dalam adat Batak berfungsi sebagai media komunikasi dengan leluhur dan Sang Pencipta.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Media komunikasi dengan leluhur", true}, {"Hiburan semata", false}, {"Penanda waktu", false}, {"Penyambut tamu", false}}},
-		{"Musik Tradisional", "Berapa jumlah gendang dalam ensemble Gondang Sabangunan?",
-			"Gondang Sabangunan terdiri dari 5 gendang taganing dan 1 odap-odap.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"5", true}, {"3", false}, {"7", false}, {"9", false}}},
-		{"Musik Tradisional", "Istilah untuk penyanyi dalam musik Batak Toba adalah?",
-			"Parsibar-sibar atau parhata adalah sebutan untuk penyanyi atau pembawa lagu Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Parsibar-sibar", true}, {"Penabuh", false}, {"Dalang", false}, {"Griyo", false}}},
+		// ══════════════════════════════════════════════════════
+		// LOKASI 3: KALDERA TOBA (15 soal)
+		// ══════════════════════════════════════════════════════
+		{3, "Kata 'dongan tubu' dalam Bahasa Batak berarti...", "'Dongan tubu' berarti teman satu marga atau orang yang lahir dari garis keturunan yang sama.", []Opt{{"Orangtua", false}, {"Teman baik", false}, {"Teman satu marga", true}, {"Kakak perempuan", false}}},
+		{3, "Pilih kata yang tepat untuk 'pesta' dalam Bahasa Batak:", "'Ulaon' dalam Bahasa Batak berarti pesta atau upacara.", []Opt{{"Ulaon", true}, {"Onan", false}, {"Huta", false}, {"Modom", false}}},
+		{3, "Kata 'mangoli' dalam Bahasa Batak berarti...", "'Mangoli' dalam Bahasa Batak berarti menikah.", []Opt{{"Bekerja", false}, {"Bertunangan", false}, {"Menikah", true}, {"Bertemu", false}}},
+		{3, "Pilih kata yang tepat untuk 'gendang' dalam Bahasa Batak:", "'Gondang' adalah kata Bahasa Batak yang berarti gendang.", []Opt{{"Godang", false}, {"Gondang", true}, {"Gok", false}, {"Geok", false}}},
+		{3, "Pilih kata yang tepat untuk 'ramai' dalam Bahasa Batak:", "'Torop' dalam Bahasa Batak berarti ramai atau banyak.", []Opt{{"Sadari", false}, {"Satokkin", false}, {"Saotik", false}, {"Torop", true}}},
+		{3, "Apa yang dimaksud dengan 'Dalihan Na Tolu' dalam adat Batak?", "Dalihan Na Tolu berarti tiga tungku yang melambangkan tiga pilar relasi sosial: hula-hula, dongan tubu, dan boru.", []Opt{{"Tiga macam ulos", false}, {"Tiga jenis makanan", false}, {"Tiga pilar relasi sosial", true}, {"Tiga generasi marga", false}}},
+		{3, "Kata 'huta' dalam Bahasa Batak berarti...", "'Huta' dalam Bahasa Batak berarti kampung atau desa.", []Opt{{"Kota", false}, {"Kampung/Desa", true}, {"Hutan", false}, {"Pasar", false}}},
+		{3, "Pilih kata yang tepat untuk 'pasar' dalam Bahasa Batak:", "'Onan' dalam Bahasa Batak berarti pasar tradisional.", []Opt{{"Huta", false}, {"Onan", true}, {"Bagas", false}, {"Tano", false}}},
+		{3, "Kata 'marsangap' dalam Bahasa Batak berarti...", "'Marsangap' dalam Bahasa Batak berarti mulia atau terhormat.", []Opt{{"Miskin", false}, {"Mulia/Terhormat", true}, {"Rendah", false}, {"Lemah", false}}},
+		{3, "Siapakah yang disebut 'hula-hula' dalam adat Batak?", "Hula-hula adalah keluarga dari pihak istri yang memiliki posisi terhormat dalam adat Batak.", []Opt{{"Saudara ayah", false}, {"Keluarga dari istri", true}, {"Anak laki-laki", false}, {"Saudara ibu", false}}},
+		{3, "Kata 'modom' dalam Bahasa Batak berarti...", "'Modom' dalam Bahasa Batak berarti tidur.", []Opt{{"Makan", false}, {"Minum", false}, {"Tidur", true}, {"Bermain", false}}},
+		{3, "Pilih kata untuk 'bekerja' dalam Bahasa Batak:", "'Manogihon' atau 'mardege' dalam Bahasa Batak berarti bekerja.", []Opt{{"Manogihon", true}, {"Marlange", false}, {"Marsiajar", false}, {"Mangan", false}}},
+		{3, "Apa arti kata 'borhat' dalam Bahasa Batak?", "'Borhat' dalam Bahasa Batak berarti berangkat atau pergi.", []Opt{{"Datang", false}, {"Berangkat", true}, {"Pulang", false}, {"Berhenti", false}}},
+		{3, "Kata 'ro' dalam Bahasa Batak berarti...", "'Ro' dalam Bahasa Batak berarti datang atau tiba.", []Opt{{"Pergi", false}, {"Datang", true}, {"Berlari", false}, {"Berhenti", false}}},
+		{3, "Pilih kata untuk 'senang' dalam Bahasa Batak:", "'Marasi' atau 'las roha' dalam Bahasa Batak berarti senang atau gembira.", []Opt{{"Marsak", false}, {"Las roha", true}, {"Dombak", false}, {"Rimas", false}}},
 
-		// TEMPAT WISATA
-		{"Tempat Wisata", "Danau Toba terletak di provinsi mana?",
-			"Danau Toba terletak di Provinsi Sumatera Utara, Indonesia.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Sumatera Utara", true}, {"Sumatera Barat", false}, {"Riau", false}, {"Aceh", false}}},
-		{"Tempat Wisata", "Pulau yang terletak di tengah Danau Toba disebut?",
-			"Pulau Samosir adalah pulau vulkanik yang terletak di tengah Danau Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Samosir", true}, {"Nias", false}, {"Batam", false}, {"Bintan", false}}},
-		{"Tempat Wisata", "Danau Toba terbentuk akibat letusan supervulkan pada berapa tahun lalu?",
-			"Danau Toba terbentuk sekitar 74.000 tahun lalu akibat letusan supervolcano terbesar.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"74.000 tahun lalu", true}, {"10.000 tahun lalu", false}, {"1.000 tahun lalu", false}, {"100.000 tahun lalu", false}}},
-		{"Tempat Wisata", "Kota terdekat dari Danau Toba yang menjadi pintu masuk wisatawan adalah?",
-			"Parapat adalah kota di tepi Danau Toba yang menjadi pintu masuk utama wisatawan.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Parapat", true}, {"Medan", false}, {"Pematangsiantar", false}, {"Balige", false}}},
-		{"Tempat Wisata", "Danau Toba diakui UNESCO sebagai?",
-			"Danau Toba diakui UNESCO sebagai Global Geopark pada tahun 2020.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Global Geopark", true}, {"Warisan Budaya", false}, {"Taman Nasional", false}, {"Biosfer Dunia", false}}},
-		{"Tempat Wisata", "Penyeberangan dari Parapat ke Samosir menggunakan?",
-			"Kapal feri menjadi transportasi utama dari Parapat menuju Pulau Samosir.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Kapal feri", true}, {"Jembatan", false}, {"Helikopter", false}, {"Speedboat saja", false}}},
-		{"Tempat Wisata", "Kabupaten yang melingkupi sebagian besar Danau Toba adalah?",
-			"Kabupaten Toba (dahulu Toba Samosir) melingkupi wilayah terbesar Danau Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Kabupaten Toba", true}, {"Kabupaten Dairi", false}, {"Kabupaten Karo", false}, {"Kabupaten Humbang", false}}},
-		{"Tempat Wisata", "Festival budaya tahunan yang digelar di kawasan Danau Toba disebut?",
-			"Festival Danau Toba adalah event tahunan yang mempromosikan budaya Batak kepada dunia.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Festival Danau Toba", true}, {"Pesta Rakyat Toba", false}, {"Karnaval Samosir", false}, {"Pekan Batak", false}}},
-		{"Tempat Wisata", "Kedalaman maksimum Danau Toba adalah sekitar?",
-			"Danau Toba memiliki kedalaman maksimum sekitar 505 meter, menjadikannya danau terdalam di Asia Tenggara.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"505 meter", true}, {"200 meter", false}, {"100 meter", false}, {"1.000 meter", false}}},
-		{"Tempat Wisata", "Luas Danau Toba adalah sekitar?",
-			"Danau Toba memiliki luas sekitar 1.145 kilometer persegi.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"1.145 km²", true}, {"500 km²", false}, {"2.000 km²", false}, {"300 km²", false}}},
+		// ══════════════════════════════════════════════════════
+		// LOKASI 4: PARAPAT (15 soal)
+		// ══════════════════════════════════════════════════════
+		{4, "Gendang khas Batak Toba disebut...", "Taganing adalah gendang khas Batak Toba yang terdiri dari 5 buah gendang berbeda ukuran.", []Opt{{"Taganing", true}, {"Drum", false}, {"Sangkakala", false}, {"Biola", false}}},
+		{4, "Makanan yang disebut 'sushi-nya orang Batak' adalah...", "Naniura disebut sushi Batak karena berbahan ikan mas mentah yang direndam bumbu tanpa dimasak api.", []Opt{{"Omok-lomok", false}, {"Naniura", true}, {"Na tinombur", false}, {"Itak gurgur", false}}},
+		{4, "Aksesoris kepala tradisional untuk pria dalam pakaian adat Batak disebut...", "Sortali adalah ikat kepala tradisional khas pria Batak Toba dalam berbagai upacara adat.", []Opt{{"Sortali", true}, {"Tali-tali", false}, {"Songket", false}, {"Sarung", false}}},
+		{4, "Pilih kata yang tepat untuk 'makan' dalam Bahasa Batak:", "'Mangan' adalah kata Bahasa Batak yang berarti makan.", []Opt{{"Manang", false}, {"Mangan", true}, {"Mampe", false}, {"Marsangap", false}}},
+		{4, "Apa nama mie khas Batak yang disebut 'spaghetti Batak'?", "Mie Gomak adalah mie khas Batak Toba yang tebal dan panjang seperti spaghetti.", []Opt{{"Mie Ayam", false}, {"Mie Aceh", false}, {"Ifu Mie", false}, {"Mie Gomak", true}}},
+		{4, "Apa makanan Batak yang berbahan dasar ikan mas dimasak dengan andaliman?", "Arsik adalah masakan khas Batak Toba berupa ikan mas yang dimasak dengan bumbu kuning dan andaliman.", []Opt{{"Saksang", false}, {"Naniura", false}, {"Arsik", true}, {"Lappet", false}}},
+		{4, "Lappet biasanya dibungkus dengan...", "Lappet adalah kue tradisional Batak yang terbuat dari tepung beras dan dibungkus dengan daun pisang.", []Opt{{"Daun singkong", false}, {"Daun kelapa", false}, {"Daun pisang", true}, {"Daun sirih", false}}},
+		{4, "Makanan khas Batak berbahan daging dan darah adalah...", "Saksang adalah masakan khas Batak yang menggunakan daging dengan bumbu darah dan rempah khas.", []Opt{{"Naniura", false}, {"Arsik", false}, {"Saksang", true}, {"Itak gurgur", false}}},
+		{4, "Dali ni horbo terbuat dari...", "Dali ni horbo adalah keju khas Batak yang terbuat dari susu kerbau yang dipadatkan.", []Opt{{"Susu kerbau", true}, {"Susu sapi", false}, {"Kelapa", false}, {"Air jeruk", false}}},
+		{4, "Makanan berbahan beras dan parutan kelapa disebut...", "Itak gurgur adalah makanan tradisional Batak Toba berbahan beras dan parutan kelapa.", []Opt{{"Itak gurgur", true}, {"Ombus-ombus", false}, {"Na tinombur", false}, {"Lappet", false}}},
+		{4, "Ombus-ombus biasanya dimakan saat...", "Ombus-ombus adalah kue tradisional Batak yang biasanya dihidangkan saat pesta adat.", []Opt{{"Ujian", false}, {"Pesta adat", true}, {"Upacara kematian", false}, {"Acara resmi", false}}},
+		{4, "Apa arti dari kalimat 'Male au'?", "'Male au' dalam Bahasa Batak berarti Saya lapar.", []Opt{{"Saya kenyang", false}, {"Saya lapar", true}, {"Saya haus", false}, {"Saya mengantuk", false}}},
+		{4, "Kalimat Bahasa Batak untuk 'Saya mau makan' adalah...", "'Naeng mangan au' artinya Saya mau makan. Naeng berarti mau/ingin.", []Opt{{"Sai ro au mangan", false}, {"Naeng mangan au", true}, {"Mangan ho do", false}, {"Au do manang", false}}},
+		{4, "Apa arti kata 'butong' dalam Bahasa Batak?", "'Butong' dalam Bahasa Batak berarti kenyang.", []Opt{{"Lapar", false}, {"Haus", false}, {"Kenyang", true}, {"Mengantuk", false}}},
+		{4, "Kata 'mahuas' dalam Bahasa Batak berarti...", "'Mahuas' dalam Bahasa Batak berarti haus.", []Opt{{"Lapar", false}, {"Haus", true}, {"Kenyang", false}, {"Pusing", false}}},
 
-		// ADAT ISTIADAT
-		{"Adat Istiadat", "Sistem kekerabatan masyarakat Batak Toba berdasarkan garis keturunan?",
-			"Masyarakat Batak Toba menganut sistem patrilineal, yaitu garis keturunan dari pihak ayah.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Patrilineal", true}, {"Matrilineal", false}, {"Bilateral", false}, {"Ambilineal", false}}},
-		{"Adat Istiadat", "Sistem adat Batak Toba yang mengatur hubungan kekerabatan disebut?",
-			"Dalihan Na Tolu adalah sistem adat Batak yang mengatur tiga pilar hubungan kekerabatan.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Dalihan Na Tolu", true}, {"Suku Adat", false}, {"Marga Sistem", false}, {"Hula-hula", false}}},
-		{"Adat Istiadat", "Tiga pilar dalam Dalihan Na Tolu adalah?",
-			"Dalihan Na Tolu terdiri dari Hula-hula, Dongan Tubu, dan Boru.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Hula-hula, Dongan Tubu, Boru", true}, {"Raja, Rakyat, Pendeta", false}, {"Ayah, Ibu, Anak", false}, {"Kakek, Ayah, Cucu", false}}},
-		{"Adat Istiadat", "Upacara kematian adat Batak Toba yang besar disebut?",
-			"Saur Matua adalah upacara adat kematian tertinggi dalam budaya Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Saur Matua", true}, {"Mangongkal Holi", false}, {"Marhata", false}, {"Martumpol", false}}},
-		{"Adat Istiadat", "Upacara pemindahan tulang leluhur dalam adat Batak disebut?",
-			"Mangongkal Holi adalah ritual pemindahan tulang leluhur ke tempat yang lebih terhormat.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Mangongkal Holi", true}, {"Saur Matua", false}, {"Mardebata", false}, {"Tortor", false}}},
-		{"Adat Istiadat", "Marga dalam suku Batak diturunkan dari?",
-			"Marga dalam adat Batak diturunkan dari pihak ayah (patrilineal).",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Pihak ayah", true}, {"Pihak ibu", false}, {"Kedua orang tua", false}, {"Pilihan sendiri", false}}},
-		{"Adat Istiadat", "Musyawarah adat dalam tradisi Batak Toba disebut?",
-			"Rapat Adat atau Pardalanan adalah forum musyawarah dalam masyarakat Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Pardalanan", true}, {"Sidang Adat", false}, {"Musyawarah Marga", false}, {"Ronda Malam", false}}},
-		{"Adat Istiadat", "Posisi Hula-hula dalam Dalihan Na Tolu adalah?",
-			"Hula-hula adalah keluarga dari pihak istri yang memiliki posisi terhormat dalam adat Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Keluarga pihak istri", true}, {"Keluarga pihak suami", false}, {"Saudara kandung", false}, {"Tetangga dekat", false}}},
-		{"Adat Istiadat", "Ucapan salam khas Batak Toba adalah?",
-			"Horas adalah salam khas Batak Toba yang bermakna sehat, sejahtera, dan selamat.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Horas", true}, {"Mejuah-juah", false}, {"Yaahowu", false}, {"Njuah-juah", false}}},
-		{"Adat Istiadat", "Rumah adat Batak Toba disebut?",
-			"Rumah Bolon atau Jabu adalah rumah adat tradisional masyarakat Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Rumah Bolon", true}, {"Rumah Gadang", false}, {"Joglo", false}, {"Honai", false}}},
+		// ══════════════════════════════════════════════════════
+		// LOKASI 5: AJIBATA (15 soal)
+		// ══════════════════════════════════════════════════════
+		{5, "Apa kata 'pelabuhan' dalam Bahasa Batak?", "'Hopal' dalam Bahasa Batak berarti pelabuhan.", []Opt{{"Pelabuhan", false}, {"Hopal", true}, {"Dermaga", false}, {"Stasiun", false}}},
+		{5, "Kata perahu dalam Bahasa Batak adalah...", "'Parau' adalah kata Bahasa Batak yang berarti perahu atau kapal.", []Opt{{"Parau", true}, {"Hapal", false}, {"Kapal", false}, {"Perahu", false}}},
+		{5, "'Panompang hopal paimahon di bontean'. Kata 'Panompang' berarti...", "'Panompang' dalam Bahasa Batak berarti penumpang.", []Opt{{"Kapal", false}, {"Pelabuhan", false}, {"Dermaga", false}, {"Penumpang", true}}},
+		{5, "'Parau nunga borhat tu Tomok'. Kata 'nunga' berarti...", "'Nunga' dalam Bahasa Batak berarti sudah. Kalimat ini berarti Perahu sudah berangkat ke Tomok.", []Opt{{"Tomok", false}, {"Berangkat", false}, {"Akan", false}, {"Sudah", true}}},
+		{5, "'Supir hopal' memiliki makna...", "'Supir hopal' berarti pengemudi kapal karena hopal berarti kapal/pelabuhan.", []Opt{{"Pengemudi", false}, {"Masinis", false}, {"Kondektur", false}, {"Pengemudi kapal", true}}},
+		{5, "Kata 'bontean' dalam Bahasa Batak berarti...", "'Bontean' dalam Bahasa Batak berarti pelabuhan atau dermaga.", []Opt{{"Pasar", false}, {"Pelabuhan", true}, {"Rumah", false}, {"Hutan", false}}},
+		{5, "Pilih kata untuk 'menyeberang' dalam Bahasa Batak:", "'Mambege' dalam Bahasa Batak berarti menyeberang.", []Opt{{"Marlange", false}, {"Mambege", true}, {"Marlojong", false}, {"Borhat", false}}},
+		{5, "Kata 'kapal' dalam Bahasa Batak adalah...", "Dalam Bahasa Batak, kapal disebut 'hopal' yang merujuk pada kendaraan air besar.", []Opt{{"Parau", false}, {"Hopal", true}, {"Bontean", false}, {"Topi", false}}},
+		{5, "Apa arti 'sian' dalam Bahasa Batak?", "'Sian' dalam Bahasa Batak berarti dari atau berasal dari.", []Opt{{"Ke", false}, {"Dari", true}, {"Di", false}, {"Untuk", false}}},
+		{5, "Kata 'tu' dalam Bahasa Batak berarti...", "'Tu' dalam Bahasa Batak berarti ke atau menuju.", []Opt{{"Dari", false}, {"Ke", true}, {"Di", false}, {"Dan", false}}},
+		{5, "Pilih kata untuk 'berangkat' dalam Bahasa Batak:", "'Borhat' dalam Bahasa Batak berarti berangkat atau pergi.", []Opt{{"Ro", false}, {"Borhat", true}, {"Mago", false}, {"Sae", false}}},
+		{5, "Kata 'jolma' dalam Bahasa Batak berarti...", "'Jolma' dalam Bahasa Batak berarti orang atau manusia.", []Opt{{"Hewan", false}, {"Orang/Manusia", true}, {"Tumbuhan", false}, {"Benda", false}}},
+		{5, "Apa arti 'torop jolma' dalam Bahasa Batak?", "'Torop jolma' dalam Bahasa Batak berarti banyak orang karena torop = banyak dan jolma = orang.", []Opt{{"Sedikit orang", false}, {"Banyak orang", true}, {"Satu orang", false}, {"Orang asing", false}}},
+		{5, "Kata 'paidaida' dalam Bahasa Batak berarti...", "'Paidaida' dalam Bahasa Batak berarti melihat-lihat atau menonton.", []Opt{{"Makan-makan", false}, {"Melihat-lihat", true}, {"Jalan-jalan", false}, {"Beli-beli", false}}},
+		{5, "Pilih kata untuk 'pulang' dalam Bahasa Batak:", "'Mulak' dalam Bahasa Batak berarti pulang atau kembali.", []Opt{{"Borhat", false}, {"Mulak", true}, {"Ro", false}, {"Sae", false}}},
+
+		// ══════════════════════════════════════════════════════
+		// LOKASI 6: TOMOK (15 soal)
+		// ══════════════════════════════════════════════════════
+		{6, "Apa Bahasa Indonesia dari kata 'bontean'?", "'Bontean' dalam Bahasa Batak berarti pelabuhan.", []Opt{{"Pelabuhan", true}, {"Hopal", false}, {"Dermaga", false}, {"Stasiun", false}}},
+		{6, "'Laho maredang-edang tu Tomok'. Arti 'maredang-edang' adalah...", "'Maredang-edang' dalam Bahasa Batak berarti jalan-jalan atau berwisata santai.", []Opt{{"Jalan-jalan", true}, {"Lari-lari", false}, {"Berenang", false}, {"Menyeberang", false}}},
+		{6, "'Torop halak martiga-tiga di Tomok'. Kata 'martiga-tiga' berarti...", "'Martiga-tiga' dalam Bahasa Batak berarti berdagang.", []Opt{{"Bernyanyi", false}, {"Berdagang", true}, {"Bertani", false}, {"Bersepeda", false}}},
+		{6, "'Godang halak paidaida Sigale-gale'. Godang sama artinya dengan...", "'Godang' dalam Bahasa Batak berarti banyak, sama dengan kata bahat.", []Opt{{"Santopik", false}, {"Saotik", false}, {"Otik", false}, {"Bahat", true}}},
+		{6, "'Rarat hian parbornginan di Tomok'. Arti 'parbornginan' adalah...", "'Parbornginan' dalam Bahasa Batak berarti hotel atau tempat menginap.", []Opt{{"Gubuk", false}, {"Rumah", false}, {"Hotel", true}, {"Restoran", false}}},
+		{6, "Di Tomok terdapat makam raja pertama yang disebut...", "Makam Raja Sidabutar adalah situs bersejarah di Tomok yang berusia lebih dari 500 tahun.", []Opt{{"Raja Sirait", false}, {"Raja Sidabutar", true}, {"Raja Simanjuntak", false}, {"Raja Sinaga", false}}},
+		{6, "Pertunjukan boneka kayu yang bisa menari di Tomok disebut...", "Sigale-gale adalah pertunjukan boneka kayu khas Batak Toba yang bisa menari mengikuti musik.", []Opt{{"Gondang", false}, {"Sigale-gale", true}, {"Tortor", false}, {"Gondang Sabangunan", false}}},
+		{6, "Kata 'marbaju' dalam Bahasa Batak berarti...", "'Marbaju' dalam Bahasa Batak berarti memakai baju atau berpakaian.", []Opt{{"Membeli baju", false}, {"Memakai baju", true}, {"Mencuci baju", false}, {"Menjahit baju", false}}},
+		{6, "Pilih kata untuk 'belanja' dalam Bahasa Batak:", "'Mamboli' dalam Bahasa Batak berarti membeli atau berbelanja.", []Opt{{"Mamboli", true}, {"Mangallang", false}, {"Mangan", false}, {"Mandok", false}}},
+		{6, "Apa arti 'souvenir' dalam konteks budaya Batak?", "Souvenir khas Batak di Tomok meliputi ulos, patung kayu, dan berbagai kerajinan tangan tradisional.", []Opt{{"Makanan khas", false}, {"Kerajinan tangan khas", true}, {"Alat musik", false}, {"Pakaian adat", false}}},
+		{6, "Kata 'na sae' dalam Bahasa Batak berarti...", "'Na sae' dalam Bahasa Batak berarti sudah selesai atau sudah habis.", []Opt{{"Belum selesai", false}, {"Sudah selesai", true}, {"Sedang berjalan", false}, {"Belum mulai", false}}},
+		{6, "Pilih kata untuk 'enak' dalam Bahasa Batak:", "'Tabo' dalam Bahasa Batak berarti enak atau lezat.", []Opt{{"Tabo", true}, {"Bura", false}, {"Oto", false}, {"Malo", false}}},
+		{6, "Kata 'na uli' dalam Bahasa Batak berarti...", "'Na uli' dalam Bahasa Batak berarti yang indah atau cantik.", []Opt{{"Yang jelek", false}, {"Yang indah", true}, {"Yang besar", false}, {"Yang kecil", false}}},
+		{6, "Apa arti 'marsijalangan' dalam Bahasa Batak?", "'Marsijalangan' dalam Bahasa Batak berarti saling mengunjungi.", []Opt{{"Saling bertengkar", false}, {"Saling mengunjungi", true}, {"Saling berjauhan", false}, {"Saling berdiam", false}}},
+		{6, "Kata 'hita' dalam Bahasa Batak berarti...", "'Hita' dalam Bahasa Batak berarti kita semua (inklusif termasuk lawan bicara).", []Opt{{"Saya", false}, {"Kamu", false}, {"Kita", true}, {"Mereka", false}}},
+
+		// ══════════════════════════════════════════════════════
+		// LOKASI 7: TUKTUK (15 soal)
+		// ══════════════════════════════════════════════════════
+		{7, "'Beta mardalani to Tuktuk'. Arti 'mardalani' adalah...", "'Mardalani' dalam Bahasa Batak berarti jalan-jalan atau berkeliling.", []Opt{{"Jalan-jalan", true}, {"Lari-lari", false}, {"Berenang", false}, {"Menyeberang", false}}},
+		{7, "'Panatapan na uli di topi Tao Toba'. Arti 'panatapan' adalah...", "'Panatapan' dalam Bahasa Batak berarti pemandangan. Tuktuk terkenal dengan panatapan Danau Toba.", []Opt{{"Gunung", false}, {"Sawah", false}, {"Pemandangan", true}, {"Menyeberang", false}}},
+		{7, "'Hami markapal sian Tomok to Tuktuk'. Arti kalimat tersebut adalah...", "Kalimat ini berarti Kami naik kapal dari Tomok ke Tuktuk.", []Opt{{"Kami naik kapal dari Tomok ke Tuktuk", true}, {"Kami bertani dari Tomok ke Tuktuk", false}, {"Kami berjalan dari Tomok ke Tuktuk", false}, {"Kami berkelana ke Tuktuk", false}}},
+		{7, "'Godang halak Batak maredang-edang tu Samosir'. Halak berarti...", "'Halak' dalam Bahasa Batak berarti orang atau jolma.", []Opt{{"Jolma", true}, {"Baoa", false}, {"Borua", false}, {"Hita", false}}},
+		{7, "'Andigan hamu lao tu Tuktuk'. Arti 'andigan' adalah...", "'Andigan' dalam Bahasa Batak berarti kapan. Kalimat ini berarti Kapan kalian pergi ke Tuktuk?", []Opt{{"Mengapa", false}, {"Siapa", false}, {"Kapan", true}, {"Dimana", false}}},
+		{7, "Kata 'topi tao' dalam Bahasa Batak berarti...", "'Topi tao' dalam Bahasa Batak berarti tepi danau atau pinggir danau.", []Opt{{"Tengah danau", false}, {"Tepi danau", true}, {"Bawah danau", false}, {"Atas danau", false}}},
+		{7, "Pilih kata untuk 'melihat' dalam Bahasa Batak:", "'Panatapan' berasal dari kata 'tangkop' atau 'ida' yang berarti melihat.", []Opt{{"Mandok", false}, {"Mangida", true}, {"Mangan", false}, {"Marlange", false}}},
+		{7, "Kata 'hami' dalam Bahasa Batak berarti...", "'Hami' dalam Bahasa Batak berarti kami (eksklusif, tidak termasuk lawan bicara).", []Opt{{"Saya", false}, {"Kamu", false}, {"Kami", true}, {"Kalian", false}}},
+		{7, "Kata 'hamu' dalam Bahasa Batak berarti...", "'Hamu' dalam Bahasa Batak berarti kalian atau kamu semua.", []Opt{{"Saya", false}, {"Kalian", true}, {"Kami", false}, {"Mereka", false}}},
+		{7, "Pilih kata untuk 'senang' dalam Bahasa Batak:", "'Las roha' dalam Bahasa Batak berarti senang atau gembira hati.", []Opt{{"Marsak roha", false}, {"Las roha", true}, {"Dombak roha", false}, {"Tiar roha", false}}},
+		{7, "Apa arti 'tao Toba' dalam Bahasa Batak?", "'Tao Toba' berarti Danau Toba. Tao berarti danau dalam Bahasa Batak.", []Opt{{"Pulau Toba", false}, {"Gunung Toba", false}, {"Danau Toba", true}, {"Sungai Toba", false}}},
+		{7, "Kata 'marsibaen' dalam Bahasa Batak berarti...", "'Marsibaen' dalam Bahasa Batak berarti bekerja sama atau saling membantu.", []Opt{{"Bersaing", false}, {"Bekerja sama", true}, {"Bermusuhan", false}, {"Berpisah", false}}},
+		{7, "Pilih kata untuk 'foto' dalam Bahasa Batak:", "Dalam Bahasa Batak modern, foto disebut 'foto' tapi tempat berfoto disebut 'paidaida' (tempat melihat).", []Opt{{"Paidaida", false}, {"Foto", true}, {"Panatapan", false}, {"Pandaida", false}}},
+		{7, "Kata 'di jolo ni' dalam Bahasa Batak berarti...", "'Di jolo ni' dalam Bahasa Batak berarti di depan sesuatu.", []Opt{{"Di belakang", false}, {"Di depan", true}, {"Di samping", false}, {"Di atas", false}}},
+		{7, "Pilih kata untuk 'cantik' dalam Bahasa Batak:", "'Uli' atau 'uli rupana' dalam Bahasa Batak berarti cantik atau tampan.", []Opt{{"Uli", true}, {"Malo", false}, {"Timbo", false}, {"Godang", false}}},
+
+		// ══════════════════════════════════════════════════════
+		// LOKASI 8: BATUHODA (15 soal)
+		// ══════════════════════════════════════════════════════
+		{8, "Kata 'saksang' dalam aksara Batak adalah...", "Saksang ditulis dalam aksara Batak sebagai ᯘᯐᯘᯉᯱ.", []Opt{{"ᯔᯘᯰᯘᯰ", false}, {"ᯘᯘᯔᯰᯘ", false}, {"ᯘᯘᯘᯰ", false}, {"ᯘᯐᯘᯉᯱ", true}}},
+		{8, "Kata 'pakaian' (amon-amon) dalam aksara Batak adalah...", "'Amon-amon' ditulis dalam aksara Batak sebagai ᯀᯔ᯲ᯀᯔ᯲.", []Opt{{"ᯀᯔ᯲ᯀᯔ᯲", true}, {"ᯀᯝᯀᯝ", false}, {"ᯀᯉ᯲ᯀᯉ᯲", false}, {"ᯀᯔᯰᯀᯔᯰ", false}}},
+		{8, "Aksara Batak terdiri dari huruf-huruf yang disebut...", "Huruf dalam aksara Batak disebut 'surat'. Ada 19 induk surat dalam aksara Batak Toba.", []Opt{{"Aksara", false}, {"Surat", true}, {"Huruf", false}, {"Karakter", false}}},
+		{8, "Tanda untuk menghilangkan bunyi vokal 'a' dalam aksara Batak disebut...", "Tanda bunuh atau pangolat digunakan untuk menghilangkan bunyi vokal a pada akhir suku kata.", []Opt{{"Pangolat", true}, {"Anak surat", false}, {"Induk surat", false}, {"Pangkat", false}}},
+		{8, "Batuhoda berasal dari kata Batak Batu dan Hoda yang berarti...", "'Hoda' dalam Bahasa Batak berarti kuda. Batuhoda dinamai karena ada batu menyerupai kuda.", []Opt{{"Batu karang", false}, {"Batu dan kuda", true}, {"Batu hitam", false}, {"Batu besar", false}}},
+		{8, "Berapa jumlah induk aksara (huruf utama) dalam aksara Batak Toba?", "Aksara Batak Toba memiliki 19 huruf induk yang masing-masing bervokal a secara default.", []Opt{{"15", false}, {"17", false}, {"19", true}, {"21", false}}},
+		{8, "Anak surat '-i' dalam aksara Batak digunakan untuk...", "Anak surat -i dalam aksara Batak ditambahkan ke huruf induk untuk mengubah bunyi vokal menjadi i.", []Opt{{"Menambah bunyi a", false}, {"Menambah bunyi i", true}, {"Menambah bunyi u", false}, {"Menambah bunyi e", false}}},
+		{8, "Kata 'indahan' (nasi) dalam aksara Batak adalah...", "Indahan ditulis dalam aksara Batak sebagai ᯤᯉᯑᯂᯉᯉᯱ.", []Opt{{"ᯤᯉᯑᯂᯉᯉᯱ", true}, {"ᯉᯑᯂᯉ", false}, {"ᯤᯉᯑᯂ", false}, {"ᯉᯑᯂᯉᯉ", false}}},
+		{8, "Aksara Batak Toba termasuk dalam kategori aksara...", "Aksara Batak Toba adalah abugida, yaitu sistem tulisan yang setiap huruf mewakili konsonan dengan vokal inheren.", []Opt{{"Alfabet", false}, {"Abugida", true}, {"Abjad", false}, {"Logografi", false}}},
+		{8, "Kata 'mangan' (makan) dalam aksara Batak adalah...", "Mangan ditulis dalam aksara Batak dengan kombinasi induk surat ma-nga-n.", []Opt{{"ᯔ ᯑ ᯔ", true}, {"ᯔ ᯉ ᯔ", false}, {"ᯔ ᯉ ᯑ", false}, {"ᯔ ᯑ ᯉ", false}}},
+		{8, "Penulisan 'Batuhoda' dalam aksara Batak adalah...", "Batuhoda dalam aksara Batak ditulis dengan kombinasi ba-tu-ho-da menggunakan anak surat -u dan -o.", []Opt{{"ᯅ ᯗᯂᯑ", true}, {"ᯅ ᯗ ᯂ ᯑ", false}, {"ᯅᯗᯂᯑ", false}, {"ᯅ ᯗᯂ ᯑ", false}}},
+		{8, "Anak surat '-u' dalam aksara Batak digunakan untuk...", "Anak surat -u ditambahkan ke huruf induk untuk mengubah bunyi vokal menjadi u.", []Opt{{"Menambah bunyi a", false}, {"Menambah bunyi i", false}, {"Menambah bunyi u", true}, {"Menambah bunyi e", false}}},
+		{8, "Kata 'lappet' dalam aksara Batak adalah...", "Lappet ditulis dalam aksara Batak sebagai ᯖᯇᯇᯄ᯲.", []Opt{{"ᯂᯇᯇ᯲", false}, {"ᯂᯇᯇ᯲ᯖ", false}, {"ᯖᯇᯇᯄ᯲", true}, {"ᯂᯇᯇᯖ᯲", false}}},
+		{8, "Aksara Batak ditulis dari arah...", "Aksara Batak ditulis dari kiri ke kanan, sama seperti tulisan Latin.", []Opt{{"Kanan ke kiri", false}, {"Kiri ke kanan", true}, {"Atas ke bawah", false}, {"Bawah ke atas", false}}},
+		{8, "Kata 'dali' dalam aksara Batak adalah...", "Dali ditulis dalam aksara Batak sebagai ᯑᯖᯤ.", []Opt{{"ᯑᯖᯤ", true}, {"ᯑᯂᯤ", false}, {"ᯑᯖᯪ", false}, {"ᯑᯖᯮ", false}}},
+
+		// ══════════════════════════════════════════════════════
+		// LOKASI 9: TANAH PONGGOL (15 soal)
+		// ══════════════════════════════════════════════════════
+		{9, "Pesta pernikahan dalam adat Batak Toba...", "Pesta pernikahan adat Batak Toba terdiri dari lebih dari satu tahapan mulai dari pemberkatan hingga ulaon sadari.", []Opt{{"Merupakan acara dukacita", false}, {"Dirayakan selama tiga hari berturut-turut", false}, {"Terdiri dari lebih dari satu tahapan", true}, {"Harus diadakan pada akhir tahun", false}}},
+		{9, "Jika pengantin laki-laki dari keluarga Sinaga, maka...", "Dalam adat Batak, pihak paranak adalah pihak laki-laki. Jika pengantin laki-laki bermarga Sinaga, maka paranak bermarga Sinaga.", []Opt{{"Pihak parboru bermarga Sinaga", false}, {"Pihak parboru tidak bermarga", false}, {"Pihak paranak bermarga Sinaga", true}, {"Pihak paranak tidak bermarga", false}}},
+		{9, "Hasapi adalah alat musik seperti...", "Hasapi adalah alat musik tradisional Batak Toba yang bentuknya menyerupai gitar kecil dengan dua senar.", []Opt{{"Gitar kecil", true}, {"Drum", false}, {"Piano", false}, {"Seruling", false}}},
+		{9, "Hasapi dimainkan dengan cara...", "Hasapi dimainkan dengan cara dipetik menggunakan jari, menghasilkan suara yang lembut.", []Opt{{"Digesek", false}, {"Dipukul", false}, {"Ditiup", false}, {"Dipetik", true}}},
+		{9, "Dalam Bahasa Batak, teras rumah disebut...", "'Di joloni jabu' dalam Bahasa Batak berarti di teras rumah atau di depan rumah.", []Opt{{"Di bagas", false}, {"Di sikkola", false}, {"Di joloni jabu", true}, {"Di kamar", false}}},
+		{9, "Apa yang dimaksud dengan 'martumpol' dalam adat Batak?", "Martumpol adalah upacara pertunangan secara adat Batak sebelum pernikahan dilaksanakan.", []Opt{{"Pesta setelah menikah", false}, {"Upacara pertunangan", true}, {"Upacara kematian", false}, {"Penabalan marga", false}}},
+		{9, "Apa arti 'parboru' dalam adat Batak?", "Parboru adalah pihak perempuan atau keluarga pengantin perempuan dalam adat pernikahan Batak.", []Opt{{"Pihak laki-laki", false}, {"Pihak perempuan", true}, {"Orang tua pengantin", false}, {"Pengantin baru", false}}},
+		{9, "Apa arti 'paranak' dalam adat Batak?", "Paranak adalah pihak laki-laki atau keluarga pengantin laki-laki dalam adat pernikahan Batak.", []Opt{{"Pihak perempuan", false}, {"Pihak laki-laki", true}, {"Keluarga mertua", false}, {"Tamu undangan", false}}},
+		{9, "Upacara 'marhata sinamot' dalam adat Batak berkaitan dengan...", "Marhata sinamot adalah proses pembicaraan mas kawin antara keluarga pengantin laki-laki dan perempuan.", []Opt{{"Pembagian ulos", false}, {"Pembicaraan mas kawin", true}, {"Penabalan gelar", false}, {"Pesta setelah menikah", false}}},
+		{9, "Kata 'pasu-pasu' dalam adat Batak berarti...", "'Pasu-pasu' dalam adat Batak berarti pemberkatan atau doa restu.", []Opt{{"Hukuman adat", false}, {"Pemberkatan/Doa restu", true}, {"Larangan adat", false}, {"Pembagian warisan", false}}},
+		{9, "Jembatan Tanah Ponggol menghubungkan...", "Jembatan Tanah Ponggol menghubungkan daratan Kabupaten Samosir dengan Pulau Samosir.", []Opt{{"Parapat dengan Tomok", false}, {"Daratan dengan Pulau Samosir", true}, {"Ajibata dengan Tuktuk", false}, {"Samosir dengan Sumatera", false}}},
+		{9, "Kata 'marsibuha-buhai' dalam Bahasa Batak berarti...", "'Marsibuha-buhai' dalam Bahasa Batak berarti bergotong royong atau bekerja bersama-sama.", []Opt{{"Berdiam diri", false}, {"Bergotong royong", true}, {"Berselisih paham", false}, {"Berpencar", false}}},
+		{9, "Dalam adat Batak, 'tudu-tudu sipanganon' adalah...", "Tudu-tudu sipanganon adalah sajian makanan adat yang disajikan dalam upacara pernikahan Batak.", []Opt{{"Tarian adat", false}, {"Sajian makanan adat", true}, {"Pemberian ulos", false}, {"Nyanyian adat", false}}},
+		{9, "Kata 'dengke' dalam Bahasa Batak berarti...", "'Dengke' dalam Bahasa Batak berarti ikan. Dengke simudur-udur adalah ikan yang disajikan dalam upacara adat.", []Opt{{"Ayam", false}, {"Ikan", true}, {"Daging", false}, {"Sayur", false}}},
+		{9, "Apa arti 'manjalo tumpak' dalam adat pernikahan Batak?", "'Manjalo tumpak' berarti menerima sumbangan atau pemberian dari tamu dalam upacara adat.", []Opt{{"Membagikan makanan", false}, {"Menerima sumbangan", true}, {"Memberikan ulos", false}, {"Melakukan tarian", false}}},
+
+		// ══════════════════════════════════════════════════════
+		// LOKASI 10: SIBEA-BEA (15 soal)
+		// ══════════════════════════════════════════════════════
+		{10, "Nama alat musik tiup yang sering dimainkan di Sibea-bea adalah...", "Tulila adalah alat musik tiup tradisional Batak Toba yang terbuat dari bambu.", []Opt{{"Tulila", true}, {"Hasapi", false}, {"Taganing", false}, {"Sarune", false}}},
+		{10, "Cara memainkan Tulila adalah dengan...", "Tulila dimainkan dengan cara ditiup. Ini adalah alat musik aerophone Batak Toba.", []Opt{{"Digesek", false}, {"Dipukul", false}, {"Dipetik", false}, {"Ditiup", true}}},
+		{10, "Suara dari Tulila terdengar seperti...", "Tulila menghasilkan suara yang lembut dan penuh perasaan, cocok untuk acara sakral.", []Opt{{"Lembut dan penuh perasaan", true}, {"Keras dan ramai", false}, {"Seperti drum", false}, {"Seperti peluit", false}}},
+		{10, "Tulila biasa dimainkan pada saat...", "Tulila biasanya dimainkan dalam upacara atau acara-acara khusus adat Batak Toba.", []Opt{{"Upacara atau acara khusus", true}, {"Olahraga", false}, {"Sekolah", false}, {"Makan malam", false}}},
+		{10, "Alat musik Tulila berasal dari daerah...", "Tulila adalah alat musik tradisional dari daerah Batak Toba di Sumatera Utara.", []Opt{{"Bali", false}, {"Batak", true}, {"Jawa", false}, {"Kalimantan", false}}},
+		{10, "Patung Yesus Kristus di Sibea-bea memiliki tinggi...", "Patung Yesus di Sibea-bea memiliki tinggi 61 meter, menjadikannya salah satu patung Yesus tertinggi di Asia Tenggara.", []Opt{{"41 meter", false}, {"51 meter", false}, {"61 meter", true}, {"71 meter", false}}},
+		{10, "Sibea-bea merupakan destinasi ikonik di...", "Sibea-bea terletak di Pulau Samosir, salah satu destinasi favorit wisatawan domestik dan internasional.", []Opt{{"Pulau Nias", false}, {"Pulau Samosir", true}, {"Kota Medan", false}, {"Kota Parapat", false}}},
+		{10, "Apa nama ansambel musik tradisional Batak Toba yang paling terkenal?", "Gondang Sabangunan adalah ansambel musik tradisional Batak Toba yang lengkap dengan berbagai alat musik.", []Opt{{"Gondang Sabangunan", true}, {"Gondang Hasapi", false}, {"Taganing Ensemble", false}, {"Sarune Band", false}}},
+		{10, "Alat musik Batak yang terbuat dari tanduk kerbau adalah...", "Sarune Bolon adalah alat tiup tradisional Batak yang terbuat dari tanduk kerbau dengan 4 lubang.", []Opt{{"Taganing", false}, {"Sarune Bolon", true}, {"Hasapi", false}, {"Gondang", false}}},
+		{10, "Garantung dalam musik Batak Toba mirip dengan alat musik modern...", "Garantung mirip xylophone karena terdiri dari bilah kayu yang dipukul untuk menghasilkan nada.", []Opt{{"Drum", false}, {"Xylophone", true}, {"Gitar", false}, {"Piano", false}}},
+		{10, "Apa fungsi Ogung dalam ansambel musik Batak?", "Ogung berfungsi sebagai pemberi irama dasar yang tetap (ritme) dalam ansambel musik Batak Toba.", []Opt{{"Memainkan melodi", false}, {"Memberi irama dasar", true}, {"Bernyanyi", false}, {"Memimpin ansambel", false}}},
+		{10, "Hesek dalam musik Batak terbuat dari...", "Hesek adalah alat musik sederhana Batak yang terbuat dari botol dan logam kecil untuk menambah semangat musik.", []Opt{{"Botol dan logam kecil", true}, {"Kayu dan rotan", false}, {"Bambu dan daun", false}, {"Kulit hewan", false}}},
+		{10, "Kata 'gondang' dalam Bahasa Batak berarti...", "'Gondang' dalam Bahasa Batak berarti gendang atau musik tradisional Batak.", []Opt{{"Suling", false}, {"Gendang/Musik tradisional", true}, {"Tari", false}, {"Nyanyian", false}}},
+		{10, "Alat musik Batak yang dipukul dengan stik dan berfungsi sebagai dirigen adalah...", "Taganing berfungsi sebagai dirigen dalam ansambel Gondang Sabangunan karena penabuhnya yang memimpin irama.", []Opt{{"Ogung", false}, {"Taganing", true}, {"Hesek", false}, {"Gondang", false}}},
+		{10, "Apa arti 'horas' dalam Bahasa Batak?", "'Horas' adalah salam khas Batak Toba yang berarti selamat, sehat, dan sejahtera.", []Opt{{"Selamat tinggal", false}, {"Selamat/Sehat/Sejahtera", true}, {"Terima kasih", false}, {"Maaf", false}}},
 	}
 
 	for _, q := range questions {
-		var cat models.TriviaCategory
-		config.DB.Where("name = ?", q.CategoryName).First(&cat)
-		if cat.ID == 0 {
+		var existing models.LocationQuestion
+		result := config.DB.Where("location_id = ? AND question = ?", q.LocID, q.Question).First(&existing)
+		if result.Error == nil {
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek soal lokasi: %v", result.Error)
 			continue
 		}
 
-		question := models.TriviaQuestion{
-			CategoryID:  cat.ID,
+		newQ := models.LocationQuestion{
+			LocationID:  q.LocID,
 			Question:    q.Question,
 			Explanation: q.Explanation,
 			IsActive:    true,
 		}
-
-		var existing models.TriviaQuestion
-		if config.DB.Where("question = ? AND category_id = ?", q.Question, cat.ID).
-			First(&existing).Error != nil {
-			config.DB.Create(&question)
-			for _, opt := range q.Options {
-				config.DB.Create(&models.TriviaQuestionOption{
-					QuestionID: question.ID,
-					OptionText: opt.Text,
-					IsCorrect:  opt.IsCorrect,
-				})
-			}
+		if err := config.DB.Create(&newQ).Error; err != nil {
+			log.Printf("❌ Gagal seed soal lokasi: %v", err)
+			continue
+		}
+		for _, opt := range q.Opts {
+			config.DB.Create(&models.LocationQuestionOption{
+				QuestionID: newQ.ID,
+				OptionText: opt.Text,
+				IsCorrect:  opt.Correct,
+			})
 		}
 	}
-	log.Println("  ✓ Trivia Questions (50 soal)")
+	log.Println("✅ Location Questions selesai (150 soal)")
 }
 
 // ============================================================
-func seedBattleQuestions() {
-	type qSeed struct {
-		Question    string
-		Explanation string
-		Options     []struct {
-			Text      string
-			IsCorrect bool
+// TRIVIA CATEGORIES
+// ============================================================
+func SeedTriviaCategories() {
+	categories := []models.TriviaCategory{
+		{ID: 1, Name: "Makanan Khas", Description: "Kenali makanan tradisional khas Batak Toba dan bahasanya", DisplayOrder: 1, IsActive: true},
+		{ID: 2, Name: "Pakaian Adat", Description: "Pelajari ulos dan pakaian tradisional Batak Toba", DisplayOrder: 2, IsActive: true},
+		{ID: 3, Name: "Alat Musik Tradisional", Description: "Kenali alat musik khas Batak Toba", DisplayOrder: 3, IsActive: true},
+		{ID: 4, Name: "Adat Istiadat", Description: "Pelajari tradisi dan adat budaya Batak Toba", DisplayOrder: 4, IsActive: true},
+		{ID: 5, Name: "Aksara Batak", Description: "Belajar membaca dan menulis aksara Batak Toba", DisplayOrder: 5, IsActive: true},
+	}
+	for _, c := range categories {
+		var existing models.TriviaCategory
+		result := config.DB.Where("id = ?", c.ID).First(&existing)
+		if result.Error == nil {
+			log.Printf("ℹ️  Trivia Category sudah ada: %s", c.Name)
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek trivia category %s: %v", c.Name, result.Error)
+			continue
+		}
+		if err := config.DB.Create(&c).Error; err != nil {
+			log.Printf("❌ Gagal seed trivia category %s: %v", c.Name, err)
+			continue
 		}
 	}
+	log.Println("✅ Trivia Categories selesai")
+}
 
-	questions := []qSeed{
-		{"Apa nama danau terbesar di Indonesia?",
-			"Danau Toba adalah danau terbesar di Indonesia dan danau vulkanik terbesar di dunia.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Danau Toba", true}, {"Danau Singkarak", false}, {"Danau Maninjau", false}, {"Danau Poso", false}}},
-		{"Pulau apa yang berada di tengah Danau Toba?",
-			"Pulau Samosir adalah pulau terbesar yang berada di tengah Danau Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Samosir", true}, {"Nias", false}, {"Batam", false}, {"Mentawai", false}}},
-		{"Kain tradisional Batak Toba yang terkenal disebut?",
-			"Ulos adalah kain tenun tradisional Batak Toba yang memiliki makna budaya mendalam.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Ulos", true}, {"Batik", false}, {"Songket", false}, {"Tapis", false}}},
-		{"Sistem kekerabatan Batak yang mengatur tiga pilar hubungan disebut?",
-			"Dalihan Na Tolu adalah sistem adat Batak yang mengatur hubungan hula-hula, dongan tubu, dan boru.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Dalihan Na Tolu", true}, {"Marga System", false}, {"Adat Minang", false}, {"Suku Adat", false}}},
-		{"Tari tradisional Batak Toba yang diiringi gondang disebut?",
-			"Tortor adalah tari tradisional Batak Toba yang memiliki makna ritual dan spiritual.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Tortor", true}, {"Saman", false}, {"Kecak", false}, {"Pendet", false}}},
-		{"Ucapan salam khas masyarakat Batak Toba adalah?",
-			"Horas adalah salam khas Batak Toba yang berarti sehat dan sejahtera.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Horas", true}, {"Marhaban", false}, {"Selamat", false}, {"Mejuah-juah", false}}},
-		{"Masakan khas Batak dari ikan mas dengan bumbu kuning disebut?",
-			"Arsik adalah masakan ikan mas khas Batak Toba yang dimasak dengan bumbu andaliman.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Arsik", true}, {"Pindang", false}, {"Saksang", false}, {"Gulai", false}}},
-		{"Alat musik petik tradisional Batak Toba disebut?",
-			"Hasapi adalah alat musik petik tradisional Batak Toba menyerupai kecapi.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Hasapi", true}, {"Sasando", false}, {"Kecapi", false}, {"Siter", false}}},
-		{"Rumah adat Batak Toba disebut?",
-			"Rumah Bolon adalah rumah adat tradisional masyarakat Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Rumah Bolon", true}, {"Rumah Gadang", false}, {"Joglo", false}, {"Tongkonan", false}}},
-		{"Rempah khas Batak dengan rasa getir yang tumbuh di kawasan Toba?",
-			"Andaliman adalah rempah khas Batak Toba yang sering digunakan dalam masakan arsik dan saksang.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Andaliman", true}, {"Kemiri", false}, {"Lada", false}, {"Ketumbar", false}}},
-		{"Boneka kayu yang bisa bergerak dalam upacara adat Batak disebut?",
-			"Sigale-gale adalah patung boneka kayu yang digerakkan dalam upacara adat Batak Toba.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Sigale-gale", true}, {"Wayang", false}, {"Ondel-ondel", false}, {"Barong", false}}},
-		{"Festival budaya tahunan di kawasan Danau Toba disebut?",
-			"Festival Danau Toba adalah event budaya tahunan yang mempromosikan kekayaan budaya Batak.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Festival Danau Toba", true}, {"Pesta Rakyat", false}, {"Karnaval Toba", false}, {"Pekan Budaya", false}}},
-		{"UNESCO mengakui Danau Toba sebagai?",
-			"Danau Toba diakui UNESCO sebagai Global Geopark pada tahun 2020.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Global Geopark", true}, {"Warisan Dunia", false}, {"Biosfer", false}, {"Taman Nasional", false}}},
-		{"Makam Raja Sidabutar yang bersejarah terletak di?",
-			"Makam Raja Sidabutar yang berusia 500 tahun terletak di Desa Tomok, Samosir.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Desa Tomok", true}, {"Parapat", false}, {"Balige", false}, {"Tarutung", false}}},
-		{"Upacara pemindahan tulang leluhur Batak disebut?",
-			"Mangongkal Holi adalah ritual sakral pemindahan tulang leluhur ke tempat yang lebih mulia.",
-			[]struct {
-				Text      string
-				IsCorrect bool
-			}{{"Mangongkal Holi", true}, {"Saur Matua", false}, {"Mardebata", false}, {"Tortor", false}}},
+// ============================================================
+// TRIVIA QUESTIONS (10 soal per kategori = 50 total)
+// ============================================================
+func SeedTriviaQuestions() {
+	type Opt struct {
+		Text    string
+		Correct bool
+	}
+	type Q struct {
+		CatID       uint
+		Question    string
+		Explanation string
+		Opts        []Opt
+	}
+
+	questions := []Q{
+		// ── KATEGORI 1: MAKANAN KHAS (10 soal) ───────────────
+		{1, "Apa makanan Batak berbahan dasar ikan mas yang tidak dimasak dengan api?", "Naniura adalah hidangan ikan mas khas Batak Toba yang dimasak tanpa api menggunakan bumbu dan asam jeruk.", []Opt{{"Saksang", false}, {"Arsik", false}, {"Naniura", true}, {"Lappet", false}}},
+		{1, "Dali ni horbo terbuat dari...", "Dali ni horbo adalah keju khas Batak Toba yang terbuat dari susu kerbau yang dipadatkan.", []Opt{{"Susu kerbau", true}, {"Susu sapi", false}, {"Kelapa", false}, {"Air jeruk", false}}},
+		{1, "Makanan berbahan beras dan parutan kelapa disebut...", "Itak gurgur adalah makanan tradisional Batak Toba berbahan beras dan parutan kelapa.", []Opt{{"Itak gurgur", true}, {"Ombus-ombus", false}, {"Na tinombur", false}, {"Lappet", false}}},
+		{1, "Ombus-ombus biasanya dimakan saat...", "Ombus-ombus dihidangkan saat pesta adat Batak Toba.", []Opt{{"Ujian", false}, {"Pesta adat", true}, {"Upacara kematian", false}, {"Acara resmi", false}}},
+		{1, "Lappet biasanya dibungkus dengan...", "Lappet adalah kue tradisional Batak yang dibungkus dengan daun pisang.", []Opt{{"Daun singkong", false}, {"Daun kelapa", false}, {"Daun pisang", true}, {"Daun sirih", false}}},
+		{1, "Makanan khas Batak berbahan daging dan darah adalah...", "Saksang adalah masakan khas Batak menggunakan daging dengan bumbu darah dan rempah khas.", []Opt{{"Naniura", false}, {"Arsik", false}, {"Saksang", true}, {"Itak gurgur", false}}},
+		{1, "Apa arti dari kalimat 'Male au'?", "'Male au' berarti Saya lapar dalam Bahasa Batak.", []Opt{{"Saya kenyang", false}, {"Saya lapar", true}, {"Saya haus", false}, {"Saya mengantuk", false}}},
+		{1, "Kalimat Bahasa Batak untuk 'Saya mau makan' adalah...", "'Naeng mangan au' artinya Saya mau makan.", []Opt{{"Sai ro au mangan", false}, {"Naeng mangan au", true}, {"Mangan ho do", false}, {"Au do manang", false}}},
+		{1, "Apa nama mie khas Batak yang disebut 'spaghetti Batak'?", "Mie Gomak adalah mie khas Batak Toba yang tebal dan panjang seperti spaghetti.", []Opt{{"Mie Ayam", false}, {"Mie Aceh", false}, {"Mie Gomak", true}, {"Mie Saksang", false}}},
+		{1, "'Butong au' dalam Bahasa Batak berarti...", "'Butong' berarti kenyang. Butong au artinya Saya kenyang.", []Opt{{"Saya lapar", false}, {"Saya haus", false}, {"Saya kenyang", true}, {"Saya tidur", false}}},
+
+		// ── KATEGORI 2: PAKAIAN ADAT (10 soal) ───────────────
+		{2, "Apa arti dari kata 'ulos'?", "Ulos adalah kain tenun tradisional khas Batak Toba yang memiliki nilai budaya dan spiritual tinggi.", []Opt{{"Topi", false}, {"Sarung", false}, {"Kain tradisional", true}, {"Sepatu", false}}},
+		{2, "Kalimat Bahasa Batak untuk 'Saya memakai ulos' adalah...", "'Au Mamakke Ulos' berarti Saya memakai ulos.", []Opt{{"Au do mangulosi", false}, {"Mangulosi do ho", false}, {"Au Mamakke Ulos", true}, {"Sai mangulosi ho", false}}},
+		{2, "Ulos yang dipakai saat pernikahan adat Batak disebut...", "Ulos Ragi Hotang adalah jenis ulos yang paling sering digunakan dalam upacara pernikahan adat Batak Toba.", []Opt{{"Ulos Sadum", false}, {"Ulos Ragi Hotang", true}, {"Ulos Mangiring", false}, {"Ulos Tumtuman", false}}},
+		{2, "Apa fungsi utama ulos dalam upacara adat Batak?", "Ulos berfungsi sebagai simbol kasih sayang dan restu dari pemberi kepada penerima.", []Opt{{"Pelindung dari hujan", false}, {"Hiasan rumah", false}, {"Simbol kasih dan restu", true}, {"Bahan pertunjukan seni", false}}},
+		{2, "Siapa yang biasanya memberikan ulos dalam acara adat (mangulosi)?", "Dalam adat Batak ulos diberikan oleh orang yang lebih tua kepada yang lebih muda.", []Opt{{"Anak kepada orang tua", false}, {"Tamu kepada tuan rumah", false}, {"Orang yang lebih tua kepada yang lebih muda", true}, {"Teman kepada sahabat", false}}},
+		{2, "Ulos Ragi Hotang melambangkan...", "Ulos Ragi Hotang melambangkan persatuan dan kekuatan.", []Opt{{"Kesuburan", false}, {"Keindahan", false}, {"Persatuan dan kekuatan", true}, {"Kekayaan", false}}},
+		{2, "Aksesoris kepala tradisional pria Batak disebut...", "Sortali adalah ikat kepala tradisional khas pria Batak Toba dalam berbagai upacara adat.", []Opt{{"Sortali", true}, {"Tali-tali", false}, {"Songket", false}, {"Sarung", false}}},
+		{2, "Dalam struktur adat Batak, pemberi ulos disebut...", "Hula-hula adalah kelompok yang memberikan ulos kepada boru dalam adat Batak.", []Opt{{"Boru", false}, {"Hula-hula", true}, {"Dongan tubu", false}, {"Pariban", false}}},
+		{2, "Mengapa ulos tidak boleh dipakai sembarangan?", "Ulos memiliki nilai sakral dan spiritual yang tinggi, penggunaannya terikat dengan konteks upacara adat.", []Opt{{"Karena mudah rusak", false}, {"Karena ulos memiliki nilai sakral dan digunakan dalam upacara adat", true}, {"Karena hanya boleh dipakai oleh raja", false}, {"Karena hanya wanita yang boleh memakainya", false}}},
+		{2, "Ulos Batak dibuat menggunakan alat tradisional yang disebut...", "Sorha adalah alat tenun tradisional Batak yang digunakan untuk membuat ulos.", []Opt{{"Tenun ikat", false}, {"Gorga", false}, {"Sorha", true}, {"Giling pahat", false}}},
+
+		// ── KATEGORI 3: ALAT MUSIK (10 soal) ─────────────────
+		{3, "Taganing dimainkan dengan cara...", "Taganing dimainkan dengan dipukul stik dan berfungsi sebagai pembawa melodi dan ritme.", []Opt{{"Dipukul dengan stik", true}, {"Ditiup seperti seruling", false}, {"Dipetik seperti gitar", false}, {"Digesek seperti biola", false}}},
+		{3, "Taganing terdiri dari berapa gendang?", "Taganing terdiri dari 5 gendang berukuran berbeda.", []Opt{{"3", false}, {"5", true}, {"7", false}, {"9", false}}},
+		{3, "Siapa yang disebut 'dirigen' di ansambel Gondang Sabangunan?", "Penabuh Taganing berperan sebagai dirigen karena menentukan tempo dan irama musik.", []Opt{{"Peniup Sarune", false}, {"Penabuh Taganing", true}, {"Penabuh Ogung", false}, {"Penabuh Hasapi", false}}},
+		{3, "Bahan utama Sarune Bolon adalah...", "Sarune Bolon adalah alat tiup tradisional Batak yang terbuat dari tanduk kerbau.", []Opt{{"Tanduk kerbau", true}, {"Bambu", false}, {"Kayu nangka", false}, {"Kulit sapi", false}}},
+		{3, "Sarune Bolon memiliki lubang sebanyak...", "Sarune Bolon memiliki 4 lubang untuk mengatur nada.", []Opt{{"2", false}, {"4", true}, {"6", false}, {"8", false}}},
+		{3, "Hasapi adalah alat musik seperti...", "Hasapi adalah alat musik tradisional Batak yang menyerupai gitar kecil dengan dua senar.", []Opt{{"Gitar kecil", true}, {"Drum", false}, {"Piano", false}, {"Seruling", false}}},
+		{3, "Ogung terbuat dari bahan apa?", "Ogung atau gong adalah alat musik Batak yang terbuat dari logam kuningan.", []Opt{{"Logam (kuningan)", true}, {"Kayu", false}, {"Bambu", false}, {"Plastik", false}}},
+		{3, "Garantung dimainkan dengan cara...", "Garantung dimainkan dengan dipukul menggunakan bilah kayu kecil dan mirip xylophone.", []Opt{{"Ditiup", false}, {"Dipetik", false}, {"Dipukul dengan bilah kayu", true}, {"Digesek", false}}},
+		{3, "Cara memainkan Tulila adalah dengan...", "Tulila adalah alat musik tiup tradisional Batak Toba yang ditiup.", []Opt{{"Digesek", false}, {"Dipukul", false}, {"Dipetik", false}, {"Ditiup", true}}},
+		{3, "Hesek terbuat dari bahan...", "Hesek adalah alat musik sederhana Batak Toba yang terbuat dari botol dan logam kecil.", []Opt{{"Botol dan logam kecil", true}, {"Kayu dan tali", false}, {"Plastik dan kertas", false}, {"Daun dan bambu", false}}},
+
+		// ── KATEGORI 4: ADAT ISTIADAT (10 soal) ──────────────
+		{4, "Apa arti dari 'Dalihan Na Tolu' dalam adat Batak?", "Dalihan Na Tolu berarti tiga tungku yang melambangkan tiga pilar relasi sosial: hula-hula, dongan tubu, dan boru.", []Opt{{"Tiga macam ulos", false}, {"Tiga jenis makanan", false}, {"Tiga pilar relasi sosial", true}, {"Tiga generasi marga", false}}},
+		{4, "Siapakah yang disebut 'hula-hula' dalam adat Batak?", "Hula-hula adalah keluarga dari pihak istri yang sangat dihormati dalam adat Batak.", []Opt{{"Saudara dari pihak ibu", false}, {"Saudara ayah", false}, {"Keluarga dari istri", true}, {"Anak laki-laki", false}}},
+		{4, "Istilah 'martumpol' berarti...", "Martumpol adalah upacara pertunangan secara adat Batak sebelum pernikahan.", []Opt{{"Pesta adat", false}, {"Lamaran secara adat Batak", true}, {"Upacara kematian", false}, {"Penabalan marga", false}}},
+		{4, "Apa yang dimaksud dengan 'marhata sinamot'?", "Marhata sinamot adalah proses pembicaraan mas kawin antara keluarga kedua pengantin.", []Opt{{"Penabalan gelar", false}, {"Pembicaraan tentang mas kawin", true}, {"Penaburan bunga", false}, {"Pembagian ulos", false}}},
+		{4, "Apa nama tarian tradisional dalam upacara adat Batak?", "Tor-tor adalah tarian tradisional khas Batak Toba yang ditampilkan dalam berbagai upacara adat.", []Opt{{"Tor-tor", true}, {"Poco-poco", false}, {"Saman", false}, {"Serimpi", false}}},
+		{4, "Upacara adat menggali tulang leluhur dalam Batak disebut...", "Mangokkal holi adalah tradisi menggali kembali tulang belulang leluhur untuk dipindahkan.", []Opt{{"Manortor", false}, {"Mangulosi", false}, {"Mangokkal holi", true}, {"Marunjuk", false}}},
+		{4, "Dalam adat Batak, 'dongan tubu' berarti...", "Dongan tubu berarti teman satu marga atau orang yang lahir dari garis keturunan yang sama.", []Opt{{"Teman kerja", false}, {"Teman sekampung", false}, {"Satu marga dari garis keturunan yang sama", true}, {"Tetangga dekat", false}}},
+		{4, "Dalam pemberian ulos, posisi tangan menunjukkan...", "Posisi tangan dalam pemberian ulos menunjukkan hierarki sosial pemberi dan penerima.", []Opt{{"Keberanian", false}, {"Hierarki sosial", true}, {"Jumlah anggota marga", false}, {"Besar cinta kasih", false}}},
+		{4, "Dalam struktur adat Batak, siapakah 'anak boru'?", "Anak boru atau boru adalah keluarga dari pihak istri yang berperan melayani dalam upacara adat.", []Opt{{"Keluarga dari suami", false}, {"Keluarga dari istri", true}, {"Saudara laki-laki", false}, {"Penari adat", false}}},
+		{4, "Ulos sering digunakan pada saat...", "Ulos digunakan dalam upacara kelahiran, pernikahan, dan kematian dalam adat Batak.", []Opt{{"Bekerja di ladang", false}, {"Makan malam bersama", false}, {"Upacara kelahiran, pernikahan, dan kematian", true}, {"Festival musik", false}}},
+
+		// ── KATEGORI 5: AKSARA BATAK (10 soal) ───────────────
+		{5, "ᯤᯉᯑᯂᯉᯉᯱ dalam aksara Batak dibaca...", "ᯤᯉᯑᯂᯉᯉᯱ dibaca 'indahan' yang berarti nasi.", []Opt{{"Indahan", true}, {"Nasi", false}, {"Inang", false}, {"Indadang", false}}},
+		{5, "ᯘᯐᯘᯉᯱ adalah penulisan aksara Batak untuk kata...", "ᯘᯐᯘᯉᯱ adalah kata saksang dalam aksara Batak.", []Opt{{"Saksang", true}, {"Sarang", false}, {"Saring", false}, {"Sanggar", false}}},
+		{5, "Kata 'ulos' dalam aksara Batak adalah...", "Ulos dalam aksara Batak ditulis sebagai ᯗᯞᯮ.", []Opt{{"ᯖᯮᯞᯮ", false}, {"ᯎᯞᯬ", false}, {"ᯗᯞᯮ", true}, {"ᯂᯞᯬ", false}}},
+		{5, "Kata 'mangulosi' dalam aksara Batak adalah...", "Mangulosi dalam aksara Batak ditulis sebagai ᯔᯉᯮᯞᯬᯘᯪ.", []Opt{{"ᯔᯉᯮᯞᯬᯘᯪ", true}, {"ᯔᯝᯮᯂᯬᯘᯪ", false}, {"ᯔᯝᯂᯬᯘ", false}, {"ᯔᯝᯞᯮᯘᯪ", false}}},
+		{5, "Kata 'sortali' dalam aksara Batak ditulis sebagai...", "Sortali dalam aksara Batak ditulis sebagai ᯘᯬᯒᯖᯞᯪ.", []Opt{{"ᯘᯬᯒᯖᯞᯪ", true}, {"ᯘᯮᯒᯖᯂᯪ", false}, {"ᯘᯬᯒᯂᯪ", false}, {"ᯘᯬᯒᯖᯞ", false}}},
+		{5, "Aksara Batak untuk kata 'parboru' adalah...", "Parboru dalam aksara Batak ditulis sebagai ᯇᯒᯅᯮᯒᯮ.", []Opt{{"ᯇᯒᯅᯮᯒᯮ", true}, {"ᯇᯒᯅᯮᯂᯮ", false}, {"ᯇᯒᯅᯂᯮᯮ", false}, {"ᯇᯒᯅᯜᯮ", false}}},
+		{5, "Kata 'martumpol' dalam aksara Batak adalah...", "Martumpol dalam aksara Batak ditulis sebagai ᯔᯒᯖᯮᯔᯇᯞ᯲.", []Opt{{"ᯔᯒᯖᯮᯔᯇᯞ᯲", true}, {"ᯔᯒᯖᯮᯇᯞ᯲", false}, {"ᯔᯒᯖᯮᯔᯂᯞ᯲", false}, {"ᯔᯒᯖᯮᯇᯂᯞ᯲", false}}},
+		{5, "ᯖᯒᯖᯒ᯲ dalam aksara Batak membentuk kata...", "ᯖᯒᯖᯒ᯲ adalah penulisan kata tortor yaitu tarian tradisional Batak.", []Opt{{"Tortor", true}, {"Tari", false}, {"Tarom", false}, {"Torap", false}}},
+		{5, "Kata 'lappet' dalam aksara Batak adalah...", "Lappet dalam aksara Batak ditulis sebagai ᯖᯇᯇᯄ᯲.", []Opt{{"ᯂᯇᯇ᯲", false}, {"ᯂᯇᯇ᯲ᯖ", false}, {"ᯖᯇᯇᯄ᯲", true}, {"ᯂᯇᯇᯖ᯲", false}}},
+		{5, "ᯎᯑᯂᯂ᯲ adalah penulisan aksara Batak untuk kata...", "ᯎᯑᯂᯂ᯲ adalah kata gomak dalam aksara Batak.", []Opt{{"Gomak", true}, {"Gomar", false}, {"Gomuk", false}, {"Gamok", false}}},
+	}
+
+	for _, q := range questions {
+		var existing models.TriviaQuestion
+		result := config.DB.Where("category_id = ? AND question = ?", q.CatID, q.Question).First(&existing)
+		if result.Error == nil {
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek soal trivia: %v", result.Error)
+			continue
+		}
+
+		newQ := models.TriviaQuestion{
+			CategoryID:  q.CatID,
+			Question:    q.Question,
+			Explanation: q.Explanation,
+			IsActive:    true,
+		}
+		if err := config.DB.Create(&newQ).Error; err != nil {
+			log.Printf("❌ Gagal seed trivia: %v", err)
+			continue
+		}
+		for _, opt := range q.Opts {
+			config.DB.Create(&models.TriviaQuestionOption{
+				QuestionID: newQ.ID,
+				OptionText: opt.Text,
+				IsCorrect:  opt.Correct,
+			})
+		}
+	}
+	log.Println("✅ Trivia Questions selesai (50 soal)")
+}
+
+// ============================================================
+// BATTLE QUESTIONS (15 soal)
+// ============================================================
+func SeedBattleQuestions() {
+	type Opt struct {
+		Text    string
+		Correct bool
+	}
+	type Q struct {
+		Question    string
+		Explanation string
+		Opts        []Opt
+	}
+
+	questions := []Q{
+		{"Apa arti kata 'horas' dalam Bahasa Batak?", "'Horas' adalah salam khas Batak Toba yang berarti selamat, sehat, dan sejahtera.", []Opt{{"Selamat/Sehat", true}, {"Terima kasih", false}, {"Sampai jumpa", false}, {"Maaf", false}}},
+		{"Danau Toba terletak di provinsi...", "Danau Toba adalah danau vulkanik terbesar di dunia yang terletak di Sumatera Utara.", []Opt{{"Sumatera Barat", false}, {"Sumatera Utara", true}, {"Riau", false}, {"Aceh", false}}},
+		{"'Mauliate' dalam Bahasa Batak berarti...", "'Mauliate' adalah ungkapan terima kasih dalam Bahasa Batak Toba.", []Opt{{"Maaf", false}, {"Halo", false}, {"Terima kasih", true}, {"Selamat datang", false}}},
+		{"Apa nama sistem kekerabatan khas Batak yang terdiri dari tiga unsur?", "Dalihan Na Tolu adalah sistem kekerabatan Batak yang terdiri dari hula-hula, dongan tubu, dan boru.", []Opt{{"Dalihan Na Tolu", true}, {"Gorga Batak", false}, {"Adat Sinamot", false}, {"Marga Tiga", false}}},
+		{"Pulau yang berada di tengah Danau Toba disebut...", "Pulau Samosir adalah pulau vulkanik yang berada di tengah Danau Toba.", []Opt{{"Pulau Nias", false}, {"Pulau Samosir", true}, {"Pulau Berhala", false}, {"Pulau Sibolga", false}}},
+		{"Apa yang dimaksud dengan 'marga' dalam adat Batak?", "Marga adalah nama klan atau kelompok kekerabatan patrilineal dalam masyarakat Batak.", []Opt{{"Nama desa", false}, {"Nama klan/garis keturunan", true}, {"Nama gelar bangsawan", false}, {"Nama upacara adat", false}}},
+		{"Alat musik Batak yang terdiri dari 5 gendang adalah...", "Taganing adalah gendang khas Batak Toba yang terdiri dari 5 buah gendang berbeda ukuran.", []Opt{{"Gondang", false}, {"Taganing", true}, {"Ogung", false}, {"Sarune", false}}},
+		{"Arsik adalah masakan Batak berbahan dasar...", "Arsik adalah masakan khas Batak Toba yang berbahan dasar ikan mas yang dimasak dengan bumbu kuning.", []Opt{{"Daging kerbau", false}, {"Ikan mas", true}, {"Ayam kampung", false}, {"Daging babi", false}}},
+		{"Rumah adat Batak Toba disebut...", "Jabu atau Ruma Adat adalah rumah tradisional Batak Toba yang memiliki atap melengkung.", []Opt{{"Joglo", false}, {"Gadang", false}, {"Jabu/Ruma Batak", true}, {"Honai", false}}},
+		{"Apa arti kata 'au' dalam Bahasa Batak?", "'Au' dalam Bahasa Batak berarti saya atau aku.", []Opt{{"Kamu", false}, {"Kita", false}, {"Saya/Aku", true}, {"Mereka", false}}},
+		{"Ornamen ukiran khas yang menghiasi rumah adat Batak disebut...", "Gorga adalah ornamen atau ukiran tradisional khas Batak Toba yang menghiasi rumah adat.", []Opt{{"Batik", false}, {"Gorga", true}, {"Tenun", false}, {"Songket", false}}},
+		{"Kata 'inang' dalam Bahasa Batak berarti...", "'Inang' dalam Bahasa Batak berarti ibu.", []Opt{{"Ayah", false}, {"Kakek", false}, {"Ibu", true}, {"Nenek", false}}},
+		{"Apa nama festival budaya Batak yang dirayakan di Danau Toba?", "Pesta Danau Toba adalah festival budaya tahunan yang merayakan kekayaan budaya Batak Toba.", []Opt{{"Pesta Danau Toba", true}, {"Festival Nias", false}, {"Karnaval Batak", false}, {"Pekan Budaya Melayu", false}}},
+		{"'Amang' dalam Bahasa Batak berarti...", "'Amang' dalam Bahasa Batak berarti ayah.", []Opt{{"Ibu", false}, {"Ayah", true}, {"Kakak", false}, {"Paman", false}}},
+		{"Alat musik modern yang mirip dengan Garantung Batak adalah...", "Garantung mirip xylophone karena terdiri dari bilah kayu yang dipukul untuk menghasilkan nada.", []Opt{{"Drum", false}, {"Xylophone", true}, {"Gitar", false}, {"Piano", false}}},
 	}
 
 	for _, q := range questions {
 		var existing models.BattleQuestion
-		if config.DB.Where("question = ?", q.Question).First(&existing).Error != nil {
-			bq := models.BattleQuestion{
-				Question:    q.Question,
-				Explanation: q.Explanation,
-				IsActive:    true,
-			}
-			config.DB.Create(&bq)
-			for _, opt := range q.Options {
-				config.DB.Create(&models.BattleQuestionOption{
-					QuestionID: bq.ID,
-					OptionText: opt.Text,
-					IsCorrect:  opt.IsCorrect,
-				})
-			}
+		result := config.DB.Where("question = ?", q.Question).First(&existing)
+		if result.Error == nil {
+			continue
 		}
-	}
-	log.Println("  ✓ Battle Questions (15 soal)")
-}
-
-// ============================================================
-func seedAchievements() {
-	achievements := []models.Achievement{
-		{Name: "Penjelajah Pemula", Description: "Selesaikan 1 lokasi Jelajah Budaya", Icon: "🗺", ConditionType: "LOCATION", ConditionValue: 1, RewardXP: 100, RewardStars: 0, IsActive: true},
-		{Name: "Penjelajah Sejati", Description: "Selesaikan 5 lokasi Jelajah Budaya", Icon: "🧭", ConditionType: "LOCATION", ConditionValue: 5, RewardXP: 300, RewardStars: 5, IsActive: true},
-		{Name: "Master Penjelajah", Description: "Selesaikan semua 10 lokasi", Icon: "🏆", ConditionType: "LOCATION", ConditionValue: 10, RewardXP: 500, RewardStars: 10, IsActive: true},
-		{Name: "Kuiz Perdana", Description: "Mainkan Trivia Budaya pertama kali", Icon: "❓", ConditionType: "TRIVIA", ConditionValue: 1, RewardXP: 50, RewardStars: 0, IsActive: true},
-		{Name: "Pecinta Trivia", Description: "Mainkan Trivia sebanyak 10 kali", Icon: "📚", ConditionType: "TRIVIA", ConditionValue: 10, RewardXP: 200, RewardStars: 3, IsActive: true},
-		{Name: "Pendekar Battle", Description: "Menangkan 1 Battle Quiz", Icon: "⚔", ConditionType: "BATTLE", ConditionValue: 1, RewardXP: 150, RewardStars: 2, IsActive: true},
-		{Name: "Raja Battle", Description: "Menangkan 5 Battle Quiz", Icon: "👑", ConditionType: "BATTLE", ConditionValue: 5, RewardXP: 400, RewardStars: 8, IsActive: true},
-		{Name: "Kolektor Bintang", Description: "Kumpulkan 20 bintang", Icon: "⭐", ConditionType: "STAR", ConditionValue: 20, RewardXP: 200, RewardStars: 0, IsActive: true},
-		{Name: "Bintang Sejati", Description: "Kumpulkan 50 bintang", Icon: "🌟", ConditionType: "STAR", ConditionValue: 50, RewardXP: 500, RewardStars: 0, IsActive: true},
-		{Name: "Naik Level", Description: "Capai Level 5", Icon: "📈", ConditionType: "LEVEL", ConditionValue: 5, RewardXP: 100, RewardStars: 5, IsActive: true},
-		{Name: "Duta Budaya", Description: "Capai Level 15", Icon: "🎖", ConditionType: "LEVEL", ConditionValue: 15, RewardXP: 500, RewardStars: 10, IsActive: true},
-		{Name: "Maestro Toba", Description: "Capai Level 20", Icon: "🎓", ConditionType: "LEVEL", ConditionValue: 20, RewardXP: 1000, RewardStars: 20, IsActive: true},
-		{Name: "XP Pertama", Description: "Kumpulkan 500 XP", Icon: "✨", ConditionType: "XP", ConditionValue: 500, RewardXP: 0, RewardStars: 2, IsActive: true},
-		{Name: "Pencari Ilmu", Description: "Kumpulkan 2000 XP", Icon: "💡", ConditionType: "XP", ConditionValue: 2000, RewardXP: 0, RewardStars: 5, IsActive: true},
-	}
-
-	for _, a := range achievements {
-		config.DB.FirstOrCreate(&a, models.Achievement{Name: a.Name})
-	}
-	log.Println("  ✓ Achievements (14 achievement)")
-}
-
-// ============================================================
-func seedGameSettings() {
-	settings := []models.GameSetting{
-		{SettingKey: "battle_question_count", SettingValue: "5", Description: "Jumlah soal per Battle"},
-		{SettingKey: "battle_wait_timeout", SettingValue: "300", Description: "Waktu tunggu room battle (detik)"},
-		{SettingKey: "trivia_question_count", SettingValue: "10", Description: "Jumlah soal per sesi Trivia"},
-		{SettingKey: "location_question_count", SettingValue: "5", Description: "Jumlah soal per lokasi Jelajah"},
-		{SettingKey: "xp_per_level", SettingValue: "500", Description: "XP yang dibutuhkan per level"},
-		{SettingKey: "character_change_level", SettingValue: "5", Description: "Level minimum ganti karakter"},
-		{SettingKey: "initial_xp", SettingValue: "0", Description: "XP awal pemain baru"},
-		{SettingKey: "initial_stars", SettingValue: "0", Description: "Bintang awal pemain baru"},
-		{SettingKey: "battle_reward_xp", SettingValue: "50", Description: "XP reward untuk pemenang battle"},
-		{SettingKey: "battle_reward_stars", SettingValue: "2", Description: "Bintang reward pemenang battle"},
-	}
-	for _, s := range settings {
-		config.DB.FirstOrCreate(&s, models.GameSetting{SettingKey: s.SettingKey})
-	}
-	log.Println("  ✓ Game Settings")
-}
-
-// ============================================================
-func seedAdmins() {
-	hash, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
-
-	var admin models.Admin
-	if config.DB.Where("username = ?", "admin").First(&admin).Error != nil {
-		admin = models.Admin{
-			Fullname:     "Super Admin TOBA",
-			Username:     "admin",
-			PasswordHash: string(hash),
-			Role:         "SUPER_ADMIN",
-		}
-		config.DB.Create(&admin)
-	} else {
-		admin.PasswordHash = string(hash)
-		admin.Fullname = "Super Admin TOBA"
-		admin.Role = "SUPER_ADMIN"
-		config.DB.Save(&admin)
-	}
-
-	log.Println("  ✓ Admin (username: admin, password: admin123)")
-}
-
-func seedLocationQuestions() {
-	type optSeed struct {
-		Text      string
-		IsCorrect bool
-	}
-	type qSeed struct {
-		LocationOrder int
-		Question      string
-		Explanation   string
-		Options       []optSeed
-	}
-
-	questions := []qSeed{
-		// ── IT DEL (level_order=1) ────────────────────────
-		{1, "Apa kepanjangan dari IT Del?",
-			"IT Del merupakan singkatan dari Institut Teknologi Del.",
-			[]optSeed{{"Institut Teknologi Del", true}, {"Inpres Toba Development", false}, {"Institut Toba Deliserdang", false}, {"Inisiatif Teknologi Delta", false}}},
-		{1, "Di kota mana IT Del berada?",
-			"IT Del berlokasi di Laguboti, Kabupaten Toba, Sumatera Utara.",
-			[]optSeed{{"Laguboti", true}, {"Balige", false}, {"Parapat", false}, {"Tarutung", false}}},
-		{1, "Siapa pendiri IT Del?",
-			"IT Del didirikan oleh Luhut Binsar Pandjaitan pada tahun 2001.",
-			[]optSeed{{"Luhut Binsar Pandjaitan", true}, {"B.J. Habibie", false}, {"Susilo Bambang Yudhoyono", false}, {"Joko Widodo", false}}},
-		{1, "Tahun berapa IT Del diresmikan?",
-			"IT Del diresmikan oleh Presiden Susilo Bambang Yudhoyono pada tahun 2012.",
-			[]optSeed{{"2012", true}, {"2001", false}, {"2005", false}, {"2010", false}}},
-		{1, "IT Del terletak di tepi danau apa?",
-			"IT Del terletak di tepi Danau Toba yang merupakan danau vulkanik terbesar di dunia.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Singkarak", false}, {"Danau Maninjau", false}, {"Danau Poso", false}}},
-		{1, "Apa yang membuat IT Del unik dibanding kampus lain?",
-			"IT Del terletak di kawasan wisata Danau Toba dan fokus pada teknologi untuk daerah.",
-			[]optSeed{{"Terletak di tepi Danau Toba", true}, {"Kampus terbesar di Indonesia", false}, {"Didirikan oleh presiden", false}, {"Gratis untuk semua mahasiswa", false}}},
-		{1, "Program studi apa yang pertama ada di IT Del?",
-			"IT Del awalnya membuka program Diploma III Teknik Informatika.",
-			[]optSeed{{"Teknik Informatika", true}, {"Kedokteran", false}, {"Hukum", false}, {"Manajemen Bisnis", false}}},
-		{1, "IT Del berada di provinsi mana?",
-			"IT Del berada di Provinsi Sumatera Utara.",
-			[]optSeed{{"Sumatera Utara", true}, {"Sumatera Barat", false}, {"Riau", false}, {"Aceh", false}}},
-		{1, "Apa visi utama IT Del?",
-			"IT Del bertujuan menjadi perguruan tinggi teknologi terkemuka yang berkontribusi pada kemajuan bangsa.",
-			[]optSeed{{"Menjadi kampus teknologi terkemuka", true}, {"Mencetak atlet nasional", false}, {"Mengembangkan pariwisata", false}, {"Menjadi kampus kedokteran terbaik", false}}},
-		{1, "Danau Toba terbentuk akibat apa?",
-			"Danau Toba terbentuk akibat letusan supervulkan sekitar 74.000 tahun yang lalu.",
-			[]optSeed{{"Letusan supervulkan", true}, {"Gempa bumi besar", false}, {"Erosi tanah", false}, {"Hujan deras ribuan tahun", false}}},
-		{1, "Apa nama kabupaten tempat IT Del berada?",
-			"IT Del berada di Kabupaten Toba, Sumatera Utara.",
-			[]optSeed{{"Kabupaten Toba", true}, {"Kabupaten Samosir", false}, {"Kabupaten Dairi", false}, {"Kabupaten Humbang", false}}},
-		{1, "Siapa presiden yang meresmikan IT Del?",
-			"IT Del diresmikan oleh Presiden Susilo Bambang Yudhoyono pada tahun 2012.",
-			[]optSeed{{"Susilo Bambang Yudhoyono", true}, {"Megawati", false}, {"Joko Widodo", false}, {"Habibie", false}}},
-		{1, "IT Del merupakan kampus berbasis apa?",
-			"IT Del merupakan kampus berbasis teknologi yang fokus pada inovasi dan pengembangan SDM.",
-			[]optSeed{{"Teknologi", true}, {"Seni dan Budaya", false}, {"Kedokteran", false}, {"Pertanian", false}}},
-		{1, "Apa nama danau yang ada di dekat IT Del?",
-			"Danau Toba adalah danau vulkanik terbesar di dunia yang berada dekat IT Del.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Ranau", false}, {"Danau Kerinci", false}, {"Danau Sentani", false}}},
-		{1, "IT Del sering disebut sebagai apa oleh masyarakat sekitar?",
-			"IT Del sering disebut sebagai kampus di tepi danau karena lokasinya yang indah di tepi Danau Toba.",
-			[]optSeed{{"Kampus di tepi danau", true}, {"Kampus di atas bukit", false}, {"Kampus dalam hutan", false}, {"Kampus pulau terpencil", false}}},
-
-		// ── PANTAI BULBUL (level_order=2) ─────────────────
-		{2, "Di kota mana Pantai Bulbul berada?",
-			"Pantai Bulbul terletak di Balige, ibu kota Kabupaten Toba.",
-			[]optSeed{{"Balige", true}, {"Parapat", false}, {"Samosir", false}, {"Laguboti", false}}},
-		{2, "Apa yang terkenal dari Pantai Bulbul?",
-			"Pantai Bulbul terkenal dengan pasir putih halus dan pemandangan Danau Toba yang indah.",
-			[]optSeed{{"Pasir putih dan pemandangan Danau Toba", true}, {"Terumbu karang yang berwarna-warni", false}, {"Ombak besar untuk surfing", false}, {"Hutan mangrove yang lebat", false}}},
-		{2, "Danau Toba merupakan danau vulkanik terbesar di mana?",
-			"Danau Toba adalah danau vulkanik terbesar di dunia.",
-			[]optSeed{{"Di dunia", true}, {"Di Asia", false}, {"Di Indonesia", false}, {"Di Asia Tenggara", false}}},
-		{2, "Kegiatan apa yang populer di Pantai Bulbul?",
-			"Berenang dan menikmati pemandangan Danau Toba adalah aktivitas paling populer di Pantai Bulbul.",
-			[]optSeed{{"Berenang dan menikmati pemandangan", true}, {"Selancar ombak", false}, {"Menyelam laut dalam", false}, {"Memanjat tebing", false}}},
-		{2, "Balige merupakan ibu kota kabupaten apa?",
-			"Balige adalah ibu kota Kabupaten Toba di Sumatera Utara.",
-			[]optSeed{{"Kabupaten Toba", true}, {"Kabupaten Samosir", false}, {"Kabupaten Taput", false}, {"Kabupaten Dairi", false}}},
-		{2, "Apa warna pasir di Pantai Bulbul?",
-			"Pantai Bulbul memiliki pasir berwarna putih yang halus dan bersih.",
-			[]optSeed{{"Putih", true}, {"Hitam", false}, {"Coklat", false}, {"Kuning keemasan", false}}},
-		{2, "Danau Toba terbentuk berapa tahun lalu?",
-			"Danau Toba terbentuk sekitar 74.000 tahun lalu akibat letusan supervulkan.",
-			[]optSeed{{"74.000 tahun lalu", true}, {"10.000 tahun lalu", false}, {"1.000 tahun lalu", false}, {"500.000 tahun lalu", false}}},
-		{2, "Apa nama festival yang sering diadakan di kawasan Danau Toba?",
-			"Festival Danau Toba adalah festival budaya tahunan yang diadakan di kawasan Danau Toba.",
-			[]optSeed{{"Festival Danau Toba", true}, {"Pesta Batak", false}, {"Karnaval Samosir", false}, {"Pekan Budaya Toba", false}}},
-		{2, "Pantai Bulbul cocok untuk wisata keluarga karena?",
-			"Pantai Bulbul cocok untuk keluarga karena airnya tenang dan pantainya bersih.",
-			[]optSeed{{"Airnya tenang dan pantainya bersih", true}, {"Ombaknya besar dan menantang", false}, {"Ada wahana permainan modern", false}, {"Tempatnya sangat sepi", false}}},
-		{2, "Apa nama pulau yang berada di tengah Danau Toba?",
-			"Pulau Samosir adalah pulau vulkanik yang berada di tengah Danau Toba.",
-			[]optSeed{{"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Batam", false}, {"Pulau Berhala", false}}},
-		{2, "Balige terletak di provinsi mana?",
-			"Balige berada di Provinsi Sumatera Utara.",
-			[]optSeed{{"Sumatera Utara", true}, {"Sumatera Barat", false}, {"Riau", false}, {"Aceh", false}}},
-		{2, "Apa yang membuat air Danau Toba berwarna biru?",
-			"Air Danau Toba berwarna biru karena sangat jernih dan dalam, memantulkan warna langit.",
-			[]optSeed{{"Jernih dan dalam memantulkan langit", true}, {"Banyak ganggang biru", false}, {"Pengaruh mineral khusus", false}, {"Efek cahaya matahari", false}}},
-		{2, "Berapa kedalaman maksimum Danau Toba?",
-			"Danau Toba memiliki kedalaman maksimum sekitar 505 meter.",
-			[]optSeed{{"505 meter", true}, {"200 meter", false}, {"1.000 meter", false}, {"100 meter", false}}},
-		{2, "Transportasi apa yang digunakan untuk ke Pulau Samosir dari Balige?",
-			"Kapal feri digunakan untuk menyeberang dari daratan menuju Pulau Samosir.",
-			[]optSeed{{"Kapal feri", true}, {"Jembatan", false}, {"Helikopter", false}, {"Perahu dayung saja", false}}},
-		{2, "Apa nama suku yang mendiami kawasan Danau Toba?",
-			"Suku Batak Toba adalah suku utama yang mendiami kawasan sekitar Danau Toba.",
-			[]optSeed{{"Batak Toba", true}, {"Batak Karo", false}, {"Minangkabau", false}, {"Melayu", false}}},
-
-		// ── MUSEUM BATAK (level_order=3) ──────────────────
-		{3, "Apa nama lengkap Museum Batak di Balige?",
-			"Museum Batak TB Silalahi Center adalah museum budaya Batak yang terletak di Balige.",
-			[]optSeed{{"TB Silalahi Center", true}, {"Museum Nasional Batak", false}, {"Galeri Budaya Toba", false}, {"Rumah Adat Batak", false}}},
-		{3, "Siapa yang mendirikan Museum Batak TB Silalahi Center?",
-			"Museum ini didirikan oleh TB Silalahi, seorang tokoh militer dan politisi asal Batak.",
-			[]optSeed{{"TB Silalahi", true}, {"Luhut Binsar Pandjaitan", false}, {"Raja Siallagan", false}, {"B.J. Habibie", false}}},
-		{3, "Apa yang disimpan di Museum Batak?",
-			"Museum Batak menyimpan lebih dari 1.000 koleksi benda budaya Batak Toba.",
-			[]optSeed{{"Koleksi benda budaya Batak Toba", true}, {"Koleksi senjata perang dunia", false}, {"Koleksi batik nusantara", false}, {"Koleksi benda prasejarah", false}}},
-		{3, "Kain tradisional Batak yang disimpan di museum disebut?",
-			"Ulos adalah kain tenun tradisional Batak Toba yang menjadi koleksi utama museum.",
-			[]optSeed{{"Ulos", true}, {"Batik", false}, {"Songket", false}, {"Tapis", false}}},
-		{3, "Ukiran khas yang menghiasi rumah adat Batak disebut?",
-			"Gorga adalah ukiran tradisional khas Batak yang biasa menghiasi rumah adat.",
-			[]optSeed{{"Gorga", true}, {"Batik", false}, {"Tenun", false}, {"Wayang", false}}},
-		{3, "Museum Batak berada di kota mana?",
-			"Museum Batak TB Silalahi Center berada di Balige, Kabupaten Toba.",
-			[]optSeed{{"Balige", true}, {"Parapat", false}, {"Samosir", false}, {"Tarutung", false}}},
-		{3, "Senjata tradisional Batak apa yang ada di museum?",
-			"Piso Gaja Dompak adalah pedang pusaka khas Batak Toba yang tersimpan di museum.",
-			[]optSeed{{"Piso Gaja Dompak", true}, {"Keris", false}, {"Rencong", false}, {"Mandau", false}}},
-		{3, "Apa fungsi museum bagi masyarakat?",
-			"Museum berfungsi sebagai tempat pelestarian dan edukasi budaya bagi generasi penerus.",
-			[]optSeed{{"Pelestarian dan edukasi budaya", true}, {"Tempat hiburan semata", false}, {"Pusat perbelanjaan budaya", false}, {"Tempat ibadah", false}}},
-		{3, "Berapa jumlah koleksi di Museum Batak?",
-			"Museum Batak TB Silalahi Center menyimpan lebih dari 1.000 koleksi benda budaya.",
-			[]optSeed{{"Lebih dari 1.000", true}, {"Kurang dari 100", false}, {"Tepat 500", false}, {"Lebih dari 10.000", false}}},
-		{3, "Apa nama alat musik tradisional Batak yang ada di museum?",
-			"Hasapi adalah alat musik petik tradisional Batak Toba yang tersimpan di Museum Batak.",
-			[]optSeed{{"Hasapi", true}, {"Gitar", false}, {"Kecapi", false}, {"Sitar", false}}},
-		{3, "Pakaian adat Batak yang paling dikenal adalah?",
-			"Ulos adalah pakaian adat Batak Toba yang paling dikenal dan sering dikenakan dalam upacara.",
-			[]optSeed{{"Ulos", true}, {"Kebaya", false}, {"Baju Bodo", false}, {"Baju Kurung", false}}},
-		{3, "Apa keistimewaan Museum Batak TB Silalahi?",
-			"Museum ini memiliki koleksi terlengkap tentang budaya Batak Toba di Indonesia.",
-			[]optSeed{{"Koleksi terlengkap budaya Batak Toba", true}, {"Museum terbesar di dunia", false}, {"Gratis untuk semua pengunjung", false}, {"Hanya buka malam hari", false}}},
-		{3, "Di museum, pengunjung bisa melihat apa?",
-			"Pengunjung bisa melihat koleksi pakaian adat, senjata, alat musik, dan peralatan rumah tangga Batak.",
-			[]optSeed{{"Koleksi pakaian, senjata, dan alat musik", true}, {"Film dokumenter saja", false}, {"Pertunjukan seni langsung", false}, {"Pameran lukisan modern", false}}},
-		{3, "Siapa TB Silalahi?",
-			"TB Silalahi adalah tokoh militer, politisi, dan pengusaha asal Batak Toba yang mendirikan museum.",
-			[]optSeed{{"Tokoh militer dan politisi Batak", true}, {"Raja Batak terakhir", false}, {"Penulis buku terkenal", false}, {"Penemu batik Batak", false}}},
-		{3, "Museum Batak terletak di tepi apa?",
-			"Museum Batak TB Silalahi Center terletak di tepi Danau Toba dengan pemandangan yang indah.",
-			[]optSeed{{"Danau Toba", true}, {"Pantai laut", false}, {"Sungai besar", false}, {"Pegunungan", false}}},
-
-		// ── HUTA SIALLAGAN (level_order=4) ────────────────
-		{4, "Huta Siallagan terletak di pulau mana?",
-			"Huta Siallagan terletak di Pulau Samosir, di tengah Danau Toba.",
-			[]optSeed{{"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Batam", false}, {"Daratan Sumatera", false}}},
-		{4, "Apa yang terkenal dari Huta Siallagan?",
-			"Huta Siallagan terkenal dengan Batu Kursi Raja yang digunakan untuk pengadilan adat.",
-			[]optSeed{{"Batu Kursi Raja untuk pengadilan adat", true}, {"Pantai pasir putih", false}, {"Air terjun tertinggi", false}, {"Hutan bambu yang lebat", false}}},
-		{4, "Siapa yang biasa duduk di Batu Kursi Siallagan?",
-			"Raja adat Siallagan yang duduk di batu kursi untuk mengadili perkara adat.",
-			[]optSeed{{"Raja adat Siallagan", true}, {"Tamu kerajaan", false}, {"Para pedagang", false}, {"Wisatawan", false}}},
-		{4, "Huta Siallagan merupakan desa adat suku apa?",
-			"Huta Siallagan adalah desa adat suku Batak Toba yang masih terjaga keasliannya.",
-			[]optSeed{{"Batak Toba", true}, {"Batak Karo", false}, {"Minangkabau", false}, {"Dayak", false}}},
-		{4, "Apa arti kata Huta dalam bahasa Batak?",
-			"Huta berarti desa atau kampung dalam bahasa Batak Toba.",
-			[]optSeed{{"Desa atau kampung", true}, {"Sungai", false}, {"Hutan", false}, {"Danau", false}}},
-		{4, "Pulau Samosir merupakan pulau terbesar di dalam danau di mana?",
-			"Pulau Samosir adalah pulau terbesar yang berada di dalam danau di dunia.",
-			[]optSeed{{"Di dunia", true}, {"Di Asia", false}, {"Di Indonesia", false}, {"Di Asia Tenggara", false}}},
-		{4, "Batu Kursi di Huta Siallagan digunakan untuk?",
-			"Batu Kursi digunakan sebagai tempat pengadilan adat dan permusyawaratan raja.",
-			[]optSeed{{"Pengadilan adat", true}, {"Tempat bertapa", false}, {"Meja makan raja", false}, {"Tempat berdagang", false}}},
-		{4, "Apa nama marga yang mendiami Huta Siallagan?",
-			"Marga Siallagan adalah marga yang secara turun-temurun mendiami desa ini.",
-			[]optSeed{{"Siallagan", true}, {"Sinaga", false}, {"Sitorus", false}, {"Simanjuntak", false}}},
-		{4, "Luas Pulau Samosir sekitar berapa km persegi?",
-			"Pulau Samosir memiliki luas sekitar 630 kilometer persegi.",
-			[]optSeed{{"630 km persegi", true}, {"100 km persegi", false}, {"1.000 km persegi", false}, {"50 km persegi", false}}},
-		{4, "Apa yang dimaksud dengan adat Batak?",
-			"Adat Batak adalah sistem aturan dan tradisi yang mengatur kehidupan masyarakat Batak Toba.",
-			[]optSeed{{"Sistem aturan dan tradisi masyarakat Batak", true}, {"Bahasa resmi Batak", false}, {"Jenis tarian Batak", false}, {"Makanan khas Batak", false}}},
-		{4, "Huta Siallagan dapat dicapai dengan cara apa dari Parapat?",
-			"Huta Siallagan di Pulau Samosir dapat dicapai dengan naik kapal feri dari Parapat.",
-			[]optSeed{{"Naik kapal feri", true}, {"Melewati jembatan", false}, {"Naik kereta api", false}, {"Terbang dengan pesawat", false}}},
-		{4, "Sistem kekerabatan Batak disebut?",
-			"Dalihan Na Tolu adalah sistem kekerabatan Batak yang mengatur hubungan antar keluarga.",
-			[]optSeed{{"Dalihan Na Tolu", true}, {"Marga Sistem", false}, {"Adat Minang", false}, {"Suku Adat", false}}},
-		{4, "Rumah adat di Huta Siallagan disebut?",
-			"Rumah Bolon adalah rumah adat tradisional Batak Toba yang ada di Huta Siallagan.",
-			[]optSeed{{"Rumah Bolon", true}, {"Rumah Gadang", false}, {"Joglo", false}, {"Honai", false}}},
-		{4, "Marga dalam adat Batak diturunkan dari?",
-			"Marga Batak diturunkan dari garis keturunan ayah (patrilineal).",
-			[]optSeed{{"Pihak ayah", true}, {"Pihak ibu", false}, {"Kedua orang tua", false}, {"Pilihan sendiri", false}}},
-		{4, "Apa salam khas masyarakat Batak?",
-			"Horas adalah ucapan salam khas masyarakat Batak yang berarti sehat dan sejahtera.",
-			[]optSeed{{"Horas", true}, {"Mejuah-juah", false}, {"Yaahowu", false}, {"Selamat", false}}},
-
-		// ── BUKIT HOLBUNG (level_order=5) ─────────────────
-		{5, "Bukit Holbung mendapat julukan apa?",
-			"Bukit Holbung dijuluki Bukit Teletubbies karena bentuknya yang bergelombang hijau.",
-			[]optSeed{{"Bukit Teletubbies", true}, {"Bukit Pelangi", false}, {"Bukit Indah", false}, {"Bukit Hijau", false}}},
-		{5, "Bukit Holbung terletak di kabupaten mana?",
-			"Bukit Holbung terletak di Kabupaten Samosir, Sumatera Utara.",
-			[]optSeed{{"Samosir", true}, {"Toba", false}, {"Dairi", false}, {"Humbang Hasundutan", false}}},
-		{5, "Ketinggian Bukit Holbung sekitar berapa meter?",
-			"Bukit Holbung berada pada ketinggian sekitar 1.000 meter di atas permukaan laut.",
-			[]optSeed{{"1.000 meter", true}, {"500 meter", false}, {"2.000 meter", false}, {"200 meter", false}}},
-		{5, "Apa yang bisa dilihat dari puncak Bukit Holbung?",
-			"Dari Bukit Holbung terlihat panorama Danau Toba 360 derajat yang menakjubkan.",
-			[]optSeed{{"Panorama Danau Toba 360 derajat", true}, {"Lautan luas", false}, {"Kota besar", false}, {"Gunung berapi aktif", false}}},
-		{5, "Waktu terbaik mengunjungi Bukit Holbung adalah?",
-			"Bukit Holbung paling indah dikunjungi saat matahari terbit dan terbenam.",
-			[]optSeed{{"Saat matahari terbit dan terbenam", true}, {"Tengah malam", false}, {"Siang hari terik", false}, {"Musim hujan", false}}},
-		{5, "Bukit Holbung berada di Pulau apa?",
-			"Bukit Holbung berada di Pulau Samosir yang terletak di tengah Danau Toba.",
-			[]optSeed{{"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Batam", false}, {"Daratan Sumatera", false}}},
-		{5, "Apa yang membuat Bukit Holbung unik?",
-			"Bukit Holbung unik karena bentuknya yang bergelombang seperti bukit dalam serial Teletubbies.",
-			[]optSeed{{"Bentuknya bergelombang hijau", true}, {"Ada batu besar ajaib", false}, {"Tanahnya berwarna merah", false}, {"Selalu berkabut sepanjang tahun", false}}},
-		{5, "Danau Toba terlihat dari Bukit Holbung karena?",
-			"Danau Toba terlihat jelas dari Bukit Holbung karena posisinya yang tinggi dan pemandangan terbuka.",
-			[]optSeed{{"Posisinya tinggi dengan pemandangan terbuka", true}, {"Ada teleskop raksasa di sana", false}, {"Danau Toba sangat besar", false}, {"Bukit ini tertinggi di Indonesia", false}}},
-		{5, "Apa nama danau yang terlihat dari Bukit Holbung?",
-			"Danau Toba adalah danau vulkanik terbesar di dunia yang terlihat dari Bukit Holbung.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Singkarak", false}, {"Danau Maninjau", false}, {"Danau Kerinci", false}}},
-		{5, "Bukit Holbung cocok untuk kegiatan apa?",
-			"Bukit Holbung cocok untuk hiking, fotografi, dan menikmati pemandangan alam.",
-			[]optSeed{{"Hiking dan fotografi", true}, {"Selancar air", false}, {"Menyelam", false}, {"Berperahu", false}}},
-		{5, "Samosir merupakan pulau di dalam danau terbesar di mana?",
-			"Samosir adalah pulau terbesar yang berada di dalam danau di dunia.",
-			[]optSeed{{"Di dunia", true}, {"Di Asia", false}, {"Di Indonesia", false}, {"Di Sumatera", false}}},
-		{5, "Apa warna dominan pemandangan di Bukit Holbung?",
-			"Pemandangan Bukit Holbung didominasi warna hijau dari rumput dan perbukitan.",
-			[]optSeed{{"Hijau", true}, {"Merah", false}, {"Kuning", false}, {"Biru", false}}},
-		{5, "Jalur menuju Bukit Holbung bisa ditempuh dari kota mana?",
-			"Bukit Holbung bisa dicapai dari Pangururan, ibu kota Kabupaten Samosir.",
-			[]optSeed{{"Pangururan", true}, {"Parapat", false}, {"Balige", false}, {"Tarutung", false}}},
-		{5, "Bukit Holbung terletak di ketinggian berapa MDPL?",
-			"Bukit Holbung berada di sekitar 1.000 meter di atas permukaan laut.",
-			[]optSeed{{"Sekitar 1.000 MDPL", true}, {"Di bawah 100 MDPL", false}, {"Lebih dari 3.000 MDPL", false}, {"Tepat 500 MDPL", false}}},
-		{5, "Kenapa Bukit Holbung ramai dikunjungi?",
-			"Bukit Holbung ramai karena pemandangannya yang indah dan unik, cocok untuk foto.",
-			[]optSeed{{"Pemandangan indah dan unik untuk foto", true}, {"Ada pertunjukan seni setiap hari", false}, {"Tiket masuknya gratis selalu", false}, {"Ada pusat perbelanjaan di sana", false}}},
-
-		// ── DESA TOMOK (level_order=6) ────────────────────
-		{6, "Desa Tomok terkenal dengan apa?",
-			"Desa Tomok terkenal dengan Makam Raja Sidabutar yang bersejarah dan berusia lebih dari 500 tahun.",
-			[]optSeed{{"Makam Raja Sidabutar", true}, {"Pantai indah", false}, {"Air terjun", false}, {"Hutan pinus", false}}},
-		{6, "Makam Raja Sidabutar berusia sekitar berapa tahun?",
-			"Makam Raja Sidabutar diperkirakan berusia lebih dari 500 tahun.",
-			[]optSeed{{"Lebih dari 500 tahun", true}, {"100 tahun", false}, {"1.000 tahun", false}, {"50 tahun", false}}},
-		{6, "Desa Tomok terletak di pulau mana?",
-			"Desa Tomok berada di Pulau Samosir, di tengah Danau Toba.",
-			[]optSeed{{"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Batam", false}, {"Daratan Sumatera", false}}},
-		{6, "Apa yang bisa dibeli di Desa Tomok?",
-			"Desa Tomok terkenal sebagai pusat kerajinan tangan Batak seperti ulos dan ukiran kayu.",
-			[]optSeed{{"Kerajinan tangan Batak seperti ulos", true}, {"Elektronik modern", false}, {"Senjata tradisional", false}, {"Makanan impor", false}}},
-		{6, "Siapa Raja Sidabutar?",
-			"Raja Sidabutar adalah raja Batak Toba yang memerintah di wilayah Tomok, Samosir.",
-			[]optSeed{{"Raja Batak Toba di Tomok", true}, {"Raja Majapahit", false}, {"Raja Sriwijaya", false}, {"Sultan Batak pertama", false}}},
-		{6, "Sigale-gale pertama kali dibuat di mana?",
-			"Sigale-gale, boneka kayu yang bisa bergerak, pertama kali dibuat di Desa Tomok.",
-			[]optSeed{{"Desa Tomok", true}, {"Huta Siallagan", false}, {"Balige", false}, {"Parapat", false}}},
-		{6, "Desa Tomok merupakan desa tertua ke berapa di Samosir?",
-			"Desa Tomok merupakan salah satu desa tertua di Pulau Samosir.",
-			[]optSeed{{"Salah satu tertua", true}, {"Desa termuda", false}, {"Desa terbesar", false}, {"Desa terkecil", false}}},
-		{6, "Ulos dari Tomok dikenal sebagai?",
-			"Ulos dari Tomok dikenal sebagai salah satu ulos terbaik dengan kualitas tenun yang tinggi.",
-			[]optSeed{{"Salah satu ulos terbaik", true}, {"Ulos paling murah", false}, {"Ulos untuk pemula", false}, {"Ulos hanya untuk pria", false}}},
-		{6, "Apa bahasa yang digunakan masyarakat Tomok sehari-hari?",
-			"Masyarakat Tomok menggunakan Bahasa Batak Toba dalam kehidupan sehari-hari.",
-			[]optSeed{{"Bahasa Batak Toba", true}, {"Bahasa Melayu", false}, {"Bahasa Jawa", false}, {"Bahasa Minang", false}}},
-		{6, "Makam Raja Sidabutar terbuat dari apa?",
-			"Makam Raja Sidabutar terbuat dari batu andesit yang diukir dengan motif Batak.",
-			[]optSeed{{"Batu andesit", true}, {"Kayu jati", false}, {"Emas murni", false}, {"Beton modern", false}}},
-		{6, "Desa Tomok merupakan gerbang masuk utama ke Samosir dari mana?",
-			"Desa Tomok menjadi gerbang masuk utama ke Samosir dari Parapat via feri.",
-			[]optSeed{{"Parapat", true}, {"Balige", false}, {"Laguboti", false}, {"Tarutung", false}}},
-		{6, "Apa nama tarian yang dipentaskan di Desa Tomok?",
-			"Tari Tortor adalah tarian tradisional Batak Toba yang sering dipentaskan di Tomok.",
-			[]optSeed{{"Tari Tortor", true}, {"Tari Saman", false}, {"Tari Kecak", false}, {"Tari Piring", false}}},
-		{6, "Sigale-gale adalah?",
-			"Sigale-gale adalah patung boneka kayu yang dapat bergerak dalam upacara adat Batak.",
-			[]optSeed{{"Patung boneka kayu yang bisa bergerak", true}, {"Jenis masakan Batak", false}, {"Alat musik Batak", false}, {"Nama senjata Batak", false}}},
-		{6, "Kerajinan ukiran kayu Batak di Tomok biasanya bermotif apa?",
-			"Ukiran kayu Batak di Tomok biasanya bermotif gorga, ukiran tradisional khas Batak.",
-			[]optSeed{{"Gorga", true}, {"Batik", false}, {"Wayang", false}, {"Kaligrafi", false}}},
-		{6, "Berapa lama perjalanan feri dari Parapat ke Tomok?",
-			"Perjalanan feri dari Parapat ke Tomok memakan waktu sekitar 30-45 menit.",
-			[]optSeed{{"30-45 menit", true}, {"5 menit", false}, {"3 jam", false}, {"1 hari", false}}},
-
-		// ── BATU GANTUNG (level_order=7) ──────────────────
-		{7, "Batu Gantung terletak di kota mana?",
-			"Batu Gantung terletak di Parapat, Kabupaten Simalungun.",
-			[]optSeed{{"Parapat", true}, {"Balige", false}, {"Samosir", false}, {"Laguboti", false}}},
-		{7, "Apa legenda di balik Batu Gantung?",
-			"Legenda Batu Gantung bercerita tentang seorang gadis bernama Seruni yang bersedih.",
-			[]optSeed{{"Gadis bernama Seruni yang bersedih", true}, {"Pertempuran raja Batak", false}, {"Kisah cinta terlarang", false}, {"Asal usul Danau Toba", false}}},
-		{7, "Batu Gantung adalah formasi batu yang?",
-			"Batu Gantung adalah formasi batu unik yang menggantung di tepi Danau Toba.",
-			[]optSeed{{"Menggantung di tepi Danau Toba", true}, {"Terapung di tengah danau", false}, {"Berada di dasar danau", false}, {"Berbentuk seperti rumah", false}}},
-		{7, "Dari mana Batu Gantung bisa dilihat?",
-			"Batu Gantung dapat dilihat dari kapal feri yang melintasi Danau Toba.",
-			[]optSeed{{"Dari kapal feri di Danau Toba", true}, {"Hanya dari pesawat", false}, {"Hanya dari bawah air", false}, {"Dari puncak gunung saja", false}}},
-		{7, "Parapat terkenal sebagai apa?",
-			"Parapat terkenal sebagai kota wisata dan pintu masuk utama ke Danau Toba.",
-			[]optSeed{{"Kota wisata pintu masuk Danau Toba", true}, {"Kota industri", false}, {"Kota pendidikan", false}, {"Ibukota provinsi", false}}},
-		{7, "Batu Gantung berada di kabupaten mana?",
-			"Batu Gantung berada di Kabupaten Simalungun, Sumatera Utara.",
-			[]optSeed{{"Simalungun", true}, {"Toba", false}, {"Samosir", false}, {"Dairi", false}}},
-		{7, "Nama gadis dalam legenda Batu Gantung adalah?",
-			"Nama gadis dalam legenda Batu Gantung adalah Seruni.",
-			[]optSeed{{"Seruni", true}, {"Butet", false}, {"Sari", false}, {"Toba", false}}},
-		{7, "Batu Gantung menjadi ikon wisata kota?",
-			"Batu Gantung menjadi salah satu ikon wisata kota Parapat di tepi Danau Toba.",
-			[]optSeed{{"Parapat", true}, {"Balige", false}, {"Samosir", false}, {"Tarutung", false}}},
-		{7, "Apa yang membuat Batu Gantung menarik secara geologi?",
-			"Batu Gantung menarik secara geologi karena merupakan formasi batuan vulkanik yang unik.",
-			[]optSeed{{"Formasi batuan vulkanik yang unik", true}, {"Mengandung emas", false}, {"Berubah warna setiap hari", false}, {"Selalu bergerak", false}}},
-		{7, "Danau Toba di sekitar Parapat terkenal karena?",
-			"Danau Toba di Parapat terkenal karena keindahannya dan menjadi destinasi wisata utama.",
-			[]optSeed{{"Keindahan alam dan wisata utama", true}, {"Airnya bisa diminum langsung", false}, {"Ada monster danau", false}, {"Sering ada tsunami", false}}},
-		{7, "Legenda Batu Gantung berasal dari suku apa?",
-			"Legenda Batu Gantung berasal dari tradisi lisan masyarakat Batak Toba.",
-			[]optSeed{{"Batak Toba", true}, {"Melayu", false}, {"Minangkabau", false}, {"Jawa", false}}},
-		{7, "Jalur feri dari Parapat menuju Samosir melewati?",
-			"Jalur feri dari Parapat melewati perairan Danau Toba dan melewati area Batu Gantung.",
-			[]optSeed{{"Perairan Danau Toba", true}, {"Laut lepas", false}, {"Sungai besar", false}, {"Terowongan bawah air", false}}},
-		{7, "Apa nama danau tempat Batu Gantung berada?",
-			"Batu Gantung berada di tepi Danau Toba, danau vulkanik terbesar di dunia.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Singkarak", false}, {"Danau Ranau", false}, {"Danau Poso", false}}},
-		{7, "Kabupaten Simalungun berbatasan dengan danau apa?",
-			"Kabupaten Simalungun berbatasan langsung dengan Danau Toba.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Ranau", false}, {"Selat Malaka", false}, {"Danau Kerinci", false}}},
-		{7, "Batu Gantung sering dikunjungi wisatawan untuk apa?",
-			"Wisatawan mengunjungi Batu Gantung untuk melihat formasi batu unik dan mendengar legendanya.",
-			[]optSeed{{"Melihat batu unik dan mendengar legenda", true}, {"Berenang di sekitarnya", false}, {"Mendaki ke puncaknya", false}, {"Berkemah di bawahnya", false}}},
-
-		// ── MENARA TELE (level_order=8) ───────────────────
-		{8, "Menara Tele berfungsi sebagai apa?",
-			"Menara Tele berfungsi sebagai menara pandang untuk menikmati panorama Danau Toba.",
-			[]optSeed{{"Menara pandang", true}, {"Menara komunikasi", false}, {"Mercusuar", false}, {"Menara air", false}}},
-		{8, "Menara Tele berada di ketinggian sekitar berapa meter?",
-			"Menara Tele berada di ketinggian sekitar 1.300 meter di atas permukaan laut.",
-			[]optSeed{{"1.300 meter", true}, {"500 meter", false}, {"200 meter", false}, {"3.000 meter", false}}},
-		{8, "Tele merupakan gerbang masuk ke pulau mana?",
-			"Tele adalah gerbang masuk ke Pulau Samosir dari daratan Sumatera melalui jalan darat.",
-			[]optSeed{{"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Batam", false}, {"Pulau Belitung", false}}},
-		{8, "Dari Menara Tele apa yang bisa dilihat?",
-			"Dari Menara Tele terlihat hamparan sawah, perbukitan, dan panorama Danau Toba.",
-			[]optSeed{{"Sawah, perbukitan, dan Danau Toba", true}, {"Lautan luas", false}, {"Kota metropolitan", false}, {"Gunung berapi aktif", false}}},
-		{8, "Jalan Tele dikenal sebagai?",
-			"Jalan Tele dikenal sebagai salah satu jalur pegunungan terindah di Sumatera Utara.",
-			[]optSeed{{"Jalur pegunungan terindah di Sumatera Utara", true}, {"Jalan tol terpanjang", false}, {"Jalan berbahaya", false}, {"Jalan buntu", false}}},
-		{8, "Menara Tele berada di desa bernama?",
-			"Menara Tele berada di Desa Tele, Kabupaten Samosir.",
-			[]optSeed{{"Desa Tele", true}, {"Desa Tomok", false}, {"Desa Balige", false}, {"Desa Siallagan", false}}},
-		{8, "Kabupaten Samosir terletak di provinsi mana?",
-			"Kabupaten Samosir terletak di Provinsi Sumatera Utara.",
-			[]optSeed{{"Sumatera Utara", true}, {"Sumatera Barat", false}, {"Riau", false}, {"Aceh", false}}},
-		{8, "Mengapa Tele penting bagi wisatawan ke Samosir?",
-			"Tele adalah pintu gerbang darat satu-satunya menuju Samosir tanpa harus naik feri.",
-			[]optSeed{{"Pintu gerbang darat ke Samosir", true}, {"Tempat belanja oleh-oleh", false}, {"Bandara kecil", false}, {"Terminal bus utama", false}}},
-		{8, "Pemandangan sawah dari Menara Tele terlihat karena?",
-			"Ketinggian Menara Tele yang mencapai 1.300 MDPL memungkinkan melihat hamparan sawah.",
-			[]optSeed{{"Ketinggian 1.300 MDPL", true}, {"Ada kamera canggih", false}, {"Lokasinya di tepi danau", false}, {"Ada teleskop di menara", false}}},
-		{8, "Apa nama danau yang terlihat dari Menara Tele?",
-			"Danau Toba adalah danau vulkanik terbesar di dunia yang terlihat dari Menara Tele.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Singkarak", false}, {"Danau Maninjau", false}, {"Danau Ranau", false}}},
-		{8, "Menara Tele cocok dikunjungi saat?",
-			"Menara Tele paling indah dikunjungi saat cuaca cerah agar pemandangan terlihat jelas.",
-			[]optSeed{{"Cuaca cerah", true}, {"Malam hari", false}, {"Musim hujan", false}, {"Tengah malam", false}}},
-		{8, "Berapa lama perjalanan dari Medan ke Menara Tele?",
-			"Perjalanan dari Medan ke Menara Tele sekitar 5-6 jam dengan kendaraan darat.",
-			[]optSeed{{"5-6 jam", true}, {"30 menit", false}, {"1 hari penuh", false}, {"2 jam", false}}},
-		{8, "Apa yang dijual di sekitar Menara Tele?",
-			"Di sekitar Menara Tele biasa dijual makanan khas Batak dan oleh-oleh Samosir.",
-			[]optSeed{{"Makanan khas Batak dan oleh-oleh", true}, {"Elektronik", false}, {"Kendaraan bermotor", false}, {"Buku pelajaran", false}}},
-		{8, "Tele berarti apa dalam bahasa setempat?",
-			"Tele adalah nama tempat yang berasal dari bahasa Batak lokal.",
-			[]optSeed{{"Nama tempat dalam bahasa Batak", true}, {"Berarti danau", false}, {"Berarti menara", false}, {"Berarti puncak gunung", false}}},
-		{8, "Pulau Samosir bisa dicapai dari Tele dengan?",
-			"Dari Tele, Pulau Samosir bisa dicapai melalui jalan darat yang melintasi perbatasan.",
-			[]optSeed{{"Jalan darat", true}, {"Kapal feri", false}, {"Perahu dayung", false}, {"Jembatan gantung", false}}},
-
-		// ── AIR TERJUN SITUMURUN (level_order=9) ──────────
-		{9, "Air Terjun Situmurun terletak di kabupaten mana?",
-			"Air Terjun Situmurun terletak di Kabupaten Toba, Sumatera Utara.",
-			[]optSeed{{"Kabupaten Toba", true}, {"Kabupaten Samosir", false}, {"Kabupaten Simalungun", false}, {"Kabupaten Dairi", false}}},
-		{9, "Apa keunikan Air Terjun Situmurun?",
-			"Air Terjun Situmurun unik karena airnya langsung jatuh ke perairan Danau Toba.",
-			[]optSeed{{"Airnya jatuh langsung ke Danau Toba", true}, {"Berwarna merah", false}, {"Mengalir ke atas", false}, {"Berbentuk spiral", false}}},
-		{9, "Situmurun berarti apa dalam bahasa Batak?",
-			"Situmurun berarti turun bertahap dalam bahasa Batak Toba.",
-			[]optSeed{{"Turun bertahap", true}, {"Air biru", false}, {"Jatuh deras", false}, {"Sungai indah", false}}},
-		{9, "Ketinggian Air Terjun Situmurun sekitar berapa meter?",
-			"Air Terjun Situmurun memiliki ketinggian sekitar 70 meter.",
-			[]optSeed{{"70 meter", true}, {"10 meter", false}, {"200 meter", false}, {"500 meter", false}}},
-		{9, "Nama lain Air Terjun Situmurun adalah?",
-			"Air Terjun Situmurun juga dikenal dengan nama Binangalom.",
-			[]optSeed{{"Binangalom", true}, {"Sipisopiso", false}, {"Sigura-gura", false}, {"Ponot", false}}},
-		{9, "Wisatawan bisa melakukan apa di Air Terjun Situmurun?",
-			"Wisatawan bisa berenang di kolam alami dan menikmati kesegaran air terjun.",
-			[]optSeed{{"Berenang di kolam alami", true}, {"Mendaki ke puncak", false}, {"Berselancar", false}, {"Memancing di laut", false}}},
-		{9, "Cara terbaik mencapai Air Terjun Situmurun adalah?",
-			"Air Terjun Situmurun paling mudah dicapai dengan perahu dari tepi Danau Toba.",
-			[]optSeed{{"Dengan perahu dari tepi danau", true}, {"Dengan kereta api", false}, {"Dengan pesawat helikopter", false}, {"Dengan jalan kaki dari Medan", false}}},
-		{9, "Air Terjun Situmurun mengalir ke mana?",
-			"Air Terjun Situmurun mengalir langsung ke perairan Danau Toba.",
-			[]optSeed{{"Danau Toba", true}, {"Laut Sumatera", false}, {"Sungai Asahan", false}, {"Sawah di bawahnya", false}}},
-		{9, "Apa nama danau yang menjadi tujuan aliran air terjun ini?",
-			"Danau Toba adalah danau vulkanik terbesar di dunia yang menjadi tujuan aliran Situmurun.",
-			[]optSeed{{"Danau Toba", true}, {"Danau Singkarak", false}, {"Danau Ranau", false}, {"Danau Poso", false}}},
-		{9, "Air Terjun Situmurun berada di provinsi mana?",
-			"Air Terjun Situmurun berada di Provinsi Sumatera Utara.",
-			[]optSeed{{"Sumatera Utara", true}, {"Sumatera Barat", false}, {"Riau", false}, {"Jambi", false}}},
-		{9, "Pemandangan di sekitar Air Terjun Situmurun didominasi oleh?",
-			"Pemandangan sekitar Air Terjun Situmurun didominasi oleh hutan hijau dan perairan Danau Toba.",
-			[]optSeed{{"Hutan hijau dan Danau Toba", true}, {"Gedung-gedung tinggi", false}, {"Padang pasir", false}, {"Salju abadi", false}}},
-		{9, "Air Terjun Situmurun termasuk kategori wisata apa?",
-			"Situmurun termasuk wisata alam yang menggabungkan keindahan air terjun dan danau.",
-			[]optSeed{{"Wisata alam air terjun dan danau", true}, {"Wisata belanja", false}, {"Wisata kuliner", false}, {"Wisata sejarah", false}}},
-		{9, "Kolam alami di bawah Air Terjun Situmurun terbentuk dari?",
-			"Kolam alami terbentuk dari pertemuan air terjun dengan permukaan Danau Toba.",
-			[]optSeed{{"Pertemuan air terjun dan Danau Toba", true}, {"Penggalian manusia", false}, {"Kawah gunung berapi", false}, {"Banjir tahunan", false}}},
-		{9, "Binangalom adalah nama lain dari?",
-			"Binangalom adalah nama lain dari Air Terjun Situmurun di Kabupaten Toba.",
-			[]optSeed{{"Air Terjun Situmurun", true}, {"Danau Toba", false}, {"Pulau Samosir", false}, {"Bukit Holbung", false}}},
-		{9, "Apa yang membuat Air Terjun Situmurun berbeda dari air terjun lain?",
-			"Keunikannya adalah langsung jatuh ke danau, bukan ke sungai atau kolam biasa.",
-			[]optSeed{{"Langsung jatuh ke danau", true}, {"Airnya berwarna biru", false}, {"Bisa diminum langsung", false}, {"Mengalir tanpa henti sepanjang tahun", false}}},
-
-		// ── SIGALE-GALE (level_order=10) ──────────────────
-		{10, "Sigale-gale adalah?",
-			"Sigale-gale adalah patung boneka kayu yang dapat bergerak dalam upacara adat Batak Toba.",
-			[]optSeed{{"Patung boneka kayu yang bisa bergerak", true}, {"Masakan khas Batak", false}, {"Alat musik Batak", false}, {"Tarian Batak", false}}},
-		{10, "Untuk apa Sigale-gale dibuat?",
-			"Sigale-gale dibuat sebagai pengganti anak bagi raja yang tidak memiliki keturunan.",
-			[]optSeed{{"Pengganti anak bagi raja tanpa keturunan", true}, {"Hiasan istana", false}, {"Senjata perang", false}, {"Media pertanian", false}}},
-		{10, "Bagaimana Sigale-gale bisa bergerak?",
-			"Sigale-gale digerakkan dengan mekanisme tali yang dikendalikan oleh manusia.",
-			[]optSeed{{"Mekanisme tali yang dikendalikan manusia", true}, {"Tenaga listrik", false}, {"Angin", false}, {"Kekuatan gaib saja", false}}},
-		{10, "Upacara Sigale-gale biasanya diiringi musik apa?",
-			"Upacara Sigale-gale biasanya diiringi musik gondang Batak Toba.",
-			[]optSeed{{"Gondang", true}, {"Gamelan", false}, {"Dangdut", false}, {"Kolintang", false}}},
-		{10, "Gondang adalah?",
-			"Gondang adalah alat musik perkusi tradisional Batak Toba yang digunakan dalam upacara.",
-			[]optSeed{{"Alat musik perkusi tradisional Batak", true}, {"Jenis makanan Batak", false}, {"Nama suku Batak", false}, {"Pakaian adat Batak", false}}},
-		{10, "Sigale-gale pertama kali ada di desa mana?",
-			"Sigale-gale pertama kali dibuat dan digunakan di Desa Tomok, Pulau Samosir.",
-			[]optSeed{{"Desa Tomok", true}, {"Huta Siallagan", false}, {"Balige", false}, {"Parapat", false}}},
-		{10, "Upacara Sigale-gale termasuk dalam ritual apa?",
-			"Upacara Sigale-gale termasuk dalam ritual pemakaman adat Batak Toba.",
-			[]optSeed{{"Ritual pemakaman adat Batak", true}, {"Ritual pernikahan", false}, {"Ritual panen", false}, {"Ritual kelahiran", false}}},
-		{10, "Tari apa yang dilakukan bersama Sigale-gale?",
-			"Tari Tortor adalah tarian yang dilakukan bersama Sigale-gale dalam upacara adat.",
-			[]optSeed{{"Tari Tortor", true}, {"Tari Saman", false}, {"Tari Kecak", false}, {"Tari Jaipong", false}}},
-		{10, "Sigale-gale terbuat dari bahan apa?",
-			"Sigale-gale terbuat dari kayu yang diukir menyerupai manusia.",
-			[]optSeed{{"Kayu", true}, {"Batu", false}, {"Tanah liat", false}, {"Logam", false}}},
-		{10, "Apa makna Sigale-gale bagi masyarakat Batak?",
-			"Sigale-gale merupakan simbol penghormatan kepada leluhur dan arwah yang telah meninggal.",
-			[]optSeed{{"Penghormatan kepada leluhur", true}, {"Lambang kekayaan", false}, {"Simbol keberanian", false}, {"Tanda kesuburan tanah", false}}},
-		{10, "Di mana wisatawan bisa melihat pertunjukan Sigale-gale?",
-			"Wisatawan bisa melihat pertunjukan Sigale-gale di Desa Tomok, Pulau Samosir.",
-			[]optSeed{{"Desa Tomok, Pulau Samosir", true}, {"Kota Medan", false}, {"Jakarta", false}, {"Museum Nasional", false}}},
-		{10, "Sigale-gale menari mengikuti irama musik apa?",
-			"Sigale-gale menari mengikuti irama gondang Sabangunan yang khas.",
-			[]optSeed{{"Gondang Sabangunan", true}, {"Gamelan Jawa", false}, {"Jazz modern", false}, {"Pop Indonesia", false}}},
-		{10, "Apa nama boneka kayu yang bisa menari dalam adat Batak?",
-			"Sigale-gale adalah nama boneka kayu yang bisa bergerak dan menari dalam upacara Batak.",
-			[]optSeed{{"Sigale-gale", true}, {"Ondel-ondel", false}, {"Barong", false}, {"Wayang", false}}},
-		{10, "Sigale-gale menjadi daya tarik wisata karena?",
-			"Sigale-gale menarik wisatawan karena keunikannya sebagai boneka kayu yang bisa menari.",
-			[]optSeed{{"Keunikan boneka kayu yang bisa menari", true}, {"Harganya sangat mahal", false}, {"Bisa berbicara sendiri", false}, {"Dibuat dari emas", false}}},
-		{10, "Pulau tempat Sigale-gale berasal adalah?",
-			"Sigale-gale berasal dari Pulau Samosir yang terletak di tengah Danau Toba.",
-			[]optSeed{{"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Batam", false}, {"Pulau Jawa", false}}},
-	}
-
-	count := 0
-	for _, q := range questions {
-		var loc models.Location
-		config.DB.Where("level_order = ?", q.LocationOrder).First(&loc)
-		if loc.ID == 0 {
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek soal battle: %v", result.Error)
 			continue
 		}
 
-		var existing models.LocationQuestion
-		if config.DB.Where("location_id = ? AND question = ?", loc.ID, q.Question).
-			First(&existing).Error != nil {
-			lq := models.LocationQuestion{
-				LocationID:  loc.ID,
-				Question:    q.Question,
-				Explanation: q.Explanation,
-				IsActive:    true,
-			}
-			config.DB.Create(&lq)
-			for _, opt := range q.Options {
-				config.DB.Create(&models.LocationQuestionOption{
-					QuestionID: lq.ID,
-					OptionText: opt.Text,
-					IsCorrect:  opt.IsCorrect,
-				})
-			}
-			count++
+		newQ := models.BattleQuestion{
+			Question:    q.Question,
+			Explanation: q.Explanation,
+			IsActive:    true,
+		}
+		if err := config.DB.Create(&newQ).Error; err != nil {
+			log.Printf("❌ Gagal seed battle: %v", err)
+			continue
+		}
+		for _, opt := range q.Opts {
+			config.DB.Create(&models.BattleQuestionOption{
+				QuestionID: newQ.ID,
+				OptionText: opt.Text,
+				IsCorrect:  opt.Correct,
+			})
 		}
 	}
-	log.Printf("  ✓ Location Questions (%d soal untuk 10 lokasi)", count)
+	log.Println("✅ Battle Questions selesai (15 soal)")
+}
+
+// ============================================================
+// ACHIEVEMENTS (14 achievement)
+// ============================================================
+func SeedAchievements() {
+	achievements := []models.Achievement{
+		{ID: 1, Name: "Penjelajah Pemula", Description: "Selesaikan lokasi pertama di Jelajah Budaya", Icon: "🗺️", ConditionType: "LOCATION", ConditionValue: 1, RewardXP: 50, RewardStars: 1},
+		{ID: 2, Name: "Sahabat Budaya", Description: "Capai Level 5", Icon: "⭐", ConditionType: "LEVEL", ConditionValue: 5, RewardXP: 100, RewardStars: 2},
+		{ID: 3, Name: "Penjelajah Sejati", Description: "Selesaikan 5 lokasi di Jelajah Budaya", Icon: "🏔️", ConditionType: "LOCATION", ConditionValue: 5, RewardXP: 150, RewardStars: 3},
+		{ID: 4, Name: "Master Penjelajah", Description: "Selesaikan semua 10 lokasi Jelajah Budaya", Icon: "🏆", ConditionType: "LOCATION", ConditionValue: 10, RewardXP: 300, RewardStars: 5},
+		{ID: 5, Name: "Kuiz Perdana", Description: "Main Trivia untuk pertama kali", Icon: "📚", ConditionType: "TRIVIA", ConditionValue: 1, RewardXP: 30, RewardStars: 1},
+		{ID: 6, Name: "Pecinta Trivia", Description: "Main Trivia sebanyak 10 kali", Icon: "📖", ConditionType: "TRIVIA", ConditionValue: 10, RewardXP: 100, RewardStars: 2},
+		{ID: 7, Name: "Master Trivia", Description: "Jawab 100 soal trivia dengan benar", Icon: "🎓", ConditionType: "TRIVIA_CORRECT", ConditionValue: 100, RewardXP: 200, RewardStars: 3},
+		{ID: 8, Name: "Pendekar Battle", Description: "Menangkan 1 Battle Quiz", Icon: "⚔️", ConditionType: "BATTLE_WIN", ConditionValue: 1, RewardXP: 75, RewardStars: 2},
+		{ID: 9, Name: "Raja Battle", Description: "Menangkan 5 Battle Quiz", Icon: "👑", ConditionType: "BATTLE_WIN", ConditionValue: 5, RewardXP: 200, RewardStars: 4},
+		{ID: 10, Name: "Kolektor Bintang", Description: "Kumpulkan 20 bintang", Icon: "⭐", ConditionType: "STARS", ConditionValue: 20, RewardXP: 100, RewardStars: 2},
+		{ID: 11, Name: "Bintang Sejati", Description: "Kumpulkan 50 bintang", Icon: "🌟", ConditionType: "STARS", ConditionValue: 50, RewardXP: 250, RewardStars: 5},
+		{ID: 12, Name: "Naik Level", Description: "Capai Level 5", Icon: "📈", ConditionType: "LEVEL", ConditionValue: 5, RewardXP: 100, RewardStars: 2},
+		{ID: 13, Name: "Duta Budaya", Description: "Capai Level 15", Icon: "🎖️", ConditionType: "LEVEL", ConditionValue: 15, RewardXP: 300, RewardStars: 5},
+		{ID: 14, Name: "Master Budaya Batak", Description: "Selesaikan semua achievement lainnya", Icon: "🏅", ConditionType: "ALL_ACHIEVEMENT", ConditionValue: 13, RewardXP: 500, RewardStars: 10},
+	}
+	for _, a := range achievements {
+		var existing models.Achievement
+		result := config.DB.Where("name = ?", a.Name).First(&existing)
+		if result.Error == nil {
+			log.Printf("ℹ️  Achievement sudah ada: %s", a.Name)
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek achievement %s: %v", a.Name, result.Error)
+			continue
+		}
+		if err := config.DB.Create(&a).Error; err != nil {
+			log.Printf("❌ Gagal seed achievement %s: %v", a.Name, err)
+			continue
+		}
+	}
+	log.Println("✅ Achievements selesai (14 achievement)")
+}
+
+// ============================================================
+// GALLERY CARDS (20 kartu)
+// ============================================================
+func SeedGalleryCards() {
+	cards := []models.GalleryCard{
+		{ID: 1, LocationID: 1, Title: "IT Del", Image: "gallery_itdel.png", Description: "Institut Teknologi Del, kampus teknologi bergengsi di tepi Danau Toba yang didirikan oleh BJ Habibie."},
+		{ID: 2, LocationID: 1, Title: "Aksara Batak", Image: "gallery_aksara.png", Description: "Sistem tulisan tradisional Batak Toba dengan 19 huruf induk yang unik dan kaya makna."},
+		{ID: 3, LocationID: 2, Title: "Taman Eden 100", Image: "gallery_tamaneden.png", Description: "Kawasan hutan tropis seluas 100 hektar yang menjadi paru-paru hijau kawasan Danau Toba."},
+		{ID: 4, LocationID: 2, Title: "Flora Endemik Toba", Image: "gallery_flora.png", Description: "Beragam tanaman endemik Sumatera yang langka dan dilindungi terdapat di kawasan Taman Eden 100."},
+		{ID: 5, LocationID: 3, Title: "Kaldera Toba", Image: "gallery_kaldera.png", Description: "Supervolcano terbesar di dunia yang kini menjadi danau vulkanik terbesar seluas 1.130 km²."},
+		{ID: 6, LocationID: 3, Title: "Pulau Samosir", Image: "gallery_samosir.png", Description: "Pulau vulkanik di tengah Danau Toba yang merupakan pulau dalam danau terbesar di dunia."},
+		{ID: 7, LocationID: 4, Title: "Parapat", Image: "gallery_parapat.png", Description: "Kota wisata di tepi Danau Toba yang menjadi pintu gerbang menuju Pulau Samosir."},
+		{ID: 8, LocationID: 4, Title: "Mie Gomak", Image: "gallery_miegomak.png", Description: "Mie khas Batak Toba yang tebal dan panjang, dijuluki spaghetti Batak dan menjadi kuliner ikonik Parapat."},
+		{ID: 9, LocationID: 5, Title: "Pelabuhan Ajibata", Image: "gallery_ajibata.png", Description: "Pelabuhan utama yang menghubungkan Parapat dengan Pulau Samosir melalui kapal ferry Batak."},
+		{ID: 10, LocationID: 5, Title: "Ferry Danau Toba", Image: "gallery_ferry.png", Description: "Kapal ferry tradisional yang menjadi transportasi utama menyeberangi Danau Toba menuju Pulau Samosir."},
+		{ID: 11, LocationID: 6, Title: "Desa Tomok", Image: "gallery_tomok.png", Description: "Desa wisata di Pulau Samosir dengan pasar souvenir khas Batak dan makam Raja Sidabutar."},
+		{ID: 12, LocationID: 6, Title: "Sigale-gale", Image: "gallery_sigalegale.png", Description: "Boneka kayu ajaib dari Tomok yang bisa menari mengikuti irama musik Gondang Batak Toba."},
+		{ID: 13, LocationID: 7, Title: "Tuktuk Siadong", Image: "gallery_tuktuk.png", Description: "Semenanjung indah di Pulau Samosir dengan pemandangan Danau Toba yang spektakuler 360 derajat."},
+		{ID: 14, LocationID: 7, Title: "Ulos Batak", Image: "gallery_ulos.png", Description: "Kain tenun tradisional khas Batak Toba yang memiliki nilai budaya dan spiritual sangat tinggi."},
+		{ID: 15, LocationID: 8, Title: "Pantai Batuhoda", Image: "gallery_batuhoda.png", Description: "Pantai cantik di Pulau Samosir dengan pasir putih bersih dan air Danau Toba yang jernih."},
+		{ID: 16, LocationID: 8, Title: "Gondang Sabangunan", Image: "gallery_gondang.png", Description: "Ansambel musik tradisional Batak Toba yang lengkap terdiri dari Taganing, Sarune, Ogung, dan Hesek."},
+		{ID: 17, LocationID: 9, Title: "Jembatan Tanah Ponggol", Image: "gallery_ponggol.png", Description: "Jembatan ikonik yang menghubungkan daratan Kabupaten Samosir dengan Pulau Samosir."},
+		{ID: 18, LocationID: 9, Title: "Adat Pernikahan Batak", Image: "gallery_pernikahan.png", Description: "Upacara adat pernikahan Batak Toba yang kaya ritual dan penuh makna filosofis mendalam."},
+		{ID: 19, LocationID: 10, Title: "Patung Yesus Sibea-bea", Image: "gallery_sibeabea.png", Description: "Patung Yesus Kristus setinggi 61 meter di Sibea-bea, salah satu yang tertinggi di Asia Tenggara."},
+		{ID: 20, LocationID: 10, Title: "Panorama Danau Toba", Image: "gallery_panorama.png", Description: "Pemandangan Danau Toba dari ketinggian Sibea-bea yang memukau dengan keindahan alam yang tiada tara."},
+	}
+	for _, c := range cards {
+		var existing models.GalleryCard
+		result := config.DB.Where("location_id = ? AND title = ?", c.LocationID, c.Title).First(&existing)
+		if result.Error == nil {
+			log.Printf("ℹ️  Gallery sudah ada: %s", c.Title)
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek gallery %s: %v", c.Title, result.Error)
+			continue
+		}
+		if err := config.DB.Create(&c).Error; err != nil {
+			log.Printf("❌ Gagal seed gallery %s: %v", c.Title, err)
+			continue
+		}
+		log.Printf("✅ Gallery ditambahkan: %s", c.Title)
+	}
+	log.Println("✅ Gallery Cards selesai (20 kartu)")
+}
+
+// ============================================================
+// GAME SETTINGS
+// ============================================================
+func SeedGameSettings() {
+	settings := []models.GameSetting{
+		{SettingKey: "quiz_time_limit", SettingValue: "15", Description: "Batas waktu soal quiz dalam detik"},
+		{SettingKey: "quiz_question_count", SettingValue: "5", Description: "Jumlah soal per sesi quiz"},
+		{SettingKey: "min_correct_to_pass", SettingValue: "3", Description: "Jumlah minimum jawaban benar untuk lulus"},
+		{SettingKey: "battle_question_count", SettingValue: "5", Description: "Jumlah soal per sesi battle"},
+		{SettingKey: "battle_time_per_question", SettingValue: "15", Description: "Batas waktu per soal battle dalam detik"},
+		{SettingKey: "xp_per_level", SettingValue: "500", Description: "XP yang dibutuhkan untuk naik satu level"},
+		{SettingKey: "matchmaking_timeout", SettingValue: "30", Description: "Waktu tunggu matchmaking sebelum vs Bot dalam detik"},
+		{SettingKey: "app_version", SettingValue: "1.0.0", Description: "Versi aplikasi saat ini"},
+	}
+	for _, s := range settings {
+		var existing models.GameSetting
+		if config.DB.Where("setting_key = ?", s.SettingKey).First(&existing).Error != nil {
+			config.DB.Create(&s)
+		}
+	}
+	log.Println("✅ Game Settings selesai")
+}
+
+// ============================================================
+// WEEKLY CHALLENGES (3 tantangan contoh)
+// ============================================================
+func SeedWeeklyChallenges() {
+	now := time.Now()
+	nextWeek := now.AddDate(0, 0, 7)
+
+	challenges := []models.WeeklyChallenge{
+		{
+			Title:       "Cocokkan Kata Batak!",
+			Description: "Pasangkan kata Bahasa Batak dengan artinya dalam Bahasa Indonesia.",
+			GameType:    "MATCHING",
+			RewardXP:    100,
+			RewardStars: 2,
+			IsActive:    true,
+			StartDate:   now,
+			EndDate:     nextWeek,
+			DataJSON:    `{"pairs":[{"batak":"Horas","indo":"Selamat/Sehat"},{"batak":"Mauliate","indo":"Terima kasih"},{"batak":"Mangan","indo":"Makan"},{"batak":"Bagas","indo":"Rumah"},{"batak":"Tao","indo":"Danau"}]}`,
+		},
+		{
+			Title:       "Susun Kata Batak!",
+			Description: "Susun huruf-huruf acak menjadi kata Bahasa Batak yang benar.",
+			GameType:    "WORD_ARRANGE",
+			RewardXP:    120,
+			RewardStars: 2,
+			IsActive:    false,
+			StartDate:   now.AddDate(0, 0, -7),
+			EndDate:     now.AddDate(0, 0, -1),
+			DataJSON:    `{"words":[{"scrambled":"SOLU","answer":"ULOS","hint":"Kain tenun khas Batak"},{"scrambled":"SAROH","answer":"HORAS","hint":"Salam khas Batak"},{"scrambled":"NAGNOM","answer":"MANGAN","hint":"Kegiatan makan"}]}`,
+		},
+		{
+			Title:       "Memory Card Budaya Batak!",
+			Description: "Temukan pasangan kartu budaya Batak yang cocok.",
+			GameType:    "MEMORY_CARD",
+			RewardXP:    150,
+			RewardStars: 3,
+			IsActive:    false,
+			StartDate:   now.AddDate(0, 0, -14),
+			EndDate:     now.AddDate(0, 0, -8),
+			DataJSON:    `{"cards":[{"id":"taganing","label":"Taganing","emoji":"🥁"},{"id":"hasapi","label":"Hasapi","emoji":"🎸"},{"id":"ulos","label":"Ulos","emoji":"🧣"},{"id":"gondang","label":"Gondang","emoji":"🎵"}]}`,
+		},
+	}
+
+	for _, c := range challenges {
+		var existing models.WeeklyChallenge
+		result := config.DB.Where("title = ? AND game_type = ?", c.Title, c.GameType).First(&existing)
+		if result.Error == nil {
+			log.Printf("ℹ️  Weekly Challenge sudah ada: %s", c.Title)
+			continue
+		}
+		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			log.Printf("❌ Gagal mengecek weekly challenge %s: %v", c.Title, result.Error)
+			continue
+		}
+		if err := config.DB.Create(&c).Error; err != nil {
+			log.Printf("❌ Gagal seed weekly challenge %s: %v", c.Title, err)
+			continue
+		}
+	}
+	log.Println("✅ Weekly Challenges selesai (3 contoh)")
+}
+
+// ============================================================
+// ADMIN — sesuai field Admin struct
+// ============================================================
+func SeedAdmin() {
+	var existing models.Admin
+	result := config.DB.Where("username = ?", "admin").First(&existing)
+	if result.Error == nil {
+		log.Println("ℹ️  Admin sudah ada, skip")
+		return
+	}
+	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		log.Printf("❌ Gagal mengecek admin: %v", result.Error)
+		return
+	}
+
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
+	if err != nil {
+		log.Printf("❌ Gagal hash password admin: %v", err)
+		return
+	}
+
+	admin := models.Admin{
+		Fullname:     "Admin TOBA",
+		Username:     "admin",
+		PasswordHash: string(hashedPass),
+		Role:         "admin",
+	}
+
+	if err := config.DB.Create(&admin).Error; err != nil {
+		log.Printf("❌ Gagal seed admin: %v", err)
+		return
+	}
+
+	fmt.Println("✅ Admin default dibuat")
+	fmt.Println("   Username : admin")
+	fmt.Println("   Password : admin123")
+	fmt.Println("   ⚠️  Ganti password setelah login pertama!")
 }
