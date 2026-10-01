@@ -44,7 +44,7 @@ public class MainApp : MonoBehaviour
 
         NetworkManager.Instance.Init(
             canvas.transform,
-            APIManager.Instance.GetBaseUrl() + "/");
+            APIManager.Instance.GetBaseUrl());
 
         FirebaseManager.Instance?.Initialize();
 
