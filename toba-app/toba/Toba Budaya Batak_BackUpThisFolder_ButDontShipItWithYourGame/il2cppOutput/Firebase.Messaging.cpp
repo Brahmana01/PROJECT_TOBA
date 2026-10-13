@@ -1518,7 +1518,7 @@ IL2CPP_EXTERN_C void DEFAULT_CALL SWIGRegisterStringCallback_FirebaseMessagingIn
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77540
+// Method Definition Index: 77542
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* FirebaseMessage_FromInternal_m4CC3E212C5B711E5B2B62BFCEE5C731A85515A03 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* ___0_other, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -1707,7 +1707,7 @@ IL_0101:
 		return L_56;
 	}
 }
-// Method Definition Index: 77541
+// Method Definition Index: 77543
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_CollapseKey_m339C3DF6AE3DC040AF94426569EC2195C6BB82EA (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1716,7 +1716,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_CollapseKey_m33
 		return L_0;
 	}
 }
-// Method Definition Index: 77542
+// Method Definition Index: 77544
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_CollapseKey_mF554D797BCC8EA451C95535ABE23417CC6B4E889 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1727,7 +1727,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_CollapseKey_mF554D79
 		return;
 	}
 }
-// Method Definition Index: 77543
+// Method Definition Index: 77545
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseMessage_get_Data_m4633EBF49233BC6304EBA4E9701C6954DBF6BCDA (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1736,7 +1736,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseMessage_get_Data_m4633
 		return L_0;
 	}
 }
-// Method Definition Index: 77544
+// Method Definition Index: 77546
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Data_mAF86D91E3BAE98093F6B824F0DE0987F117775FE (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, RuntimeObject* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1747,7 +1747,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Data_mAF86D91E3BAE98
 		return;
 	}
 }
-// Method Definition Index: 77545
+// Method Definition Index: 77547
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_Error_m628F181C4444596F5698E1AFCB6E67C00EE7B2EE (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1756,7 +1756,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_Error_m628F181C
 		return L_0;
 	}
 }
-// Method Definition Index: 77546
+// Method Definition Index: 77548
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Error_mE85D580435096CD7168DC6E0A6D6E0BB1CD305F9 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1767,7 +1767,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Error_mE85D580435096
 		return;
 	}
 }
-// Method Definition Index: 77547
+// Method Definition Index: 77549
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_ErrorDescription_m887FE59C8D3D2335AAC0BBCE98C912DFE92BB23C (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1776,7 +1776,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_ErrorDescriptio
 		return L_0;
 	}
 }
-// Method Definition Index: 77548
+// Method Definition Index: 77550
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_ErrorDescription_m9E41A332C1D42AE4B1DE33DCEFF30C3921BFF35C (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1787,7 +1787,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_ErrorDescription_m9E
 		return;
 	}
 }
-// Method Definition Index: 77549
+// Method Definition Index: 77551
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_From_m6A8B7F66B7C0E65663FF0054C694CF5C957AC8E4 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1796,7 +1796,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_From_m6A8B7F66B
 		return L_0;
 	}
 }
-// Method Definition Index: 77550
+// Method Definition Index: 77552
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_From_m943B763EB24774DB1BFB5ADE168B53EB03DE28AC (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1807,7 +1807,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_From_m943B763EB24774
 		return;
 	}
 }
-// Method Definition Index: 77551
+// Method Definition Index: 77553
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Uri_t1500A52B5F71A04F5D05C0852D0F2A0941842A0E* FirebaseMessage_get_Link_m499FEB761A3F6A88E64F2D69F9A03F0E28D42E5A (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1816,7 +1816,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Uri_t1500A52B5F71A04F5D05C0852D0F2A0941842A0E
 		return L_0;
 	}
 }
-// Method Definition Index: 77552
+// Method Definition Index: 77554
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Link_m40718749226ADF6AAB62BD50697B0C3AB7C24F0D (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, Uri_t1500A52B5F71A04F5D05C0852D0F2A0941842A0E* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1827,7 +1827,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Link_m40718749226ADF
 		return;
 	}
 }
-// Method Definition Index: 77553
+// Method Definition Index: 77555
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_MessageId_mA06224C6A9C60DA2E73C30DF894B9A66EA27FFEC (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1836,7 +1836,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_MessageId_mA062
 		return L_0;
 	}
 }
-// Method Definition Index: 77554
+// Method Definition Index: 77556
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageId_m73059B5444A66AFBA4F3D9841786DADE503C5DB0 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1847,7 +1847,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageId_m73059B544
 		return;
 	}
 }
-// Method Definition Index: 77555
+// Method Definition Index: 77557
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_MessageType_mE74F760E1067384AFF099776E1EB2E608298B779 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1856,7 +1856,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_MessageType_mE7
 		return L_0;
 	}
 }
-// Method Definition Index: 77556
+// Method Definition Index: 77558
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageType_m93FA839F3CF9DF81862622D81ED4A367988F1937 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1867,7 +1867,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageType_m93FA839
 		return;
 	}
 }
-// Method Definition Index: 77557
+// Method Definition Index: 77559
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* FirebaseMessage_get_Notification_mC9378F111739D7593BC3E8F085D9500B218A4A2F (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1876,7 +1876,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseNotification_t17D8D8BE158C522C9DBA575
 		return L_0;
 	}
 }
-// Method Definition Index: 77558
+// Method Definition Index: 77560
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Notification_mEE345553ADB2813A18981604A72C6EAF769162BF (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1887,7 +1887,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Notification_mEE3455
 		return;
 	}
 }
-// Method Definition Index: 77559
+// Method Definition Index: 77561
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessage_get_NotificationOpened_m20366C61D5F048F1C7C65471A7961E3F21AC9C52 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1896,7 +1896,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessage_get_NotificationOpened_m
 		return L_0;
 	}
 }
-// Method Definition Index: 77560
+// Method Definition Index: 77562
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_NotificationOpened_m303A2CA4C64DC98F1E40325A208F400B3494E151 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1906,7 +1906,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_NotificationOpened_m
 		return;
 	}
 }
-// Method Definition Index: 77561
+// Method Definition Index: 77563
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_Priority_m154A74DED37BB580CD0B40B52417B5ADF9650841 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1915,7 +1915,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_Priority_m154A7
 		return L_0;
 	}
 }
-// Method Definition Index: 77562
+// Method Definition Index: 77564
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Priority_mA9EFDF670BC095A65B9F8B33AB32D8DD50143A06 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1926,7 +1926,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_Priority_mA9EFDF670B
 		return;
 	}
 }
-// Method Definition Index: 77563
+// Method Definition Index: 77565
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* FirebaseMessage_get_RawData_mB4FC7C03D209D02B28D4357E19F3E776B4A4450B (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1935,7 +1935,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A8261
 		return L_0;
 	}
 }
-// Method Definition Index: 77564
+// Method Definition Index: 77566
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_RawData_mEE5E5EB87E5C37A86CEB932DFFF156B0292BE52B (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1946,7 +1946,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_RawData_mEE5E5EB87E5
 		return;
 	}
 }
-// Method Definition Index: 77565
+// Method Definition Index: 77567
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR TimeSpan_t8195C5B013A2C532FEBDF0B64B6911982E750F5A FirebaseMessage_get_TimeToLive_m6BD4BB702BDECAE1765DA2D2AA9930BF2B411FF3 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1955,7 +1955,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR TimeSpan_t8195C5B013A2C532FEBDF0B64B6911982E7
 		return L_0;
 	}
 }
-// Method Definition Index: 77566
+// Method Definition Index: 77568
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_TimeToLive_m6A500FDFD6B464330450DA6AF9754534DC348D55 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, TimeSpan_t8195C5B013A2C532FEBDF0B64B6911982E750F5A ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1965,7 +1965,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_TimeToLive_m6A500FDF
 		return;
 	}
 }
-// Method Definition Index: 77567
+// Method Definition Index: 77569
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_To_m0D1BD6DDA27E4B38F1F8CA9E36226E0199D4499D (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -1974,7 +1974,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessage_get_To_m0D1BD6DDA27
 		return L_0;
 	}
 }
-// Method Definition Index: 77568
+// Method Definition Index: 77570
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_To_m760C1FD5853796C542F1252B1DA42DA830521018 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -1985,7 +1985,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage_set_To_m760C1FD5853796C5
 		return;
 	}
 }
-// Method Definition Index: 77569
+// Method Definition Index: 77571
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage__ctor_m742FE4419880C19B9763BD1D0AEC5E6BB048DCA0 (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -2002,7 +2002,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessage__ctor_m742FE4419880C19B9
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77570
+// Method Definition Index: 77572
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessaging_get_RegistrationOnInitEnabled_m5660B70EE739859B76EF5938201EBC970AF352D8 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2028,7 +2028,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77571
+// Method Definition Index: 77573
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_set_RegistrationOnInitEnabled_mE8CB7B1767EF9DCC20C97CD98125C7B5DA5FB18A (bool ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2046,7 +2046,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_set_RegistrationOnInit
 		return;
 	}
 }
-// Method Definition Index: 77572
+// Method Definition Index: 77574
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessaging_get_TokenRegistrationOnInitEnabled_m4C19ACC05AE94D7F9CD860DF541C6208B1E4E9EA (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2072,7 +2072,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77573
+// Method Definition Index: 77575
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_set_TokenRegistrationOnInitEnabled_m1831D76AC2FFAD2CC33C5A499FA7DBD422C250C3 (bool ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2090,7 +2090,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_set_TokenRegistrationO
 		return;
 	}
 }
-// Method Definition Index: 77574
+// Method Definition Index: 77576
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessaging_get_DeliveryMetricsExportedToBigQueryEnabled_m06018461B2F70F64433782B1DFBE4E1E6B533C80 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2116,7 +2116,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77575
+// Method Definition Index: 77577
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_set_DeliveryMetricsExportedToBigQueryEnabled_mFA8D305949258F8796368CD315B21D72FD31DB83 (bool ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2134,7 +2134,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_set_DeliveryMetricsExp
 		return;
 	}
 }
-// Method Definition Index: 77576
+// Method Definition Index: 77578
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessaging_RegisterAsync_mDE2DA971CF2F3EFB7B511109D6506BA29E36BF11 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2160,7 +2160,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77577
+// Method Definition Index: 77579
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessaging_UnregisterAsync_m95BE5AB153B8E99B5C779D6B896B2E24BC2DC3BB (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2186,7 +2186,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77578
+// Method Definition Index: 77580
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_1_t3D7638C82ED289AF156EDBAE76842D8DF4C4A9E0* FirebaseMessaging_GetTokenAsync_m21AABFA9552959DD10479545CAE7E7C8FF7643AB (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2212,7 +2212,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77579
+// Method Definition Index: 77581
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessaging_DeleteTokenAsync_m8C3C653740DBB5E59BC0B044DBE607E1F772C8E9 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2238,7 +2238,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77580
+// Method Definition Index: 77582
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_MessageReceived_m7593D2A9A31F8D9D6C63C5721DD27D6029AD51DD (EventHandler_1_tF3AA5EB88F494B5147D2E245A3AF5AB3CDF8D72B* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2256,7 +2256,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_MessageReceived_m7
 		return;
 	}
 }
-// Method Definition Index: 77581
+// Method Definition Index: 77583
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_MessageReceived_mC78F77D418BC853D058C936B5FD9F4653DBC6D0C (EventHandler_1_tF3AA5EB88F494B5147D2E245A3AF5AB3CDF8D72B* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2274,7 +2274,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_MessageReceived
 		return;
 	}
 }
-// Method Definition Index: 77582
+// Method Definition Index: 77584
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_TokenReceived_m104BD22FC0B8EB65EAD116DD143E307DC074B58D (EventHandler_1_t628C7697D75CC4686AD6125D745540AC427C28A0* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2292,7 +2292,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_TokenReceived_m104
 		return;
 	}
 }
-// Method Definition Index: 77583
+// Method Definition Index: 77585
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_TokenReceived_m57733EDA0C697B1C9C675C7222933E9DFD72D1DC (EventHandler_1_t628C7697D75CC4686AD6125D745540AC427C28A0* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2310,7 +2310,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_TokenReceived_m
 		return;
 	}
 }
-// Method Definition Index: 77584
+// Method Definition Index: 77586
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_RegistrationReceived_m1CEDCA00A31AD3BB9CFA5A14B0210259A2C979E8 (EventHandler_1_tB0C11A919746F6196DD5BF0C888C4D5852131080* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2328,7 +2328,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_RegistrationReceiv
 		return;
 	}
 }
-// Method Definition Index: 77585
+// Method Definition Index: 77587
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_RegistrationReceived_m6B092E67BD073A664C044E3D7B0804A193745BC5 (EventHandler_1_tB0C11A919746F6196DD5BF0C888C4D5852131080* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2346,7 +2346,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_RegistrationRec
 		return;
 	}
 }
-// Method Definition Index: 77586
+// Method Definition Index: 77588
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_UnregistrationReceived_mBEF14FDCD07B3BF05CAAAE8C078C244AB35CC68F (EventHandler_1_tD190B6ED97DE881FFA0F312C532578DDD60F8829* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2364,7 +2364,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_add_UnregistrationRece
 		return;
 	}
 }
-// Method Definition Index: 77587
+// Method Definition Index: 77589
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_UnregistrationReceived_mA53DBA2D8D25C024BA46D981E81F7BA315EFA22B (EventHandler_1_tD190B6ED97DE881FFA0F312C532578DDD60F8829* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2382,7 +2382,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessaging_remove_UnregistrationR
 		return;
 	}
 }
-// Method Definition Index: 77588
+// Method Definition Index: 77590
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessaging_RequestPermissionAsync_mD58F048A50CD1B735BE6033456922A42671670DA (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2408,7 +2408,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77589
+// Method Definition Index: 77591
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessaging_SubscribeAsync_m648779F7705CF77214D393454CE0E00175C1858F (String_t* ___0_topic, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2435,7 +2435,7 @@ IL_000a:
 		return L_2;
 	}
 }
-// Method Definition Index: 77590
+// Method Definition Index: 77592
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessaging_UnsubscribeAsync_mA91F8F827D8AC38546796C20E4EDB2A9A42EC5C4 (String_t* ___0_topic, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2470,7 +2470,7 @@ IL_000a:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77591
+// Method Definition Index: 77593
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* AndroidNotificationParams_FromInternal_m8AC23D639885477534CDD404CD87D6B0934FA548 (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* ___0_other, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2525,7 +2525,7 @@ IL_0024:
 		return L_7;
 	}
 }
-// Method Definition Index: 77592
+// Method Definition Index: 77594
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* AndroidNotificationParams_get_ChannelId_mC1C24D8979C03D54B70F71FFD247C1015FD22647 (AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2534,7 +2534,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* AndroidNotificationParams_get_Chann
 		return L_0;
 	}
 }
-// Method Definition Index: 77593
+// Method Definition Index: 77595
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParams_set_ChannelId_m6364414BAA90D19891FECFB97B88E4204F8AFDC0 (AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2545,7 +2545,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParams_set_ChannelId_
 		return;
 	}
 }
-// Method Definition Index: 77594
+// Method Definition Index: 77596
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParams__ctor_m14F9AA0AEAB945312E12E35AA16BE19E43A113CB (AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -2562,7 +2562,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParams__ctor_m14F9AA0
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77595
+// Method Definition Index: 77597
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* FirebaseNotification_FromInternal_mB2186A96933D3839D72ED1F46289B5491A1A6B76 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* ___0_other, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -2721,7 +2721,7 @@ IL_00d2:
 		return L_46;
 	}
 }
-// Method Definition Index: 77596
+// Method Definition Index: 77598
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* FirebaseNotification_get_Android_mB972D002792C85C0ABF73EA076F729D5EECD0279 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2730,7 +2730,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR AndroidNotificationParams_t5D31ABDF15208A4697
 		return L_0;
 	}
 }
-// Method Definition Index: 77597
+// Method Definition Index: 77599
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Android_m567BA7563BD1D64B80E0FD39D27774D179D8C8D2 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2741,7 +2741,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Android_m567BA7
 		return;
 	}
 }
-// Method Definition Index: 77598
+// Method Definition Index: 77600
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Badge_mFAF2E4B800BCE96112724BEB780143D6E228670E (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2750,7 +2750,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Badge_mFAF
 		return L_0;
 	}
 }
-// Method Definition Index: 77599
+// Method Definition Index: 77601
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Badge_mB7C30AA73961C60EF97B72F7F14B6E206B322969 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2761,7 +2761,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Badge_mB7C30AA7
 		return;
 	}
 }
-// Method Definition Index: 77600
+// Method Definition Index: 77602
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Body_mEFB4117BAE3B281BB0C92DE332459AE63DB32343 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2770,7 +2770,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Body_mEFB4
 		return L_0;
 	}
 }
-// Method Definition Index: 77601
+// Method Definition Index: 77603
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Body_m3E02DB91699A4F64AA95CA05A7A94A94698FEC50 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2781,7 +2781,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Body_m3E02DB916
 		return;
 	}
 }
-// Method Definition Index: 77602
+// Method Definition Index: 77604
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseNotification_get_BodyLocalizationArgs_m3497C125427EEE8528663A71AF83071EC867F2DE (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2790,7 +2790,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseNotification_get_BodyL
 		return L_0;
 	}
 }
-// Method Definition Index: 77603
+// Method Definition Index: 77605
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_BodyLocalizationArgs_m9810B0FE02A57713E8749DF087A65C047C2BD387 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, RuntimeObject* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2801,7 +2801,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_BodyLocalizatio
 		return;
 	}
 }
-// Method Definition Index: 77604
+// Method Definition Index: 77606
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_BodyLocalizationKey_mD3A07666F5C03B3DCCCD8ACB12B5CD7C1937E01F (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2810,7 +2810,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_BodyLocali
 		return L_0;
 	}
 }
-// Method Definition Index: 77605
+// Method Definition Index: 77607
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_BodyLocalizationKey_m9FEB4B64D6B94EEAA27A286930AB5910690FF75C (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2821,7 +2821,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_BodyLocalizatio
 		return;
 	}
 }
-// Method Definition Index: 77606
+// Method Definition Index: 77608
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_ClickAction_m4E42D4CF9017681EC8A66D54A397C7ED07F57EF0 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2830,7 +2830,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_ClickActio
 		return L_0;
 	}
 }
-// Method Definition Index: 77607
+// Method Definition Index: 77609
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_ClickAction_m5544A311DED18F1F8847E534D8098873E21327A4 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2841,7 +2841,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_ClickAction_m55
 		return;
 	}
 }
-// Method Definition Index: 77608
+// Method Definition Index: 77610
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Color_m8E72F7B6988F032E60427AFABEC2CA3D4EEEB1B8 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2850,7 +2850,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Color_m8E7
 		return L_0;
 	}
 }
-// Method Definition Index: 77609
+// Method Definition Index: 77611
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Color_mEDEA814C9FCFDFC7EBF296BC9AC3D9D24B775199 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2861,7 +2861,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Color_mEDEA814C
 		return;
 	}
 }
-// Method Definition Index: 77610
+// Method Definition Index: 77612
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Icon_m8D00AC4BA1191ED24F52B3F85D7B56DF4E9E6D7B (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2870,7 +2870,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Icon_m8D00
 		return L_0;
 	}
 }
-// Method Definition Index: 77611
+// Method Definition Index: 77613
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Icon_mE86E5CFC08245C1EED5970A32BDF84F92E02D217 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2881,7 +2881,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Icon_mE86E5CFC0
 		return;
 	}
 }
-// Method Definition Index: 77612
+// Method Definition Index: 77614
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Sound_mCC04130300784A12DC864617A6FBC8C144CAF24F (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2890,7 +2890,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Sound_mCC0
 		return L_0;
 	}
 }
-// Method Definition Index: 77613
+// Method Definition Index: 77615
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Sound_mFA3410DE78782C819BA2410F3D0A36DCEFAD7598 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2901,7 +2901,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Sound_mFA3410DE
 		return;
 	}
 }
-// Method Definition Index: 77614
+// Method Definition Index: 77616
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Tag_m519E0B46290C433EA85BFFC0435848CA0DC6EE8F (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2910,7 +2910,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Tag_m519E0
 		return L_0;
 	}
 }
-// Method Definition Index: 77615
+// Method Definition Index: 77617
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tag_m3DA49F6CFD21DD8A93D9B2A6834055CADF91AE67 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2921,7 +2921,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tag_m3DA49F6CFD
 		return;
 	}
 }
-// Method Definition Index: 77616
+// Method Definition Index: 77618
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Title_mE13C0B56A0B81DECA17D6BC996E1376240A5F96D (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2930,7 +2930,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_Title_mE13
 		return L_0;
 	}
 }
-// Method Definition Index: 77617
+// Method Definition Index: 77619
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Title_m073C79521BC43E5C6E8EF44CB03B31A0245289DD (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2941,7 +2941,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_Title_m073C7952
 		return;
 	}
 }
-// Method Definition Index: 77618
+// Method Definition Index: 77620
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseNotification_get_TitleLocalizationArgs_mF276A7644F8D6DE696B39204A82CB705485ADCEA (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2950,7 +2950,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseNotification_get_Title
 		return L_0;
 	}
 }
-// Method Definition Index: 77619
+// Method Definition Index: 77621
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_TitleLocalizationArgs_m94481E755904B8A68E032AD0BD64F589A201C77F (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, RuntimeObject* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2961,7 +2961,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_TitleLocalizati
 		return;
 	}
 }
-// Method Definition Index: 77620
+// Method Definition Index: 77622
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_TitleLocalizationKey_m7B87BAD6A317D86656AC82E6242519E31092A1A9 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -2970,7 +2970,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotification_get_TitleLocal
 		return L_0;
 	}
 }
-// Method Definition Index: 77621
+// Method Definition Index: 77623
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_TitleLocalizationKey_m2998C3A168A1796DD507A4A0B7906F47712C39F2 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -2981,7 +2981,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification_set_TitleLocalizati
 		return;
 	}
 }
-// Method Definition Index: 77622
+// Method Definition Index: 77624
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification__ctor_mAC708CF5A2697DB927E89CFBD4E79A2B2173CD48 (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -2998,7 +2998,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotification__ctor_mAC708CF5A269
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77623
+// Method Definition Index: 77625
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessageReceivedEventArgs__ctor_mF420D689ACEE65740BA0E1A253DF2D33CBAFC061 (MessageReceivedEventArgs_tAFDBCC69B3DEC0F5EB76ACAA8D97A404E61F73E5* __this, FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* ___0_msg, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3018,7 +3018,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessageReceivedEventArgs__ctor_mF420D689
 		return;
 	}
 }
-// Method Definition Index: 77624
+// Method Definition Index: 77626
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* MessageReceivedEventArgs_get_Message_mB05C315AA155A3A35925369C5093FFB8B91C2BF6 (MessageReceivedEventArgs_tAFDBCC69B3DEC0F5EB76ACAA8D97A404E61F73E5* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3027,7 +3027,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseMessage_t09E58AB584806FC5C23F419AD7CD
 		return L_0;
 	}
 }
-// Method Definition Index: 77625
+// Method Definition Index: 77627
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessageReceivedEventArgs_set_Message_m237AEA7C0AAB2533F89A673BA3F288F4E1F3D04A (MessageReceivedEventArgs_tAFDBCC69B3DEC0F5EB76ACAA8D97A404E61F73E5* __this, FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -3046,7 +3046,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessageReceivedEventArgs_set_Message_m23
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77626
+// Method Definition Index: 77628
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedEventArgs__ctor_m834B72CF7DB04F86A4929BBDEFA7E969BFC09D21 (TokenReceivedEventArgs_t91FA07EA184701BF44700D7581779A5C84C7B98C* __this, String_t* ___0_token, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3066,7 +3066,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedEventArgs__ctor_m834B72CF7D
 		return;
 	}
 }
-// Method Definition Index: 77627
+// Method Definition Index: 77629
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* TokenReceivedEventArgs_get_Token_m238B04731212F820259074BD576723DCED8B719A (TokenReceivedEventArgs_t91FA07EA184701BF44700D7581779A5C84C7B98C* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3075,7 +3075,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* TokenReceivedEventArgs_get_Token_m2
 		return L_0;
 	}
 }
-// Method Definition Index: 77628
+// Method Definition Index: 77630
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedEventArgs_set_Token_mC42B0EC030BD8880FA31346108580505D1C4A318 (TokenReceivedEventArgs_t91FA07EA184701BF44700D7581779A5C84C7B98C* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -3094,7 +3094,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedEventArgs_set_Token_mC42B0E
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77629
+// Method Definition Index: 77631
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedEventArgs__ctor_m15454044A48F9A249F365331B2B41600750589B8 (RegistrationReceivedEventArgs_t818B79F1005529F110D77F19670836F2ECB947B5* __this, String_t* ___0_installationId, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3114,7 +3114,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedEventArgs__ctor_m154
 		return;
 	}
 }
-// Method Definition Index: 77630
+// Method Definition Index: 77632
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* RegistrationReceivedEventArgs_get_InstallationId_m7B7AECCE7CC2C8FC03EA01F42D29CA45B9062C09 (RegistrationReceivedEventArgs_t818B79F1005529F110D77F19670836F2ECB947B5* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3123,7 +3123,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* RegistrationReceivedEventArgs_get_I
 		return L_0;
 	}
 }
-// Method Definition Index: 77631
+// Method Definition Index: 77633
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedEventArgs_set_InstallationId_mE82D59BCA446903B21375BF23E305AF5D89B5AC1 (RegistrationReceivedEventArgs_t818B79F1005529F110D77F19670836F2ECB947B5* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -3142,7 +3142,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedEventArgs_set_Instal
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77632
+// Method Definition Index: 77634
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedEventArgs__ctor_m0103DCDEF8240FBA2B8E6F2C1E02AAD4E372C875 (UnregistrationReceivedEventArgs_tFB2BB102D24389582CFE5D521EC8CF5E6445FBF3* __this, String_t* ___0_installationId, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3162,7 +3162,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedEventArgs__ctor_m0
 		return;
 	}
 }
-// Method Definition Index: 77633
+// Method Definition Index: 77635
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* UnregistrationReceivedEventArgs_get_InstallationId_m6DA9115911E2BCAD1C9EC7FCCD08901D9387FA64 (UnregistrationReceivedEventArgs_tFB2BB102D24389582CFE5D521EC8CF5E6445FBF3* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3171,7 +3171,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* UnregistrationReceivedEventArgs_get
 		return L_0;
 	}
 }
-// Method Definition Index: 77634
+// Method Definition Index: 77636
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedEventArgs_set_InstallationId_m545225B537AD5993E8F563485FCD438C20F637A0 (UnregistrationReceivedEventArgs_tFB2BB102D24389582CFE5D521EC8CF5E6445FBF3* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -3190,7 +3190,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedEventArgs_set_Inst
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77635
+// Method Definition Index: 77637
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptions__ctor_m4BF8BBF58B12D19C6D8969066A2F0F9B44FA4B6A (MessagingOptions_t8815B50D7DA2B2B7E1A353CD49EAE4E81997E65B* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3200,7 +3200,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptions__ctor_m4BF8BBF58B12D19C
 		return;
 	}
 }
-// Method Definition Index: 77636
+// Method Definition Index: 77638
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool MessagingOptions_get_SuppressNotificationPermissionPrompt_m20AE260F5BD27068C369328EDBD4131C46DF2907 (MessagingOptions_t8815B50D7DA2B2B7E1A353CD49EAE4E81997E65B* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3209,7 +3209,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool MessagingOptions_get_SuppressNotificatio
 		return L_0;
 	}
 }
-// Method Definition Index: 77637
+// Method Definition Index: 77639
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptions_set_SuppressNotificationPermissionPrompt_mF0705AB5502AE5D3211C451580B3CAFA91CCFBAC (MessagingOptions_t8815B50D7DA2B2B7E1A353CD49EAE4E81997E65B* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -3227,7 +3227,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptions_set_SuppressNotificatio
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77638
+// Method Definition Index: 77640
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal__ctor_m46E5903ADF8B688C895A2A856629280DA9FAB924 (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, intptr_t ___0_cPtr, bool ___1_cMemoryOwn, const RuntimeMethod* method) 
 {
 	{
@@ -3247,7 +3247,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal__ctor_m46E5903A
 		return;
 	}
 }
-// Method Definition Index: 77639
+// Method Definition Index: 77641
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F MessagingOptionsInternal_getCPtr_m65C441303B4F6004C6855BC43AA1D127CEBA8852 (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* ___0_obj, const RuntimeMethod* method) 
 {
 	HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F V_0;
@@ -3291,7 +3291,7 @@ IL_001a:
 		return L_4;
 	}
 }
-// Method Definition Index: 77640
+// Method Definition Index: 77642
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal_Finalize_m4E343AD5347C6109181456338D808052A007FC4F (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3325,7 +3325,7 @@ IL_0014:
 		return;
 	}
 }
-// Method Definition Index: 77641
+// Method Definition Index: 77643
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal_Dispose_m9C73B06008282C3F089E64F8E9F74DF1A613F31D (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3344,7 +3344,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal_Dispose_m9C73B0
 		return;
 	}
 }
-// Method Definition Index: 77642
+// Method Definition Index: 77644
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal_Dispose_m09F632BCDB975561296EB56F70FD406CE232E24E (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, bool ___0_disposing, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3457,7 +3457,7 @@ IL_0073:
 		return;
 	}
 }
-// Method Definition Index: 77643
+// Method Definition Index: 77645
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal__ctor_m70116EF93BA665F92E24140406EC0DF777A5BD44 (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3499,7 +3499,7 @@ IL_001d:
 		return;
 	}
 }
-// Method Definition Index: 77644
+// Method Definition Index: 77646
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessagingOptionsInternal_set_suppress_notification_permission_prompt_m28D8EA2B70A2EE57867A731F17232AD6BB6AD6E2 (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3541,7 +3541,7 @@ IL_001d:
 		return;
 	}
 }
-// Method Definition Index: 77645
+// Method Definition Index: 77647
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool MessagingOptionsInternal_get_suppress_notification_permission_prompt_m7167CCC6DFFAB671CCC680442CF73FC130EE9298 (MessagingOptionsInternal_t6B4E9EA24268631004EE8BB24CBFFE1E65F001EA* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3603,7 +3603,7 @@ IL_0020:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77646
+// Method Definition Index: 77648
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal__ctor_m18645ED57BD5C7FE1BC0057CF3F655F659027D49 (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* __this, intptr_t ___0_cPtr, bool ___1_cMemoryOwn, const RuntimeMethod* method) 
 {
 	{
@@ -3623,7 +3623,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal__ctor_
 		return;
 	}
 }
-// Method Definition Index: 77647
+// Method Definition Index: 77649
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F AndroidNotificationParamsInternal_getCPtr_m2243327E2FC9887CC46E78BAA3EBBA3E7A97466A (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* ___0_obj, const RuntimeMethod* method) 
 {
 	HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F V_0;
@@ -3667,7 +3667,7 @@ IL_001a:
 		return L_4;
 	}
 }
-// Method Definition Index: 77648
+// Method Definition Index: 77650
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal_Finalize_m11130A5C43078B98DFB0D3AE18D98167FCD3FC19 (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* __this, const RuntimeMethod* method) 
 {
 	{
@@ -3701,7 +3701,7 @@ IL_0014:
 		return;
 	}
 }
-// Method Definition Index: 77649
+// Method Definition Index: 77651
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal_Dispose_m5A08A2A340D420F3F21F01C7FB489737B6819705 (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3720,7 +3720,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal_Dispos
 		return;
 	}
 }
-// Method Definition Index: 77650
+// Method Definition Index: 77652
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal_Dispose_m0CE75DD4BC176FBB5A8F842472B7C435CFB04C4B (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* __this, bool ___0_disposing, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3833,7 +3833,7 @@ IL_0073:
 		return;
 	}
 }
-// Method Definition Index: 77651
+// Method Definition Index: 77653
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* AndroidNotificationParamsInternal_get_channel_id_mD5DCD81CEDA5D70E461A3C0EC7A4E8ADCC4A787F (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3887,7 +3887,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77652
+// Method Definition Index: 77654
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AndroidNotificationParamsInternal__ctor_mC13B16AF3598607F99E3BEAD8BD3C5D34DD314D7 (AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -3937,7 +3937,7 @@ IL_001d:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77653
+// Method Definition Index: 77655
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal__ctor_m944C7FF8AD018701C519732D88A57D9D051E361C (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, intptr_t ___0_cPtr, bool ___1_cMemoryOwn, const RuntimeMethod* method) 
 {
 	{
@@ -3957,7 +3957,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal__ctor_m944C
 		return;
 	}
 }
-// Method Definition Index: 77654
+// Method Definition Index: 77656
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F FirebaseNotificationInternal_getCPtr_mFBCBCA4CBCA64E9032DE82AF912A43D0B5D4C70E (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* ___0_obj, const RuntimeMethod* method) 
 {
 	HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F V_0;
@@ -4001,7 +4001,7 @@ IL_001a:
 		return L_4;
 	}
 }
-// Method Definition Index: 77655
+// Method Definition Index: 77657
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal_Finalize_mF3F95144E5959715F71C8EB91A12D7F14D6F7D8A (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	{
@@ -4035,7 +4035,7 @@ IL_0014:
 		return;
 	}
 }
-// Method Definition Index: 77656
+// Method Definition Index: 77658
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal_Dispose_mCD3CDDE9EADCE3BC779810B23B38E5BD9AC27128 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4054,7 +4054,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal_Dispose_mCD
 		return;
 	}
 }
-// Method Definition Index: 77657
+// Method Definition Index: 77659
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal_Dispose_mEDE6576657842E77B2DF761DD00B821FB9F72C4A (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, bool ___0_disposing, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4167,7 +4167,7 @@ IL_0073:
 		return;
 	}
 }
-// Method Definition Index: 77658
+// Method Definition Index: 77660
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseNotificationInternal__ctor_m94976D5C7341EDC2D36594FD6CCA73D0CA2C1888 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4209,7 +4209,7 @@ IL_001d:
 		return;
 	}
 }
-// Method Definition Index: 77659
+// Method Definition Index: 77661
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_title_m430A19C02C58BDEBFC060F4472E701E0C5C92AA1 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4263,7 +4263,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77660
+// Method Definition Index: 77662
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_body_mE559E07B76BF487327DEBE638D0A4C0CD6EC1FE5 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4317,7 +4317,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77661
+// Method Definition Index: 77663
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_icon_mF2FADC3A1E15BFF0194A4EB4EFE8B80589BF4126 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4371,7 +4371,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77662
+// Method Definition Index: 77664
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_sound_m4E9BD03EC1003D8A20D0B7AEE9E1C1E488C98DC8 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4425,7 +4425,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77663
+// Method Definition Index: 77665
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_badge_m5B439CB28BADB0E1B6E4CE404FD1335C12D5D7A4 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4479,7 +4479,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77664
+// Method Definition Index: 77666
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_tag_mCC2354FA88ACA9039139ECC55D1B5FF5FB8F770C (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4533,7 +4533,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77665
+// Method Definition Index: 77667
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_color_mB18B63A6D473A669DF93BA86F12EFA6033AB97AF (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4587,7 +4587,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77666
+// Method Definition Index: 77668
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_click_action_m70F501576BA5478231D575A454A098CC77DC9050 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4641,7 +4641,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77667
+// Method Definition Index: 77669
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_body_loc_key_m10B54C383142001471563D8E17D761B32D8C19A9 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4695,7 +4695,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77668
+// Method Definition Index: 77670
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseNotificationInternal_get_body_loc_args_m135E8889D57417649FDD26346087B1D7CA58233B (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4778,7 +4778,7 @@ IL_0038:
 		return L_10;
 	}
 }
-// Method Definition Index: 77669
+// Method Definition Index: 77671
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseNotificationInternal_get_title_loc_key_m9CF28787186BE6B5515248B7B6AF97AF0F290A4C (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4832,7 +4832,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77670
+// Method Definition Index: 77672
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseNotificationInternal_get_title_loc_args_mF431A6B6E87FD735A8FD8CEBE4553E7EF49EF47A (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -4915,7 +4915,7 @@ IL_0038:
 		return L_10;
 	}
 }
-// Method Definition Index: 77671
+// Method Definition Index: 77673
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR AndroidNotificationParamsInternal_t5D04814737F950B3BDE5B1CE53C1625DDF3DB559* FirebaseNotificationInternal_get_android_m500FE21A59E7B04761B75C516B39CFFC87CF5113 (FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5006,7 +5006,7 @@ IL_0038:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77672
+// Method Definition Index: 77674
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal__ctor_m394E89C713BC9E17A1BBD304D67667DE54E6F20A (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, intptr_t ___0_cPtr, bool ___1_cMemoryOwn, const RuntimeMethod* method) 
 {
 	{
@@ -5026,7 +5026,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal__ctor_m394E89C71
 		return;
 	}
 }
-// Method Definition Index: 77673
+// Method Definition Index: 77675
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F FirebaseMessageInternal_getCPtr_m27775EDAE6BC47301A6917B85D36761F20B98D45 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* ___0_obj, const RuntimeMethod* method) 
 {
 	HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F V_0;
@@ -5070,7 +5070,7 @@ IL_001a:
 		return L_4;
 	}
 }
-// Method Definition Index: 77674
+// Method Definition Index: 77676
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal_Finalize_m12BEABABC4325D74C2E471C086110DD341457C9E (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	{
@@ -5104,7 +5104,7 @@ IL_0014:
 		return;
 	}
 }
-// Method Definition Index: 77675
+// Method Definition Index: 77677
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal_Dispose_m92D7484243AD765D0782BDCE417A1D5E54CD0827 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5123,7 +5123,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal_Dispose_m92D7484
 		return;
 	}
 }
-// Method Definition Index: 77676
+// Method Definition Index: 77678
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal_Dispose_m3EC0B7CCD31B6953F328C6C21F86E8E49A6A8D7F (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, bool ___0_disposing, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5236,7 +5236,7 @@ IL_0073:
 		return;
 	}
 }
-// Method Definition Index: 77677
+// Method Definition Index: 77679
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessageInternal__ctor_m0D196B61A6515ED7EDB2F23EE54C198AC249B514 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5278,7 +5278,7 @@ IL_001d:
 		return;
 	}
 }
-// Method Definition Index: 77678
+// Method Definition Index: 77680
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_from_mE590D6E23417A10F413EC887C7718308BCBDF06B (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5332,7 +5332,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77679
+// Method Definition Index: 77681
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_to_m5487A2CC37941DF67C0FC81200E9C65B37C908A6 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5386,7 +5386,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77680
+// Method Definition Index: 77682
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_collapse_key_m5A9D9E15017F7A30496DBE8923030202FF81DE77 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5440,7 +5440,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77681
+// Method Definition Index: 77683
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* FirebaseMessageInternal_get_data_mC2F786ECA1D20DF52315615C2400760FD8F345C2 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5523,7 +5523,7 @@ IL_0038:
 		return L_10;
 	}
 }
-// Method Definition Index: 77682
+// Method Definition Index: 77684
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR CharVector_t2241E8448ED3F4FAF6DAA696F0F5BE5D67807A74* FirebaseMessageInternal_get_raw_data_m98BBD99C7BA02A65D12EAAEEEAAFB19A0502EB18 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5606,7 +5606,7 @@ IL_0038:
 		return L_10;
 	}
 }
-// Method Definition Index: 77683
+// Method Definition Index: 77685
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_message_id_mC6698ED081A14662B6A17E73108D93B210CD9D03 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5660,7 +5660,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77684
+// Method Definition Index: 77686
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_message_type_mE78C824A46AE50F23EA08DC73D0BF6EA6A0B0E8B (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5714,7 +5714,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77685
+// Method Definition Index: 77687
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_priority_mA622EF5DBD3BBE23FE6B1D3179E688128964180A (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5768,7 +5768,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77686
+// Method Definition Index: 77688
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t FirebaseMessageInternal_get_time_to_live_m79EB84BBF363677C916119E9AB11E388A6AF5136 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5822,7 +5822,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77687
+// Method Definition Index: 77689
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_error_m42574B205FA93A2F00602C2C9CC1384C6EC8FC2F (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5876,7 +5876,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77688
+// Method Definition Index: 77690
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_error_description_m6C6B4F3A98CD0C9E03761D63973658FDEEA2B4F5 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -5930,7 +5930,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77689
+// Method Definition Index: 77691
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseNotificationInternal_tB2B036E45A9BFC91D7305F40720DD220CFF7317A* FirebaseMessageInternal_get_notification_mBA172A7FE4BD3F0B6E492F38BF219E105282D388 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -6013,7 +6013,7 @@ IL_0038:
 		return L_10;
 	}
 }
-// Method Definition Index: 77690
+// Method Definition Index: 77692
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessageInternal_get_notification_opened_mA4913D67DF62CC06C0ABEA30ED5C3DCC1A2A7173 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -6067,7 +6067,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77691
+// Method Definition Index: 77693
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_link_mD31B870EC5B01135796AD20FA1F646D6F09E238D (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -6121,7 +6121,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77692
+// Method Definition Index: 77694
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessageInternal_get_original_priority_m8DB1D8724D9E538F73282AF7CC7DB33D1F373524 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -6175,7 +6175,7 @@ IL_0020:
 		return L_6;
 	}
 }
-// Method Definition Index: 77693
+// Method Definition Index: 77695
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int64_t FirebaseMessageInternal_get_sent_time_m7C3298AA11DD71AC17F6A68FC6CDBF3B33A6C665 (FirebaseMessageInternal_t4878C083F3BD9EF16F4B274BE0C902B22AF3E185* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -6245,7 +6245,7 @@ IL_0020:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77694
+// Method Definition Index: 77696
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE__cctor_m22947FC3D28A48D49C6488343348567D1AF79862 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -6271,7 +6271,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE__cctor_
 		return;
 	}
 }
-// Method Definition Index: 77695
+// Method Definition Index: 77697
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_ExportFix_mB8A21854F19839FC1352A8ADEF727E3D284AB96B (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6293,7 +6293,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_ExportF
 	#endif
 
 }
-// Method Definition Index: 77696
+// Method Definition Index: 77698
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new_MessagingOptionsInternal_mD87D0F2EF73662869F57D0EAF08A8A0ECF1E75AA (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6316,7 +6316,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new
 
 	return returnValue;
 }
-// Method Definition Index: 77697
+// Method Definition Index: 77699
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_MessagingOptionsInternal_suppress_notification_permission_prompt_set_m2E34E4A3E6BF281C4055ED6648039A845B97AB5D (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, bool ___1_jarg2, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6341,7 +6341,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_Messagi
 	#endif
 
 }
-// Method Definition Index: 77698
+// Method Definition Index: 77700
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_MessagingOptionsInternal_suppress_notification_permission_prompt_get_m92513B649C8BC99655D6A16E635696A2724B77E9 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6367,7 +6367,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_Messagi
 
 	return static_cast<bool>(returnValue);
 }
-// Method Definition Index: 77699
+// Method Definition Index: 77701
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_MessagingOptionsInternal_mEA4B66F335EEEC37F7C5D1E209C41B28854440B8 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6392,7 +6392,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_
 	#endif
 
 }
-// Method Definition Index: 77700
+// Method Definition Index: 77702
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_AndroidNotificationParamsInternal_channel_id_get_mA6C08C3A019A8182279FF1674F05E80A0D34D804 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6424,7 +6424,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_An
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77701
+// Method Definition Index: 77703
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new_AndroidNotificationParamsInternal_mFA16B52A7EA2E1BAF0353AE6E0E42EFD8CE15B6C (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6447,7 +6447,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new
 
 	return returnValue;
 }
-// Method Definition Index: 77702
+// Method Definition Index: 77704
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_AndroidNotificationParamsInternal_m92CCF6A929B14168B31E691BE3B85C539AEB9DF4 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6472,7 +6472,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_
 	#endif
 
 }
-// Method Definition Index: 77703
+// Method Definition Index: 77705
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new_FirebaseNotificationInternal_m9214ECEF232F925CFB6CB1E135FEFAD339E8021A (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6495,7 +6495,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new
 
 	return returnValue;
 }
-// Method Definition Index: 77704
+// Method Definition Index: 77706
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_FirebaseNotificationInternal_mD066C034D476ECAB7837BAAB60EACA135DE23DB4 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6520,7 +6520,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_
 	#endif
 
 }
-// Method Definition Index: 77705
+// Method Definition Index: 77707
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_title_get_mF30F66E8A9BEEC936428832B2ACE83A9D3661E04 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6552,7 +6552,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77706
+// Method Definition Index: 77708
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_body_get_m8F95C87B801647739E196643B26460A9A70A7629 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6584,7 +6584,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77707
+// Method Definition Index: 77709
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_icon_get_mBB3A34BE7F27EDCC34B777D5A470862A238F8E12 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6616,7 +6616,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77708
+// Method Definition Index: 77710
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_sound_get_m530EC0BE47054EA8100A610022E8F2C56CFA6547 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6648,7 +6648,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77709
+// Method Definition Index: 77711
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_badge_get_mA640F1DC6859A14CA550AC31CC0AE3C4A288C463 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6680,7 +6680,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77710
+// Method Definition Index: 77712
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_tag_get_m8D7C7449C6A37C6231BFBD3DB87123BB402302C3 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6712,7 +6712,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77711
+// Method Definition Index: 77713
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_color_get_mE559427BB8D922C38583A8E9089964EF86F28F4F (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6744,7 +6744,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77712
+// Method Definition Index: 77714
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_click_action_get_mEE77033AC43E6820C6D9F99916A366BF69F529AC (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6776,7 +6776,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77713
+// Method Definition Index: 77715
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_body_loc_key_get_m0CD603DD7AEC63DC6BE48B46AA8E429ABB9A6390 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6808,7 +6808,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77714
+// Method Definition Index: 77716
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_body_loc_args_get_m4597B1B3545BC7D9BF64A85DC3ADACB4D9DA313D (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6834,7 +6834,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Fir
 
 	return returnValue;
 }
-// Method Definition Index: 77715
+// Method Definition Index: 77717
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_title_loc_key_get_mB908C852CE98774F5F42F086266A547885E53D09 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6866,7 +6866,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77716
+// Method Definition Index: 77718
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_title_loc_args_get_mE7F84A9A49609841989DF3FFED0F14192AD59DB2 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6892,7 +6892,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Fir
 
 	return returnValue;
 }
-// Method Definition Index: 77717
+// Method Definition Index: 77719
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_FirebaseNotificationInternal_android_get_m9E92F5EDB07DD20C914FC02879FA94F5E7F2E774 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6918,7 +6918,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Fir
 
 	return returnValue;
 }
-// Method Definition Index: 77718
+// Method Definition Index: 77720
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new_FirebaseMessageInternal_m758E5F32D7564FBEBAC8A6327BF927AD8E442106 (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6941,7 +6941,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_new
 
 	return returnValue;
 }
-// Method Definition Index: 77719
+// Method Definition Index: 77721
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_FirebaseMessageInternal_mD15EF62AC59E1DA718AEDD7AFE2D4AACD824A304 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6966,7 +6966,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_delete_
 	#endif
 
 }
-// Method Definition Index: 77720
+// Method Definition Index: 77722
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_from_get_mD56AA88C439C27D2550DE42328639E28C310C4C2 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -6998,7 +6998,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77721
+// Method Definition Index: 77723
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_to_get_m10D864790A1BF71493CDD0298154DEADCE4574DF (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7030,7 +7030,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77722
+// Method Definition Index: 77724
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_collapse_key_get_m8B97F585AF4C34DA2963B61369A0E53E407521B4 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7062,7 +7062,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77723
+// Method Definition Index: 77725
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_data_get_m330144DDA3830889DFE354CC36707E73E1D571ED (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7088,7 +7088,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Fir
 
 	return returnValue;
 }
-// Method Definition Index: 77724
+// Method Definition Index: 77726
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_raw_data_get_m26C2C306E641A195458F4C6441DD0983136C598A (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7114,7 +7114,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Fir
 
 	return returnValue;
 }
-// Method Definition Index: 77725
+// Method Definition Index: 77727
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_message_id_get_m64E3471A2ABFF0942D7E8AF10724BE6EA55156AF (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7146,7 +7146,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77726
+// Method Definition Index: 77728
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_message_type_get_mE7102ACE36C8E506405ECC70F099133BD082DE2B (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7178,7 +7178,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77727
+// Method Definition Index: 77729
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_priority_get_mFB7965AAF39E83DC5BAE2D0BC305919C9AA1254E (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7210,7 +7210,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77728
+// Method Definition Index: 77730
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_time_to_live_get_m31D1C73CB97268431A69BE17D50AC9EFF56796F9 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7236,7 +7236,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t FirebaseMessagingInternalPINVOKE_Fire
 
 	return returnValue;
 }
-// Method Definition Index: 77729
+// Method Definition Index: 77731
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_error_get_m5C1DD3937C89B654D90E45A6C597CC9DD1699604 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7268,7 +7268,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77730
+// Method Definition Index: 77732
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_error_description_get_m98B48FEA09F89D69F61A9C9F67EC2A9681136E34 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7300,7 +7300,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77731
+// Method Definition Index: 77733
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_notification_get_mB75895AADEA1929FCCCD97315A7CE8C0D36A2424 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7326,7 +7326,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Fir
 
 	return returnValue;
 }
-// Method Definition Index: 77732
+// Method Definition Index: 77734
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_notification_opened_get_mE3012872D4EC6851D29D6D35EE38E0B29B2362A6 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7352,7 +7352,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_Firebas
 
 	return static_cast<bool>(returnValue);
 }
-// Method Definition Index: 77733
+// Method Definition Index: 77735
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_link_get_mCA103CD50398B59F50A9B32E47DFA2655C390909 (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7384,7 +7384,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77734
+// Method Definition Index: 77736
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_original_priority_get_mF71D17501D8CEEB0C621029847F6E527B5E5843C (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7416,7 +7416,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* FirebaseMessagingInternalPINVOKE_Fi
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77735
+// Method Definition Index: 77737
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int64_t FirebaseMessagingInternalPINVOKE_FirebaseMessageInternal_sent_time_get_m2E0F3DCBD1691D3BD15955864B0CB72961315A6E (HandleRef_t4B05E32B68797F702257D4E838B85A976313F08F ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7442,7 +7442,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int64_t FirebaseMessagingInternalPINVOKE_Fire
 
 	return returnValue;
 }
-// Method Definition Index: 77736
+// Method Definition Index: 77738
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_IsRegistrationOnInitEnabled_m25CFBABB4626DC3335D678D3448506CE172AFA72 (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7465,7 +7465,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_IsRegis
 
 	return static_cast<bool>(returnValue);
 }
-// Method Definition Index: 77737
+// Method Definition Index: 77739
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetRegistrationOnInitEnabled_m90D6CA8DB056416483B1EEA4D47BAA50395BCC74 (bool ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7487,7 +7487,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetRegi
 	#endif
 
 }
-// Method Definition Index: 77738
+// Method Definition Index: 77740
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_IsTokenRegistrationOnInitEnabled_m8CDF3A6771E2316D96DCE670252957C75CC2803D (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7510,7 +7510,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_IsToken
 
 	return static_cast<bool>(returnValue);
 }
-// Method Definition Index: 77739
+// Method Definition Index: 77741
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetTokenRegistrationOnInitEnabled_m6E6FAAB778F9D433B7CBC02F3BD82368F19B05CD (bool ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7532,7 +7532,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetToke
 	#endif
 
 }
-// Method Definition Index: 77740
+// Method Definition Index: 77742
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_RequestPermission_mB84DD40BFFB28B8CBBAFAC0B15084D3E85D3B19D (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7555,7 +7555,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Req
 
 	return returnValue;
 }
-// Method Definition Index: 77741
+// Method Definition Index: 77743
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Subscribe_m6B6A96249CC6B0587F2A433FCD71E28FD18CA387 (String_t* ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7584,7 +7584,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Sub
 
 	return returnValue;
 }
-// Method Definition Index: 77742
+// Method Definition Index: 77744
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Unsubscribe_m77E605FC463AE4161DB5E24D4ED5470E272694B9 (String_t* ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7613,7 +7613,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Uns
 
 	return returnValue;
 }
-// Method Definition Index: 77743
+// Method Definition Index: 77745
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_DeliveryMetricsExportToBigQueryEnabled_mFCC207AA3C82FA42C1C43A92C758F2FCB58706BE (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7636,7 +7636,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternalPINVOKE_Deliver
 
 	return static_cast<bool>(returnValue);
 }
-// Method Definition Index: 77744
+// Method Definition Index: 77746
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetDeliveryMetricsExportToBigQuery_mB5E4D47949B8970122D67021CE7D02CC3CB54604 (bool ___0_jarg1, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7658,7 +7658,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetDeli
 	#endif
 
 }
-// Method Definition Index: 77745
+// Method Definition Index: 77747
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Register_mAD30F4783DD83F07478CB974F8F82EF927183E28 (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7681,7 +7681,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Reg
 
 	return returnValue;
 }
-// Method Definition Index: 77746
+// Method Definition Index: 77748
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Unregister_mDA43B914747B8F1CE48D6BA2C64257D144ACFBAE (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7704,7 +7704,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Unr
 
 	return returnValue;
 }
-// Method Definition Index: 77747
+// Method Definition Index: 77749
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_GetToken_m283C06E32A271E92AFD3AF6C63B4559A15196322 (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7727,7 +7727,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Get
 
 	return returnValue;
 }
-// Method Definition Index: 77748
+// Method Definition Index: 77750
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_DeleteToken_m50A48DC217B428851B76916BB61BC13893B74F52 (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7750,7 +7750,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR intptr_t FirebaseMessagingInternalPINVOKE_Del
 
 	return returnValue;
 }
-// Method Definition Index: 77749
+// Method Definition Index: 77751
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetListenerCallbacks_m3E839035C8C6EDADC9E59C004DBF604C9E505600 (MessageReceivedDelegate_tC359F68B781FEF6AD9614848D9E424A75864A2DD* ___0_jarg1, TokenReceivedDelegate_t94D788F786589847637D4B424A0BA12A93E5A77B* ___1_jarg2, RegistrationReceivedDelegate_t52E508B81A1E0EF87ECF39293226C900FFA0C2C5* ___2_jarg3, UnregistrationReceivedDelegate_tB37960B439C8F5D03090C08493DB0036ACBF4077* ___3_jarg4, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7784,7 +7784,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetList
 	#endif
 
 }
-// Method Definition Index: 77750
+// Method Definition Index: 77752
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetListenerCallbacksEnabled_mA510E1D2B38EAFAB39140C86CE1778CE0EB33899 (bool ___0_jarg1, bool ___1_jarg2, bool ___2_jarg3, bool ___3_jarg4, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7806,7 +7806,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SetList
 	#endif
 
 }
-// Method Definition Index: 77751
+// Method Definition Index: 77753
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SendPendingEvents_m1893AC58CD513471D6190453941434DBEADEC21E (const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7828,7 +7828,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE_SendPen
 	#endif
 
 }
-// Method Definition Index: 77752
+// Method Definition Index: 77754
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternalPINVOKE__ctor_mEABCE54E6B4C9DD05C6D1F3A466FE960D31CF53D (FirebaseMessagingInternalPINVOKE_t7B5D590B6238B9C13CB2B4154EFF672F0A334796* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -7994,7 +7994,7 @@ extern "C" void DEFAULT_CALL ReversePInvokeWrapper_SWIGExceptionHelper_SetPendin
 	SWIGExceptionHelper_SetPendingArgumentOutOfRangeException_mB09406C6A74CEBBA37585BC6A9B0D06283587747(____0_message_unmarshaled, ____1_paramName_unmarshaled, NULL);
 
 }
-// Method Definition Index: 77753
+// Method Definition Index: 77755
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SWIGRegisterExceptionCallbacks_FirebaseMessagingInternal_m26CD358608A4F789CC7189D992388603B7FF8E42 (ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___0_applicationDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___1_arithmeticDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___2_divideByZeroDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___3_indexOutOfRangeDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___4_invalidCastDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___5_invalidOperationDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___6_ioDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___7_nullReferenceDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___8_outOfMemoryDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___9_overflowDelegate, ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* ___10_systemExceptionDelegate, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8049,7 +8049,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SWIGRegisterExceptio
 	#endif
 
 }
-// Method Definition Index: 77754
+// Method Definition Index: 77756
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SWIGRegisterExceptionCallbacksArgument_FirebaseMessagingInternal_m498FBCE2B09FFB942FC91E7325103220688FE814 (ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* ___0_argumentDelegate, ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* ___1_argumentNullDelegate, ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* ___2_argumentOutOfRangeDelegate, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8080,7 +8080,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SWIGRegisterExceptio
 	#endif
 
 }
-// Method Definition Index: 77755
+// Method Definition Index: 77757
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingApplicationException_m16CAD952E28BB750D9451F21BD26DEAB1D0F6B9F (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8103,7 +8103,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingApplicatio
 		return;
 	}
 }
-// Method Definition Index: 77756
+// Method Definition Index: 77758
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingArithmeticException_m7AFD9E4007059EDE3A8606883823FCA830306929 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8126,7 +8126,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingArithmetic
 		return;
 	}
 }
-// Method Definition Index: 77757
+// Method Definition Index: 77759
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingDivideByZeroException_mAB838A4C8D538856175C1D5E033954DADB48AAA1 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8149,7 +8149,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingDivideByZe
 		return;
 	}
 }
-// Method Definition Index: 77758
+// Method Definition Index: 77760
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingIndexOutOfRangeException_m69A9394389F24C162D0713B20F8C30A0C9175124 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8172,7 +8172,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingIndexOutOf
 		return;
 	}
 }
-// Method Definition Index: 77759
+// Method Definition Index: 77761
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingInvalidCastException_m9FE584FFFF198EA602214109042451DB62D793C3 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8195,7 +8195,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingInvalidCas
 		return;
 	}
 }
-// Method Definition Index: 77760
+// Method Definition Index: 77762
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingInvalidOperationException_m822D9220A1D414942C213E916EDA47A2F6ED3F2A (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8218,7 +8218,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingInvalidOpe
 		return;
 	}
 }
-// Method Definition Index: 77761
+// Method Definition Index: 77763
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingIOException_m099053FC1E09932041E2974EC2006D0A70CD23C2 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8241,7 +8241,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingIOExceptio
 		return;
 	}
 }
-// Method Definition Index: 77762
+// Method Definition Index: 77764
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingNullReferenceException_m93AA45D964E3D5725FEDC8BD4F6DA92D473D4363 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8264,7 +8264,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingNullRefere
 		return;
 	}
 }
-// Method Definition Index: 77763
+// Method Definition Index: 77765
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingOutOfMemoryException_mC12B14FA7AEF3FD16A7967A649B498CF188A70DB (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8287,7 +8287,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingOutOfMemor
 		return;
 	}
 }
-// Method Definition Index: 77764
+// Method Definition Index: 77766
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingOverflowException_m32F0DB46D3FAB4818C667E77A83CB7EC23132118 (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8310,7 +8310,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingOverflowEx
 		return;
 	}
 }
-// Method Definition Index: 77765
+// Method Definition Index: 77767
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingSystemException_m0CEDD19B2496AF48F7C128586E36158B538A7FED (String_t* ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8333,7 +8333,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingSystemExce
 		return;
 	}
 }
-// Method Definition Index: 77766
+// Method Definition Index: 77768
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingArgumentException_m7832D8140B56F7A713E828865F4734AD892F85C9 (String_t* ___0_message, String_t* ___1_paramName, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8357,7 +8357,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingArgumentEx
 		return;
 	}
 }
-// Method Definition Index: 77767
+// Method Definition Index: 77769
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingArgumentNullException_m65371853C42FEEC975F26F0B43A7F825AA55425C (String_t* ___0_message, String_t* ___1_paramName, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8410,7 +8410,7 @@ IL_0022:
 		return;
 	}
 }
-// Method Definition Index: 77768
+// Method Definition Index: 77770
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper_SetPendingArgumentOutOfRangeException_mB09406C6A74CEBBA37585BC6A9B0D06283587747 (String_t* ___0_message, String_t* ___1_paramName, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8463,7 +8463,7 @@ IL_0022:
 		return;
 	}
 }
-// Method Definition Index: 77769
+// Method Definition Index: 77771
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper__cctor_m904346D540116D3B54038B2F876CB858FF12C2B0 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8581,7 +8581,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper__cctor_m904346D54011
 		return;
 	}
 }
-// Method Definition Index: 77770
+// Method Definition Index: 77772
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGExceptionHelper__ctor_m16DB8C93F4739C73DA41D132A2AA742A24F275F8 (SWIGExceptionHelper_t8F77FBBCCB36CCBA44F4B587A6A1B3B9046548F2* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8633,7 +8633,7 @@ IL2CPP_EXTERN_C  void DelegatePInvokeWrapper_ExceptionDelegate_t590ECDF213DE8B1B
 	____0_message_marshaled = NULL;
 
 }
-// Method Definition Index: 77771
+// Method Definition Index: 77773
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionDelegate__ctor_m9B8856FE785C63BDE30547DDA13C391CF9C49664 (ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8671,14 +8671,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionDelegate__ctor_m9B8856FE785C63B
 	}
 	__this->___extra_arg = (intptr_t)&ExceptionDelegate_Invoke_m533EDBF271B6EA7EF27274E352D1EBA80EF0029A_Multicast;
 }
-// Method Definition Index: 77772
+// Method Definition Index: 77774
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionDelegate_Invoke_m533EDBF271B6EA7EF27274E352D1EBA80EF0029A (ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* __this, String_t* ___0_message, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef void (*FunctionPointerType) (RuntimeObject*, String_t*, const RuntimeMethod*);
 	((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_message, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77773
+// Method Definition Index: 77775
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* ExceptionDelegate_BeginInvoke_m4C8AE9CE9E74F442D91FE628543394912B497990 (ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* __this, String_t* ___0_message, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___1_callback, RuntimeObject* ___2_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8686,7 +8686,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* ExceptionDelegate_BeginInvoke_
 	__d_args[0] = ___0_message;
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___1_callback, (RuntimeObject*)___2_object);
 }
-// Method Definition Index: 77774
+// Method Definition Index: 77776
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionDelegate_EndInvoke_m8B1FEF4E9A9B7E7273F9CCF62F40BB276AF90567 (ExceptionDelegate_t590ECDF213DE8B1B2303770F8ED3A3D8F062D58E* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8741,7 +8741,7 @@ IL2CPP_EXTERN_C  void DelegatePInvokeWrapper_ExceptionArgumentDelegate_tB7045E62
 	____1_paramName_marshaled = NULL;
 
 }
-// Method Definition Index: 77775
+// Method Definition Index: 77777
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionArgumentDelegate__ctor_mF80C2DE3E1E379FBAF0BCFA24273C6168EF49E1A (ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8779,14 +8779,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionArgumentDelegate__ctor_mF80C2DE
 	}
 	__this->___extra_arg = (intptr_t)&ExceptionArgumentDelegate_Invoke_mF7D6EDF1F61593109D3B33FB155FF68CEE0ADE48_Multicast;
 }
-// Method Definition Index: 77776
+// Method Definition Index: 77778
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionArgumentDelegate_Invoke_mF7D6EDF1F61593109D3B33FB155FF68CEE0ADE48 (ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* __this, String_t* ___0_message, String_t* ___1_paramName, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef void (*FunctionPointerType) (RuntimeObject*, String_t*, String_t*, const RuntimeMethod*);
 	((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_message, ___1_paramName, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77777
+// Method Definition Index: 77779
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* ExceptionArgumentDelegate_BeginInvoke_m27F01531BD70DDDE1C25922D93EE47A6E37B6745 (ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* __this, String_t* ___0_message, String_t* ___1_paramName, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___2_callback, RuntimeObject* ___3_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8795,7 +8795,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* ExceptionArgumentDelegate_Begi
 	__d_args[1] = ___1_paramName;
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___2_callback, (RuntimeObject*)___3_object);
 }
-// Method Definition Index: 77778
+// Method Definition Index: 77780
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionArgumentDelegate_EndInvoke_m68A697777870F3C11B0F4149130A4406D93FC2DA (ExceptionArgumentDelegate_tB7045E62572A075A017B4BFE7EEA2F5D4BA66268* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -8809,7 +8809,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ExceptionArgumentDelegate_EndInvoke_m68A
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77779
+// Method Definition Index: 77781
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool SWIGPendingException_get_Pending_m57380330FE698094C7745BAA056487DBD692CACD (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8866,7 +8866,7 @@ IL_0021:
 		return L_5;
 	}
 }
-// Method Definition Index: 77780
+// Method Definition Index: 77782
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGPendingException_Set_mB0D05EEB3EF6DF2CAEF94B82665B37BC6A3EE772 (Exception_t* ___0_e, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -8962,7 +8962,7 @@ IL_005f:
 		return;
 	}
 }
-// Method Definition Index: 77781
+// Method Definition Index: 77783
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Exception_t* SWIGPendingException_Retrieve_m6426756A5FA0D36A8773692D8A4DB9EB136EF94F (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9077,7 +9077,7 @@ IL_005e:
 		return L_11;
 	}
 }
-// Method Definition Index: 77782
+// Method Definition Index: 77784
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGPendingException__cctor_m8CA383CF2CDDEBCFCDFF00279AE2A4AC95E55AB0 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9105,7 +9105,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGPendingException__cctor_m8CA383CF2CD
 		return;
 	}
 }
-// Method Definition Index: 77783
+// Method Definition Index: 77785
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGPendingException__ctor_mEED64385D34C5A98C4D94B3A9764F8AB01F53593 (SWIGPendingException_t5A331B1CDE30E8CDDED5A86EDF0FD81913B3F732* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -9137,7 +9137,7 @@ extern "C" char* DEFAULT_CALL ReversePInvokeWrapper_SWIGStringHelper_CreateStrin
 
 	return _returnValue_marshaled;
 }
-// Method Definition Index: 77784
+// Method Definition Index: 77786
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringHelper_SWIGRegisterStringCallback_FirebaseMessagingInternal_m9817766B0AA2AB44D24D66CAF2948DFD392BFEC0 (SWIGStringDelegate_t3733F401E285C00FA16532FF2F4EBC453D2EFD4B* ___0_stringDelegate, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -9162,7 +9162,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringHelper_SWIGRegisterStringCallb
 	#endif
 
 }
-// Method Definition Index: 77785
+// Method Definition Index: 77787
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* SWIGStringHelper_CreateString_m1AAAFED866E7CCD713F52BF16A507C01DDCF98F5 (String_t* ___0_cString, const RuntimeMethod* method) 
 {
 	String_t* V_0 = NULL;
@@ -9180,7 +9180,7 @@ IL_0005:
 		return L_1;
 	}
 }
-// Method Definition Index: 77786
+// Method Definition Index: 77788
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringHelper__cctor_m1C577F5CE1B75ACF4A45C7283B0770A72D5422C0 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9204,7 +9204,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringHelper__cctor_m1C577F5CE1B75AC
 		return;
 	}
 }
-// Method Definition Index: 77787
+// Method Definition Index: 77789
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringHelper__ctor_m9E4276A9347460CC420A9D89FED945B3B8EBB492 (SWIGStringHelper_t35DCD1CF678C3C3F1FC16C9EF15A41EE3201E4E5* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -9265,7 +9265,7 @@ IL2CPP_EXTERN_C  String_t* DelegatePInvokeWrapper_SWIGStringDelegate_t3733F401E2
 
 	return _returnValue_unmarshaled;
 }
-// Method Definition Index: 77788
+// Method Definition Index: 77790
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringDelegate__ctor_m81B4ABCF43DAE5BD07629D338A8B78A4A3FFE5E6 (SWIGStringDelegate_t3733F401E285C00FA16532FF2F4EBC453D2EFD4B* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -9303,14 +9303,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SWIGStringDelegate__ctor_m81B4ABCF43DAE5
 	}
 	__this->___extra_arg = (intptr_t)&SWIGStringDelegate_Invoke_m39507A7F6D81A231922FB3F9C40DE3E39E2756ED_Multicast;
 }
-// Method Definition Index: 77789
+// Method Definition Index: 77791
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* SWIGStringDelegate_Invoke_m39507A7F6D81A231922FB3F9C40DE3E39E2756ED (SWIGStringDelegate_t3733F401E285C00FA16532FF2F4EBC453D2EFD4B* __this, String_t* ___0_message, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef String_t* (*FunctionPointerType) (RuntimeObject*, String_t*, const RuntimeMethod*);
 	return ((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_message, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77790
+// Method Definition Index: 77792
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* SWIGStringDelegate_BeginInvoke_mE2F98836803044F7F0C4DB5F675A8A21B218684C (SWIGStringDelegate_t3733F401E285C00FA16532FF2F4EBC453D2EFD4B* __this, String_t* ___0_message, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___1_callback, RuntimeObject* ___2_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -9318,7 +9318,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* SWIGStringDelegate_BeginInvoke
 	__d_args[0] = ___0_message;
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___1_callback, (RuntimeObject*)___2_object);
 }
-// Method Definition Index: 77791
+// Method Definition Index: 77793
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* SWIGStringDelegate_EndInvoke_mB79A5043B6E01F4A589C74F97F3DA772D46AE07A (SWIGStringDelegate_t3733F401E285C00FA16532FF2F4EBC453D2EFD4B* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -9333,7 +9333,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* SWIGStringDelegate_EndInvoke_mB79A5
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77792
+// Method Definition Index: 77794
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_ExportFix_mECA8B576A4C1870B80DBDE337A291760C7B34785 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9350,7 +9350,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_ExportFix_mECA
 		return;
 	}
 }
-// Method Definition Index: 77793
+// Method Definition Index: 77795
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_MessageReceivedInternal_mEB4D77305B5CF64291252C48A758A43A5259F1A5 (EventHandler_1_tF3AA5EB88F494B5147D2E245A3AF5AB3CDF8D72B* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9396,7 +9396,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77794
+// Method Definition Index: 77796
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_MessageReceivedInternal_m48E900A6197AD9F22A96A9BEBBA5B6F24361F59D (EventHandler_1_tF3AA5EB88F494B5147D2E245A3AF5AB3CDF8D72B* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9442,7 +9442,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77795
+// Method Definition Index: 77797
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_TokenReceivedInternal_m3662DE4A41714F3DBA9AC6626FE68E7CBC1F8AB0 (EventHandler_1_t628C7697D75CC4686AD6125D745540AC427C28A0* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9488,7 +9488,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77796
+// Method Definition Index: 77798
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_TokenReceivedInternal_mEACE635BD2653F721855BEE68592AB923AACA684 (EventHandler_1_t628C7697D75CC4686AD6125D745540AC427C28A0* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9534,7 +9534,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77797
+// Method Definition Index: 77799
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_RegistrationReceivedInternal_mB6529EFAB9A2F9E8FB0DA3352F88021FE5F4399E (EventHandler_1_tB0C11A919746F6196DD5BF0C888C4D5852131080* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9580,7 +9580,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77798
+// Method Definition Index: 77800
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_RegistrationReceivedInternal_mD6462CA06B20BC67DA6711A34B6E75433009B91E (EventHandler_1_tB0C11A919746F6196DD5BF0C888C4D5852131080* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9626,7 +9626,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77799
+// Method Definition Index: 77801
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_UnregistrationReceivedInternal_m3EF498AED5DD8380CA6D7C9EF5FF8C4A30F05CC6 (EventHandler_1_tD190B6ED97DE881FFA0F312C532578DDD60F8829* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9672,7 +9672,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77800
+// Method Definition Index: 77802
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_UnregistrationReceivedInternal_m5CBC477A9403FA2A67337CF9FD0C6A3F6FB9786A (EventHandler_1_tD190B6ED97DE881FFA0F312C532578DDD60F8829* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9718,7 +9718,7 @@ IL_0006:
 		return;
 	}
 }
-// Method Definition Index: 77801
+// Method Definition Index: 77803
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_CreateOrDestroyListener_m26A57D65078188744E66607C5329ED3380737BDA (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9857,7 +9857,7 @@ IL_008d:
 		return;
 	}
 }
-// Method Definition Index: 77802
+// Method Definition Index: 77804
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal__cctor_m5177EAD2A53FEC3DE0BDC416159F0FD559CDDA68 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9876,7 +9876,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal__cctor_m5177EA
 		return;
 	}
 }
-// Method Definition Index: 77803
+// Method Definition Index: 77805
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseApp_tD23C437863A3502177988D1382B58820B0571A25* FirebaseMessagingInternal_get_App_mDD844E6A2E29A8FEC7E7FBD6E17114D1045A49E2 (const RuntimeMethod* method) 
 {
 	FirebaseApp_tD23C437863A3502177988D1382B58820B0571A25* V_0 = NULL;
@@ -9895,7 +9895,7 @@ IL_0009:
 		return L_1;
 	}
 }
-// Method Definition Index: 77804
+// Method Definition Index: 77806
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_MessageReceived_mC5A16D9C6B27183A2BE11BC3B959DE1CFEB1502E (EventHandler_1_tF3AA5EB88F494B5147D2E245A3AF5AB3CDF8D72B* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -9964,7 +9964,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77805
+// Method Definition Index: 77807
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_MessageReceived_mD0468618A30662D25AB206D7AF9FB7CE7B3A5A5F (EventHandler_1_tF3AA5EB88F494B5147D2E245A3AF5AB3CDF8D72B* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10033,7 +10033,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77806
+// Method Definition Index: 77808
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_TokenReceived_m17AD5A76E8E2A0E5792BD9692B267D5804600EF3 (EventHandler_1_t628C7697D75CC4686AD6125D745540AC427C28A0* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10102,7 +10102,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77807
+// Method Definition Index: 77809
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_TokenReceived_m99740ADB7FB9302EE1D6A48D69CCD78378271023 (EventHandler_1_t628C7697D75CC4686AD6125D745540AC427C28A0* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10171,7 +10171,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77808
+// Method Definition Index: 77810
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_RegistrationReceived_mA387728B993306D716623058E645E81659A553AC (EventHandler_1_tB0C11A919746F6196DD5BF0C888C4D5852131080* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10240,7 +10240,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77809
+// Method Definition Index: 77811
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_RegistrationReceived_mABD8C64736749E88370CB93124C51E8C4D5706BA (EventHandler_1_tB0C11A919746F6196DD5BF0C888C4D5852131080* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10309,7 +10309,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77810
+// Method Definition Index: 77812
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_add_UnregistrationReceived_m90D1B74B58343F480EE6D5E35CB37D21A42F1A94 (EventHandler_1_tD190B6ED97DE881FFA0F312C532578DDD60F8829* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10378,7 +10378,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77811
+// Method Definition Index: 77813
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_remove_UnregistrationReceived_m4C9ABA2C96F6C6A4191767A971B79F86E930E45F (EventHandler_1_tD190B6ED97DE881FFA0F312C532578DDD60F8829* ___0_value, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10447,7 +10447,7 @@ IL_0033:
 		return;
 	}
 }
-// Method Definition Index: 77812
+// Method Definition Index: 77814
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternal_IsRegistrationOnInitEnabled_m767EA382543DC5C4CD0B3B3CD6C60AACD0C89F01 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10500,7 +10500,7 @@ IL_001a:
 		return L_5;
 	}
 }
-// Method Definition Index: 77813
+// Method Definition Index: 77815
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_SetRegistrationOnInitEnabled_m7B42D11D9807966E17B4C4D256F7B2078BF7E45E (bool ___0_enable, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10541,7 +10541,7 @@ IL_0017:
 		return;
 	}
 }
-// Method Definition Index: 77814
+// Method Definition Index: 77816
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternal_IsTokenRegistrationOnInitEnabled_mA2781907D4FE1D9F7935CFB03A03159F6DCE3154 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10594,7 +10594,7 @@ IL_001a:
 		return L_5;
 	}
 }
-// Method Definition Index: 77815
+// Method Definition Index: 77817
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_SetTokenRegistrationOnInitEnabled_m9B52AC29A43EFB1ECB0E468906533498DD9A890D (bool ___0_enable, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10635,7 +10635,7 @@ IL_0017:
 		return;
 	}
 }
-// Method Definition Index: 77816
+// Method Definition Index: 77818
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessagingInternal_RequestPermissionAsync_m873E389BF025B4748969E79AB92D87F39B6324B4 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10671,7 +10671,7 @@ IL_0016:
 		return L_4;
 	}
 }
-// Method Definition Index: 77817
+// Method Definition Index: 77819
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessagingInternal_SubscribeAsync_mE79666BD1F4279F5A398F2EF6D5898B568278245 (String_t* ___0_topic, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10708,7 +10708,7 @@ IL_0017:
 		return L_5;
 	}
 }
-// Method Definition Index: 77818
+// Method Definition Index: 77820
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessagingInternal_UnsubscribeAsync_m5C658F7C53419C6B657A59230D2EAFBFA7A59913 (String_t* ___0_topic, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10745,7 +10745,7 @@ IL_0017:
 		return L_5;
 	}
 }
-// Method Definition Index: 77819
+// Method Definition Index: 77821
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool FirebaseMessagingInternal_DeliveryMetricsExportToBigQueryEnabled_m7EB9EE6009787228923AF856099E929499D11002 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10798,7 +10798,7 @@ IL_001a:
 		return L_5;
 	}
 }
-// Method Definition Index: 77820
+// Method Definition Index: 77822
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_SetDeliveryMetricsExportToBigQuery_m7872D28AAF44C25DB3BE8CC4A3D8B0F221BB3AFE (bool ___0_enable, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10839,7 +10839,7 @@ IL_0017:
 		return;
 	}
 }
-// Method Definition Index: 77821
+// Method Definition Index: 77823
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessagingInternal_RegisterAsync_mCFA2B64A214BDB4F1EB6899564186B7DFF1991FC (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10875,7 +10875,7 @@ IL_0016:
 		return L_4;
 	}
 }
-// Method Definition Index: 77822
+// Method Definition Index: 77824
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessagingInternal_UnregisterAsync_m035551C3142BE9D08C30A03451A6254680BD730B (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10911,7 +10911,7 @@ IL_0016:
 		return L_4;
 	}
 }
-// Method Definition Index: 77823
+// Method Definition Index: 77825
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_1_t3D7638C82ED289AF156EDBAE76842D8DF4C4A9E0* FirebaseMessagingInternal_GetTokenAsync_mB7650D0CFCB6B1794FACD6DD95FF4D64BBB3D8B8 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -10971,7 +10971,7 @@ IL_0025:
 		return L_7;
 	}
 }
-// Method Definition Index: 77824
+// Method Definition Index: 77826
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Task_t751C4CC3ECD055BABA8A0B6A5DFBB4283DCA8572* FirebaseMessagingInternal_DeleteTokenAsync_mD7711B87C4EB6E2AFAE6BC838E81C16BD28319A4 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11007,7 +11007,7 @@ IL_0016:
 		return L_4;
 	}
 }
-// Method Definition Index: 77825
+// Method Definition Index: 77827
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_SetListenerCallbacks_m992BBB665A9ABFD9CACF0DAF14A13A6C4BD8C586 (MessageReceivedDelegate_tC359F68B781FEF6AD9614848D9E424A75864A2DD* ___0_messageCallback, TokenReceivedDelegate_t94D788F786589847637D4B424A0BA12A93E5A77B* ___1_tokenCallback, RegistrationReceivedDelegate_t52E508B81A1E0EF87ECF39293226C900FFA0C2C5* ___2_registrationCallback, UnregistrationReceivedDelegate_tB37960B439C8F5D03090C08493DB0036ACBF4077* ___3_unregistrationCallback, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11051,7 +11051,7 @@ IL_001a:
 		return;
 	}
 }
-// Method Definition Index: 77826
+// Method Definition Index: 77828
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_SetListenerCallbacksEnabled_mB4CA7C3B77BBF988C4A2E78BB96618A753B57808 (bool ___0_message_callback_enabled, bool ___1_token_callback_enabled, bool ___2_registration_callback_enabled, bool ___3_unregistration_callback_enabled, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11095,7 +11095,7 @@ IL_001a:
 		return;
 	}
 }
-// Method Definition Index: 77827
+// Method Definition Index: 77829
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal_SendPendingEvents_mF37E4968C514206507A21FDBF37851E86175D1AE (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11135,7 +11135,7 @@ IL_0016:
 		return;
 	}
 }
-// Method Definition Index: 77828
+// Method Definition Index: 77830
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void FirebaseMessagingInternal__ctor_m583427BB0C21787A9108C072D04F2E027578FE0F (FirebaseMessagingInternal_t5BA4C00E870C78649EB09E1A6C25A96D9B709C4A* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -11191,7 +11191,7 @@ extern "C" void DEFAULT_CALL ReversePInvokeWrapper_Listener_UnregistrationReceiv
 	Listener_UnregistrationReceivedDelegateMethod_mF0252FEE346753128A465221A99EEF8D57CC1BBE(____0_installationId_unmarshaled, NULL);
 
 }
-// Method Definition Index: 77829
+// Method Definition Index: 77831
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Listener_tD9FF04A7F23E059A7AC58B722229D90E411DCE94* Listener_Create_mCFE34FC9462E8E2A7F06DFA646706A8768344912 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11285,7 +11285,7 @@ IL_0049:
 		return L_10;
 	}
 }
-// Method Definition Index: 77830
+// Method Definition Index: 77832
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_Destroy_m7125D7C1A41AE4F5626A8244B5AFAC72CF665B1C (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11371,7 +11371,7 @@ IL_003f:
 		return;
 	}
 }
-// Method Definition Index: 77831
+// Method Definition Index: 77833
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR FirebaseApp_tD23C437863A3502177988D1382B58820B0571A25* Listener_get_App_m80CFA320C72D55AAF7AF0511A3438AE4C3352678 (const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11462,7 +11462,7 @@ IL_003a:
 		return L_8;
 	}
 }
-// Method Definition Index: 77832
+// Method Definition Index: 77834
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener__ctor_m9C65E3EEED1849EABC038FE63FED4BB67CF10750 (Listener_tD9FF04A7F23E059A7AC58B722229D90E411DCE94* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11520,7 +11520,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener__ctor_m9C65E3EEED1849EABC038FE6
 		return;
 	}
 }
-// Method Definition Index: 77833
+// Method Definition Index: 77835
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_Finalize_m547B6E55CF8DE1429EE42D5D669122BC1A782B53 (Listener_tD9FF04A7F23E059A7AC58B722229D90E411DCE94* __this, const RuntimeMethod* method) 
 {
 	{
@@ -11554,7 +11554,7 @@ IL_0013:
 		return;
 	}
 }
-// Method Definition Index: 77834
+// Method Definition Index: 77836
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_Dispose_mC5B7FC81D018F039F5F4E0A83329168B3477624A (Listener_tD9FF04A7F23E059A7AC58B722229D90E411DCE94* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11644,7 +11644,7 @@ IL_004b:
 		return;
 	}
 }
-// Method Definition Index: 77835
+// Method Definition Index: 77837
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Listener_MessageReceivedDelegateMethod_m0EEBDE312DB6220B7B234DF480BC735CE7E2D55C (intptr_t ___0_message, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11690,7 +11690,7 @@ IL_002f:
 		return L_9;
 	}
 }
-// Method Definition Index: 77836
+// Method Definition Index: 77838
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_TokenReceivedDelegateMethod_m53120EACED86E5BE2D643F5280A677729F0330F4 (String_t* ___0_token, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11720,7 +11720,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_TokenReceivedDelegateMethod_m53
 		return;
 	}
 }
-// Method Definition Index: 77837
+// Method Definition Index: 77839
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_RegistrationReceivedDelegateMethod_mA4E5AEC3B24B0DB112A15F6896D95675204FDB9B (String_t* ___0_installationId, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11750,7 +11750,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_RegistrationReceivedDelegateMet
 		return;
 	}
 }
-// Method Definition Index: 77838
+// Method Definition Index: 77840
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Listener_UnregistrationReceivedDelegateMethod_mF0252FEE346753128A465221A99EEF8D57CC1BBE (String_t* ___0_installationId, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -11819,7 +11819,7 @@ IL2CPP_EXTERN_C  bool DelegatePInvokeWrapper_MessageReceivedDelegate_tC359F68B78
 
 	return static_cast<bool>(returnValue);
 }
-// Method Definition Index: 77839
+// Method Definition Index: 77841
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessageReceivedDelegate__ctor_mC8A41EC07A44480E78068A6B072844D07CC08F57 (MessageReceivedDelegate_tC359F68B781FEF6AD9614848D9E424A75864A2DD* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -11849,14 +11849,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MessageReceivedDelegate__ctor_mC8A41EC07
 	}
 	__this->___extra_arg = (intptr_t)&MessageReceivedDelegate_Invoke_mEC45C1400C3CF005039B986AF7A9E1192A67A916_Multicast;
 }
-// Method Definition Index: 77840
+// Method Definition Index: 77842
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool MessageReceivedDelegate_Invoke_mEC45C1400C3CF005039B986AF7A9E1192A67A916 (MessageReceivedDelegate_tC359F68B781FEF6AD9614848D9E424A75864A2DD* __this, intptr_t ___0_message, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef bool (*FunctionPointerType) (RuntimeObject*, intptr_t, const RuntimeMethod*);
 	return ((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_message, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77841
+// Method Definition Index: 77843
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* MessageReceivedDelegate_BeginInvoke_m5AD142A33B59A0FDE38AE601BCF6907917A8B235 (MessageReceivedDelegate_tC359F68B781FEF6AD9614848D9E424A75864A2DD* __this, intptr_t ___0_message, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___1_callback, RuntimeObject* ___2_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -11864,7 +11864,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* MessageReceivedDelegate_BeginI
 	__d_args[0] = Box(il2cpp_defaults.int_class, &___0_message);
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___1_callback, (RuntimeObject*)___2_object);
 }
-// Method Definition Index: 77842
+// Method Definition Index: 77844
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool MessageReceivedDelegate_EndInvoke_m9E41BD36BEB4668FE5AB193369F27DA57EF5A1E1 (MessageReceivedDelegate_tC359F68B781FEF6AD9614848D9E424A75864A2DD* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -11914,7 +11914,7 @@ IL2CPP_EXTERN_C  void DelegatePInvokeWrapper_TokenReceivedDelegate_t94D788F78658
 	____0_token_marshaled = NULL;
 
 }
-// Method Definition Index: 77843
+// Method Definition Index: 77845
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedDelegate__ctor_mE4BD266FA22280CECDBF3A8CA8981F4340DC961C (TokenReceivedDelegate_t94D788F786589847637D4B424A0BA12A93E5A77B* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -11952,14 +11952,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedDelegate__ctor_mE4BD266FA22
 	}
 	__this->___extra_arg = (intptr_t)&TokenReceivedDelegate_Invoke_m6649B7D2811B1C15CF6556DBF7551A9D08FE6F8A_Multicast;
 }
-// Method Definition Index: 77844
+// Method Definition Index: 77846
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedDelegate_Invoke_m6649B7D2811B1C15CF6556DBF7551A9D08FE6F8A (TokenReceivedDelegate_t94D788F786589847637D4B424A0BA12A93E5A77B* __this, String_t* ___0_token, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef void (*FunctionPointerType) (RuntimeObject*, String_t*, const RuntimeMethod*);
 	((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_token, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77845
+// Method Definition Index: 77847
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* TokenReceivedDelegate_BeginInvoke_mFB66793E2B1F508DC8CC82223D2D770AE42D8AC6 (TokenReceivedDelegate_t94D788F786589847637D4B424A0BA12A93E5A77B* __this, String_t* ___0_token, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___1_callback, RuntimeObject* ___2_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -11967,7 +11967,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* TokenReceivedDelegate_BeginInv
 	__d_args[0] = ___0_token;
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___1_callback, (RuntimeObject*)___2_object);
 }
-// Method Definition Index: 77846
+// Method Definition Index: 77848
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void TokenReceivedDelegate_EndInvoke_m6632C036D2F4DD8CB9E8FCFE2E4CC8FC5D8B2089 (TokenReceivedDelegate_t94D788F786589847637D4B424A0BA12A93E5A77B* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12016,7 +12016,7 @@ IL2CPP_EXTERN_C  void DelegatePInvokeWrapper_RegistrationReceivedDelegate_t52E50
 	____0_installationId_marshaled = NULL;
 
 }
-// Method Definition Index: 77847
+// Method Definition Index: 77849
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedDelegate__ctor_m293ED07D7D8B2782A534A39940E0DEC3095296B7 (RegistrationReceivedDelegate_t52E508B81A1E0EF87ECF39293226C900FFA0C2C5* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12054,14 +12054,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedDelegate__ctor_m293E
 	}
 	__this->___extra_arg = (intptr_t)&RegistrationReceivedDelegate_Invoke_m64D9626484C2306F3646A05B88FD7DF66E2D2FCE_Multicast;
 }
-// Method Definition Index: 77848
+// Method Definition Index: 77850
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedDelegate_Invoke_m64D9626484C2306F3646A05B88FD7DF66E2D2FCE (RegistrationReceivedDelegate_t52E508B81A1E0EF87ECF39293226C900FFA0C2C5* __this, String_t* ___0_installationId, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef void (*FunctionPointerType) (RuntimeObject*, String_t*, const RuntimeMethod*);
 	((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_installationId, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77849
+// Method Definition Index: 77851
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegistrationReceivedDelegate_BeginInvoke_m5532EF44C1412E583CA5776E620EEF09A4D3EC50 (RegistrationReceivedDelegate_t52E508B81A1E0EF87ECF39293226C900FFA0C2C5* __this, String_t* ___0_installationId, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___1_callback, RuntimeObject* ___2_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12069,7 +12069,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegistrationReceivedDelegate_B
 	__d_args[0] = ___0_installationId;
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___1_callback, (RuntimeObject*)___2_object);
 }
-// Method Definition Index: 77850
+// Method Definition Index: 77852
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegistrationReceivedDelegate_EndInvoke_m933ABCB6384223C328539DBEBF670287344D1A47 (RegistrationReceivedDelegate_t52E508B81A1E0EF87ECF39293226C900FFA0C2C5* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12118,7 +12118,7 @@ IL2CPP_EXTERN_C  void DelegatePInvokeWrapper_UnregistrationReceivedDelegate_tB37
 	____0_installationId_marshaled = NULL;
 
 }
-// Method Definition Index: 77851
+// Method Definition Index: 77853
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedDelegate__ctor_mCC045209C3C80B434E53F6D16C8B7AEA54FA5FC7 (UnregistrationReceivedDelegate_tB37960B439C8F5D03090C08493DB0036ACBF4077* __this, RuntimeObject* ___0_object, intptr_t ___1_method, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12156,14 +12156,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedDelegate__ctor_mCC
 	}
 	__this->___extra_arg = (intptr_t)&UnregistrationReceivedDelegate_Invoke_m19489CF00676A73388B5186B7A24FD89F7E680FF_Multicast;
 }
-// Method Definition Index: 77852
+// Method Definition Index: 77854
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedDelegate_Invoke_m19489CF00676A73388B5186B7A24FD89F7E680FF (UnregistrationReceivedDelegate_tB37960B439C8F5D03090C08493DB0036ACBF4077* __this, String_t* ___0_installationId, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	typedef void (*FunctionPointerType) (RuntimeObject*, String_t*, const RuntimeMethod*);
 	((FunctionPointerType)__this->___invoke_impl)((Il2CppObject*)__this->___method_code, ___0_installationId, reinterpret_cast<RuntimeMethod*>(__this->___method));
 }
-// Method Definition Index: 77853
+// Method Definition Index: 77855
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* UnregistrationReceivedDelegate_BeginInvoke_m99A09ACE6468E2D8A71584E57812A234595C6C9A (UnregistrationReceivedDelegate_tB37960B439C8F5D03090C08493DB0036ACBF4077* __this, String_t* ___0_installationId, AsyncCallback_t7FEF460CBDCFB9C5FA2EF776984778B9A4145F4C* ___1_callback, RuntimeObject* ___2_object, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12171,7 +12171,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* UnregistrationReceivedDelegate
 	__d_args[0] = ___0_installationId;
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)__this, __d_args, (RuntimeDelegate*)___1_callback, (RuntimeObject*)___2_object);
 }
-// Method Definition Index: 77854
+// Method Definition Index: 77856
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedDelegate_EndInvoke_m5D0445804F946E41E9414670F850BBB11936B7D2 (UnregistrationReceivedDelegate_tB37960B439C8F5D03090C08493DB0036ACBF4077* __this, RuntimeObject* ___0_result, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12185,7 +12185,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnregistrationReceivedDelegate_EndInvoke
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77855
+// Method Definition Index: 77857
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass17_0__ctor_m3A7E7B991BF126C1386E24A9E74824144C2B441A (U3CU3Ec__DisplayClass17_0_tC92D42640301B1D9F4F98C29DA4DAB0689911C2E* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12194,7 +12194,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass17_0__ctor_m3A7E7B9
 		return;
 	}
 }
-// Method Definition Index: 77856
+// Method Definition Index: 77858
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CU3Ec__DisplayClass17_0_U3CMessageReceivedDelegateMethodU3Eb__0_mBE174821C4B9733FFAEFC2343ADAB29E3DCB8950 (U3CU3Ec__DisplayClass17_0_tC92D42640301B1D9F4F98C29DA4DAB0689911C2E* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -12271,7 +12271,7 @@ IL_0046:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77857
+// Method Definition Index: 77859
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass18_0__ctor_mBE4707957957138EDBF49D61862AC5D71D6D03A0 (U3CU3Ec__DisplayClass18_0_t0A35D9C134EEFA2E46F8EC3C83FBF2CD674B7A83* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12280,7 +12280,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass18_0__ctor_mBE47079
 		return;
 	}
 }
-// Method Definition Index: 77858
+// Method Definition Index: 77860
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass18_0_U3CTokenReceivedDelegateMethodU3Eb__0_m23412916C35569F72CF0F72F5AB69202064B6A58 (U3CU3Ec__DisplayClass18_0_t0A35D9C134EEFA2E46F8EC3C83FBF2CD674B7A83* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -12330,7 +12330,7 @@ IL_0024:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77859
+// Method Definition Index: 77861
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass19_0__ctor_mF64614CA0F52320C75528635046C0BF799A6E7F6 (U3CU3Ec__DisplayClass19_0_t2571A381C655B72E4CAFC0BCD29AE77FA6D2CBCF* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12339,7 +12339,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass19_0__ctor_mF64614C
 		return;
 	}
 }
-// Method Definition Index: 77860
+// Method Definition Index: 77862
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass19_0_U3CRegistrationReceivedDelegateMethodU3Eb__0_m6A54C42EB128B8E2A3C6189F8E7CF7158BF74F0F (U3CU3Ec__DisplayClass19_0_t2571A381C655B72E4CAFC0BCD29AE77FA6D2CBCF* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -12389,7 +12389,7 @@ IL_0024:
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 77861
+// Method Definition Index: 77863
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass20_0__ctor_mBD99C67E8462293E3C434F0CD60C4B3B5FE186C8 (U3CU3Ec__DisplayClass20_0_t3511DB4420063CA7B410C655E27657DFEF7D92A3* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
@@ -12398,7 +12398,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass20_0__ctor_mBD99C67
 		return;
 	}
 }
-// Method Definition Index: 77862
+// Method Definition Index: 77864
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass20_0_U3CUnregistrationReceivedDelegateMethodU3Eb__0_m154CC15A83E1B130271742905C77DD4215800496 (U3CU3Ec__DisplayClass20_0_t3511DB4420063CA7B410C655E27657DFEF7D92A3* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -12443,7 +12443,7 @@ IL_0024:
 #ifdef __clang__
 #pragma clang diagnostic pop
 #endif
-// Method Definition Index: 77542
+// Method Definition Index: 77544
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_CollapseKey_mF554D797BCC8EA451C95535ABE23417CC6B4E889_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12454,7 +12454,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Collapse
 		return;
 	}
 }
-// Method Definition Index: 77544
+// Method Definition Index: 77546
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Data_mAF86D91E3BAE98093F6B824F0DE0987F117775FE_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, RuntimeObject* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12465,7 +12465,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Data_mAF
 		return;
 	}
 }
-// Method Definition Index: 77546
+// Method Definition Index: 77548
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Error_mE85D580435096CD7168DC6E0A6D6E0BB1CD305F9_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12476,7 +12476,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Error_mE
 		return;
 	}
 }
-// Method Definition Index: 77548
+// Method Definition Index: 77550
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_ErrorDescription_m9E41A332C1D42AE4B1DE33DCEFF30C3921BFF35C_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12487,7 +12487,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_ErrorDes
 		return;
 	}
 }
-// Method Definition Index: 77550
+// Method Definition Index: 77552
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_From_m943B763EB24774DB1BFB5ADE168B53EB03DE28AC_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12498,7 +12498,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_From_m94
 		return;
 	}
 }
-// Method Definition Index: 77552
+// Method Definition Index: 77554
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Link_m40718749226ADF6AAB62BD50697B0C3AB7C24F0D_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, Uri_t1500A52B5F71A04F5D05C0852D0F2A0941842A0E* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12509,7 +12509,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Link_m40
 		return;
 	}
 }
-// Method Definition Index: 77554
+// Method Definition Index: 77556
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageId_m73059B5444A66AFBA4F3D9841786DADE503C5DB0_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12520,7 +12520,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageI
 		return;
 	}
 }
-// Method Definition Index: 77556
+// Method Definition Index: 77558
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageType_m93FA839F3CF9DF81862622D81ED4A367988F1937_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12531,7 +12531,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_MessageT
 		return;
 	}
 }
-// Method Definition Index: 77558
+// Method Definition Index: 77560
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Notification_mEE345553ADB2813A18981604A72C6EAF769162BF_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12542,7 +12542,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Notifica
 		return;
 	}
 }
-// Method Definition Index: 77560
+// Method Definition Index: 77562
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_NotificationOpened_m303A2CA4C64DC98F1E40325A208F400B3494E151_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, bool ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12552,7 +12552,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Notifica
 		return;
 	}
 }
-// Method Definition Index: 77562
+// Method Definition Index: 77564
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Priority_mA9EFDF670BC095A65B9F8B33AB32D8DD50143A06_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12563,7 +12563,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_Priority
 		return;
 	}
 }
-// Method Definition Index: 77564
+// Method Definition Index: 77566
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_RawData_mEE5E5EB87E5C37A86CEB932DFFF156B0292BE52B_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12574,7 +12574,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_RawData_
 		return;
 	}
 }
-// Method Definition Index: 77563
+// Method Definition Index: 77565
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* FirebaseMessage_get_RawData_mB4FC7C03D209D02B28D4357E19F3E776B4A4450B_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, const RuntimeMethod* method) 
 {
 	{
@@ -12583,7 +12583,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ByteU5BU5D_tA6237BF417AE52AD70CFB
 		return L_0;
 	}
 }
-// Method Definition Index: 77566
+// Method Definition Index: 77568
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_TimeToLive_m6A500FDFD6B464330450DA6AF9754534DC348D55_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, TimeSpan_t8195C5B013A2C532FEBDF0B64B6911982E750F5A ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12593,7 +12593,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_TimeToLi
 		return;
 	}
 }
-// Method Definition Index: 77568
+// Method Definition Index: 77570
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_To_m760C1FD5853796C542F1252B1DA42DA830521018_inline (FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12604,7 +12604,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseMessage_set_To_m760C
 		return;
 	}
 }
-// Method Definition Index: 77593
+// Method Definition Index: 77595
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void AndroidNotificationParams_set_ChannelId_m6364414BAA90D19891FECFB97B88E4204F8AFDC0_inline (AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12615,7 +12615,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void AndroidNotificationParams_se
 		return;
 	}
 }
-// Method Definition Index: 77597
+// Method Definition Index: 77599
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Android_m567BA7563BD1D64B80E0FD39D27774D179D8C8D2_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, AndroidNotificationParams_t5D31ABDF15208A4697A746B167C7C87A20CD5B1A* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12626,7 +12626,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_And
 		return;
 	}
 }
-// Method Definition Index: 77599
+// Method Definition Index: 77601
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Badge_mB7C30AA73961C60EF97B72F7F14B6E206B322969_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12637,7 +12637,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Bad
 		return;
 	}
 }
-// Method Definition Index: 77601
+// Method Definition Index: 77603
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Body_m3E02DB91699A4F64AA95CA05A7A94A94698FEC50_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12648,7 +12648,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Bod
 		return;
 	}
 }
-// Method Definition Index: 77603
+// Method Definition Index: 77605
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_BodyLocalizationArgs_m9810B0FE02A57713E8749DF087A65C047C2BD387_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, RuntimeObject* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12659,7 +12659,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Bod
 		return;
 	}
 }
-// Method Definition Index: 77605
+// Method Definition Index: 77607
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_BodyLocalizationKey_m9FEB4B64D6B94EEAA27A286930AB5910690FF75C_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12670,7 +12670,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Bod
 		return;
 	}
 }
-// Method Definition Index: 77607
+// Method Definition Index: 77609
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_ClickAction_m5544A311DED18F1F8847E534D8098873E21327A4_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12681,7 +12681,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Cli
 		return;
 	}
 }
-// Method Definition Index: 77609
+// Method Definition Index: 77611
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Color_mEDEA814C9FCFDFC7EBF296BC9AC3D9D24B775199_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12692,7 +12692,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Col
 		return;
 	}
 }
-// Method Definition Index: 77611
+// Method Definition Index: 77613
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Icon_mE86E5CFC08245C1EED5970A32BDF84F92E02D217_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12703,7 +12703,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Ico
 		return;
 	}
 }
-// Method Definition Index: 77613
+// Method Definition Index: 77615
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Sound_mFA3410DE78782C819BA2410F3D0A36DCEFAD7598_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12714,7 +12714,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Sou
 		return;
 	}
 }
-// Method Definition Index: 77615
+// Method Definition Index: 77617
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tag_m3DA49F6CFD21DD8A93D9B2A6834055CADF91AE67_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12725,7 +12725,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tag
 		return;
 	}
 }
-// Method Definition Index: 77617
+// Method Definition Index: 77619
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Title_m073C79521BC43E5C6E8EF44CB03B31A0245289DD_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12736,7 +12736,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tit
 		return;
 	}
 }
-// Method Definition Index: 77619
+// Method Definition Index: 77621
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_TitleLocalizationArgs_m94481E755904B8A68E032AD0BD64F589A201C77F_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, RuntimeObject* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12747,7 +12747,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tit
 		return;
 	}
 }
-// Method Definition Index: 77621
+// Method Definition Index: 77623
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_TitleLocalizationKey_m2998C3A168A1796DD507A4A0B7906F47712C39F2_inline (FirebaseNotification_t17D8D8BE158C522C9DBA575BB7295EBE3413EB0A* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12758,7 +12758,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void FirebaseNotification_set_Tit
 		return;
 	}
 }
-// Method Definition Index: 77625
+// Method Definition Index: 77627
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void MessageReceivedEventArgs_set_Message_m237AEA7C0AAB2533F89A673BA3F288F4E1F3D04A_inline (MessageReceivedEventArgs_tAFDBCC69B3DEC0F5EB76ACAA8D97A404E61F73E5* __this, FirebaseMessage_t09E58AB584806FC5C23F419AD7CDCE53969FE20F* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12769,7 +12769,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void MessageReceivedEventArgs_set
 		return;
 	}
 }
-// Method Definition Index: 77628
+// Method Definition Index: 77630
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void TokenReceivedEventArgs_set_Token_mC42B0EC030BD8880FA31346108580505D1C4A318_inline (TokenReceivedEventArgs_t91FA07EA184701BF44700D7581779A5C84C7B98C* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12780,7 +12780,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void TokenReceivedEventArgs_set_T
 		return;
 	}
 }
-// Method Definition Index: 77631
+// Method Definition Index: 77633
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void RegistrationReceivedEventArgs_set_InstallationId_mE82D59BCA446903B21375BF23E305AF5D89B5AC1_inline (RegistrationReceivedEventArgs_t818B79F1005529F110D77F19670836F2ECB947B5* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -12791,7 +12791,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void RegistrationReceivedEventArg
 		return;
 	}
 }
-// Method Definition Index: 77634
+// Method Definition Index: 77636
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void UnregistrationReceivedEventArgs_set_InstallationId_m545225B537AD5993E8F563485FCD438C20F637A0_inline (UnregistrationReceivedEventArgs_tFB2BB102D24389582CFE5D521EC8CF5E6445FBF3* __this, String_t* ___0_value, const RuntimeMethod* method) 
 {
 	{

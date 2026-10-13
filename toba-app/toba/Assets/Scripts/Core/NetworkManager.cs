@@ -12,7 +12,7 @@ public class NetworkManager : MonoBehaviour
     private GameObject _banner;
     private Transform  _canvas;
     private const float CHECK_INTERVAL = 15f;
-    private string _pingUrl = "http://localhost:8080/api/";
+    private string _pingUrl = "http://43.173.13.187/api/";
 
     void Awake()
     {

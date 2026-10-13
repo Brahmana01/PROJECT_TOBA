@@ -8,8 +8,8 @@ public class APIManager : MonoBehaviour
     public static APIManager Instance;
 
     [Header("URLs")]
-    private string BASE_URL = "http://localhost:8080/api";
-    private string WS_URL   = "ws://localhost:8080/ws";
+    private string BASE_URL = "http://43.173.13.187/api";
+    private string WS_URL   = "ws://43.173.13.187/ws";
 
     // WebSocket
     private WebSocket battleSocket;
@@ -120,6 +120,17 @@ public class APIManager : MonoBehaviour
             onSuccess?.Invoke(req.downloadHandler.text);
         else
         {
+            string body = req.downloadHandler != null
+                ? req.downloadHandler.text
+                : "";
+
+            Debug.LogError(
+                $"[API] POST GAGAL | URL={url} | " +
+                $"HTTP={req.responseCode} | " +
+                $"Result={req.result} | " +
+                $"Error={req.error} | Body={body}"
+            );
+
             string errMsg = GetFriendlyError(req.result, req.error);
             onError?.Invoke(errMsg);
         }
