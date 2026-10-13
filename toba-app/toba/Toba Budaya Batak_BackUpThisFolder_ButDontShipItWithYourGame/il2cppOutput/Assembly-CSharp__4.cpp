@@ -244,13 +244,14 @@ struct U3CFloatPenU3Ed__18_t1D1D8C0AED4A3D09ACDE90EE3376292F0DDA4D31;
 struct U3CMonitorScrollU3Ed__24_t66F5B32C3F6C9076AB8E6214FA92AC58C270FF4A;
 struct U3CPressBackU3Ed__15_t4EB51D5E35CCFA5E4A1D02F8CC55B7823528BFD9;
 struct U3CSwayLeavesU3Ed__27_t5D4489287A3ACD88DFBB109C1B5763505347B770;
-struct U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089;
-struct U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7;
-struct U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC;
-struct U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD;
-struct U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3;
-struct U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4;
-struct U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770;
+struct U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF;
+struct U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2;
+struct U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E;
+struct U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298;
+struct U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264;
+struct U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C;
+struct U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D;
+struct U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3;
 struct ScrollRectEvent_t812C011901E6101F2A0FFC34C66AC5F65C0DEC26;
 struct U3CU3Ec__DisplayClass3_0_t54BB8BB17B54FD18B06C707E64B6262F481BF956;
 struct U3CU3Ec__DisplayClass4_0_t3B331DD03387DD0776F0D85EF78E95FEF30FBB1B;
@@ -300,15 +301,15 @@ IL2CPP_EXTERN_C RuntimeClass* Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB
 IL2CPP_EXTERN_C RuntimeClass* U3CAnimateButtonPressU3Ed__29_t3E0634948D2900FA9CDA471B34B4534DEFD0D117_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CAnimateEntranceU3Ed__31_t98418CB748272CD9E7CFA18976987D9D8C53283A_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CAnimateEntranceU3Ed__35_tD8A8E33C822E9A604208BA38DF57CD82C83B5DC4_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CFloatBackButtonU3Ed__18_tC6386515FA3F975D2CB8CE170836A48799E43BA8_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CFloatBackU3Ed__14_t79C5BD95CB2157C7781EEC9C73C8011051FA39B1_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CFloatButtonU3Ed__28_tB148AC3FC0D32727E272C65FAC15834B9DA41405_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CFloatButtonU3Ed__34_t43B91F28C941F44528A3F8FC862D834BD6CA4F53_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CFloatPenU3Ed__18_t1D1D8C0AED4A3D09ACDE90EE3376292F0DDA4D31_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CFloatPenU3Ed__22_tB797B2A9AD2F6F9D69DECC29A9AD8235D1B3307E_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CMonitorNameInputScrollU3Ed__28_t2211AD39B4FA7370251761889093BD44A4534C9F_il2cpp_TypeInfo_var;
@@ -316,14 +317,14 @@ IL2CPP_EXTERN_C RuntimeClass* U3CMonitorScrollU3Ed__24_t66F5B32C3F6C9076AB8E6214
 IL2CPP_EXTERN_C RuntimeClass* U3CPressBackButtonU3Ed__19_t627BBC18C261795AABC0B085B3B8FAAA2D0C65E9_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CPressBackU3Ed__15_t4EB51D5E35CCFA5E4A1D02F8CC55B7823528BFD9_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CPressContinueButtonU3Ed__31_t5326A3D4CE267A4ADD876237382A2803D3285CFD_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CRunTimerU3Ed__30_t1391B330B71D0CEFA28A22BB17F3B8440FC8D7EF_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CShowFeedbackThenNextU3Ed__29_t53BCFA97D349A5F4943984A3AADFC8C8AEC2ADC1_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CSlideInU3Ed__26_t33BAEAC614F590E0B16D49B1985A3A226F701725_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CSwayLeavesU3Ed__27_t5D4489287A3ACD88DFBB109C1B5763505347B770_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CSwayLeavesU3Ed__33_t107A60821EEEFA3F345F12838E92460B9F1C2B26_il2cpp_TypeInfo_var;
-IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass13_0_tF24DB7820684EF82957C0171B05ECE2E2253C998_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass17_0_t37CEB14255B43374DCFCD03B65F06B935C04AF88_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass21_0_tE6F8A0FB1C0997C0F5ACE124394C6F35714F371B_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass24_0_tF63F9BA0851B8FDB5005E0C0856D44950840FAD2_il2cpp_TypeInfo_var;
@@ -334,6 +335,7 @@ IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass3_0_t54BB8BB17B54FD18B06C707E
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec__DisplayClass4_0_t3B331DD03387DD0776F0D85EF78E95FEF30FBB1B_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec_t5E04BC21A9836A063AEBC541E5AF1A393B5C8B50_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec_t637D9FAEEFABC70437DB8C88BA4E6B4DE26799A4_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* UnityAction_1_t690494F0E492A2098660E28B8EB7D71B2C69BE1B_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* UnityAction_1_tAEFA3C1C529F0E1AD7C7C7AFC88822D359E7AC90_il2cpp_TypeInfo_var;
 IL2CPP_EXTERN_C RuntimeClass* UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7_il2cpp_TypeInfo_var;
@@ -544,15 +546,15 @@ IL2CPP_EXTERN_C const RuntimeMethod* SettingScreen_U3CShowU3Eb__1_0_m17958E2E870
 IL2CPP_EXTERN_C const RuntimeMethod* U3CAnimateButtonPressU3Ed__29_System_Collections_IEnumerator_Reset_m04C6C7971B744F91D19024F72B34706AD9FCC1BE_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CAnimateEntranceU3Ed__31_System_Collections_IEnumerator_Reset_m796ECBB19FE273050976A0497D83567DE040FFF5_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CAnimateEntranceU3Ed__35_System_Collections_IEnumerator_Reset_m1D3F598BF3F6ED16559E102B82F4228D36EE75EC_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CButtonIdleU3Ed__19_System_Collections_IEnumerator_Reset_m7E926344BE3386172EF844F2BBB89E204130C324_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CButtonPressU3Ed__20_System_Collections_IEnumerator_Reset_m7E2B5276BCCCF35A49CFE637E1655EC7B086F38F_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CEntranceU3Ed__21_System_Collections_IEnumerator_Reset_mF84CDD372C8A275F6D0A0CA72C8E8C6B682A537A_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CFlameAnimationU3Ed__17_System_Collections_IEnumerator_Reset_mB79FBB15D3F6CC819647FDF2FDB69B7E0779199B_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CButtonIdleU3Ed__20_System_Collections_IEnumerator_Reset_m13EFC53BADBA61C96280F9E5CA5DD982708287C1_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CButtonPressAndNavigateU3Ed__21_System_Collections_IEnumerator_Reset_m72E7F2CBCE292570D5B9C2E1AF2DB5D26CB36DD3_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CEntranceU3Ed__22_System_Collections_IEnumerator_Reset_mD6E5ECCAE53A001CFED6D2777A25D1F1004BC804_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CFlameAnimationU3Ed__18_System_Collections_IEnumerator_Reset_m1440B340A17B4FFF9CAE8CD89C1187BC1A2EEF76_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatBackButtonU3Ed__18_System_Collections_IEnumerator_Reset_m134B0A16D5C24D284A04A5F85DF3BFDB9A486F4B_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatBackU3Ed__14_System_Collections_IEnumerator_Reset_mAD2A50294D578399796A0916C81DBF2460D966D2_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatButtonU3Ed__28_System_Collections_IEnumerator_Reset_m99F8AD59AB2AB0EE76A827422ED53FD12032AFB2_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatButtonU3Ed__34_System_Collections_IEnumerator_Reset_m968A79F3A007884C135E92CE41AA3C012F2A2003_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatElementU3Ed__18_System_Collections_IEnumerator_Reset_mD3967DD4115AE9F468B17C07FCD8C2E15D62C94B_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatElementU3Ed__19_System_Collections_IEnumerator_Reset_m9F01F363AD8CB72DFEABBD2CFA43654F0CC1500C_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatPenU3Ed__18_System_Collections_IEnumerator_Reset_m7D16C86A874488F2EB4B4F64E2BC390F741BFAFA_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CFloatPenU3Ed__22_System_Collections_IEnumerator_Reset_m750DB6D7BC258304094438A0DFEFFAA409654F1F_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CMonitorNameInputScrollU3Ed__28_System_Collections_IEnumerator_Reset_m9DA7E005FDF1FAB1537862066842910465C50ED3_RuntimeMethod_var;
@@ -560,18 +562,18 @@ IL2CPP_EXTERN_C const RuntimeMethod* U3CMonitorScrollU3Ed__24_System_Collections
 IL2CPP_EXTERN_C const RuntimeMethod* U3CPressBackButtonU3Ed__19_System_Collections_IEnumerator_Reset_m88BB11E4F07297B1A837F1A19D7D2D114EEF0BB3_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CPressBackU3Ed__15_System_Collections_IEnumerator_Reset_mB94C5A12E59546F04C8B1F2399408048FF8AE420_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CPressContinueButtonU3Ed__31_System_Collections_IEnumerator_Reset_mDD70C584852D99DE7DC10817285080E39FD1D8C8_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CRocketIdleU3Ed__15_System_Collections_IEnumerator_Reset_m29C0C9F7259E1944948607D07549AA7CC390469C_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CRocketIdleU3Ed__16_System_Collections_IEnumerator_Reset_m461A5DD199E549C359895F32520BF80E5D8C1A17_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CRunTimerU3Ed__30_System_Collections_IEnumerator_Reset_m1F607DA38D5A14BE233BE81FCBB7A9B612941B72_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CShowFeedbackThenNextU3Ed__29_System_Collections_IEnumerator_Reset_m1DA2CA77885C036308BDF72987C514BE13F9C6EE_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CSlideInU3Ed__26_System_Collections_IEnumerator_Reset_mD02344F9C700C02B054D3882BABD81663866107A_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CSwayLeavesU3Ed__27_System_Collections_IEnumerator_Reset_m8A0A7EA3A12DFEA0649D0A8BC06056208F204B94_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CSwayLeavesU3Ed__33_System_Collections_IEnumerator_Reset_m2E6F98063807D03E851918DEB0036D7A6B111B42_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec_U3CCreateStartButtonU3Eb__14_0_mE71CB5938749B6A44F63DD926472BD0E4A1421AC_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec_U3CShowU3Eb__1_1_m992BE132CA63A3E4E1E0BC071D582BEA38D09B94_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec_U3CShowU3Eb__1_2_m5B180CBBD62E6C2E0E064A3400C368365BE60230_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec_U3CShowU3Eb__1_3_mC75CB1A281593971742962A8E818C592DBE35930_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass13_0_U3CCreateHeaderU3Eb__0_m9F47746938C623364C5BA616F72E19AAC4CB34ED_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__0_m51E5FFCC40D186AEE9C29C5EA09DBB6D9B395E45_RuntimeMethod_var;
-IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__1_mC943781E26682DF189163A2FEAEF9B148191133E_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass14_0_U3CCreateStartButtonU3Eb__1_m05160007B58FC171BC082AF9BA3486ADABAD4384_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass17_0_U3CCreateHeaderU3Eb__0_m2AB3F6E85B1176A24705E987572DF2DD6B4FC224_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass21_0_U3CCreateInputU3Eb__0_m0DB92C6FCDEB9ED4116EBA4EECEE330EF90D7BEC_RuntimeMethod_var;
 IL2CPP_EXTERN_C const RuntimeMethod* U3CU3Ec__DisplayClass21_0_U3CCreateInputU3Eb__1_mEDB4C77752D6148075C62733D6A7B2A598E50DA7_RuntimeMethod_var;
@@ -839,12 +841,16 @@ struct U3CMonitorScrollU3Ed__24_t66F5B32C3F6C9076AB8E6214FA92AC58C270FF4A  : pub
 	RegisterPinScreen_t2D6AFFD214C1FB8B210302270F9E74E54E60E211* ___U3CU3E4__this;
 	RectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5* ___textRect;
 };
-struct U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089  : public RuntimeObject
+struct U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF  : public RuntimeObject
+{
+};
+struct U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2  : public RuntimeObject
 {
 	RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* ___U3CU3E4__this;
+	Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* ___btn;
 	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ___button;
 };
-struct U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD  : public RuntimeObject
+struct U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
@@ -854,7 +860,7 @@ struct U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD  : public R
 	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CbuttonU3E5__4;
 	float ___U3CtU3E5__5;
 };
-struct U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770  : public RuntimeObject
+struct U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
@@ -1162,6 +1168,7 @@ struct RegisterPinScreen_t2D6AFFD214C1FB8B210302270F9E74E54E60E211  : public Bas
 struct RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9  : public BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA
 {
 	AuthResponse_t427FD874477EE91F761227A39C82D1533133A3D3* ___authData;
+	bool ___isStarting;
 };
 struct SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565  : public BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA
 {
@@ -1688,7 +1695,7 @@ struct U3CSwayLeavesU3Ed__27_t5D4489287A3ACD88DFBB109C1B5763505347B770  : public
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___U3CoriginU3E5__2;
 	float ___U3CtU3E5__3;
 };
-struct U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7  : public RuntimeObject
+struct U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
@@ -1696,14 +1703,15 @@ struct U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7  : public
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___U3CoriginU3E5__2;
 	float ___U3CtU3E5__3;
 };
-struct U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC  : public RuntimeObject
+struct U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
 	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___target;
+	RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* ___U3CU3E4__this;
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___U3CoriginalU3E5__2;
 };
-struct U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3  : public RuntimeObject
+struct U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
@@ -1713,7 +1721,7 @@ struct U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3  : pu
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___U3CoriginU3E5__2;
 	float ___U3CphaseU3E5__3;
 };
-struct U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4  : public RuntimeObject
+struct U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D  : public RuntimeObject
 {
 	int32_t ___U3CU3E1__state;
 	RuntimeObject* ___U3CU3E2__current;
@@ -2910,6 +2918,11 @@ struct U3CU3Ec_t5E04BC21A9836A063AEBC541E5AF1A393B5C8B50_StaticFields
 	U3CU3Ec_t5E04BC21A9836A063AEBC541E5AF1A393B5C8B50* ___U3CU3E9;
 	Action_1_t3CB5D1A819C3ED3F99E9E39F890F18633253949A* ___U3CU3E9__16_1;
 };
+struct U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields
+{
+	U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF* ___U3CU3E9;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___U3CU3E9__14_0;
+};
 struct U3CU3Ec_t637D9FAEEFABC70437DB8C88BA4E6B4DE26799A4_StaticFields
 {
 	U3CU3Ec_t637D9FAEEFABC70437DB8C88BA4E6B4DE26799A4* ___U3CU3E9;
@@ -3721,20 +3734,21 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_FloatEle
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_AddTextShadow_m9661E40BC21B9E964B264F234A310B929515FAEC (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* ___0_text, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* AuthResponse_GetValidName_m4401DCF0A044068B06E5F2A4BCF386F56E287127 (AuthResponse_t427FD874477EE91F761227A39C82D1533133A3D3* __this, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD92EF0CAB7E2A14B53FFF4E6CB64F5C79ABFAD (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, String_t* ___0_label, String_t* ___1_value, float ___2_y, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass13_0__ctor_m004F83EC46E1ACE0428F097B831B8BEDC5E7F0ED (U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass14_0__ctor_mF2FCE9599C724460953E3C8C1009E1F74F7FDF15 (U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* __this, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateRocket_mD02403B737549F556CA8580A7F7C257966BE4609 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonIdle_mDECC581AECA689619F6335BE4E7AFF1B50135CA1 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_RocketIdle_mE5DE72B6566916277C4E882642BFA0F8383DB5CD (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateFlame_mB07CF944D1A71002176B3774436A07FD28966FA7 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_rocket, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__15__ctor_m1237619147114AE3143111BE6B18B1C892E606A2 (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__16__ctor_m2FD3033A9D43BA0E47EA7A2E775B818BD7357D0A (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_FlameAnimation_m2AAEC4D0AC268B22D40B100253E83C602ECE0A5F (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* ___1_image, int32_t ___2_index, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__17__ctor_m8F78DE3FEC80DB4D2BA56FFE04E98529EBE388DC (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__18__ctor_m5F58D335A1AA60039F8728C19138BD11E461D05C (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__19__ctor_m72F9F232725531CF3CC5B0DE4713B153F06707BD (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressU3Ed__20__ctor_mD95B4FC695397D1C75AB4C5BB7D8862759E16C91 (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__21__ctor_m9678861A8D57D20E737512E0FDB612A505856E12 (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__18__ctor_m6F91CC575D024A1A31C27BB71614A9EC6FE38451 (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__19__ctor_mA1DBA1BB7DBE81E52C7EE7D632E6C2CBB47E2C77 (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__20__ctor_m5546CC35C805E44C89FDEF2A85B277D231385DCB (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressAndNavigateU3Ed__21__ctor_m9D03E51B23A5235EE16F46B7E12A9AD46A3E8BB9 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__22__ctor_mF377DFF59EB0DA06B3EE5A4487C455A8B346F2BE (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__ctor_m7DC32B735D2201A8DED370FB75B6CC8AE145EC75 (U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonPressAndNavigate_m653BB03DBE8A971F768DE096FFA6250F7D5164C4 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* ___1_btn, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MainMenuScreen__ctor_mEEDCB7FC57EEE817EA1F0F6DC567EA39E05ECED5 (MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, const RuntimeMethod* method) ;
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonPress_mA6E4AC8A4D7591E1AA114B4EF934CF9232E729C7 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float Random_Range_m5236C99A7D8AE6AC9190592DC66016652A2D2494 (float ___0_minInclusive, float ___1_maxInclusive, const RuntimeMethod* method) ;
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B (const RuntimeMethod* method) ;
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) ;
@@ -19907,14 +19921,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen__ctor_m4395930F6F5
 		s_Il2CppMethodInitialized = true;
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:13>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:14>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_0 = ___0_parent;
 		BaseScreen__ctor_m46985D1058DD213839D950397B5D5BC697447273(__this, L_0, _stringLiteral45596B81BA230A734A5D1DBDFC9A932B7ADFE3D0, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:15>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:16>
 		AuthResponse_t427FD874477EE91F761227A39C82D1533133A3D3* L_1 = ___1_data;
 		__this->___authData = L_1;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___authData), (void*)L_1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:16>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:17>
 		return;
 	}
 }
@@ -19929,36 +19943,36 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_Show_m4173350E96B0
 		s_Il2CppMethodInitialized = true;
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:20>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:21>
 		il2cpp_codegen_runtime_class_init_inline(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var);
 		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0 = ((TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_StaticFields*)il2cpp_codegen_static_fields_for(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var))->___ForestGreen;
 		BaseScreen_SetBackground_mEA5C9B882EC73B04086C059955CAE712CCBC2A12(__this, L_0, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:22>
-		RegisterSummaryScreen_CreateBackground_m649B7DD23A62E12B46C38096E97598ED2632EADE(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:23>
-		RegisterSummaryScreen_CreateHeader_m2F9E6538B6719CBCDE81B5C109FA49EC81B3DE41(__this, NULL);
+		RegisterSummaryScreen_CreateBackground_m649B7DD23A62E12B46C38096E97598ED2632EADE(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:24>
-		RegisterSummaryScreen_CreateBoard_m6E5080B3F1988FD8273DD383D3D05ADD18F8635B(__this, NULL);
+		RegisterSummaryScreen_CreateHeader_m2F9E6538B6719CBCDE81B5C109FA49EC81B3DE41(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:25>
-		RegisterSummaryScreen_CreateAvatar_mF61540C78F8A855F38A345E23E4959A7C1CD69D0(__this, NULL);
+		RegisterSummaryScreen_CreateBoard_m6E5080B3F1988FD8273DD383D3D05ADD18F8635B(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:26>
-		RegisterSummaryScreen_CreateWelcome_mF94E6B36A02E0B690A4BD4E77F84608DB7EA79E3(__this, NULL);
+		RegisterSummaryScreen_CreateAvatar_mF61540C78F8A855F38A345E23E4959A7C1CD69D0(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:27>
-		RegisterSummaryScreen_CreateAccountInfo_m88586526B9C65403A83F3C852EBF75EFB7441E6D(__this, NULL);
+		RegisterSummaryScreen_CreateWelcome_mF94E6B36A02E0B690A4BD4E77F84608DB7EA79E3(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:28>
-		RegisterSummaryScreen_CreateUsernameNote_mD52F7BB7462B576D732C69647ABFABA44CF1EBC2(__this, NULL);
+		RegisterSummaryScreen_CreateAccountInfo_m88586526B9C65403A83F3C852EBF75EFB7441E6D(__this, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:29>
+		RegisterSummaryScreen_CreateUsernameNote_mD52F7BB7462B576D732C69647ABFABA44CF1EBC2(__this, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:30>
 		RegisterSummaryScreen_CreateStartButton_m0B285700573D3483401D89D655774ED0D7AB0486(__this, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:31>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:32>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:33>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:34>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_1 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		RuntimeObject* L_2;
 		L_2 = RegisterSummaryScreen_Entrance_m9B9FE7FBF192944545C869760246D187B8E54358(__this, NULL);
 		NullCheck(L_1);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_3;
 		L_3 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_1, L_2, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:34>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:35>
 		return;
 	}
 }
@@ -19972,7 +19986,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CA
 		s_Il2CppMethodInitialized = true;
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:42>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:43>
 		String_t* L_0 = ___0_path;
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_1;
 		L_1 = Resources_Load_TisSprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99_mD30BD3A93DAF8B841F2BE37B3780DE390A04085A(L_0, Resources_Load_TisSprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99_mD30BD3A93DAF8B841F2BE37B3780DE390A04085A_RuntimeMethod_var);
@@ -19999,14 +20013,13 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBackground_m
 	Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 V_3;
 	memset((&V_3), 0, sizeof(V_3));
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:51>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:52>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:53>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:54>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:55>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_0;
 		L_0 = RegisterSummaryScreen_Load_m68ED4307BB614CC3B7137ADE16A835B30BA4FD1B(__this, _stringLiteral5B29F7D559C2B6A99A19AA158328A7C5C42D283B, NULL);
 		V_0 = L_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:56>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:57>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:58>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:59>
@@ -20014,6 +20027,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBackground_m
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:61>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:62>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:63>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:64>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_1 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_1);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2;
@@ -20026,13 +20040,13 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBackground_m
 		L_5 = Vector2_get_one_m9097EB8DC23C26118A591AF16702796C3EF51DFB_inline(NULL);
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_6;
 		L_6 = UIBuilder_CreatePanel_m7F3BF70D0DB8CF681A31D441A88BBCEF6EFA7FC5(L_2, _stringLiteral5230F5FD1E0998B73530AA850D3A5872D61228EC, L_3, L_4, L_5, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:65>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:66>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:67>
 		NullCheck(L_6);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_7;
 		L_7 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_6, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_1 = L_7;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:68>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:69>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_8 = V_1;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_9;
@@ -20043,7 +20057,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBackground_m
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:69>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:70>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_10 = V_1;
 		NullCheck(L_10);
 		VirtualActionInvoker1< bool >::Invoke(25, L_10, (bool)0);
@@ -20051,7 +20065,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBackground_m
 
 IL_0046:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:71>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:72>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_11 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_12;
@@ -20062,13 +20076,12 @@ IL_0046:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:72>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:73>
 		return;
 	}
 
 IL_0050:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:74>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:75>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:76>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:77>
@@ -20079,6 +20092,7 @@ IL_0050:
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:82>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:83>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:84>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:85>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_13 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_13);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_14;
@@ -20093,13 +20107,13 @@ IL_0050:
 		Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 L_18 = V_3;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_19;
 		L_19 = UIBuilder_CreateImage_m9FBB42ADCA6846EEB54ABCA801017C4DBC713F05(L_14, _stringLiteralFE2B0DCCE70B8E46BAE9EA3DE9A881386CE203CD, L_15, L_16, L_17, L_18, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:86>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:87>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:88>
 		NullCheck(L_19);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_20;
 		L_20 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_19, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_2 = L_20;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:89>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:90>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_21 = V_2;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_22;
@@ -20110,11 +20124,11 @@ IL_0050:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:91>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:92>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_23 = V_2;
 		NullCheck(L_23);
 		Image_set_preserveAspect_mF465AFD1313C0F002B37C8B86C75F98CB72A4098(L_23, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:92>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:93>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_24 = V_2;
 		NullCheck(L_24);
 		VirtualActionInvoker1< bool >::Invoke(25, L_24, (bool)0);
@@ -20122,7 +20136,7 @@ IL_0050:
 
 IL_00a0:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:94>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:95>
 		return;
 	}
 }
@@ -20145,14 +20159,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateHeader_m2F9E
 	Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 V_3;
 	memset((&V_3), 0, sizeof(V_3));
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:102>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:103>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:104>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:105>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:106>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_0;
 		L_0 = RegisterSummaryScreen_Load_m68ED4307BB614CC3B7137ADE16A835B30BA4FD1B(__this, _stringLiteralE02837D291AD53A228AA94C0BDB7123455FBFD63, NULL);
 		V_0 = L_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:107>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:108>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_1 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -20163,13 +20177,12 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateHeader_m2F9E
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:108>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:109>
 		return;
 	}
 
 IL_0016:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:110>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:111>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:112>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:113>
@@ -20183,6 +20196,7 @@ IL_0016:
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:121>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:122>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:123>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:124>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_3 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_3);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_4;
@@ -20199,14 +20213,14 @@ IL_0016:
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9;
 		L_9 = UIBuilder_CreateImage_m9FBB42ADCA6846EEB54ABCA801017C4DBC713F05(L_4, _stringLiteralE8AE71D36BAE48ADD40EBC5C03BC7E29C2644B3E, L_5, L_6, L_7, L_8, NULL);
 		V_1 = L_9;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:125>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:126>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:127>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_10 = V_1;
 		NullCheck(L_10);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_11;
 		L_11 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_10, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_2 = L_11;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:128>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:129>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_12 = V_2;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_13;
@@ -20217,11 +20231,11 @@ IL_0016:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:130>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:131>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_14 = V_2;
 		NullCheck(L_14);
 		Image_set_preserveAspect_mF465AFD1313C0F002B37C8B86C75F98CB72A4098(L_14, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:131>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:132>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_15 = V_2;
 		NullCheck(L_15);
 		VirtualActionInvoker1< bool >::Invoke(25, L_15, (bool)0);
@@ -20229,13 +20243,13 @@ IL_0016:
 
 IL_0072:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:134>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:135>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:136>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:137>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:138>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:139>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:140>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:141>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_16 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_17 = V_1;
 		NullCheck(L_17);
@@ -20246,7 +20260,7 @@ IL_0072:
 		NullCheck(L_16);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_20;
 		L_20 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_16, L_19, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:141>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:142>
 		return;
 	}
 }
@@ -20267,14 +20281,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBoard_m6E508
 	Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 V_2;
 	memset((&V_2), 0, sizeof(V_2));
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:149>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:150>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:151>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:152>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:153>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_0;
 		L_0 = RegisterSummaryScreen_Load_m68ED4307BB614CC3B7137ADE16A835B30BA4FD1B(__this, _stringLiteral2841DA3B038C4944CC94C3DAFAC9B2AC86A37CF3, NULL);
 		V_0 = L_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:154>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:155>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_1 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -20285,13 +20299,12 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateBoard_m6E508
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:155>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:156>
 		return;
 	}
 
 IL_0016:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:157>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:158>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:159>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:160>
@@ -20305,6 +20318,7 @@ IL_0016:
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:168>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:169>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:170>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:171>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_3 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_3);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_4;
@@ -20320,13 +20334,13 @@ IL_0016:
 		Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 L_8 = V_2;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9;
 		L_9 = UIBuilder_CreateImage_m9FBB42ADCA6846EEB54ABCA801017C4DBC713F05(L_4, _stringLiteralD9AD2C43339147F6104041A53E5E279DFE3AECAA, L_5, L_6, L_7, L_8, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:172>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:173>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:174>
 		NullCheck(L_9);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_10;
 		L_10 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_9, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_1 = L_10;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:175>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:176>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_11 = V_1;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_12;
@@ -20337,11 +20351,11 @@ IL_0016:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:177>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:178>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_13 = V_1;
 		NullCheck(L_13);
 		Image_set_preserveAspect_mF465AFD1313C0F002B37C8B86C75F98CB72A4098(L_13, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:178>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:179>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_14 = V_1;
 		NullCheck(L_14);
 		VirtualActionInvoker1< bool >::Invoke(25, L_14, (bool)0);
@@ -20349,7 +20363,7 @@ IL_0016:
 
 IL_0070:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:180>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:181>
 		return;
 	}
 }
@@ -20372,14 +20386,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateAvatar_mF615
 	Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 V_3;
 	memset((&V_3), 0, sizeof(V_3));
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:188>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:189>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:190>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:191>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:192>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_0;
 		L_0 = RegisterSummaryScreen_Load_m68ED4307BB614CC3B7137ADE16A835B30BA4FD1B(__this, _stringLiteralB47C49EA32BA1113358330BD3CAE69DB99439231, NULL);
 		V_0 = L_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:193>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:194>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_1 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -20390,13 +20404,12 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateAvatar_mF615
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:194>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:195>
 		return;
 	}
 
 IL_0016:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:196>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:197>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:198>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:199>
@@ -20410,6 +20423,7 @@ IL_0016:
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:207>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:208>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:209>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:210>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_3 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_3);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_4;
@@ -20426,14 +20440,14 @@ IL_0016:
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9;
 		L_9 = UIBuilder_CreateImage_m9FBB42ADCA6846EEB54ABCA801017C4DBC713F05(L_4, _stringLiteral5FB6B863A4156CE2129B5FBF8C155567CE1CE90B, L_5, L_6, L_7, L_8, NULL);
 		V_1 = L_9;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:211>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:212>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:213>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_10 = V_1;
 		NullCheck(L_10);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_11;
 		L_11 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_10, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_2 = L_11;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:214>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:215>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_12 = V_2;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_13;
@@ -20444,11 +20458,11 @@ IL_0016:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:216>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:217>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_14 = V_2;
 		NullCheck(L_14);
 		Image_set_preserveAspect_mF465AFD1313C0F002B37C8B86C75F98CB72A4098(L_14, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:217>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:218>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_15 = V_2;
 		NullCheck(L_15);
 		VirtualActionInvoker1< bool >::Invoke(25, L_15, (bool)0);
@@ -20456,13 +20470,13 @@ IL_0016:
 
 IL_0072:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:220>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:221>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:222>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:223>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:224>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:225>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:226>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:227>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_16 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_17 = V_1;
 		NullCheck(L_17);
@@ -20473,7 +20487,7 @@ IL_0072:
 		NullCheck(L_16);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_20;
 		L_20 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_16, L_19, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:227>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:228>
 		return;
 	}
 }
@@ -20490,7 +20504,6 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateWelcome_mF94
 	}
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* V_0 = NULL;
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:235>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:236>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:237>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:238>
@@ -20506,6 +20519,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateWelcome_mF94
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:248>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:249>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:250>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:251>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_0 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_0);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_1;
@@ -20524,25 +20538,25 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateWelcome_mF94
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_6;
 		L_6 = GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E(L_5, GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E_RuntimeMethod_var);
 		V_0 = L_6;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:252>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:253>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:254>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_7 = V_0;
 		NullCheck(L_7);
 		TMP_Text_set_fontStyle_m61931944B2E922D50087312D80F8685A2F29EBF8(L_7, 1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:255>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:256>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:257>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_8 = V_0;
 		NullCheck(L_8);
 		TMP_Text_set_characterSpacing_mDCD34D244A502CA21CEB817E1F4CAC5BC6CCBA63(L_8, (0.300000012f), NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:258>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:259>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:260>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_9 = V_0;
 		NullCheck(L_9);
 		VirtualActionInvoker1< bool >::Invoke(25, L_9, (bool)0);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:261>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:262>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_10 = V_0;
 		RegisterSummaryScreen_AddTextShadow_m9661E40BC21B9E964B264F234A310B929515FAEC(__this, L_10, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:262>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:263>
 		return;
 	}
 }
@@ -20568,27 +20582,27 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateAccountInfo_
 	String_t* V_2 = NULL;
 	String_t* G_B3_0 = NULL;
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:270>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:271>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:272>
 		AuthResponse_t427FD874477EE91F761227A39C82D1533133A3D3* L_0 = __this->___authData;
 		NullCheck(L_0);
 		String_t* L_1;
 		L_1 = AuthResponse_GetValidName_m4401DCF0A044068B06E5F2A4BCF386F56E287127(L_0, NULL);
 		V_0 = L_1;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:273>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:274>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:275>
 		AuthResponse_t427FD874477EE91F761227A39C82D1533133A3D3* L_2 = __this->___authData;
 		NullCheck(L_2);
 		String_t* L_3;
 		L_3 = AuthResponse_GetValidUsername_m1F8C0F2CB40E17C04A1F06B05442BA05B47BC904(L_2, NULL);
 		V_1 = L_3;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:276>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:277>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:278>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:279>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:280>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:281>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:282>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:283>
 		int32_t L_4;
 		L_4 = PlayerPrefs_GetInt_m8AD1FA8BA54CC6CE2B2AEEE36B6D75587BB1692D(_stringLiteralBC5CBBC0375512F733712D0D06B935101903905D, 1, NULL);
 		if ((((int32_t)L_4) == ((int32_t)1)))
@@ -20609,36 +20623,36 @@ IL_002d:
 IL_0032:
 	{
 		V_2 = G_B3_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:284>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:285>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:286>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:287>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:288>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:289>
 		String_t* L_5 = V_0;
 		RegisterSummaryScreen_CreateDataRow_m9BD92EF0CAB7E2A14B53FFF4E6CB64F5C79ABFAD(__this, _stringLiteral7B08D8F22F7AEC927ED0D2A954EB3F0DD6A13B9E, L_5, (130.0f), NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:290>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:291>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:292>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:293>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:294>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:295>
 		String_t* L_6 = V_1;
 		String_t* L_7;
 		L_7 = String_Concat_m9E3155FB84015C823606188F53B47CB44C444991(_stringLiteralBA1039E8CDAE53E44AC3E6185B0871F3D031A476, L_6, NULL);
 		RegisterSummaryScreen_CreateDataRow_m9BD92EF0CAB7E2A14B53FFF4E6CB64F5C79ABFAD(__this, _stringLiteral4A281F9DBD5E103CE9E67E73392C2A3BA578F217, L_7, (45.0f), NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:296>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:297>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:298>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:299>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:300>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:301>
 		String_t* L_8 = V_2;
 		RegisterSummaryScreen_CreateDataRow_m9BD92EF0CAB7E2A14B53FFF4E6CB64F5C79ABFAD(__this, _stringLiteralDA6B62616FB1828861432BF413F6EA964016FEAF, L_8, (-40.0f), NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:302>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:303>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:304>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:305>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:306>
-		RegisterSummaryScreen_CreateDataRow_m9BD92EF0CAB7E2A14B53FFF4E6CB64F5C79ABFAD(__this, _stringLiteralB224A2EFE789603DFDDB79BA6CD8E1B7A89B708B, _stringLiteral30A2D22EE891B4A43878069C59160A495D2574A4, (-125.0f), NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:307>
+		RegisterSummaryScreen_CreateDataRow_m9BD92EF0CAB7E2A14B53FFF4E6CB64F5C79ABFAD(__this, _stringLiteralB224A2EFE789603DFDDB79BA6CD8E1B7A89B708B, _stringLiteral30A2D22EE891B4A43878069C59160A495D2574A4, (-125.0f), NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:308>
 		return;
 	}
 }
@@ -20656,7 +20670,6 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* V_0 = NULL;
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* V_1 = NULL;
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:315>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:316>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:317>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:318>
@@ -20672,6 +20685,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:328>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:329>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:330>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:331>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_0 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_0);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_1;
@@ -20692,25 +20706,24 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_8;
 		L_8 = GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E(L_7, GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E_RuntimeMethod_var);
 		V_0 = L_8;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:332>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:333>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:334>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_9 = V_0;
 		NullCheck(L_9);
 		TMP_Text_set_fontStyle_m61931944B2E922D50087312D80F8685A2F29EBF8(L_9, 1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:335>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:336>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:337>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_10 = V_0;
 		NullCheck(L_10);
 		TMP_Text_set_enableWordWrapping_mFAEE849315B4723F9C86C127B1A59EF50BE1C12F(L_10, (bool)0, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:338>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:339>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:340>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_11 = V_0;
 		NullCheck(L_11);
 		VirtualActionInvoker1< bool >::Invoke(25, L_11, (bool)0);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:341>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:342>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_12 = V_0;
 		RegisterSummaryScreen_AddTextShadow_m9661E40BC21B9E964B264F234A310B929515FAEC(__this, L_12, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:345>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:346>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:347>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:348>
@@ -20726,6 +20739,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:358>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:359>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:360>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:361>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_13 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_13);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_14;
@@ -20745,36 +20759,36 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_21;
 		L_21 = GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E(L_20, GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E_RuntimeMethod_var);
 		V_1 = L_21;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:362>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:363>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:364>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_22 = V_1;
 		NullCheck(L_22);
 		TMP_Text_set_fontStyle_m61931944B2E922D50087312D80F8685A2F29EBF8(L_22, 1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:365>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:366>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:367>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_23 = V_1;
 		NullCheck(L_23);
 		TMP_Text_set_enableWordWrapping_mFAEE849315B4723F9C86C127B1A59EF50BE1C12F(L_23, (bool)0, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:368>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:369>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:370>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_24 = V_1;
 		NullCheck(L_24);
 		TMP_Text_set_overflowMode_mB8911BA07CEE0AC1E4E108B5EB79B230F90E96A1(L_24, 1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:371>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:372>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:373>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_25 = V_1;
 		NullCheck(L_25);
 		VirtualActionInvoker1< bool >::Invoke(25, L_25, (bool)0);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:374>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:375>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_26 = V_1;
 		RegisterSummaryScreen_AddTextShadow_m9661E40BC21B9E964B264F234A310B929515FAEC(__this, L_26, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:376>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:377>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:378>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:379>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:380>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:381>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:382>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:383>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_27 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_28 = V_0;
 		NullCheck(L_28);
@@ -20785,13 +20799,13 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 		NullCheck(L_27);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_31;
 		L_31 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_27, L_30, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:384>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:385>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:386>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:387>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:388>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:389>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:390>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:391>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_32 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_33 = V_1;
 		NullCheck(L_33);
@@ -20802,7 +20816,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateDataRow_m9BD
 		NullCheck(L_32);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_36;
 		L_36 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_32, L_35, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:391>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:392>
 		return;
 	}
 }
@@ -20822,14 +20836,13 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateUsernameNote
 	String_t* V_0 = NULL;
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* V_1 = NULL;
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:399>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:400>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:401>
 		AuthResponse_t427FD874477EE91F761227A39C82D1533133A3D3* L_0 = __this->___authData;
 		NullCheck(L_0);
 		String_t* L_1;
 		L_1 = AuthResponse_GetValidUsername_m1F8C0F2CB40E17C04A1F06B05442BA05B47BC904(L_0, NULL);
 		V_0 = L_1;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:402>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:403>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:404>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:405>
@@ -20847,6 +20860,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateUsernameNote
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:417>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:418>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:419>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:420>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_2 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_2);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3;
@@ -20868,31 +20882,31 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateUsernameNote
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_10;
 		L_10 = GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E(L_9, GameObject_GetComponent_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_mBDBF977A8C7734F6EDD83FC65C6FDDE74427611E_RuntimeMethod_var);
 		V_1 = L_10;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:421>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:422>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:423>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_11 = V_1;
 		NullCheck(L_11);
 		TMP_Text_set_fontStyle_m61931944B2E922D50087312D80F8685A2F29EBF8(L_11, 1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:424>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:425>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:426>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_12 = V_1;
 		NullCheck(L_12);
 		TMP_Text_set_enableWordWrapping_mFAEE849315B4723F9C86C127B1A59EF50BE1C12F(L_12, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:427>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:428>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:429>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_13 = V_1;
 		NullCheck(L_13);
 		VirtualActionInvoker1< bool >::Invoke(25, L_13, (bool)0);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:430>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:431>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_14 = V_1;
 		RegisterSummaryScreen_AddTextShadow_m9661E40BC21B9E964B264F234A310B929515FAEC(__this, L_14, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:432>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:433>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:434>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:435>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:436>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:437>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:438>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:439>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_15 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_16 = V_1;
 		NullCheck(L_16);
@@ -20903,7 +20917,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateUsernameNote
 		NullCheck(L_15);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_19;
 		L_19 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_15, L_18, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:439>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:440>
 		return;
 	}
 }
@@ -20917,8 +20931,8 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_AddTextShadow_m966
 		s_Il2CppMethodInitialized = true;
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:448>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:449>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:450>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_0 = ___0_text;
 		NullCheck(L_0);
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_1;
@@ -20926,30 +20940,30 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_AddTextShadow_m966
 		NullCheck(L_1);
 		Shadow_tCAA59FE9D6B0DC6DCC505E8E22D8D3C05BE6DE95* L_2;
 		L_2 = GameObject_AddComponent_TisShadow_tCAA59FE9D6B0DC6DCC505E8E22D8D3C05BE6DE95_m478D7E458D94E3A705781BBB0E8EEE777BC45EA1(L_1, GameObject_AddComponent_TisShadow_tCAA59FE9D6B0DC6DCC505E8E22D8D3C05BE6DE95_m478D7E458D94E3A705781BBB0E8EEE777BC45EA1_RuntimeMethod_var);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:451>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:452>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:453>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:454>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:455>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:456>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:457>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:458>
 		Shadow_tCAA59FE9D6B0DC6DCC505E8E22D8D3C05BE6DE95* L_3 = L_2;
 		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_4;
 		memset((&L_4), 0, sizeof(L_4));
 		Color__ctor_m3786F0D6E510D9CFA544523A955870BD2A514C8C_inline((&L_4), (1.0f), (0.899999976f), (0.550000012f), (0.349999994f), NULL);
 		NullCheck(L_3);
 		Shadow_set_effectColor_mCCC5DB6B7D09C5DEE0C677DEB3B9B0C578F05AF1(L_3, L_4, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:459>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:460>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:461>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:462>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:463>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:464>
 		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_5;
 		memset((&L_5), 0, sizeof(L_5));
 		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_5), (1.0f), (-1.0f), NULL);
 		NullCheck(L_3);
 		Shadow_set_effectDistance_m5E7B565C41CF2A8C84EC98319ACBF5C8E1FE47DA(L_3, L_5, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:464>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:465>
 		return;
 	}
 }
@@ -20966,26 +20980,43 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateStartButton_
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__0_m51E5FFCC40D186AEE9C29C5EA09DBB6D9B395E45_RuntimeMethod_var);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__1_mC943781E26682DF189163A2FEAEF9B148191133E_RuntimeMethod_var);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec_U3CCreateStartButtonU3Eb__14_0_mE71CB5938749B6A44F63DD926472BD0E4A1421AC_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass14_0_U3CCreateStartButtonU3Eb__1_m05160007B58FC171BC082AF9BA3486ADABAD4384_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7_il2cpp_TypeInfo_var);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral26CC285863056B1ACCF4621ADF99F1D04486EBEB);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralC137E8BFE4934F5EC1E91C365686E9BE534089F8);
 		s_Il2CppMethodInitialized = true;
 	}
-	U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* V_0 = NULL;
+	U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* V_0 = NULL;
 	TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* V_1 = NULL;
-	Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* V_2 = NULL;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* G_B2_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B2_1;
+	memset((&G_B2_1), 0, sizeof(G_B2_1));
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 G_B2_2;
+	memset((&G_B2_2), 0, sizeof(G_B2_2));
+	String_t* G_B2_3 = NULL;
+	String_t* G_B2_4 = NULL;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* G_B2_5 = NULL;
+	U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* G_B2_6 = NULL;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* G_B1_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B1_1;
+	memset((&G_B1_1), 0, sizeof(G_B1_1));
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 G_B1_2;
+	memset((&G_B1_2), 0, sizeof(G_B1_2));
+	String_t* G_B1_3 = NULL;
+	String_t* G_B1_4 = NULL;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* G_B1_5 = NULL;
+	U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* G_B1_6 = NULL;
 	{
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_0 = (U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089*)il2cpp_codegen_object_new(U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089_il2cpp_TypeInfo_var);
-		U3CU3Ec__DisplayClass13_0__ctor_m004F83EC46E1ACE0428F097B831B8BEDC5E7F0ED(L_0, NULL);
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_0 = (U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2*)il2cpp_codegen_object_new(U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2_il2cpp_TypeInfo_var);
+		U3CU3Ec__DisplayClass14_0__ctor_mF2FCE9599C724460953E3C8C1009E1F74F7FDF15(L_0, NULL);
 		V_0 = L_0;
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_1 = V_0;
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_1 = V_0;
 		NullCheck(L_1);
 		L_1->___U3CU3E4__this = __this;
 		Il2CppCodeGenWriteBarrier((void**)(&L_1->___U3CU3E4__this), (void*)__this);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:473>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:474>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:475>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:476>
@@ -20998,27 +21029,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateStartButton_
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:483>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:484>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:485>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:486>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:487>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:488>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:489>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:490>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:491>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:492>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:493>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:494>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:495>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:496>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:497>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:498>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:499>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:500>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:501>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:502>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:503>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:504>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:505>
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_2 = V_0;
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_2 = V_0;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_3 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)__this)->___screenObj;
 		NullCheck(L_3);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_4;
@@ -21028,157 +21039,209 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateStartButton_
 		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_5), (850.0f), (145.0f), NULL);
 		il2cpp_codegen_runtime_class_init_inline(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var);
 		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_6 = ((TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_StaticFields*)il2cpp_codegen_static_fields_for(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var))->___BatakGold;
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_7 = V_0;
-		Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* L_8 = (Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07*)il2cpp_codegen_object_new(Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07_il2cpp_TypeInfo_var);
-		Action__ctor_mBDC7B0B4A3F583B64C2896F01BDED360772F67DC(L_8, L_7, (intptr_t)((void*)U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__0_m51E5FFCC40D186AEE9C29C5EA09DBB6D9B395E45_RuntimeMethod_var), NULL);
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9;
-		L_9 = UIBuilder_CreateButton_mF01E6D361D6221B75EBB18AF663DFF2863BA9F23(L_4, _stringLiteral26CC285863056B1ACCF4621ADF99F1D04486EBEB, _stringLiteralC137E8BFE4934F5EC1E91C365686E9BE534089F8, L_5, L_6, L_8, NULL);
-		NullCheck(L_2);
-		L_2->___button = L_9;
-		Il2CppCodeGenWriteBarrier((void**)(&L_2->___button), (void*)L_9);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:507>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:508>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:509>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:510>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:511>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:512>
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_10 = V_0;
-		NullCheck(L_10);
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_11 = L_10->___button;
-		NullCheck(L_11);
-		RectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5* L_12;
-		L_12 = GameObject_GetComponent_TisRectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5_m1592DCB5AA07291F73A76006F0913A64DFB8A9C4(L_11, GameObject_GetComponent_TisRectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5_m1592DCB5AA07291F73A76006F0913A64DFB8A9C4_RuntimeMethod_var);
-		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_13;
-		memset((&L_13), 0, sizeof(L_13));
-		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_13), (0.0f), (-700.0f), NULL);
-		NullCheck(L_12);
-		RectTransform_set_anchoredPosition_mF903ACE04F6959B1CD67E2B94FABC0263068F965(L_12, L_13, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:514>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:515>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:516>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:517>
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_14 = V_0;
-		NullCheck(L_14);
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_15 = L_14->___button;
-		NullCheck(L_15);
-		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_16;
-		L_16 = GameObject_GetComponentInChildren_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_m58413DB121C1F732459A1F2B911AB85B1BF21AFB(L_15, GameObject_GetComponentInChildren_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_m58413DB121C1F732459A1F2B911AB85B1BF21AFB_RuntimeMethod_var);
-		V_1 = L_16;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:519>
-		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_17 = V_1;
-		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
-		bool L_18;
-		L_18 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_17, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
-		if (!L_18)
+		il2cpp_codegen_runtime_class_init_inline(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var);
+		Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* L_7 = ((U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields*)il2cpp_codegen_static_fields_for(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var))->___U3CU3E9__14_0;
+		Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* L_8 = L_7;
+		if (L_8)
 		{
-			goto IL_00b0;
+			G_B2_0 = L_8;
+			G_B2_1 = L_6;
+			G_B2_2 = L_5;
+			G_B2_3 = _stringLiteralC137E8BFE4934F5EC1E91C365686E9BE534089F8;
+			G_B2_4 = _stringLiteral26CC285863056B1ACCF4621ADF99F1D04486EBEB;
+			G_B2_5 = L_4;
+			G_B2_6 = L_2;
+			goto IL_0056;
+		}
+		G_B1_0 = L_8;
+		G_B1_1 = L_6;
+		G_B1_2 = L_5;
+		G_B1_3 = _stringLiteralC137E8BFE4934F5EC1E91C365686E9BE534089F8;
+		G_B1_4 = _stringLiteral26CC285863056B1ACCF4621ADF99F1D04486EBEB;
+		G_B1_5 = L_4;
+		G_B1_6 = L_2;
+	}
+	{
+		il2cpp_codegen_runtime_class_init_inline(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var);
+		U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF* L_9 = ((U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields*)il2cpp_codegen_static_fields_for(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var))->___U3CU3E9;
+		Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* L_10 = (Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07*)il2cpp_codegen_object_new(Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07_il2cpp_TypeInfo_var);
+		Action__ctor_mBDC7B0B4A3F583B64C2896F01BDED360772F67DC(L_10, L_9, (intptr_t)((void*)U3CU3Ec_U3CCreateStartButtonU3Eb__14_0_mE71CB5938749B6A44F63DD926472BD0E4A1421AC_RuntimeMethod_var), NULL);
+		Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* L_11 = L_10;
+		((U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields*)il2cpp_codegen_static_fields_for(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var))->___U3CU3E9__14_0 = L_11;
+		Il2CppCodeGenWriteBarrier((void**)(&((U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields*)il2cpp_codegen_static_fields_for(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var))->___U3CU3E9__14_0), (void*)L_11);
+		G_B2_0 = L_11;
+		G_B2_1 = G_B1_1;
+		G_B2_2 = G_B1_2;
+		G_B2_3 = G_B1_3;
+		G_B2_4 = G_B1_4;
+		G_B2_5 = G_B1_5;
+		G_B2_6 = G_B1_6;
+	}
+
+IL_0056:
+	{
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_12;
+		L_12 = UIBuilder_CreateButton_mF01E6D361D6221B75EBB18AF663DFF2863BA9F23(G_B2_5, G_B2_4, G_B2_3, G_B2_2, G_B2_1, G_B2_0, NULL);
+		NullCheck(G_B2_6);
+		G_B2_6->___button = L_12;
+		Il2CppCodeGenWriteBarrier((void**)(&G_B2_6->___button), (void*)L_12);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:487>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:488>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:489>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:490>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:491>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:492>
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_13 = V_0;
+		NullCheck(L_13);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_14 = L_13->___button;
+		NullCheck(L_14);
+		RectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5* L_15;
+		L_15 = GameObject_GetComponent_TisRectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5_m1592DCB5AA07291F73A76006F0913A64DFB8A9C4(L_14, GameObject_GetComponent_TisRectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5_m1592DCB5AA07291F73A76006F0913A64DFB8A9C4_RuntimeMethod_var);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_16;
+		memset((&L_16), 0, sizeof(L_16));
+		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_16), (0.0f), (-700.0f), NULL);
+		NullCheck(L_15);
+		RectTransform_set_anchoredPosition_mF903ACE04F6959B1CD67E2B94FABC0263068F965(L_15, L_16, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:494>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:495>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:496>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:497>
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_17 = V_0;
+		NullCheck(L_17);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_18 = L_17->___button;
+		NullCheck(L_18);
+		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_19;
+		L_19 = GameObject_GetComponentInChildren_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_m58413DB121C1F732459A1F2B911AB85B1BF21AFB(L_18, GameObject_GetComponentInChildren_TisTextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957_m58413DB121C1F732459A1F2B911AB85B1BF21AFB_RuntimeMethod_var);
+		V_1 = L_19;
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:499>
+		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_20 = V_1;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_21;
+		L_21 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_20, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_21)
+		{
+			goto IL_00c3;
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:521>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:522>
-		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_19 = V_1;
-		NullCheck(L_19);
-		TMP_Text_set_fontSize_m1C3A3BA2BC88E5E1D89375FD35A0AA91E75D3AAD(L_19, (38.0f), NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:524>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:525>
-		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_20 = V_1;
-		NullCheck(L_20);
-		TMP_Text_set_fontStyle_m61931944B2E922D50087312D80F8685A2F29EBF8(L_20, 1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:527>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:528>
-		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_21 = V_1;
-		il2cpp_codegen_runtime_class_init_inline(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var);
-		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_22 = ((TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_StaticFields*)il2cpp_codegen_static_fields_for(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var))->___WoodDark;
-		NullCheck(L_21);
-		VirtualActionInvoker1< Color_tD001788D726C3A7F1379BEED0260B9591F440C1F >::Invoke(23, L_21, L_22);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:530>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:531>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:501>
+		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_22 = V_1;
+		NullCheck(L_22);
+		TMP_Text_set_fontSize_m1C3A3BA2BC88E5E1D89375FD35A0AA91E75D3AAD(L_22, (38.0f), NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:502>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_23 = V_1;
 		NullCheck(L_23);
-		TMP_Text_set_characterSpacing_mDCD34D244A502CA21CEB817E1F4CAC5BC6CCBA63(L_23, (1.0f), NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:533>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:534>
+		TMP_Text_set_fontStyle_m61931944B2E922D50087312D80F8685A2F29EBF8(L_23, 1, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:503>
 		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_24 = V_1;
+		il2cpp_codegen_runtime_class_init_inline(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var);
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_25 = ((TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_StaticFields*)il2cpp_codegen_static_fields_for(TOBATheme_tBAD884CAB02B644A2246F6861A0D644796596F7C_il2cpp_TypeInfo_var))->___WoodDark;
 		NullCheck(L_24);
-		VirtualActionInvoker1< bool >::Invoke(25, L_24, (bool)0);
+		VirtualActionInvoker1< Color_tD001788D726C3A7F1379BEED0260B9591F440C1F >::Invoke(23, L_24, L_25);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:504>
+		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_26 = V_1;
+		NullCheck(L_26);
+		TMP_Text_set_characterSpacing_mDCD34D244A502CA21CEB817E1F4CAC5BC6CCBA63(L_26, (1.0f), NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:505>
+		TextMeshProUGUI_t101091AF4B578BB534C92E9D1EEAF0611636D957* L_27 = V_1;
+		NullCheck(L_27);
+		VirtualActionInvoker1< bool >::Invoke(25, L_27, (bool)0);
 	}
 
-IL_00b0:
+IL_00c3:
 	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:508>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:509>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:510>
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_28 = V_0;
+		NullCheck(L_28);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_29 = L_28->___button;
+		NullCheck(L_29);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_30;
+		L_30 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_29, NULL);
+		RegisterSummaryScreen_CreateRocket_mD02403B737549F556CA8580A7F7C257966BE4609(__this, L_30, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:512>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:513>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:514>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:515>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:516>
+		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_31 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_32 = V_0;
+		NullCheck(L_32);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_33 = L_32->___button;
+		NullCheck(L_33);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_34;
+		L_34 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_33, NULL);
+		RuntimeObject* L_35;
+		L_35 = RegisterSummaryScreen_ButtonIdle_mDECC581AECA689619F6335BE4E7AFF1B50135CA1(__this, L_34, NULL);
+		NullCheck(L_31);
+		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_36;
+		L_36 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_31, L_35, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:518>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:519>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:520>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:521>
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_37 = V_0;
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_38 = V_0;
+		NullCheck(L_38);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_39 = L_38->___button;
+		NullCheck(L_39);
+		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_40;
+		L_40 = GameObject_GetComponentInChildren_TisButton_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098_mC24167312F3DB38FB43365A8583DA381DB6EAA4A(L_39, GameObject_GetComponentInChildren_TisButton_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098_mC24167312F3DB38FB43365A8583DA381DB6EAA4A_RuntimeMethod_var);
+		NullCheck(L_37);
+		L_37->___btn = L_40;
+		Il2CppCodeGenWriteBarrier((void**)(&L_37->___btn), (void*)L_40);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:523>
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_41 = V_0;
+		NullCheck(L_41);
+		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_42 = L_41->___btn;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_43;
+		L_43 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_42, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_43)
+		{
+			goto IL_012b;
+		}
+	}
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:525>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:526>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:527>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:528>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:529>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:530>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:531>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:532>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:533>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:534>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:535>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:536>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:537>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:538>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:539>
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_25 = V_0;
-		NullCheck(L_25);
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_26 = L_25->___button;
-		NullCheck(L_26);
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_27;
-		L_27 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_26, NULL);
-		RegisterSummaryScreen_CreateRocket_mD02403B737549F556CA8580A7F7C257966BE4609(__this, L_27, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:540>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:541>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:542>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:543>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:544>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:545>
-		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_28 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_29 = V_0;
-		NullCheck(L_29);
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_30 = L_29->___button;
-		NullCheck(L_30);
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_31;
-		L_31 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_30, NULL);
-		RuntimeObject* L_32;
-		L_32 = RegisterSummaryScreen_ButtonIdle_mDECC581AECA689619F6335BE4E7AFF1B50135CA1(__this, L_31, NULL);
-		NullCheck(L_28);
-		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_33;
-		L_33 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_28, L_32, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:547>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:548>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:549>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:550>
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_34 = V_0;
-		NullCheck(L_34);
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_35 = L_34->___button;
-		NullCheck(L_35);
-		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_36;
-		L_36 = GameObject_GetComponentInChildren_TisButton_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098_mC24167312F3DB38FB43365A8583DA381DB6EAA4A(L_35, GameObject_GetComponentInChildren_TisButton_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098_mC24167312F3DB38FB43365A8583DA381DB6EAA4A_RuntimeMethod_var);
-		V_2 = L_36;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:552>
-		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_37 = V_2;
-		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
-		bool L_38;
-		L_38 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_37, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
-		if (!L_38)
-		{
-			goto IL_0109;
-		}
-	}
-	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:554>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:555>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:556>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:557>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:558>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:559>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:560>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:561>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:562>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:563>
-		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_39 = V_2;
-		NullCheck(L_39);
-		ButtonClickedEvent_t8EA72E90B3BD1392FB3B3EF167D5121C23569E4C* L_40;
-		L_40 = Button_get_onClick_m701712A7F7F000CC80D517C4510697E15722C35C_inline(L_39, NULL);
-		U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* L_41 = V_0;
-		UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7* L_42 = (UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7*)il2cpp_codegen_object_new(UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7_il2cpp_TypeInfo_var);
-		UnityAction__ctor_mC53E20D6B66E0D5688CD81B88DBB34F5A58B7131(L_42, L_41, (intptr_t)((void*)U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__1_mC943781E26682DF189163A2FEAEF9B148191133E_RuntimeMethod_var), NULL);
-		NullCheck(L_40);
-		UnityEvent_AddListener_m8AA4287C16628486B41DA41CA5E7A856A706D302(L_40, L_42, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:546>
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_44 = V_0;
+		NullCheck(L_44);
+		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_45 = L_44->___btn;
+		NullCheck(L_45);
+		ButtonClickedEvent_t8EA72E90B3BD1392FB3B3EF167D5121C23569E4C* L_46;
+		L_46 = Button_get_onClick_m701712A7F7F000CC80D517C4510697E15722C35C_inline(L_45, NULL);
+		U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* L_47 = V_0;
+		UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7* L_48 = (UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7*)il2cpp_codegen_object_new(UnityAction_t11A1F3B953B365C072A5DCC32677EE1796A962A7_il2cpp_TypeInfo_var);
+		UnityAction__ctor_mC53E20D6B66E0D5688CD81B88DBB34F5A58B7131(L_48, L_47, (intptr_t)((void*)U3CU3Ec__DisplayClass14_0_U3CCreateStartButtonU3Eb__1_m05160007B58FC171BC082AF9BA3486ADABAD4384_RuntimeMethod_var), NULL);
+		NullCheck(L_46);
+		UnityEvent_AddListener_m8AA4287C16628486B41DA41CA5E7A856A706D302(L_46, L_48, NULL);
 	}
 
-IL_0109:
+IL_012b:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:565>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:548>
 		return;
 	}
 }
@@ -21201,14 +21264,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateRocket_mD024
 	Nullable_1_tEE83D90B507D40B6C58B5EEF5B9D44D377B44F11 V_3;
 	memset((&V_3), 0, sizeof(V_3));
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:574>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:575>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:576>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:577>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:557>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:558>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:559>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:560>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_0;
 		L_0 = RegisterSummaryScreen_Load_m68ED4307BB614CC3B7137ADE16A835B30BA4FD1B(__this, _stringLiteral2C06358E3B082A4E1EBC86147CEB57F6234BAECA, NULL);
 		V_0 = L_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:579>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:562>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_1 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -21219,26 +21282,26 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateRocket_mD024
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:580>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:563>
 		return;
 	}
 
 IL_0016:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:582>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:583>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:584>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:585>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:586>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:587>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:588>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:589>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:590>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:591>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:592>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:593>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:594>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:595>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:565>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:566>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:567>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:568>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:569>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:570>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:571>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:572>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:573>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:574>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:575>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:576>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:577>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:578>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = ___0_parent;
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_4 = V_0;
 		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_5;
@@ -21252,14 +21315,14 @@ IL_0016:
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_8;
 		L_8 = UIBuilder_CreateImage_m9FBB42ADCA6846EEB54ABCA801017C4DBC713F05(L_3, _stringLiteralCD503E948E61D33894C3D83AC55ACCB578E3C635, L_4, L_5, L_6, L_7, NULL);
 		V_1 = L_8;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:597>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:598>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:580>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:581>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9 = V_1;
 		NullCheck(L_9);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_10;
 		L_10 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_9, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_2 = L_10;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:600>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:583>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_11 = V_2;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_12;
@@ -21270,13 +21333,13 @@ IL_0016:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:602>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:603>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:585>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:586>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_13 = V_2;
 		NullCheck(L_13);
 		Image_set_preserveAspect_mF465AFD1313C0F002B37C8B86C75F98CB72A4098(L_13, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:605>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:606>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:588>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:589>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_14 = V_2;
 		NullCheck(L_14);
 		VirtualActionInvoker1< bool >::Invoke(25, L_14, (bool)0);
@@ -21284,11 +21347,11 @@ IL_0016:
 
 IL_0068:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:609>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:610>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:611>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:612>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:613>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:592>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:593>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:594>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:595>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:596>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_15 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_16 = V_1;
 		NullCheck(L_16);
@@ -21299,15 +21362,15 @@ IL_0068:
 		NullCheck(L_15);
 		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_19;
 		L_19 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_15, L_18, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:615>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:616>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:617>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:598>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:599>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:600>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_20 = V_1;
 		NullCheck(L_20);
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_21;
 		L_21 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_20, NULL);
 		RegisterSummaryScreen_CreateFlame_mB07CF944D1A71002176B3774436A07FD28966FA7(__this, L_21, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:618>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:601>
 		return;
 	}
 }
@@ -21317,14 +21380,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_RocketId
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3_il2cpp_TypeInfo_var);
 		s_Il2CppMethodInitialized = true;
 	}
 	//<source_info:<no-source>:1>
 	{
-		U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* L_0 = (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770*)il2cpp_codegen_object_new(U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770_il2cpp_TypeInfo_var);
-		U3CRocketIdleU3Ed__15__ctor_m1237619147114AE3143111BE6B18B1C892E606A2(L_0, 0, NULL);
-		U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* L_1 = L_0;
+		U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* L_0 = (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3*)il2cpp_codegen_object_new(U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3_il2cpp_TypeInfo_var);
+		U3CRocketIdleU3Ed__16__ctor_m2FD3033A9D43BA0E47EA7A2E775B818BD7357D0A(L_0, 0, NULL);
+		U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* L_1 = L_0;
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = ___0_target;
 		NullCheck(L_1);
 		L_1->___target = L_2;
@@ -21359,14 +21422,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateFlame_mB07CF
 	memset((&G_B9_0), 0, sizeof(G_B9_0));
 	Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* G_B9_1 = NULL;
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:653>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:654>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:655>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:656>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:636>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:637>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:638>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:639>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_0;
 		L_0 = RegisterSummaryScreen_Load_m68ED4307BB614CC3B7137ADE16A835B30BA4FD1B(__this, _stringLiteral2B744207AB486BC7DBA3B9E87EF547057E712B44, NULL);
 		V_0 = L_0;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:658>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:641>
 		Sprite_tAFF74BC83CD68037494CB0B4F28CBDF8971CAB99* L_1 = V_0;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_2;
@@ -21377,33 +21440,33 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RegisterSummaryScreen_CreateFlame_mB07CF
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:659>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:642>
 		return;
 	}
 
 IL_0016:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:661>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:644>
 		V_1 = 0;
 		goto IL_00f9;
 	}
 
 IL_001d:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:663>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:664>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:665>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:666>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:667>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:668>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:669>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:670>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:671>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:672>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:673>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:674>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:675>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:676>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:646>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:647>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:648>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:649>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:650>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:651>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:652>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:653>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:654>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:655>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:656>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:657>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:658>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:659>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = ___0_rocket;
 		String_t* L_4;
 		L_4 = Int32_ToString_m030E01C24E294D6762FB0B6F37CB541581F55CA5((&V_1), NULL);
@@ -21421,14 +21484,14 @@ IL_001d:
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_10;
 		L_10 = UIBuilder_CreateImage_m9FBB42ADCA6846EEB54ABCA801017C4DBC713F05(L_3, L_5, L_6, L_7, L_8, L_9, NULL);
 		V_2 = L_10;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:678>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:679>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:661>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:662>
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_11 = V_2;
 		NullCheck(L_11);
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_12;
 		L_12 = GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D(L_11, GameObject_GetComponent_TisImage_tBC1D03F63BF71132E9A5E472B8742F172A011E7E_mA59EA7D5F9133B2593F4AB70B099928BA955EE7D_RuntimeMethod_var);
 		V_3 = L_12;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:681>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:664>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_13 = V_3;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_14;
@@ -21439,37 +21502,37 @@ IL_001d:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:684>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:685>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:667>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:668>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_15 = V_3;
 		NullCheck(L_15);
 		Image_set_preserveAspect_mF465AFD1313C0F002B37C8B86C75F98CB72A4098(L_15, (bool)1, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:687>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:688>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:670>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:671>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_16 = V_3;
 		NullCheck(L_16);
 		VirtualActionInvoker1< bool >::Invoke(25, L_16, (bool)0);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:673>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:674>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:675>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:676>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:677>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:678>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:679>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:680>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:681>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:682>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:683>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:684>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:685>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:686>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:687>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:688>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:689>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:690>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:691>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:692>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:693>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:694>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:695>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:696>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:697>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:698>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:699>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:700>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:701>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:702>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:703>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:704>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:705>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:706>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:707>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:708>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:709>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:710>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_17 = V_3;
 		int32_t L_18 = V_1;
 		if ((((int32_t)L_18) < ((int32_t)2)))
@@ -21520,13 +21583,13 @@ IL_00d7:
 	{
 		NullCheck(G_B9_1);
 		VirtualActionInvoker1< Color_tD001788D726C3A7F1379BEED0260B9591F440C1F >::Invoke(23, G_B9_1, G_B9_0);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:712>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:713>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:714>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:715>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:716>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:717>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:718>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:695>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:696>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:697>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:698>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:699>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:700>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:701>
 		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_23 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_24 = V_2;
 		NullCheck(L_24);
@@ -21543,14 +21606,14 @@ IL_00d7:
 
 IL_00f5:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:661>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:644>
 		int32_t L_30 = V_1;
 		V_1 = ((int32_t)il2cpp_codegen_add(L_30, 1));
 	}
 
 IL_00f9:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:661>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:644>
 		int32_t L_31 = V_1;
 		if ((((int32_t)L_31) < ((int32_t)5)))
 		{
@@ -21558,7 +21621,7 @@ IL_00f9:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:720>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:703>
 		return;
 	}
 }
@@ -21568,24 +21631,24 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_FlameAni
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C_il2cpp_TypeInfo_var);
 		s_Il2CppMethodInitialized = true;
 	}
 	//<source_info:<no-source>:1>
 	{
-		U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* L_0 = (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3*)il2cpp_codegen_object_new(U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3_il2cpp_TypeInfo_var);
-		U3CFlameAnimationU3Ed__17__ctor_m8F78DE3FEC80DB4D2BA56FFE04E98529EBE388DC(L_0, 0, NULL);
-		U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* L_1 = L_0;
+		U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* L_0 = (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C*)il2cpp_codegen_object_new(U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C_il2cpp_TypeInfo_var);
+		U3CFlameAnimationU3Ed__18__ctor_m6F91CC575D024A1A31C27BB71614A9EC6FE38451(L_0, 0, NULL);
+		U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* L_1 = L_0;
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = ___0_target;
 		NullCheck(L_1);
 		L_1->___target = L_2;
 		Il2CppCodeGenWriteBarrier((void**)(&L_1->___target), (void*)L_2);
-		U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* L_3 = L_1;
+		U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* L_3 = L_1;
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_4 = ___1_image;
 		NullCheck(L_3);
 		L_3->___image = L_4;
 		Il2CppCodeGenWriteBarrier((void**)(&L_3->___image), (void*)L_4);
-		U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* L_5 = L_3;
+		U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* L_5 = L_3;
 		int32_t L_6 = ___2_index;
 		NullCheck(L_5);
 		L_5->___index = L_6;
@@ -21598,23 +21661,23 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_FloatEle
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D_il2cpp_TypeInfo_var);
 		s_Il2CppMethodInitialized = true;
 	}
 	//<source_info:<no-source>:1>
 	{
-		U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* L_0 = (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4*)il2cpp_codegen_object_new(U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4_il2cpp_TypeInfo_var);
-		U3CFloatElementU3Ed__18__ctor_m5F58D335A1AA60039F8728C19138BD11E461D05C(L_0, 0, NULL);
-		U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* L_1 = L_0;
+		U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* L_0 = (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D*)il2cpp_codegen_object_new(U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D_il2cpp_TypeInfo_var);
+		U3CFloatElementU3Ed__19__ctor_mA1DBA1BB7DBE81E52C7EE7D632E6C2CBB47E2C77(L_0, 0, NULL);
+		U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* L_1 = L_0;
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = ___0_target;
 		NullCheck(L_1);
 		L_1->___target = L_2;
 		Il2CppCodeGenWriteBarrier((void**)(&L_1->___target), (void*)L_2);
-		U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* L_3 = L_1;
+		U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* L_3 = L_1;
 		float L_4 = ___1_speed;
 		NullCheck(L_3);
 		L_3->___speed = L_4;
-		U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* L_5 = L_3;
+		U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* L_5 = L_3;
 		float L_6 = ___2_amount;
 		NullCheck(L_5);
 		L_5->___amount = L_6;
@@ -21627,14 +21690,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonId
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E_il2cpp_TypeInfo_var);
 		s_Il2CppMethodInitialized = true;
 	}
 	//<source_info:<no-source>:1>
 	{
-		U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* L_0 = (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7*)il2cpp_codegen_object_new(U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7_il2cpp_TypeInfo_var);
-		U3CButtonIdleU3Ed__19__ctor_m72F9F232725531CF3CC5B0DE4713B153F06707BD(L_0, 0, NULL);
-		U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* L_1 = L_0;
+		U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* L_0 = (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E*)il2cpp_codegen_object_new(U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E_il2cpp_TypeInfo_var);
+		U3CButtonIdleU3Ed__20__ctor_m5546CC35C805E44C89FDEF2A85B277D231385DCB(L_0, 0, NULL);
+		U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* L_1 = L_0;
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = ___0_target;
 		NullCheck(L_1);
 		L_1->___target = L_2;
@@ -21643,24 +21706,28 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonId
 	}
 }
 // Method Definition Index: 62223
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonPress_mA6E4AC8A4D7591E1AA114B4EF934CF9232E729C7 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, const RuntimeMethod* method) 
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_ButtonPressAndNavigate_m653BB03DBE8A971F768DE096FFA6250F7D5164C4 (RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_target, Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* ___1_btn, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298_il2cpp_TypeInfo_var);
 		s_Il2CppMethodInitialized = true;
 	}
 	//<source_info:<no-source>:1>
 	{
-		U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* L_0 = (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC*)il2cpp_codegen_object_new(U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC_il2cpp_TypeInfo_var);
-		U3CButtonPressU3Ed__20__ctor_mD95B4FC695397D1C75AB4C5BB7D8862759E16C91(L_0, 0, NULL);
-		U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* L_1 = L_0;
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = ___0_target;
+		U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* L_0 = (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298*)il2cpp_codegen_object_new(U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298_il2cpp_TypeInfo_var);
+		U3CButtonPressAndNavigateU3Ed__21__ctor_m9D03E51B23A5235EE16F46B7E12A9AD46A3E8BB9(L_0, 0, NULL);
+		U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* L_1 = L_0;
 		NullCheck(L_1);
-		L_1->___target = L_2;
-		Il2CppCodeGenWriteBarrier((void**)(&L_1->___target), (void*)L_2);
-		return L_1;
+		L_1->___U3CU3E4__this = __this;
+		Il2CppCodeGenWriteBarrier((void**)(&L_1->___U3CU3E4__this), (void*)__this);
+		U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* L_2 = L_1;
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = ___0_target;
+		NullCheck(L_2);
+		L_2->___target = L_3;
+		Il2CppCodeGenWriteBarrier((void**)(&L_2->___target), (void*)L_3);
+		return L_2;
 	}
 }
 // Method Definition Index: 62224
@@ -21669,14 +21736,14 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_Entrance
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264_il2cpp_TypeInfo_var);
 		s_Il2CppMethodInitialized = true;
 	}
 	//<source_info:<no-source>:1>
 	{
-		U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* L_0 = (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD*)il2cpp_codegen_object_new(U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD_il2cpp_TypeInfo_var);
-		U3CEntranceU3Ed__21__ctor_m9678861A8D57D20E737512E0FDB612A505856E12(L_0, 0, NULL);
-		U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* L_1 = L_0;
+		U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* L_0 = (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264*)il2cpp_codegen_object_new(U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264_il2cpp_TypeInfo_var);
+		U3CEntranceU3Ed__22__ctor_mF377DFF59EB0DA06B3EE5A4487C455A8B346F2BE(L_0, 0, NULL);
+		U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* L_1 = L_0;
 		NullCheck(L_1);
 		L_1->___U3CU3E4__this = __this;
 		Il2CppCodeGenWriteBarrier((void**)(&L_1->___U3CU3E4__this), (void*)__this);
@@ -21692,7 +21759,25 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* RegisterSummaryScreen_Entrance
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
 // Method Definition Index: 62225
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass13_0__ctor_m004F83EC46E1ACE0428F097B831B8BEDC5E7F0ED (U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* __this, const RuntimeMethod* method) 
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__cctor_m4E9F2948149D4BAEA9ECD13B140FD9FC24EEC1FA (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	//<source_info:<no-source>:1>
+	{
+		U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF* L_0 = (U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF*)il2cpp_codegen_object_new(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var);
+		U3CU3Ec__ctor_m7DC32B735D2201A8DED370FB75B6CC8AE145EC75(L_0, NULL);
+		((U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields*)il2cpp_codegen_static_fields_for(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var))->___U3CU3E9 = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&((U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_StaticFields*)il2cpp_codegen_static_fields_for(U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF_il2cpp_TypeInfo_var))->___U3CU3E9), (void*)L_0);
+		return;
+	}
+}
+// Method Definition Index: 62226
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__ctor_m7DC32B735D2201A8DED370FB75B6CC8AE145EC75 (U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -21700,82 +21785,11 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass13_0__ctor_m004F83E
 		return;
 	}
 }
-// Method Definition Index: 62226
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__0_m51E5FFCC40D186AEE9C29C5EA09DBB6D9B395E45 (U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* __this, const RuntimeMethod* method) 
-{
-	static bool s_Il2CppMethodInitialized;
-	if (!s_Il2CppMethodInitialized)
-	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8_il2cpp_TypeInfo_var);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734_il2cpp_TypeInfo_var);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral6F4887A2B18C07CB4C943C1D632D6EAC36D442D2);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral87D420DF04865E4B07E2E1436DAD45507662F5B4);
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralBC5CBBC0375512F733712D0D06B935101903905D);
-		s_Il2CppMethodInitialized = true;
-	}
-	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:485>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:486>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:487>
-		SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734* L_0 = ((SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734_StaticFields*)il2cpp_codegen_static_fields_for(SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734_il2cpp_TypeInfo_var))->___Instance;
-		NullCheck(L_0);
-		SoundManager_PlaySFX_mCBC661A7E21BC0E724734C9670E9DDEBC31DD5F3(L_0, _stringLiteral87D420DF04865E4B07E2E1436DAD45507662F5B4, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:489>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:490>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:491>
-		PlayerPrefs_DeleteKey_mF3A7857B52DCEF4139843CD28716788624C2AD30(_stringLiteral6F4887A2B18C07CB4C943C1D632D6EAC36D442D2, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:493>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:494>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:495>
-		PlayerPrefs_DeleteKey_mF3A7857B52DCEF4139843CD28716788624C2AD30(_stringLiteralBC5CBBC0375512F733712D0D06B935101903905D, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:497>
-		PlayerPrefs_Save_m82567E045D69C838112EA204B60C144D4C1EA3AE(NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:499>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:500>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:501>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:502>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:503>
-		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_1 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
-		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_2 = __this->___U3CU3E4__this;
-		NullCheck(L_2);
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)L_2)->___container;
-		MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8* L_4 = (MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8*)il2cpp_codegen_object_new(MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8_il2cpp_TypeInfo_var);
-		MainMenuScreen__ctor_mEEDCB7FC57EEE817EA1F0F6DC567EA39E05ECED5(L_4, L_3, NULL);
-		NullCheck(L_1);
-		ScreenManager_ChangeScreen_m773E0E01BBE4168FD8AB11664DA15299C6570210(L_1, L_4, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:504>
-		return;
-	}
-}
 // Method Definition Index: 62227
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass13_0_U3CCreateStartButtonU3Eb__1_mC943781E26682DF189163A2FEAEF9B148191133E (U3CU3Ec__DisplayClass13_0_t2155258596FACABC48F0B234AFBE515EDD57E089* __this, const RuntimeMethod* method) 
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec_U3CCreateStartButtonU3Eb__14_0_mE71CB5938749B6A44F63DD926472BD0E4A1421AC (U3CU3Ec_tE88109A7FED3F5C30A9666B8432BB89B6448B4DF* __this, const RuntimeMethod* method) 
 {
-	static bool s_Il2CppMethodInitialized;
-	if (!s_Il2CppMethodInitialized)
 	{
-		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var);
-		s_Il2CppMethodInitialized = true;
-	}
-	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:557>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:558>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:559>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:560>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:561>
-		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_0 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
-		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_1 = __this->___U3CU3E4__this;
-		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_2 = __this->___button;
-		NullCheck(L_2);
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3;
-		L_3 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_2, NULL);
-		NullCheck(L_1);
-		RuntimeObject* L_4;
-		L_4 = RegisterSummaryScreen_ButtonPress_mA6E4AC8A4D7591E1AA114B4EF934CF9232E729C7(L_1, L_3, NULL);
-		NullCheck(L_0);
-		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_5;
-		L_5 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_0, L_4, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:562>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:484>
 		return;
 	}
 }
@@ -21788,7 +21802,89 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass13_0_U3CCreateStart
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
 // Method Definition Index: 62228
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__19__ctor_m72F9F232725531CF3CC5B0DE4713B153F06707BD (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass14_0__ctor_mF2FCE9599C724460953E3C8C1009E1F74F7FDF15 (U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* __this, const RuntimeMethod* method) 
+{
+	//<source_info:<no-source>:1>
+	{
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		return;
+	}
+}
+// Method Definition Index: 62229
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CU3Ec__DisplayClass14_0_U3CCreateStartButtonU3Eb__1_m05160007B58FC171BC082AF9BA3486ADABAD4384 (U3CU3Ec__DisplayClass14_0_tE29BCD38037A4EDA9D93A8532AF137666E015AA2* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral87D420DF04865E4B07E2E1436DAD45507662F5B4);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:528>
+		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_0 = __this->___U3CU3E4__this;
+		NullCheck(L_0);
+		bool L_1 = L_0->___isStarting;
+		if (!L_1)
+		{
+			goto IL_000e;
+		}
+	}
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:529>
+		return;
+	}
+
+IL_000e:
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:531>
+		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_2 = __this->___U3CU3E4__this;
+		NullCheck(L_2);
+		L_2->___isStarting = (bool)1;
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:533>
+		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_3 = __this->___btn;
+		NullCheck(L_3);
+		Selectable_set_interactable_m8DD581C1AD99B2EFA8B3EE9AF69EDDF26688B492(L_3, (bool)0, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:535>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:536>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:537>
+		SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734* L_4 = ((SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734_StaticFields*)il2cpp_codegen_static_fields_for(SoundManager_tCA2CCAC5CDF1BA10E525C01C8D1D0DFAC9BE3734_il2cpp_TypeInfo_var))->___Instance;
+		NullCheck(L_4);
+		SoundManager_PlaySFX_mCBC661A7E21BC0E724734C9670E9DDEBC31DD5F3(L_4, _stringLiteral87D420DF04865E4B07E2E1436DAD45507662F5B4, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:539>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:540>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:541>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:542>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:543>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:544>
+		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_5 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
+		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_6 = __this->___U3CU3E4__this;
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_7 = __this->___button;
+		NullCheck(L_7);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_8;
+		L_8 = GameObject_get_transform_m0BC10ADFA1632166AE5544BDF9038A2650C2AE56(L_7, NULL);
+		Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* L_9 = __this->___btn;
+		NullCheck(L_6);
+		RuntimeObject* L_10;
+		L_10 = RegisterSummaryScreen_ButtonPressAndNavigate_m653BB03DBE8A971F768DE096FFA6250F7D5164C4(L_6, L_8, L_9, NULL);
+		NullCheck(L_5);
+		Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B* L_11;
+		L_11 = MonoBehaviour_StartCoroutine_m4CAFF732AA28CD3BDC5363B44A863575530EC812(L_5, L_10, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:545>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 62230
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__20__ctor_m5546CC35C805E44C89FDEF2A85B277D231385DCB (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -21798,16 +21894,16 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__19__ctor_m72F9F232725
 		return;
 	}
 }
-// Method Definition Index: 62229
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__19_System_IDisposable_Dispose_mAAC428C2EF28C1EAB7B0761DC3E4A403DF8C9822 (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62231
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__20_System_IDisposable_Dispose_m712A1DC25619C9ABBE6D8ECFBF6D3A941EE108F0 (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		return;
 	}
 }
-// Method Definition Index: 62230
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CButtonIdleU3Ed__19_MoveNext_mE985A3F5F2798CF2442479F72BDCB35827EC3790 (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62232
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CButtonIdleU3Ed__20_MoveNext_m5AF8F28E085BCC01162DF78BDF7636CFB1D21DB2 (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
@@ -21839,7 +21935,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CButtonIdleU3Ed__19_MoveNext_mE985A3F5
 IL_0013:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:842>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:825>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_4;
@@ -21850,41 +21946,41 @@ IL_0013:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:843>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:826>
 		return (bool)0;
 	}
 
 IL_002a:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:845>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:846>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:828>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:829>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_5 = __this->___target;
 		NullCheck(L_5);
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6;
 		L_6 = Transform_get_localPosition_mA9C86B990DF0685EA1061A120218993FDCC60A95(L_5, NULL);
 		__this->___U3CoriginU3E5__2 = L_6;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:848>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:831>
 		__this->___U3CtU3E5__3 = (0.0f);
 		goto IL_00ba;
 	}
 
 IL_0048:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:852>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:853>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:854>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:835>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:836>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:837>
 		float L_7 = __this->___U3CtU3E5__3;
 		float L_8;
 		L_8 = Time_get_deltaTime_mC3195000401F0FD167DD2F948FD2BC58330D0865(NULL);
 		__this->___U3CtU3E5__3 = ((float)il2cpp_codegen_add(L_7, ((float)il2cpp_codegen_multiply(L_8, (0.699999988f)))));
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:856>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:857>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:858>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:859>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:860>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:861>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:862>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:863>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:839>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:840>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:841>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:842>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:843>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:844>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:845>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:846>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_9 = __this->___target;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_10 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->___U3CoriginU3E5__2);
 		float L_11 = L_10->___x;
@@ -21900,7 +21996,7 @@ IL_0048:
 		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_18), L_11, ((float)il2cpp_codegen_add(L_13, ((float)il2cpp_codegen_multiply(L_15, (1.5f))))), L_17, NULL);
 		NullCheck(L_9);
 		Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134(L_9, L_18, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:865>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:848>
 		__this->___U3CU3E2__current = NULL;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)NULL);
 		__this->___U3CU3E1__state = 1;
@@ -21914,7 +22010,7 @@ IL_00b3:
 
 IL_00ba:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:850>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:833>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_19 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_20;
@@ -21925,12 +22021,12 @@ IL_00ba:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:867>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:850>
 		return (bool)0;
 	}
 }
-// Method Definition Index: 62231
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonIdleU3Ed__19_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m034B2230685DEE0089DDC2DDF88CA58AABF9ACDC (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62233
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonIdleU3Ed__20_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mE96C88B22F475A7103CA7320FEDC6CAC5A6D4B45 (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -21938,18 +22034,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonIdleU3Ed__19_System_C
 		return L_0;
 	}
 }
-// Method Definition Index: 62232
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__19_System_Collections_IEnumerator_Reset_m7E926344BE3386172EF844F2BBB89E204130C324 (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62234
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonIdleU3Ed__20_System_Collections_IEnumerator_Reset_m13EFC53BADBA61C96280F9E5CA5DD982708287C1 (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A* L_0 = (NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A*)il2cpp_codegen_object_new(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A_il2cpp_TypeInfo_var)));
 		NotSupportedException__ctor_m1398D0CDE19B36AA3DE9392879738C1EA2439CDF(L_0, NULL);
-		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CButtonIdleU3Ed__19_System_Collections_IEnumerator_Reset_m7E926344BE3386172EF844F2BBB89E204130C324_RuntimeMethod_var)));
+		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CButtonIdleU3Ed__20_System_Collections_IEnumerator_Reset_m13EFC53BADBA61C96280F9E5CA5DD982708287C1_RuntimeMethod_var)));
 	}
 }
-// Method Definition Index: 62233
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonIdleU3Ed__19_System_Collections_IEnumerator_get_Current_m5EC5E82E01E967E390D44C5EF2BB41B3FFB8CE4C (U3CButtonIdleU3Ed__19_tD07266309283DECF12AAC65E2D40CDFA5E336DF7* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62235
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonIdleU3Ed__20_System_Collections_IEnumerator_get_Current_m476144709805C47A2BA7756C0CBAC2319C595386 (U3CButtonIdleU3Ed__20_t2B81516199245DD9D80F3EA194BA81217974A62E* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -21965,8 +22061,8 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonIdleU3Ed__19_System_C
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 62234
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressU3Ed__20__ctor_mD95B4FC695397D1C75AB4C5BB7D8862759E16C91 (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
+// Method Definition Index: 62236
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressAndNavigateU3Ed__21__ctor_m9D03E51B23A5235EE16F46B7E12A9AD46A3E8BB9 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -21976,42 +22072,49 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressU3Ed__20__ctor_mD95B4FC695
 		return;
 	}
 }
-// Method Definition Index: 62235
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressU3Ed__20_System_IDisposable_Dispose_m6091D43ABF863A5CDEDA7E9CDF4255C3B1A69D72 (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62237
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressAndNavigateU3Ed__21_System_IDisposable_Dispose_m4FC490FDAE87480F9EC613EBC67E398D2C432680 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		return;
 	}
 }
-// Method Definition Index: 62236
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CButtonPressU3Ed__20_MoveNext_mDB147774C956E53E181F20E450C20CF335E0BD04 (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62238
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CButtonPressAndNavigateU3Ed__21_MoveNext_m429947751661EA6C948E67691EDC4FC2AEFAE820 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
 	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8_il2cpp_TypeInfo_var);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var);
 		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral6F4887A2B18C07CB4C943C1D632D6EAC36D442D2);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralBC5CBBC0375512F733712D0D06B935101903905D);
 		s_Il2CppMethodInitialized = true;
 	}
 	int32_t V_0 = 0;
+	RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* V_1 = NULL;
 	{
 		int32_t L_0 = __this->___U3CU3E1__state;
 		V_0 = L_0;
-		int32_t L_1 = V_0;
-		switch (L_1)
+		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_1 = __this->___U3CU3E4__this;
+		V_1 = L_1;
+		int32_t L_2 = V_0;
+		switch (L_2)
 		{
 			case 0:
 			{
-				goto IL_001b;
+				goto IL_0022;
 			}
 			case 1:
 			{
-				goto IL_0077;
+				goto IL_007e;
 			}
 			case 2:
 			{
-				goto IL_00b2;
+				goto IL_00c9;
 			}
 		}
 	}
@@ -22019,89 +22122,163 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CButtonPressU3Ed__20_MoveNext_mDB14777
 		return (bool)0;
 	}
 
-IL_001b:
+IL_0022:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:876>
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = __this->___target;
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:860>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
-		bool L_3;
-		L_3 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_2, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
-		if (!L_3)
+		bool L_4;
+		L_4 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_3, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_4)
 		{
-			goto IL_0032;
+			goto IL_0039;
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:877>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:861>
 		return (bool)0;
 	}
 
-IL_0032:
+IL_0039:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:879>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:880>
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_4 = __this->___target;
-		NullCheck(L_4);
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_5;
-		L_5 = Transform_get_localScale_m804A002A53A645CDFCD15BB0F37209162720363F(L_4, NULL);
-		__this->___U3CoriginalU3E5__2 = L_5;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:882>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:883>
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_6 = __this->___target;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7 = __this->___U3CoriginalU3E5__2;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8;
-		L_8 = Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline(L_7, (0.920000017f), NULL);
-		NullCheck(L_6);
-		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_6, L_8, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:885>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:886>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:887>
-		WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3* L_9 = (WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3*)il2cpp_codegen_object_new(WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3_il2cpp_TypeInfo_var);
-		WaitForSeconds__ctor_m579F95BADEDBAB4B3A7E302C6EE3995926EF2EFC(L_9, (0.0799999982f), NULL);
-		__this->___U3CU3E2__current = L_9;
-		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)L_9);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:863>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:864>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_5 = __this->___target;
+		NullCheck(L_5);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6;
+		L_6 = Transform_get_localScale_m804A002A53A645CDFCD15BB0F37209162720363F(L_5, NULL);
+		__this->___U3CoriginalU3E5__2 = L_6;
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:866>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:867>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_7 = __this->___target;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = __this->___U3CoriginalU3E5__2;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
+		L_9 = Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline(L_8, (0.920000017f), NULL);
+		NullCheck(L_7);
+		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_7, L_9, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:869>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:870>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:871>
+		WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3* L_10 = (WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3*)il2cpp_codegen_object_new(WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3_il2cpp_TypeInfo_var);
+		WaitForSeconds__ctor_m579F95BADEDBAB4B3A7E302C6EE3995926EF2EFC(L_10, (0.0799999982f), NULL);
+		__this->___U3CU3E2__current = L_10;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)L_10);
 		__this->___U3CU3E1__state = 1;
 		return (bool)1;
 	}
 
-IL_0077:
+IL_007e:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:889>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:890>
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_10 = __this->___target;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11 = __this->___U3CoriginalU3E5__2;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12;
-		L_12 = Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline(L_11, (1.02999997f), NULL);
-		NullCheck(L_10);
-		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_10, L_12, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:892>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:893>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:894>
-		WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3* L_13 = (WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3*)il2cpp_codegen_object_new(WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3_il2cpp_TypeInfo_var);
-		WaitForSeconds__ctor_m579F95BADEDBAB4B3A7E302C6EE3995926EF2EFC(L_13, (0.0700000003f), NULL);
-		__this->___U3CU3E2__current = L_13;
-		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)L_13);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:873>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_11 = __this->___target;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_12;
+		L_12 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_11, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_12)
+		{
+			goto IL_0095;
+		}
+	}
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:874>
+		return (bool)0;
+	}
+
+IL_0095:
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:876>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:877>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_13 = __this->___target;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14 = __this->___U3CoriginalU3E5__2;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_15;
+		L_15 = Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline(L_14, (1.02999997f), NULL);
+		NullCheck(L_13);
+		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_13, L_15, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:879>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:880>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:881>
+		WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3* L_16 = (WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3*)il2cpp_codegen_object_new(WaitForSeconds_tF179DF251655B8DF044952E70A60DF4B358A3DD3_il2cpp_TypeInfo_var);
+		WaitForSeconds__ctor_m579F95BADEDBAB4B3A7E302C6EE3995926EF2EFC(L_16, (0.0700000003f), NULL);
+		__this->___U3CU3E2__current = L_16;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)L_16);
 		__this->___U3CU3E1__state = 2;
 		return (bool)1;
 	}
 
-IL_00b2:
+IL_00c9:
 	{
 		__this->___U3CU3E1__state = (-1);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:883>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_17 = __this->___target;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_18;
+		L_18 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_17, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_18)
+		{
+			goto IL_00e0;
+		}
+	}
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:884>
+		return (bool)0;
+	}
+
+IL_00e0:
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:886>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:887>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_19 = __this->___target;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_20 = __this->___U3CoriginalU3E5__2;
+		NullCheck(L_19);
+		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_19, L_20, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:890>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:891>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:892>
+		PlayerPrefs_DeleteKey_mF3A7857B52DCEF4139843CD28716788624C2AD30(_stringLiteral6F4887A2B18C07CB4C943C1D632D6EAC36D442D2, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:894>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:895>
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:896>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:897>
-		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_14 = __this->___target;
-		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_15 = __this->___U3CoriginalU3E5__2;
-		NullCheck(L_14);
-		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_14, L_15, NULL);
+		PlayerPrefs_DeleteKey_mF3A7857B52DCEF4139843CD28716788624C2AD30(_stringLiteralBC5CBBC0375512F733712D0D06B935101903905D, NULL);
 		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:898>
+		PlayerPrefs_Save_m82567E045D69C838112EA204B60C144D4C1EA3AE(NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:902>
+		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_21 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_22;
+		L_22 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_21, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_22)
+		{
+			goto IL_0119;
+		}
+	}
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:903>
+		return (bool)0;
+	}
+
+IL_0119:
+	{
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:905>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:906>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:907>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:908>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:909>
+		ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50* L_23 = ((ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_StaticFields*)il2cpp_codegen_static_fields_for(ScreenManager_t74B00CC32B0370204F289774CED60C5963251C50_il2cpp_TypeInfo_var))->___Instance;
+		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_24 = V_1;
+		NullCheck(L_24);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_25 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)L_24)->___container;
+		MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8* L_26 = (MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8*)il2cpp_codegen_object_new(MainMenuScreen_tA9BAC7CF37D677AC5CA7A0D29EC29CCB272ECAD8_il2cpp_TypeInfo_var);
+		MainMenuScreen__ctor_mEEDCB7FC57EEE817EA1F0F6DC567EA39E05ECED5(L_26, L_25, NULL);
+		NullCheck(L_23);
+		ScreenManager_ChangeScreen_m773E0E01BBE4168FD8AB11664DA15299C6570210(L_23, L_26, NULL);
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:910>
 		return (bool)0;
 	}
 }
-// Method Definition Index: 62237
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonPressU3Ed__20_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m94247AC82ABE79E2EE58C469003D3284487AABF0 (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62239
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonPressAndNavigateU3Ed__21_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mA77480C57F120B691A0324A40826F34D1A23FB69 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22109,18 +22286,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonPressU3Ed__20_System_
 		return L_0;
 	}
 }
-// Method Definition Index: 62238
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressU3Ed__20_System_Collections_IEnumerator_Reset_m7E2B5276BCCCF35A49CFE637E1655EC7B086F38F (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62240
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CButtonPressAndNavigateU3Ed__21_System_Collections_IEnumerator_Reset_m72E7F2CBCE292570D5B9C2E1AF2DB5D26CB36DD3 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A* L_0 = (NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A*)il2cpp_codegen_object_new(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A_il2cpp_TypeInfo_var)));
 		NotSupportedException__ctor_m1398D0CDE19B36AA3DE9392879738C1EA2439CDF(L_0, NULL);
-		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CButtonPressU3Ed__20_System_Collections_IEnumerator_Reset_m7E2B5276BCCCF35A49CFE637E1655EC7B086F38F_RuntimeMethod_var)));
+		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CButtonPressAndNavigateU3Ed__21_System_Collections_IEnumerator_Reset_m72E7F2CBCE292570D5B9C2E1AF2DB5D26CB36DD3_RuntimeMethod_var)));
 	}
 }
-// Method Definition Index: 62239
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonPressU3Ed__20_System_Collections_IEnumerator_get_Current_m7DA0DDE4E5A70ACD3F15BEA9C4AEAA704A9DDAE2 (U3CButtonPressU3Ed__20_t6306CE2EF50EB7E67D9A88C8EF14008FC5DA5BDC* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62241
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonPressAndNavigateU3Ed__21_System_Collections_IEnumerator_get_Current_m44DE002483A7EDD33458C4A6EA3B653654B85E34 (U3CButtonPressAndNavigateU3Ed__21_t05E3435F1188958A78ED2BAF6454880BB4DF7298* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22136,8 +22313,8 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CButtonPressU3Ed__20_System_
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 62240
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__21__ctor_m9678861A8D57D20E737512E0FDB612A505856E12 (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
+// Method Definition Index: 62242
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__22__ctor_mF377DFF59EB0DA06B3EE5A4487C455A8B346F2BE (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22147,16 +22324,16 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__21__ctor_m9678861A8D57D
 		return;
 	}
 }
-// Method Definition Index: 62241
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__21_System_IDisposable_Dispose_m82EBD67C2C24EFE17C07FE805AA7C6400CB3E782 (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62243
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__22_System_IDisposable_Dispose_m915E90DB01EBF45A49CCFE1F912ABAA76941DE48 (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		return;
 	}
 }
-// Method Definition Index: 62242
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CEntranceU3Ed__21_MoveNext_m6BB1E169356491DBD0FC7708BCD2F68D96232817 (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62244
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CEntranceU3Ed__22_MoveNext_m8CB0C4E0C56B8B66899FC5A79C61DF96319FFB16 (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
@@ -22195,10 +22372,10 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CEntranceU3Ed__21_MoveNext_m6BB1E16935
 IL_001a:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:906>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:907>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:908>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:909>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:918>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:919>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:920>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:921>
 		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_4 = V_1;
 		NullCheck(L_4);
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_5 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)L_4)->___screenObj;
@@ -22210,10 +22387,10 @@ IL_001a:
 		L_7 = Transform_Find_m3087032B0E1C5B96A2D2C27020BAEAE2DA08F932(L_6, _stringLiteralE8AE71D36BAE48ADD40EBC5C03BC7E29C2644B3E, NULL);
 		__this->___U3CheaderU3E5__2 = L_7;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CheaderU3E5__2), (void*)L_7);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:911>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:912>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:913>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:914>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:923>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:924>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:925>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:926>
 		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_8 = V_1;
 		NullCheck(L_8);
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)L_8)->___screenObj;
@@ -22225,10 +22402,10 @@ IL_001a:
 		L_11 = Transform_Find_m3087032B0E1C5B96A2D2C27020BAEAE2DA08F932(L_10, _stringLiteralD9AD2C43339147F6104041A53E5E279DFE3AECAA, NULL);
 		__this->___U3CboardU3E5__3 = L_11;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CboardU3E5__3), (void*)L_11);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:916>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:917>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:918>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:919>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:928>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:929>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:930>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:931>
 		RegisterSummaryScreen_t6E9B792F17EB88F612DFCEEE8D02FB5BEF63E4A9* L_12 = V_1;
 		NullCheck(L_12);
 		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_13 = ((BaseScreen_tCE265D511E3D1EC3F35F1103E5D147B2DB50BAEA*)L_12)->___screenObj;
@@ -22240,7 +22417,7 @@ IL_001a:
 		L_15 = Transform_Find_m3087032B0E1C5B96A2D2C27020BAEAE2DA08F932(L_14, _stringLiteral26CC285863056B1ACCF4621ADF99F1D04486EBEB, NULL);
 		__this->___U3CbuttonU3E5__4 = L_15;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CbuttonU3E5__4), (void*)L_15);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:921>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:933>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_16 = __this->___U3CheaderU3E5__2;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_17;
@@ -22251,8 +22428,8 @@ IL_001a:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:922>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:923>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:934>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:935>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_18 = __this->___U3CheaderU3E5__2;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19;
 		L_19 = Vector3_get_one_mC9B289F1E15C42C597180C9FE6FB492495B51D02_inline(NULL);
@@ -22264,7 +22441,7 @@ IL_001a:
 
 IL_009a:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:925>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:937>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_21 = __this->___U3CboardU3E5__3;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_22;
@@ -22275,8 +22452,8 @@ IL_009a:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:926>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:927>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:938>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:939>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_23 = __this->___U3CboardU3E5__3;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_24;
 		L_24 = Vector3_get_one_mC9B289F1E15C42C597180C9FE6FB492495B51D02_inline(NULL);
@@ -22288,7 +22465,7 @@ IL_009a:
 
 IL_00c2:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:929>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:941>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_26 = __this->___U3CbuttonU3E5__4;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_27;
@@ -22299,8 +22476,8 @@ IL_00c2:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:930>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:931>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:942>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:943>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_28 = __this->___U3CbuttonU3E5__4;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_29;
 		L_29 = Vector3_get_one_mC9B289F1E15C42C597180C9FE6FB492495B51D02_inline(NULL);
@@ -22312,30 +22489,30 @@ IL_00c2:
 
 IL_00ea:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:933>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:945>
 		__this->___U3CtU3E5__5 = (0.0f);
 		goto IL_01d8;
 	}
 
 IL_00fa:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:937>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:938>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:949>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:950>
 		float L_31 = __this->___U3CtU3E5__5;
 		float L_32;
 		L_32 = Time_get_deltaTime_mC3195000401F0FD167DD2F948FD2BC58330D0865(NULL);
 		__this->___U3CtU3E5__5 = ((float)il2cpp_codegen_add(L_31, L_32));
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:940>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:941>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:942>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:943>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:944>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:945>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:952>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:953>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:954>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:955>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:956>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:957>
 		float L_33 = __this->___U3CtU3E5__5;
 		float L_34;
 		L_34 = Mathf_SmoothStep_mEFDC738EB0AA162D71013BDBBDD157B080A8E524_inline((0.0f), (1.0f), ((float)(L_33/(0.400000006f))), NULL);
 		V_2 = L_34;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:947>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:959>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_35 = __this->___U3CheaderU3E5__2;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_36;
@@ -22346,12 +22523,12 @@ IL_00fa:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:949>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:950>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:951>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:952>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:953>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:954>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:961>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:962>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:963>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:964>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:965>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:966>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_37 = __this->___U3CheaderU3E5__2;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_38;
 		L_38 = Vector3_get_one_mC9B289F1E15C42C597180C9FE6FB492495B51D02_inline(NULL);
@@ -22368,7 +22545,7 @@ IL_00fa:
 
 IL_015b:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:957>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:969>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_43 = __this->___U3CboardU3E5__3;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_44;
@@ -22379,12 +22556,12 @@ IL_015b:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:959>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:960>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:961>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:962>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:963>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:964>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:971>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:972>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:973>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:974>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:975>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:976>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_45 = __this->___U3CboardU3E5__3;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_46;
 		L_46 = Vector3_get_one_mC9B289F1E15C42C597180C9FE6FB492495B51D02_inline(NULL);
@@ -22401,7 +22578,7 @@ IL_015b:
 
 IL_018e:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:967>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:979>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_51 = __this->___U3CbuttonU3E5__4;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_52;
@@ -22412,12 +22589,12 @@ IL_018e:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:969>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:970>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:971>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:972>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:973>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:974>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:981>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:982>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:983>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:984>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:985>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:986>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_53 = __this->___U3CbuttonU3E5__4;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_54;
 		L_54 = Vector3_get_one_mC9B289F1E15C42C597180C9FE6FB492495B51D02_inline(NULL);
@@ -22434,7 +22611,7 @@ IL_018e:
 
 IL_01c1:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:977>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:989>
 		__this->___U3CU3E2__current = NULL;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)NULL);
 		__this->___U3CU3E1__state = 1;
@@ -22448,7 +22625,7 @@ IL_01d1:
 
 IL_01d8:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:935>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:947>
 		float L_59 = __this->___U3CtU3E5__5;
 		if ((((float)L_59) < ((float)(0.400000006f))))
 		{
@@ -22456,12 +22633,12 @@ IL_01d8:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:979>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:991>
 		return (bool)0;
 	}
 }
-// Method Definition Index: 62243
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CEntranceU3Ed__21_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mA1F6A6330BD7E62A16C0CFD18A47C9680875168F (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62245
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CEntranceU3Ed__22_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m91B17E415537E9A466E6696B49F73C49904818C3 (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22469,18 +22646,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CEntranceU3Ed__21_System_Col
 		return L_0;
 	}
 }
-// Method Definition Index: 62244
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__21_System_Collections_IEnumerator_Reset_mF84CDD372C8A275F6D0A0CA72C8E8C6B682A537A (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62246
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CEntranceU3Ed__22_System_Collections_IEnumerator_Reset_mD6E5ECCAE53A001CFED6D2777A25D1F1004BC804 (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A* L_0 = (NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A*)il2cpp_codegen_object_new(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A_il2cpp_TypeInfo_var)));
 		NotSupportedException__ctor_m1398D0CDE19B36AA3DE9392879738C1EA2439CDF(L_0, NULL);
-		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CEntranceU3Ed__21_System_Collections_IEnumerator_Reset_mF84CDD372C8A275F6D0A0CA72C8E8C6B682A537A_RuntimeMethod_var)));
+		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CEntranceU3Ed__22_System_Collections_IEnumerator_Reset_mD6E5ECCAE53A001CFED6D2777A25D1F1004BC804_RuntimeMethod_var)));
 	}
 }
-// Method Definition Index: 62245
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CEntranceU3Ed__21_System_Collections_IEnumerator_get_Current_m5357D4E55EA85232CFD1520F46D2AC20EDD09F1A (U3CEntranceU3Ed__21_t0C97EEB874299A491B79EBA33571877A8A6E05AD* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62247
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CEntranceU3Ed__22_System_Collections_IEnumerator_get_Current_mD8EC522F07EB20F0EC8F91B0676E829327B411AC (U3CEntranceU3Ed__22_t1A61108F50AD8F36708B075D8F269D1FD6A5A264* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22496,8 +22673,8 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CEntranceU3Ed__21_System_Col
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 62246
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__17__ctor_m8F78DE3FEC80DB4D2BA56FFE04E98529EBE388DC (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
+// Method Definition Index: 62248
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__18__ctor_m6F91CC575D024A1A31C27BB71614A9EC6FE38451 (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22507,16 +22684,16 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__17__ctor_m8F78DE3
 		return;
 	}
 }
-// Method Definition Index: 62247
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__17_System_IDisposable_Dispose_m3E81A4272A5A74E88455CAA1272E751F4285BFC7 (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62249
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__18_System_IDisposable_Dispose_mF539CF4D0F40AF05AD46389E5CD136F942F7AB52 (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		return;
 	}
 }
-// Method Definition Index: 62248
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CFlameAnimationU3Ed__17_MoveNext_m239B21B253BF24B4A23B20A785AF3E5AA3059D00 (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62250
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CFlameAnimationU3Ed__18_MoveNext_mC78ABD5E1395679F2EFD6B5E1FC4F63C61AE6527 (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
@@ -22551,7 +22728,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CFlameAnimationU3Ed__17_MoveNext_m239B
 IL_0013:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:727>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:710>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_4;
@@ -22562,24 +22739,24 @@ IL_0013:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:728>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:711>
 		return (bool)0;
 	}
 
 IL_002a:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:730>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:731>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:713>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:714>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_5 = __this->___target;
 		NullCheck(L_5);
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6;
 		L_6 = Transform_get_localPosition_mA9C86B990DF0685EA1061A120218993FDCC60A95(L_5, NULL);
 		__this->___U3CoriginU3E5__2 = L_6;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:733>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:734>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:735>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:736>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:737>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:716>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:717>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:718>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:719>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:720>
 		float L_7;
 		L_7 = Random_Range_m5236C99A7D8AE6AC9190592DC66016652A2D2494((0.0f), (6.28000021f), NULL);
 		__this->___U3CphaseU3E5__3 = L_7;
@@ -22588,23 +22765,23 @@ IL_002a:
 
 IL_0055:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:741>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:742>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:743>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:744>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:724>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:725>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:726>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:727>
 		float L_8;
 		L_8 = Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B(NULL);
 		float L_9 = __this->___U3CphaseU3E5__3;
 		V_1 = ((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_8, (7.0f))), L_9));
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:746>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:747>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:748>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:749>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:750>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:751>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:752>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:753>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:754>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:729>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:730>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:731>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:732>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:733>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:734>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:735>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:736>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:737>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_10 = __this->___target;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11 = __this->___U3CoriginU3E5__2;
 		float L_12 = V_1;
@@ -22621,13 +22798,13 @@ IL_0055:
 		L_18 = Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline(L_11, L_17, NULL);
 		NullCheck(L_10);
 		Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134(L_10, L_18, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:756>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:757>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:758>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:759>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:760>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:761>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:762>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:739>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:740>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:741>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:742>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:743>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:744>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:745>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_19 = __this->___target;
 		float L_20 = V_1;
 		float L_21;
@@ -22637,17 +22814,17 @@ IL_0055:
 		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_22), (0.0f), (0.0f), ((float)il2cpp_codegen_multiply(L_21, (9.0f))), NULL);
 		NullCheck(L_19);
 		Transform_set_localEulerAngles_m0458551662A1A51FDCA4C0417282B25D391661DF(L_19, L_22, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:764>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:765>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:766>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:767>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:768>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:769>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:770>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:771>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:772>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:773>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:774>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:747>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:748>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:749>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:750>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:751>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:752>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:753>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:754>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:755>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:756>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:757>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_23 = __this->___target;
 		float L_24 = V_1;
 		float L_25;
@@ -22659,33 +22836,33 @@ IL_0055:
 		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_27), (0.699999988f), ((float)il2cpp_codegen_add((0.75f), ((float)il2cpp_codegen_multiply(L_26, (0.449999988f))))), (1.0f), NULL);
 		NullCheck(L_23);
 		Transform_set_localScale_mBA79E811BAF6C47B80FF76414C12B47B3CD03633(L_23, L_27, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:776>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:777>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:759>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:760>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_28 = __this->___image;
 		NullCheck(L_28);
 		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_29;
 		L_29 = VirtualFuncInvoker0< Color_tD001788D726C3A7F1379BEED0260B9591F440C1F >::Invoke(22, L_28);
 		V_2 = L_29;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:779>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:780>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:781>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:782>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:783>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:784>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:785>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:762>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:763>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:764>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:765>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:766>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:767>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:768>
 		float L_30 = V_1;
 		float L_31;
 		L_31 = sinf(((float)il2cpp_codegen_multiply(L_30, (1.60000002f))));
 		float L_32;
 		L_32 = fabsf(L_31);
 		(&V_2)->___a = ((float)il2cpp_codegen_add((0.699999988f), ((float)il2cpp_codegen_multiply(L_32, (0.25f)))));
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:787>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:788>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:770>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:771>
 		Image_tBC1D03F63BF71132E9A5E472B8742F172A011E7E* L_33 = __this->___image;
 		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_34 = V_2;
 		NullCheck(L_33);
 		VirtualActionInvoker1< Color_tD001788D726C3A7F1379BEED0260B9591F440C1F >::Invoke(23, L_33, L_34);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:790>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:773>
 		__this->___U3CU3E2__current = NULL;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)NULL);
 		__this->___U3CU3E1__state = 1;
@@ -22699,7 +22876,7 @@ IL_0157:
 
 IL_015e:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:739>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:722>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_35 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_36;
@@ -22710,12 +22887,12 @@ IL_015e:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:792>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:775>
 		return (bool)0;
 	}
 }
-// Method Definition Index: 62249
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFlameAnimationU3Ed__17_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mECBAD6B159C1F60774EBA6448CC3D15239B2C1FC (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62251
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFlameAnimationU3Ed__18_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_mB423AEF389C21345234EC934E3A62FDE3A65714D (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22723,18 +22900,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFlameAnimationU3Ed__17_Syst
 		return L_0;
 	}
 }
-// Method Definition Index: 62250
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__17_System_Collections_IEnumerator_Reset_mB79FBB15D3F6CC819647FDF2FDB69B7E0779199B (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62252
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFlameAnimationU3Ed__18_System_Collections_IEnumerator_Reset_m1440B340A17B4FFF9CAE8CD89C1187BC1A2EEF76 (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A* L_0 = (NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A*)il2cpp_codegen_object_new(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A_il2cpp_TypeInfo_var)));
 		NotSupportedException__ctor_m1398D0CDE19B36AA3DE9392879738C1EA2439CDF(L_0, NULL);
-		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CFlameAnimationU3Ed__17_System_Collections_IEnumerator_Reset_mB79FBB15D3F6CC819647FDF2FDB69B7E0779199B_RuntimeMethod_var)));
+		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CFlameAnimationU3Ed__18_System_Collections_IEnumerator_Reset_m1440B340A17B4FFF9CAE8CD89C1187BC1A2EEF76_RuntimeMethod_var)));
 	}
 }
-// Method Definition Index: 62251
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFlameAnimationU3Ed__17_System_Collections_IEnumerator_get_Current_m09B027F11F27E410A28DB44291A04B0D9CA4866B (U3CFlameAnimationU3Ed__17_t922C11F109D8D3E095D9D5088EF6EFD0BEEDD8D3* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62253
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFlameAnimationU3Ed__18_System_Collections_IEnumerator_get_Current_m8A4F7A59C4A1894D01396484360FDF42D3D1F4FC (U3CFlameAnimationU3Ed__18_t32B217C3951FCF9B139C269A4E32C1C40F49B19C* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22750,8 +22927,8 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFlameAnimationU3Ed__17_Syst
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 62252
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__18__ctor_m5F58D335A1AA60039F8728C19138BD11E461D05C (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
+// Method Definition Index: 62254
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__19__ctor_mA1DBA1BB7DBE81E52C7EE7D632E6C2CBB47E2C77 (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22761,16 +22938,16 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__18__ctor_m5F58D335A
 		return;
 	}
 }
-// Method Definition Index: 62253
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__18_System_IDisposable_Dispose_m00DBA6FEA359E4282D9CCB74229AC506836ACCC3 (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62255
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__19_System_IDisposable_Dispose_m4C172E48F6F16EE5A68EBD959D7B43222D920FF0 (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		return;
 	}
 }
-// Method Definition Index: 62254
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CFloatElementU3Ed__18_MoveNext_m6D2486DCB64341B02AB8814CF1D930026A430FB5 (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62256
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CFloatElementU3Ed__19_MoveNext_mCEE4591F90583E3AD10C89B19D27D12D4DA6E6F6 (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
@@ -22803,7 +22980,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CFloatElementU3Ed__18_MoveNext_m6D2486
 IL_0013:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:803>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:786>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_4;
@@ -22814,24 +22991,24 @@ IL_0013:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:804>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:787>
 		return (bool)0;
 	}
 
 IL_002a:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:806>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:807>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:789>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:790>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_5 = __this->___target;
 		NullCheck(L_5);
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6;
 		L_6 = Transform_get_localPosition_mA9C86B990DF0685EA1061A120218993FDCC60A95(L_5, NULL);
 		__this->___U3CoriginU3E5__2 = L_6;
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:809>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:810>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:811>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:812>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:813>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:792>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:793>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:794>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:795>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:796>
 		float L_7;
 		L_7 = Random_Range_m5236C99A7D8AE6AC9190592DC66016652A2D2494((0.0f), (6.28000021f), NULL);
 		__this->___U3CphaseU3E5__3 = L_7;
@@ -22840,23 +23017,23 @@ IL_002a:
 
 IL_0052:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:817>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:818>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:819>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:820>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:800>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:801>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:802>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:803>
 		float L_8;
 		L_8 = Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B(NULL);
 		float L_9 = __this->___speed;
 		float L_10 = __this->___U3CphaseU3E5__3;
 		V_1 = ((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_8, L_9)), L_10));
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:822>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:823>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:824>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:825>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:826>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:827>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:828>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:829>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:805>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:806>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:807>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:808>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:809>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:810>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:811>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:812>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_11 = __this->___target;
 		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_12 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->___U3CoriginU3E5__2);
 		float L_13 = L_12->___x;
@@ -22873,7 +23050,7 @@ IL_0052:
 		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_21), L_13, ((float)il2cpp_codegen_add(L_15, ((float)il2cpp_codegen_multiply(L_17, L_18)))), L_20, NULL);
 		NullCheck(L_11);
 		Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134(L_11, L_21, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:831>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:814>
 		__this->___U3CU3E2__current = NULL;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)NULL);
 		__this->___U3CU3E1__state = 1;
@@ -22887,7 +23064,7 @@ IL_00b5:
 
 IL_00bc:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:815>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:798>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_22 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_23;
@@ -22898,12 +23075,12 @@ IL_00bc:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:833>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:816>
 		return (bool)0;
 	}
 }
-// Method Definition Index: 62255
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFloatElementU3Ed__18_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m3E945D03CA38D4D09063AE248978B583E27872C3 (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62257
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFloatElementU3Ed__19_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m8B7F23AFF3567F9B37A9F69CF059270F50D713F6 (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22911,18 +23088,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFloatElementU3Ed__18_System
 		return L_0;
 	}
 }
-// Method Definition Index: 62256
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__18_System_Collections_IEnumerator_Reset_mD3967DD4115AE9F468B17C07FCD8C2E15D62C94B (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62258
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CFloatElementU3Ed__19_System_Collections_IEnumerator_Reset_m9F01F363AD8CB72DFEABBD2CFA43654F0CC1500C (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A* L_0 = (NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A*)il2cpp_codegen_object_new(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A_il2cpp_TypeInfo_var)));
 		NotSupportedException__ctor_m1398D0CDE19B36AA3DE9392879738C1EA2439CDF(L_0, NULL);
-		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CFloatElementU3Ed__18_System_Collections_IEnumerator_Reset_mD3967DD4115AE9F468B17C07FCD8C2E15D62C94B_RuntimeMethod_var)));
+		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CFloatElementU3Ed__19_System_Collections_IEnumerator_Reset_m9F01F363AD8CB72DFEABBD2CFA43654F0CC1500C_RuntimeMethod_var)));
 	}
 }
-// Method Definition Index: 62257
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFloatElementU3Ed__18_System_Collections_IEnumerator_get_Current_mB9AEEC41DDED6D85E78C4568AA48F7455D595B63 (U3CFloatElementU3Ed__18_tFEE42006A625FD45FD9002C2F50643DDEF5199E4* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62259
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFloatElementU3Ed__19_System_Collections_IEnumerator_get_Current_m9D6E679E10C7E813DFEC39CDEBEED99A104AF09D (U3CFloatElementU3Ed__19_tD6DA4EB50BF1506C93D2BA4D81CA90A5BB0C2F3D* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22938,8 +23115,8 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CFloatElementU3Ed__18_System
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 62258
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__15__ctor_m1237619147114AE3143111BE6B18B1C892E606A2 (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
+// Method Definition Index: 62260
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__16__ctor_m2FD3033A9D43BA0E47EA7A2E775B818BD7357D0A (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, int32_t ___0_U3CU3E1__state, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -22949,16 +23126,16 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__15__ctor_m12376191471
 		return;
 	}
 }
-// Method Definition Index: 62259
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__15_System_IDisposable_Dispose_mB9F4E49F8A44E6694B4003F8732EA87401F33DD1 (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62261
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__16_System_IDisposable_Dispose_m0CE8A4BEFE3FC4DD425A7303BAE2C37C8BB4FB0D (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		return;
 	}
 }
-// Method Definition Index: 62260
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CRocketIdleU3Ed__15_MoveNext_mAFF67C1E9F8CFAC82DE525D66C6EC41216732060 (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62262
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CRocketIdleU3Ed__16_MoveNext_m9A7D126581FC2C930FABA0BD846A9EC6CB16CE0D (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
 	if (!s_Il2CppMethodInitialized)
@@ -22990,7 +23167,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool U3CRocketIdleU3Ed__15_MoveNext_mAFF67C1E
 IL_0010:
 	{
 		__this->___U3CU3E1__state = (-1);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:623>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:606>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_4;
@@ -23001,33 +23178,33 @@ IL_0010:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:624>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:607>
 		return (bool)0;
 	}
 
 IL_0027:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:626>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:609>
 		__this->___U3CtU3E5__2 = (0.0f);
 		goto IL_008e;
 	}
 
 IL_0034:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:630>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:631>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:632>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:613>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:614>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:615>
 		float L_5 = __this->___U3CtU3E5__2;
 		float L_6;
 		L_6 = Time_get_deltaTime_mC3195000401F0FD167DD2F948FD2BC58330D0865(NULL);
 		__this->___U3CtU3E5__2 = ((float)il2cpp_codegen_add(L_5, ((float)il2cpp_codegen_multiply(L_6, (4.0f)))));
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:634>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:635>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:636>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:637>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:638>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:639>
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:640>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:617>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:618>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:619>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:620>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:621>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:622>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:623>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_7 = __this->___target;
 		float L_8 = __this->___U3CtU3E5__2;
 		float L_9;
@@ -23037,7 +23214,7 @@ IL_0034:
 		Vector3__ctor_m376936E6B999EF1ECBE57D990A386303E2283DE0_inline((&L_10), (0.0f), (0.0f), ((float)il2cpp_codegen_multiply(L_9, (0.400000006f))), NULL);
 		NullCheck(L_7);
 		Transform_set_localEulerAngles_m0458551662A1A51FDCA4C0417282B25D391661DF(L_7, L_10, NULL);
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:642>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:625>
 		__this->___U3CU3E2__current = NULL;
 		Il2CppCodeGenWriteBarrier((void**)(&__this->___U3CU3E2__current), (void*)NULL);
 		__this->___U3CU3E1__state = 1;
@@ -23051,7 +23228,7 @@ IL_0087:
 
 IL_008e:
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:628>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:611>
 		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_11 = __this->___target;
 		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
 		bool L_12;
@@ -23062,12 +23239,12 @@ IL_008e:
 		}
 	}
 	{
-		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:644>
+		//<source_info:D:/PROJECT_TOBA/toba-app/toba/Assets/Scripts/Screens/RegisterSummaryScreen.cs:627>
 		return (bool)0;
 	}
 }
-// Method Definition Index: 62261
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CRocketIdleU3Ed__15_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m901B3DD521F1AFB7A9EEE5029B96DC5F210191B2 (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62263
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CRocketIdleU3Ed__16_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m6BC12801AA129909AC9E45C595E0FE2AFF9EB8E6 (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -23075,18 +23252,18 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CRocketIdleU3Ed__15_System_C
 		return L_0;
 	}
 }
-// Method Definition Index: 62262
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__15_System_Collections_IEnumerator_Reset_m29C0C9F7259E1944948607D07549AA7CC390469C (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62264
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void U3CRocketIdleU3Ed__16_System_Collections_IEnumerator_Reset_m461A5DD199E549C359895F32520BF80E5D8C1A17 (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
 		NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A* L_0 = (NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A*)il2cpp_codegen_object_new(((RuntimeClass*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&NotSupportedException_t1429765983D409BD2986508963C98D214E4EBF4A_il2cpp_TypeInfo_var)));
 		NotSupportedException__ctor_m1398D0CDE19B36AA3DE9392879738C1EA2439CDF(L_0, NULL);
-		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CRocketIdleU3Ed__15_System_Collections_IEnumerator_Reset_m29C0C9F7259E1944948607D07549AA7CC390469C_RuntimeMethod_var)));
+		IL2CPP_RAISE_MANAGED_EXCEPTION(L_0, ((RuntimeMethod*)il2cpp_codegen_initialize_runtime_metadata_inline((uintptr_t*)&U3CRocketIdleU3Ed__16_System_Collections_IEnumerator_Reset_m461A5DD199E549C359895F32520BF80E5D8C1A17_RuntimeMethod_var)));
 	}
 }
-// Method Definition Index: 62263
-IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CRocketIdleU3Ed__15_System_Collections_IEnumerator_get_Current_m9CD52DF3BC9944591E31EBC7F6249F1814EAAF72 (U3CRocketIdleU3Ed__15_tE8D8B480C330E56C08101D962EBC2FD8496ED770* __this, const RuntimeMethod* method) 
+// Method Definition Index: 62265
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CRocketIdleU3Ed__16_System_Collections_IEnumerator_get_Current_m5476D221B90CC5304DE99CA35EBDC7C4725666E5 (U3CRocketIdleU3Ed__16_tCD0D81A119D06CE859C5687BE5DC9CE3A6EED4D3* __this, const RuntimeMethod* method) 
 {
 	//<source_info:<no-source>:1>
 	{
@@ -23102,7 +23279,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* U3CRocketIdleU3Ed__15_System_C
 #pragma clang diagnostic ignored "-Winvalid-offsetof"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
-// Method Definition Index: 62264
+// Method Definition Index: 62266
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen__ctor_mEDCC93885903DE8A000621478CBEED424B5C5BD2 (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -23119,7 +23296,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen__ctor_mEDCC93885903DE8A000
 		return;
 	}
 }
-// Method Definition Index: 62265
+// Method Definition Index: 62267
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_Show_mEAE2092DA9C042A73760FED1823C4A5116FC6F4D (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -23458,7 +23635,7 @@ IL_013a:
 		return;
 	}
 }
-// Method Definition Index: 62266
+// Method Definition Index: 62268
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateSectionHeader_m60C1F5BF14DA996EB671F40EFE08B6E4D8DE463F (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, String_t* ___1_title, float ___2_yPos, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -23506,7 +23683,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateSectionHeader_m60C1F
 		return;
 	}
 }
-// Method Definition Index: 62267
+// Method Definition Index: 62269
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateSliderRow_mA53A830413D959D1531EE499D519A66BECF19363 (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, String_t* ___1_label, float ___2_currentValue, float ___3_yPos, Action_1_t310F18CB4338A2740CA701F160C62E2C3198E66A* ___4_onChange, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -23762,7 +23939,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateSliderRow_mA53A83041
 		return;
 	}
 }
-// Method Definition Index: 62268
+// Method Definition Index: 62270
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateToggleRow_mCA646B4AE86030B51D69A88FF09BF9211C08E7D3 (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, String_t* ___1_label, bool ___2_currentValue, float ___3_yPos, Action_1_t10DCB0C07D0D3C565CEACADC80D1152B35A45F6C* ___4_onChange, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -24015,7 +24192,7 @@ IL_013d:
 		return;
 	}
 }
-// Method Definition Index: 62269
+// Method Definition Index: 62271
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateInfoRow_m1D2F0C8C2B0B6D71B3570AD5FA853936F4C2A6B1 (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___0_parent, String_t* ___1_label, String_t* ___2_value, float ___3_yPos, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -24093,7 +24270,7 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_CreateInfoRow_m1D2F0C8C2B0
 		return;
 	}
 }
-// Method Definition Index: 62270
+// Method Definition Index: 62272
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void SettingScreen_U3CShowU3Eb__1_0_m17958E2E8701EE7D56829F62D47D44623B0601A3 (SettingScreen_t94E66AD9FBB4383D4AE27E7F47ADD2DCE9B89565* __this, const RuntimeMethod* method) 
 {
 	static bool s_Il2CppMethodInitialized;
@@ -24193,7 +24370,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED02
 		return L_0;
 	}
 }
-// Method Definition Index: 68333
+// Method Definition Index: 68335
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ColorBlock_tDD7C62E7AFE442652FC98F8D058CE8AE6BFD7C11 Selectable_get_colors_mB53E365D02351D4B64084295C4B2A7AF2DEC4750_inline (Selectable_t3251808068A17B8E92FB33590A4C2FA66D456712* __this, const RuntimeMethod* method) 
 {
 	{
@@ -24202,7 +24379,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ColorBlock_tDD7C62E7AFE442652FC98
 		return L_0;
 	}
 }
-// Method Definition Index: 67315
+// Method Definition Index: 67317
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ColorBlock_set_normalColor_m3EBF594F6FA2C6494ACA9FCB9B458807D85B96F8_inline (ColorBlock_tDD7C62E7AFE442652FC98F8D058CE8AE6BFD7C11* __this, Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -24213,7 +24390,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ColorBlock_set_normalColor_m
 		return;
 	}
 }
-// Method Definition Index: 67317
+// Method Definition Index: 67319
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ColorBlock_set_highlightedColor_m04E97DF2CCE7CAC47120D8F486E18BF62F16FF86_inline (ColorBlock_tDD7C62E7AFE442652FC98F8D058CE8AE6BFD7C11* __this, Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -24224,7 +24401,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ColorBlock_set_highlightedCo
 		return;
 	}
 }
-// Method Definition Index: 67319
+// Method Definition Index: 67321
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ColorBlock_set_pressedColor_m644C938090857AB07C57B25FE53F6DC2BB0DD5A8_inline (ColorBlock_tDD7C62E7AFE442652FC98F8D058CE8AE6BFD7C11* __this, Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___0_value, const RuntimeMethod* method) 
 {
 	{
@@ -24235,7 +24412,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void ColorBlock_set_pressedColor_
 		return;
 	}
 }
-// Method Definition Index: 67274
+// Method Definition Index: 67276
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR ButtonClickedEvent_t8EA72E90B3BD1392FB3B3EF167D5121C23569E4C* Button_get_onClick_m701712A7F7F000CC80D517C4510697E15722C35C_inline (Button_t6786514A57F7AFDEE5431112FEA0CAB24F5AE098* __this, const RuntimeMethod* method) 
 {
 	{
@@ -24800,7 +24977,7 @@ IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D
 		return L_12;
 	}
 }
-// Method Definition Index: 68181
+// Method Definition Index: 68183
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RectTransform_t6C5DA5E41A89E0F488B001E45E58963480E543A5* ScrollRect_get_content_m7878BCA28A96B7FBA02DC466A1ED2C9E191C6996_inline (ScrollRect_t17D2F2939CA8953110180DF53164CFC3DC88D70E* __this, const RuntimeMethod* method) 
 {
 	{
@@ -24863,7 +25040,7 @@ IL_000c:
 		return L_2;
 	}
 }
-// Method Definition Index: 68408
+// Method Definition Index: 68410
 IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR SliderEvent_t92A82EF6C62E15AF92B640FE2D960E877E8C6555* Slider_get_onValueChanged_m4DA3FD0F8D7BB838F442C07F7796EEE584D0D4F6_inline (Slider_t87EA570E3D6556CABF57456C2F3873FFD86E652F* __this, const RuntimeMethod* method) 
 {
 	{
