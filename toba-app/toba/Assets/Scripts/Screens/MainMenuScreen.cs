@@ -1345,6 +1345,14 @@ public class MainMenuScreen : BaseScreen
 
         obj.transform.SetAsLastSibling();
 
+        // ===== PERBAIKAN: ikat karakter ke kiri-bawah, sejajar puncak footer =====
+        RectTransform decoRt = obj.GetComponent<RectTransform>();
+        decoRt.anchorMin = decoRt.anchorMax = new Vector2(0f, 0.17f);
+        decoRt.pivot = new Vector2(0f, 0f);
+        decoRt.sizeDelta = new Vector2(180f, 275f);
+        decoRt.anchoredPosition = new Vector2(20f, -78f);
+        // ========================================================================
+
 
         ScreenManager.Instance.StartCoroutine(
             FloatCharacter(
