@@ -5,6 +5,8 @@ public class MainApp : MonoBehaviour
 {
     private Canvas canvas;
 
+    private RectTransform safeAreaRoot;
+
     void Awake()
     {
         Screen.orientation = ScreenOrientation.Portrait;
@@ -39,7 +41,7 @@ public class MainApp : MonoBehaviour
             }
         }
 
-        ScreenManager.Instance.canvasTransform = canvas.transform;
+        ScreenManager.Instance.canvasTransform = safeAreaRoot;
         SoundManager.Instance.PlayBGM("bgm_main");
 
         NetworkManager.Instance.Init(
@@ -57,11 +59,11 @@ public class MainApp : MonoBehaviour
         bool doneOnboard = PlayerPrefs.GetInt("OnboardingDone", 0) == 1;
 
         if (hasSession)
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(canvas.transform));
+            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(safeAreaRoot));
         else if (!doneOnboard)
-            ScreenManager.Instance.ChangeScreen(new OnboardingScreen(canvas.transform));
+            ScreenManager.Instance.ChangeScreen(new OnboardingScreen(safeAreaRoot));
         else
-            ScreenManager.Instance.ChangeScreen(new SplashScreen(canvas.transform));
+            ScreenManager.Instance.ChangeScreen(new SplashScreen(safeAreaRoot));
     }
 
     void SetupManagers()
@@ -92,6 +94,25 @@ public class MainApp : MonoBehaviour
         scaler.referenceResolution = new Vector2(1080, 1920);
         scaler.screenMatchMode = UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         scaler.matchWidthOrHeight = 0.5f;
+
+        // Lapisan 1: alas hijau penuh layar
+        GameObject bg = new GameObject("FullScreenBackground",
+            typeof(RectTransform), typeof(UnityEngine.UI.Image));
+        bg.transform.SetParent(canvasObj.transform, false);
+        RectTransform bgRt = bg.GetComponent<RectTransform>();
+        bgRt.anchorMin = Vector2.zero;
+        bgRt.anchorMax = Vector2.one;
+        bgRt.offsetMin = Vector2.zero;
+        bgRt.offsetMax = Vector2.zero;
+        UnityEngine.UI.Image bgImg = bg.GetComponent<UnityEngine.UI.Image>();
+        bgImg.color = TOBATheme.ForestGreen;
+        bgImg.raycastTarget = false;
+
+        // Lapisan 2: panel SafeArea
+        GameObject safe = new GameObject("SafeArea", typeof(RectTransform));
+        safe.transform.SetParent(canvasObj.transform, false);
+        safeAreaRoot = safe.GetComponent<RectTransform>();
+        safe.AddComponent<SafeArea>();
 
         if (Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
         {
