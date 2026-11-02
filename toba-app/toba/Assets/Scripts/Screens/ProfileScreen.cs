@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class ProfileScreen : BaseScreen
 {
     private ProfileResponse profileData;
@@ -17,6 +18,7 @@ public class ProfileScreen : BaseScreen
     private GameObject xpBarFill;
     private GameObject emptyStateObj;
     private GameObject loadingObj;
+    GameObject contentArea;
 
     public ProfileScreen(Transform parent) : base(parent, "ProfileScreen") { }
 
@@ -59,11 +61,39 @@ public class ProfileScreen : BaseScreen
 
     void BuildProfileUI()
     {
+        // Pengaman: kalau terpanggil dua kali, buang wadah lama.
+        if (contentArea != null)
+        {
+            Object.Destroy(contentArea);
+            contentArea = null;
+        }
+
+        // ── CONTENT AREA: mengisi panel di bawah header ───────
+        contentArea = new GameObject("ContentArea");
+        contentArea.transform.SetParent(screenObj.transform, false);
+        RectTransform rtArea = contentArea.AddComponent<RectTransform>();
+        rtArea.anchorMin = Vector2.zero;
+        rtArea.anchorMax = Vector2.one;
+        rtArea.offsetMin = Vector2.zero;
+        rtArea.offsetMax = new Vector2(0f, -HeaderBar.Height);
+
+        // ── FAKTOR PERKECIL SERAGAM ───────────────────────────
+        // Paksa Canvas menghitung ukuran dulu supaya rect tidak masih 0.
+        Canvas.ForceUpdateCanvases();
+        Rect areaRect = rtArea.rect;
+        float areaW = areaRect.width > 1f ? areaRect.width : 1080f;   // cadangan
+        float areaH = areaRect.height > 1f ? areaRect.height : 1690f; // cadangan
+
+        float widthFactor = areaW / 1000f;
+        float heightFactor = (0.33f * areaH - 30f) / 420f;
+        float s = Mathf.Clamp(Mathf.Min(widthFactor, heightFactor), 0.6f, 1f);
+
         // ── CARD AVATAR & INFO UTAMA ──────────────────────────
         GameObject topCard = UIBuilder.CreatePanelSized(
-            screenObj.transform, "TopCard", TOBATheme.WoodDark,
-            new Vector2(1000, 420), new Vector2(0, 520f)
+            contentArea.transform, "TopCard", TOBATheme.WoodDark,
+            new Vector2(1000, 420), Vector2.zero
         );
+        PlaceFromTop(topCard.GetComponent<RectTransform>(), 0.08f, new Vector2(1000, 420), s);
 
         Outline topOutline = topCard.AddComponent<Outline>();
         topOutline.effectColor = TOBATheme.BatakGold;
@@ -136,11 +166,12 @@ public class ProfileScreen : BaseScreen
 
         xpTxt.fontStyle = FontStyles.Normal;
 
-        // ── CARD STATISTIK ────────────────────────────────────
+        // ── CARD STATISTIK (260 tinggi) ───────────────────────
         GameObject statsCard = UIBuilder.CreatePanelSized(
-            screenObj.transform, "StatsCard", TOBATheme.CardBG,
-            new Vector2(1000, 220), new Vector2(0, 190f)
+            contentArea.transform, "StatsCard", TOBATheme.CardBG,
+            new Vector2(1000, 260), Vector2.zero
         );
+        PlaceFromTop(statsCard.GetComponent<RectTransform>(), 0.41f, new Vector2(1000, 260), s);
 
         Outline statsOutline = statsCard.AddComponent<Outline>();
         statsOutline.effectColor = TOBATheme.BatakGold;
@@ -148,7 +179,7 @@ public class ProfileScreen : BaseScreen
 
         UIBuilder.CreateTextSized(
             statsCard.transform, "📊 STATISTIK", 36, TOBATheme.WoodDark,
-            TextAlignmentOptions.Left, new Vector2(900, 55), new Vector2(-10f, 70f)
+            TextAlignmentOptions.Left, new Vector2(900, 55), new Vector2(-10f, 92f)
         );
 
         // 3 stat boxes
@@ -156,10 +187,15 @@ public class ProfileScreen : BaseScreen
         CreateStatBox(statsCard.transform, "🏆", "Achievement", "0", 0f);
         CreateStatBox(statsCard.transform, "🖼", "Kartu", "0", 280f);
 
-        // ── CARD AKSI ─────────────────────────────────────────
-        // Tombol Ganti Karakter
+        // ── GRUP TOMBOL (270 tinggi: 120 + jarak 30 + 120) ────
+        GameObject buttonGroup = new GameObject("ButtonGroup");
+        buttonGroup.transform.SetParent(contentArea.transform, false);
+        RectTransform rtGroup = buttonGroup.AddComponent<RectTransform>();
+        PlaceFromTop(rtGroup, 0.75f, new Vector2(1000, 270), s);
+
+        // Tombol Ganti Karakter (atas)
         GameObject btnGanti = UIBuilder.CreateButton(
-            screenObj.transform, "BtnGantiKarakter", "🎭 GANTI KARAKTER",
+            buttonGroup.transform, "BtnGantiKarakter", "🎭 GANTI KARAKTER",
             new Vector2(900, 120), TOBATheme.WoodMedium, () => {
                 int level = PlayerPrefs.GetInt("PlayerLevel", 1);
 
@@ -175,13 +211,13 @@ public class ProfileScreen : BaseScreen
             }
         );
 
-        btnGanti.GetComponent<RectTransform>().anchorMin =
-            btnGanti.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-        btnGanti.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -210f);
+        RectTransform rtGanti = btnGanti.GetComponent<RectTransform>();
+        rtGanti.anchorMin = rtGanti.anchorMax = new Vector2(0.5f, 0.5f);
+        rtGanti.anchoredPosition = new Vector2(0, 75f);
 
-        // Tombol Logout
+        // Tombol Logout (bawah)
         GameObject btnLogout = UIBuilder.CreateButton(
-            screenObj.transform, "BtnLogout", "🚪 KELUAR",
+            buttonGroup.transform, "BtnLogout", "🚪 KELUAR",
             new Vector2(900, 120), TOBATheme.Error, () => {
                 SoundManager.Instance?.PlaySFX("sfx_click");
 
@@ -209,26 +245,27 @@ public class ProfileScreen : BaseScreen
             }
         );
 
-        btnLogout.GetComponent<RectTransform>().anchorMin =
-            btnLogout.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-        btnLogout.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -360f);
+        RectTransform rtLogout = btnLogout.GetComponent<RectTransform>();
+        rtLogout.anchorMin = rtLogout.anchorMax = new Vector2(0.5f, 0.5f);
+        rtLogout.anchoredPosition = new Vector2(0, -75f);
     }
 
     void CreateStatBox(Transform parent, string icon, string label, string value, float xPos)
     {
+        // Kotak 150 tinggi, tengahnya di y = -35 dari tengah StatsCard (260).
         GameObject box = UIBuilder.CreatePanelSized(
             parent, "Stat_" + label, new Color(0, 0, 0, 0.08f),
-            new Vector2(270, 110), new Vector2(xPos, -45f)
+            new Vector2(270, 150), new Vector2(xPos, -35f)
         );
 
         UIBuilder.CreateTextSized(
             box.transform, icon, 42, TOBATheme.WoodDark,
-            TextAlignmentOptions.Center, new Vector2(270, 55), new Vector2(0, 20f)
+            TextAlignmentOptions.Center, new Vector2(270, 55), new Vector2(0, 42f)
         );
 
         TextMeshProUGUI valTxt = UIBuilder.CreateTextSized(
             box.transform, value, 36, TOBATheme.WoodDark,
-            TextAlignmentOptions.Center, new Vector2(270, 44), new Vector2(0, -20f)
+            TextAlignmentOptions.Center, new Vector2(270, 44), new Vector2(0, -8f)
         ).GetComponent<TextMeshProUGUI>();
 
         // Simpan referensi berdasarkan label
@@ -237,13 +274,14 @@ public class ProfileScreen : BaseScreen
         if (label == "Kartu") galleryTxt = valTxt;
 
         TextMeshProUGUI lblTxt = UIBuilder.CreateTextSized(
-            box.transform, label, 22, TOBATheme.TextGray,
-            TextAlignmentOptions.Center, new Vector2(270, 35), new Vector2(0, -52f)
+            box.transform, label, 28, TOBATheme.TextGray,
+            TextAlignmentOptions.Center, new Vector2(270, 40), new Vector2(0, -50f)
         ).GetComponent<TextMeshProUGUI>();
 
         lblTxt.fontStyle = FontStyles.Normal;
     }
 
+    
     void FetchProfile()
     {
         ClearEmptyState();
@@ -317,21 +355,30 @@ public class ProfileScreen : BaseScreen
 
     void RetryFetchProfile()
     {
+        // Bersihkan dulu, baru tampilkan loading (urutan lama terbalik).
         ClearEmptyState();
-        ShowLoading();
 
-        // Bersihkan UI profile yang mungkin sudah dibuat
-        Transform[] children = screenObj.transform.GetComponentsInChildren<Transform>();
-
-        for (int i = children.Length - 1; i >= 0; i--)
+        if (contentArea != null)
         {
-            Transform child = children[i];
-
-            if (child != screenObj.transform && child.name != "HeaderBar")
-                Object.Destroy(child.gameObject);
+            Object.Destroy(contentArea);
+            contentArea = null;
         }
 
+        ShowLoading();
         FetchProfile();
+    }
+
+    // Menaruh elemen: menempel di persentase tinggi ContentArea (dari atas),
+    // menggantung ke bawah, lalu dikecilkan seragam dari tepi atasnya.
+    void PlaceFromTop(RectTransform rt, float topFraction, Vector2 size, float scale)
+    {
+        // Urutan: anchor, pivot, sizeDelta, anchoredPosition PALING AKHIR.
+        rt.anchorMin = new Vector2(0.5f, 1f - topFraction);
+        rt.anchorMax = new Vector2(0.5f, 1f - topFraction);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.sizeDelta = size;
+        rt.anchoredPosition = Vector2.zero;
+        rt.localScale = new Vector3(scale, scale, 1f);
     }
 
     void UpdateUI()
