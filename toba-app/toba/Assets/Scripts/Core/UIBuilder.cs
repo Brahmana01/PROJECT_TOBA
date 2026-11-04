@@ -117,6 +117,54 @@ public static class UIBuilder
         return bg;
     }
 
+        // ── BACKGROUND COVER: penuhi panel, rasio gambar terjaga, tepi dipotong ──
+    // Dipakai layar yang ingin latar tidak melar. CreateBackground lama tidak disentuh.
+    public static GameObject CreateBackgroundCover(Transform parent, Sprite bgSprite)
+    {
+        if (bgSprite == null)
+        {
+            Debug.LogWarning("[UIBuilder] CreateBackgroundCover: sprite null, latar tidak dibuat.");
+            return null;
+        }
+
+        // Wadah: meregang penuh, selalu paling belakang, dan memotong apa pun yang keluar.
+        GameObject holder = new GameObject("BackgroundCover");
+        holder.transform.SetParent(parent, false);
+        holder.transform.SetAsFirstSibling();
+
+        RectTransform rtHolder = holder.AddComponent<RectTransform>();
+        rtHolder.anchorMin = Vector2.zero;
+        rtHolder.anchorMax = Vector2.one;
+        rtHolder.offsetMin = rtHolder.offsetMax = Vector2.zero;
+
+        holder.AddComponent<RectMask2D>();
+
+        // Gambar: anak wadah. Ukurannya diatur AspectRatioFitter.
+        GameObject imgObj = new GameObject("Image");
+        imgObj.transform.SetParent(holder.transform, false);
+
+        RectTransform rtImg = imgObj.AddComponent<RectTransform>();
+        rtImg.anchorMin = new Vector2(0.5f, 0.5f);
+        rtImg.anchorMax = new Vector2(0.5f, 0.5f);
+        rtImg.pivot = new Vector2(0.5f, 0.5f);
+        rtImg.sizeDelta = new Vector2(bgSprite.rect.width, bgSprite.rect.height);
+        rtImg.anchoredPosition = Vector2.zero;
+
+        Image img = imgObj.AddComponent<Image>();
+        img.sprite = bgSprite;
+        img.type = Image.Type.Simple;
+        img.preserveAspect = false;   // rasio dijaga oleh AspectRatioFitter, bukan Image
+        img.color = Color.white;
+        img.raycastTarget = false;
+
+        AspectRatioFitter fitter = imgObj.AddComponent<AspectRatioFitter>();
+        fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+        fitter.aspectRatio = bgSprite.rect.width / bgSprite.rect.height; // 941/1672 ≈ 0,563
+
+        return holder;
+    }
+    
+
     // ── TEKS ──────────────────────────────────────────────
     public static GameObject CreateText(Transform parent, string content,
         int fontSize, Color color, TextAlignmentOptions align)

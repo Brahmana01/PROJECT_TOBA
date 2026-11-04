@@ -26,6 +26,9 @@ public class ProfileScreen : BaseScreen
     {
         SetBackground(TOBATheme.ForestGreen);
 
+        // Latar gambar. Selalu di belakang karena memakai SetAsFirstSibling.
+        UIBuilder.CreateBackgroundCover(screenObj.transform, LoadBackgroundSprite());
+
         HeaderBar.Create(screenObj.transform, "PROFIL", () => {
             ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
         });
@@ -34,6 +37,29 @@ public class ProfileScreen : BaseScreen
         FetchProfile();
     }
 
+// Memuat bg_toba dari Resources. LoadSpriteFlexible milik MainMenu bersifat private,
+    // jadi Profil memuat sendiri dengan pola yang sama.
+    Sprite LoadBackgroundSprite()
+    {
+        Sprite sprite = Resources.Load<Sprite>("bg_toba");
+        if (sprite != null)
+            return sprite;
+
+        Texture2D tex = Resources.Load<Texture2D>("bg_toba");
+        if (tex != null)
+        {
+            return Sprite.Create(
+                tex,
+                new Rect(0, 0, tex.width, tex.height),
+                new Vector2(0.5f, 0.5f),
+                100f
+            );
+        }
+
+        Debug.LogWarning("[Profile] Sprite bg_toba tidak ditemukan di Resources.");
+        return null;
+    }
+    
     void ShowLoading()
     {
         ClearEmptyState();
