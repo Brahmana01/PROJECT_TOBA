@@ -1,0 +1,233 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\quizscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\quizscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\locationdetailscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\locationdetailscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\challenge\\challengeguessimagescreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\challenge\\challengeguessimagescreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\triviamenuscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\triviamenuscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\triviaresultscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\triviaresultscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\triviaquizscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\triviaquizscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\screens\\mapscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\screens\\mapscreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\core\\tobatheme.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\tobatheme.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\core\\uibuilder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\uibuilder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\core\\basescreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\basescreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\core\\apimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\core\\apimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\Challenge\\ChallengeCategorizeScreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Screens\\Challenge\\ChallengeCategorizeScreen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|d:\\penelitian miss monalisa\\project_toba\\toba-app\\toba\\assets\\scripts\\components\\headerbar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\components\\headerbar.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QuizScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\QuizScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\QuizScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\QuizScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\QuizScreen.cs",
+              "ViewState": "AgIAANABAAAAAAAAAAAqwNwBAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-03T09:42:53.279Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LocationDetailScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\LocationDetailScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\LocationDetailScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\LocationDetailScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\LocationDetailScreen.cs",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAuwLQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-03T09:42:17.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ChallengeGuessImageScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\Challenge\\ChallengeGuessImageScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\Challenge\\ChallengeGuessImageScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\Challenge\\ChallengeGuessImageScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\Challenge\\ChallengeGuessImageScreen.cs",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAqwL8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-03T09:34:05.924Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MapScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\MapScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\MapScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\MapScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\MapScreen.cs",
+              "ViewState": "AgIAAOYJAAAAAAAAAAAmwAAKAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-01T07:56:58.657Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "HeaderBar.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Components\\HeaderBar.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Components\\HeaderBar.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Components\\HeaderBar.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Components\\HeaderBar.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAQwBgAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-01T06:57:09.515Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TriviaMenuScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\TriviaMenuScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\TriviaMenuScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\TriviaMenuScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\TriviaMenuScreen.cs",
+              "ViewState": "AgIAAOkCAAAAAAAAAAAgwPMCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-16T12:57:12.675Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TriviaQuizScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\TriviaQuizScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\TriviaQuizScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\TriviaQuizScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\TriviaQuizScreen.cs",
+              "ViewState": "AgIAAK4EAAAAAAAAAAAqwMkEAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-17T02:21:23.414Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TriviaResultScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\TriviaResultScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\TriviaResultScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\TriviaResultScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\TriviaResultScreen.cs",
+              "ViewState": "AgIAAPYCAAAAAAAAAAAqwAEDAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-17T02:25:12.876Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "APIManager.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\APIManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\APIManager.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\APIManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\APIManager.cs",
+              "ViewState": "AgIAABwBAAAAAAAAAAAcwDMBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-01T06:33:44.176Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "BaseScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\BaseScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\BaseScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\BaseScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\BaseScreen.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAcwCsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-16T14:06:35.221Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TOBATheme.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\TOBATheme.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\TOBATheme.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\TOBATheme.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\TOBATheme.cs",
+              "ViewState": "AgIAADEAAAAAAAAAAAAkwEUAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-16T14:42:48.222Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UIBuilder.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\UIBuilder.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Core\\UIBuilder.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Core\\UIBuilder.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Core\\UIBuilder.cs",
+              "ViewState": "AgIAAH4BAAAAAAAAAAAiwJcBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-16T14:07:32.167Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ChallengeCategorizeScreen.cs",
+              "DocumentMoniker": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\Challenge\\ChallengeCategorizeScreen.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Screens\\Challenge\\ChallengeCategorizeScreen.cs",
+              "ToolTip": "D:\\PENELITIAN MISS MONALISA\\PROJECT_TOBA\\toba-app\\toba\\Assets\\Scripts\\Screens\\Challenge\\ChallengeCategorizeScreen.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Screens\\Challenge\\ChallengeCategorizeScreen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-03T09:13:53.113Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
