@@ -13,9 +13,9 @@ public class HeaderBar
     const float GoldLineInset = 6f;
 
     public static GameObject Create(Transform parent, string title,
-        System.Action onBack = null)
+    System.Action onBack = null, string backgroundSpriteName = "panel_wood")
     {
-        Sprite woodSprite = TOBATheme.LoadSprite("panel_wood");
+        Sprite woodSprite = TOBATheme.LoadSprite(backgroundSpriteName);
 
         // Panel header
         GameObject header = new GameObject("Header");
@@ -33,8 +33,8 @@ public class HeaderBar
         if (woodSprite != null)
         {
             imgH.sprite = woodSprite;
-            imgH.type = Image.Type.Sliced;
-            imgH.color = new Color(0.6f, 0.35f, 0.1f, 0.95f);
+            imgH.type = Image.Type.Simple;
+            imgH.color = Color.white;
         }
         else
         {
