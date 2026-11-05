@@ -1498,23 +1498,61 @@ func SeedAchievements() {
 		{ID: 13, Name: "Duta Budaya", Description: "Capai Level 15", Icon: "🎖️", ConditionType: "LEVEL", ConditionValue: 15, RewardXP: 300, RewardStars: 5},
 		{ID: 14, Name: "Master Budaya Batak", Description: "Selesaikan semua achievement lainnya", Icon: "🏅", ConditionType: "ALL_ACHIEVEMENT", ConditionValue: 13, RewardXP: 500, RewardStars: 10},
 	}
+
 	for _, a := range achievements {
 		var existing models.Achievement
 		result := config.DB.Where("name = ?", a.Name).First(&existing)
+
 		if result.Error == nil {
-			log.Printf("ℹ️  Achievement sudah ada: %s", a.Name)
+			err := config.DB.Model(&existing).Updates(map[string]interface{}{
+				"description":     a.Description,
+				"icon":            a.Icon,
+				"condition_type":  a.ConditionType,
+				"condition_value": a.ConditionValue,
+				"reward_xp":       a.RewardXP,
+				"reward_stars":    a.RewardStars,
+				"is_active":       true,
+			}).Error
+
+			if err != nil {
+				log.Printf("❌ Gagal update achievement %s: %v", a.Name, err)
+			} else {
+				log.Printf("✅ Achievement diperbarui: %s", a.Name)
+			}
 			continue
 		}
+
 		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			log.Printf("❌ Gagal mengecek achievement %s: %v", a.Name, result.Error)
 			continue
 		}
+
+		// Gunakan ID otomatis PostgreSQL, bukan ID dari seed.
+		a.ID = 0
+
 		if err := config.DB.Create(&a).Error; err != nil {
 			log.Printf("❌ Gagal seed achievement %s: %v", a.Name, err)
 			continue
 		}
+
+		log.Printf("✅ Achievement baru ditambahkan: %s", a.Name)
 	}
-	log.Println("✅ Achievements selesai (14 achievement)")
+	// Nonaktifkan achievement lama yang tidak digunakan lagi.
+	// Record dan riwayat pemain tetap dipertahankan.
+	legacyNames := []string{
+		"Maestro Toba",
+		"XP Pertama",
+		"Pencari Ilmu",
+	}
+
+	if err := config.DB.Model(&models.Achievement{}).
+		Where("name IN ?", legacyNames).
+		Update("is_active", false).Error; err != nil {
+		log.Printf("❌ Gagal menonaktifkan achievement lama: %v", err)
+	}
+
+	log.Println("✅ Achievements selesai disinkronkan")
+
 }
 
 // ============================================================
