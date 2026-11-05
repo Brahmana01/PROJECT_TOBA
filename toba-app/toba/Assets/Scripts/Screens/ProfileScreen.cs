@@ -20,21 +20,145 @@ public class ProfileScreen : BaseScreen
     private GameObject loadingObj;
     GameObject contentArea;
 
+    // Header papan (nilai sama dengan layar Trivia)
+    const float HeaderMinY = 0.875f;
+    const float HeaderMaxY = 0.995f;
+    const float WoodCenterFromBottom = 0.459f;
+    static float HeaderCenterY =>
+        HeaderMinY + (HeaderMaxY - HeaderMinY) * WoodCenterFromBottom;
+    const float BackButtonSize = 120f;
+    const float BackButtonLeft = 30f;
+
     public ProfileScreen(Transform parent) : base(parent, "ProfileScreen") { }
 
     public override void Show()
     {
         SetBackground(TOBATheme.ForestGreen);
 
-        // Latar gambar. Selalu di belakang karena memakai SetAsFirstSibling.
         UIBuilder.CreateBackgroundCover(screenObj.transform, LoadBackgroundSprite());
 
-        HeaderBar.Create(screenObj.transform, "PROFIL", () => {
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
-        });
+        CreateProfileHeader();
 
         ShowLoading();
         FetchProfile();
+    }
+
+    // Memuat sprite dari Resources. Aman untuk gambar mode Single maupun Multiple.
+    Sprite LoadSpriteAny(string path)
+    {
+        Sprite s = Resources.Load<Sprite>(path);
+        if (s != null) return s;
+
+        Sprite[] all = Resources.LoadAll<Sprite>(path);
+        if (all != null && all.Length > 0) return all[0];
+
+        Texture2D tex = Resources.Load<Texture2D>(path);
+        if (tex != null)
+        {
+            return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height),
+                new Vector2(0.5f, 0.5f), 100f);
+        }
+
+        Debug.LogWarning("[Profile] Sprite tidak ditemukan: " + path);
+        return null;
+    }
+
+    // Mengganti gambar kartu dengan sprite bergaris (Sliced bila punya Border).
+    void ApplyCardSprite(GameObject card, string path)
+    {
+        Image img = card.GetComponent<Image>();
+        Sprite sp = LoadSpriteAny(path);
+        if (img == null || sp == null)
+        {
+            Debug.LogWarning("[Profile] Sprite kartu tidak terpasang: " + path);
+            return;
+        }
+
+        img.sprite = sp;
+        img.type = sp.border != Vector4.zero ? Image.Type.Sliced : Image.Type.Simple;
+        img.color = Color.white;
+    }
+
+    void CreateProfileHeader()
+    {
+        // Wadah penuh panel, dibuat setelah latar sehingga tampil di atasnya.
+        GameObject headerRoot = new GameObject("ProfileHeader");
+        headerRoot.transform.SetParent(screenObj.transform, false);
+        RectTransform rtRoot = headerRoot.AddComponent<RectTransform>();
+        rtRoot.anchorMin = Vector2.zero;
+        rtRoot.anchorMax = Vector2.one;
+        rtRoot.offsetMin = rtRoot.offsetMax = Vector2.zero;
+
+        // ── Papan judul ──
+        GameObject board = new GameObject("ProfileBoard");
+        board.transform.SetParent(headerRoot.transform, false);
+        RectTransform rtBoard = board.AddComponent<RectTransform>();
+        rtBoard.anchorMin = new Vector2(0.02f, HeaderMinY);
+        rtBoard.anchorMax = new Vector2(0.98f, HeaderMaxY);
+        rtBoard.offsetMin = rtBoard.offsetMax = Vector2.zero;
+
+        Sprite boardSprite = LoadSpriteAny("gambar/toba_header_panel");
+        Image boardImg = board.AddComponent<Image>();
+        if (boardSprite != null)
+        {
+            boardImg.sprite = boardSprite;
+            boardImg.color = Color.white;
+        }
+        else
+        {
+            boardImg.sprite = UIBuilder.GetDefaultSprite();
+            boardImg.color = TOBATheme.WoodMedium;
+        }
+        boardImg.type = Image.Type.Simple;
+        boardImg.preserveAspect = true;
+        boardImg.raycastTarget = false;
+
+        // ── Judul: sedikit di bawah tengah kotak, pas di kayu ──
+        GameObject titleObj = UIBuilder.CreateTextSized(
+            board.transform, "PROFIL", 52, TOBATheme.BatakGold,
+            TextAlignmentOptions.Center, new Vector2(480f, 90f), new Vector2(0f, -9f)
+        );
+        TextMeshProUGUI titleTmp = titleObj.GetComponent<TextMeshProUGUI>();
+        titleTmp.fontStyle = FontStyles.Bold;
+        titleTmp.enableAutoSizing = true;
+        titleTmp.fontSizeMin = 28;
+        titleTmp.fontSizeMax = 52;
+        titleTmp.raycastTarget = false;
+
+        // ── Tombol kembali: lingkaran emas, sejajar tengah kayu ──
+        Sprite backSprite = TOBATheme.LoadSprite("RegisterNameScreen/register_name_back_button_v2");
+
+        GameObject btnObj = new GameObject("BackButton");
+        btnObj.transform.SetParent(headerRoot.transform, false);
+        RectTransform rtBtn = btnObj.AddComponent<RectTransform>();
+        rtBtn.anchorMin = new Vector2(0f, HeaderCenterY);
+        rtBtn.anchorMax = new Vector2(0f, HeaderCenterY);
+        rtBtn.pivot = new Vector2(0f, 0.5f);
+        rtBtn.sizeDelta = new Vector2(BackButtonSize, BackButtonSize);
+        rtBtn.anchoredPosition = new Vector2(BackButtonLeft, 0f);
+
+        Image btnImg = btnObj.AddComponent<Image>();
+        if (backSprite != null)
+        {
+            btnImg.sprite = backSprite;
+            btnImg.color = Color.white;
+        }
+        else
+        {
+            Debug.LogWarning("[Profile] Sprite tombol kembali tidak ditemukan.");
+            btnImg.sprite = UIBuilder.GetDefaultSprite();
+            btnImg.color = TOBATheme.BatakGold;
+        }
+        btnImg.preserveAspect = true;
+        btnImg.raycastTarget = true;
+
+        Button btn = btnObj.AddComponent<Button>();
+        btn.targetGraphic = btnImg;
+        btn.transition = Selectable.Transition.None;
+        btn.onClick.AddListener(() => {
+            SoundManager.Instance?.PlaySFX("sfx_click");
+            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
+        });
     }
 
 // Memuat bg_toba dari Resources. LoadSpriteFlexible milik MainMenu bersifat private,
@@ -87,48 +211,42 @@ public class ProfileScreen : BaseScreen
 
     void BuildProfileUI()
     {
-        // Pengaman: kalau terpanggil dua kali, buang wadah lama.
         if (contentArea != null)
         {
             Object.Destroy(contentArea);
             contentArea = null;
         }
 
-        // ── CONTENT AREA: mengisi panel di bawah header ───────
+        // ── CONTENT AREA: dari dasar panel sampai tepi bawah papan header ──
         contentArea = new GameObject("ContentArea");
         contentArea.transform.SetParent(screenObj.transform, false);
         RectTransform rtArea = contentArea.AddComponent<RectTransform>();
         rtArea.anchorMin = Vector2.zero;
-        rtArea.anchorMax = Vector2.one;
-        rtArea.offsetMin = Vector2.zero;
-        rtArea.offsetMax = new Vector2(0f, -HeaderBar.Height);
+        rtArea.anchorMax = new Vector2(1f, HeaderMinY);
+        rtArea.offsetMin = rtArea.offsetMax = Vector2.zero;
 
-        // ── FAKTOR PERKECIL SERAGAM ───────────────────────────
-        // Paksa Canvas menghitung ukuran dulu supaya rect tidak masih 0.
+        // ── FAKTOR PERKECIL SERAGAM ──
         Canvas.ForceUpdateCanvases();
         Rect areaRect = rtArea.rect;
         float areaW = areaRect.width > 1f ? areaRect.width : 1080f;   // cadangan
-        float areaH = areaRect.height > 1f ? areaRect.height : 1690f; // cadangan
+        float areaH = areaRect.height > 1f ? areaRect.height : 1680f; // cadangan
 
-        float widthFactor = areaW / 1000f;
-        float heightFactor = (0.33f * areaH - 30f) / 420f;
+        float widthFactor = (areaW - 40f) / 1000f;                    // margin 20 per sisi
+        float heightFactor = (0.33f * areaH - 30f) / 460f;
         float s = Mathf.Clamp(Mathf.Min(widthFactor, heightFactor), 0.6f, 1f);
 
-        // ── CARD AVATAR & INFO UTAMA ──────────────────────────
+        // ── CARD AVATAR & INFO UTAMA (1000 x 460) ──
         GameObject topCard = UIBuilder.CreatePanelSized(
             contentArea.transform, "TopCard", TOBATheme.WoodDark,
-            new Vector2(1000, 420), Vector2.zero
+            new Vector2(1000, 460), Vector2.zero
         );
-        PlaceFromTop(topCard.GetComponent<RectTransform>(), 0.08f, new Vector2(1000, 420), s);
+        ApplyCardSprite(topCard, "gambar/panel_fakta");
+        PlaceFromTop(topCard.GetComponent<RectTransform>(), 0.08f, new Vector2(1000, 460), s);
 
-        Outline topOutline = topCard.AddComponent<Outline>();
-        topOutline.effectColor = TOBATheme.BatakGold;
-        topOutline.effectDistance = new Vector2(4, 4);
-
-        // Avatar circle
+        // Avatar
         GameObject avatar = UIBuilder.CreatePanelSized(
             topCard.transform, "Avatar", TOBATheme.BatakGold,
-            new Vector2(160, 160), new Vector2(-340f, 60f)
+            new Vector2(160, 160), new Vector2(-330f, 75f)
         );
 
         UIBuilder.CreateTextSized(
@@ -139,41 +257,39 @@ public class ProfileScreen : BaseScreen
         // Nama
         nameTxt = UIBuilder.CreateTextSized(
             topCard.transform, "MEMUAT...", 52, Color.white,
-            TextAlignmentOptions.Left, new Vector2(560, 70), new Vector2(100f, 100f)
+            TextAlignmentOptions.Left, new Vector2(560, 70), new Vector2(110f, 115f)
         ).GetComponent<TextMeshProUGUI>();
 
         // Gelar
         titleTxt = UIBuilder.CreateTextSized(
             topCard.transform, "...", 32, TOBATheme.BatakGold,
-            TextAlignmentOptions.Left, new Vector2(560, 50), new Vector2(100f, 40f)
+            TextAlignmentOptions.Left, new Vector2(560, 50), new Vector2(110f, 55f)
         ).GetComponent<TextMeshProUGUI>();
-
         titleTxt.fontStyle = FontStyles.Normal;
 
-        // Username
+        // Username (warna lebih terang agar terbaca)
         usernameTxt = UIBuilder.CreateTextSized(
-            topCard.transform, "@...", 28, TOBATheme.TextGray,
-            TextAlignmentOptions.Left, new Vector2(560, 45), new Vector2(100f, -5f)
+            topCard.transform, "@...", 28, TOBATheme.TextLight,
+            TextAlignmentOptions.Left, new Vector2(560, 45), new Vector2(110f, 10f)
         ).GetComponent<TextMeshProUGUI>();
-
         usernameTxt.fontStyle = FontStyles.Normal;
 
         // Level
         levelTxt = UIBuilder.CreateTextSized(
             topCard.transform, "Level 1", 38, Color.white,
-            TextAlignmentOptions.Left, new Vector2(260, 55), new Vector2(-50f, -60f)
+            TextAlignmentOptions.Left, new Vector2(260, 55), new Vector2(-50f, -45f)
         ).GetComponent<TextMeshProUGUI>();
 
         // Bintang
         starTxt = UIBuilder.CreateTextSized(
             topCard.transform, "⭐ 0", 38, TOBATheme.BatakGold,
-            TextAlignmentOptions.Right, new Vector2(260, 55), new Vector2(320f, -60f)
+            TextAlignmentOptions.Right, new Vector2(240, 55), new Vector2(300f, -45f)
         ).GetComponent<TextMeshProUGUI>();
 
         // XP Bar background
         GameObject xpBg = UIBuilder.CreatePanelSized(
             topCard.transform, "XPBg", new Color(0, 0, 0, 0.4f),
-            new Vector2(900, 30), new Vector2(0, -120f)
+            new Vector2(860, 30), new Vector2(0, -100f)
         );
 
         // XP Bar fill
@@ -181,18 +297,16 @@ public class ProfileScreen : BaseScreen
             xpBg.transform, "XPFill", TOBATheme.BtnPrimary,
             Vector2.zero, new Vector2(0f, 1f)
         );
-
         xpBarFill.GetComponent<Image>().raycastTarget = false;
 
         // XP teks
         xpTxt = UIBuilder.CreateTextSized(
             topCard.transform, "0 / 500 XP", 28, TOBATheme.TextLight,
-            TextAlignmentOptions.Center, new Vector2(900, 40), new Vector2(0, -155f)
+            TextAlignmentOptions.Center, new Vector2(860, 40), new Vector2(0, -140f)
         ).GetComponent<TextMeshProUGUI>();
-
         xpTxt.fontStyle = FontStyles.Normal;
 
-        // ── CARD STATISTIK (260 tinggi) ───────────────────────
+        // ── CARD STATISTIK (1000 x 260), krem datar + outline emas ──
         GameObject statsCard = UIBuilder.CreatePanelSized(
             contentArea.transform, "StatsCard", TOBATheme.CardBG,
             new Vector2(1000, 260), Vector2.zero
@@ -204,24 +318,22 @@ public class ProfileScreen : BaseScreen
         statsOutline.effectDistance = new Vector2(3, 3);
 
         UIBuilder.CreateTextSized(
-            statsCard.transform, "📊 STATISTIK", 36, TOBATheme.WoodDark,
+            statsCard.transform, "STATISTIK", 36, TOBATheme.WoodDark,
             TextAlignmentOptions.Left, new Vector2(900, 55), new Vector2(-10f, 92f)
         );
 
-        // 3 stat boxes
-        CreateStatBox(statsCard.transform, "🗺", "Lokasi", "0", -280f);
-        CreateStatBox(statsCard.transform, "🏆", "Achievement", "0", 0f);
-        CreateStatBox(statsCard.transform, "🖼", "Kartu", "0", 280f);
+        CreateStatBox(statsCard.transform, "Lokasi", "0", -280f);
+        CreateStatBox(statsCard.transform, "Achievement", "0", 0f);
+        CreateStatBox(statsCard.transform, "Kartu", "0", 280f);
 
-        // ── GRUP TOMBOL (270 tinggi: 120 + jarak 30 + 120) ────
+        // ── GRUP TOMBOL (270 tinggi) ──
         GameObject buttonGroup = new GameObject("ButtonGroup");
         buttonGroup.transform.SetParent(contentArea.transform, false);
         RectTransform rtGroup = buttonGroup.AddComponent<RectTransform>();
         PlaceFromTop(rtGroup, 0.75f, new Vector2(1000, 270), s);
 
-        // Tombol Ganti Karakter (atas)
         GameObject btnGanti = UIBuilder.CreateButton(
-            buttonGroup.transform, "BtnGantiKarakter", "🎭 GANTI KARAKTER",
+            buttonGroup.transform, "BtnGantiKarakter", "GANTI KARAKTER",
             new Vector2(900, 120), TOBATheme.WoodMedium, () => {
                 int level = PlayerPrefs.GetInt("PlayerLevel", 1);
 
@@ -241,9 +353,8 @@ public class ProfileScreen : BaseScreen
         rtGanti.anchorMin = rtGanti.anchorMax = new Vector2(0.5f, 0.5f);
         rtGanti.anchoredPosition = new Vector2(0, 75f);
 
-        // Tombol Logout (bawah)
         GameObject btnLogout = UIBuilder.CreateButton(
-            buttonGroup.transform, "BtnLogout", "🚪 KELUAR",
+            buttonGroup.transform, "BtnLogout", "KELUAR",
             new Vector2(900, 120), TOBATheme.Error, () => {
                 SoundManager.Instance?.PlaySFX("sfx_click");
 
@@ -276,34 +387,27 @@ public class ProfileScreen : BaseScreen
         rtLogout.anchoredPosition = new Vector2(0, -75f);
     }
 
-    void CreateStatBox(Transform parent, string icon, string label, string value, float xPos)
+    // Parameter icon dihapus (emoji tampil sebagai kotak hitam).
+    void CreateStatBox(Transform parent, string label, string value, float xPos)
     {
-        // Kotak 150 tinggi, tengahnya di y = -35 dari tengah StatsCard (260).
         GameObject box = UIBuilder.CreatePanelSized(
             parent, "Stat_" + label, new Color(0, 0, 0, 0.08f),
             new Vector2(270, 150), new Vector2(xPos, -35f)
         );
 
-        UIBuilder.CreateTextSized(
-            box.transform, icon, 42, TOBATheme.WoodDark,
-            TextAlignmentOptions.Center, new Vector2(270, 55), new Vector2(0, 42f)
-        );
-
         TextMeshProUGUI valTxt = UIBuilder.CreateTextSized(
-            box.transform, value, 36, TOBATheme.WoodDark,
-            TextAlignmentOptions.Center, new Vector2(270, 44), new Vector2(0, -8f)
+            box.transform, value, 52, TOBATheme.WoodDark,
+            TextAlignmentOptions.Center, new Vector2(270, 60), new Vector2(0, 22f)
         ).GetComponent<TextMeshProUGUI>();
 
-        // Simpan referensi berdasarkan label
         if (label == "Lokasi") locationTxt = valTxt;
         if (label == "Achievement") achievementTxt = valTxt;
         if (label == "Kartu") galleryTxt = valTxt;
 
         TextMeshProUGUI lblTxt = UIBuilder.CreateTextSized(
-            box.transform, label, 28, TOBATheme.TextGray,
-            TextAlignmentOptions.Center, new Vector2(270, 40), new Vector2(0, -50f)
+            box.transform, label, 30, TOBATheme.WoodMedium,
+            TextAlignmentOptions.Center, new Vector2(270, 42), new Vector2(0, -38f)
         ).GetComponent<TextMeshProUGUI>();
-
         lblTxt.fontStyle = FontStyles.Normal;
     }
 
