@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 	"toba-backend/config"
 	"toba-backend/models"
@@ -26,39 +27,44 @@ func SeedAll() {
 	SeedGameSettings()
 	SeedWeeklyChallenges()
 	SeedAdmin()
-	log.Println("✅ Semua seed data berhasil!")
+	log.Println("ℹ️ Seluruh fungsi seed selesai dipanggil; periksa log masing-masing untuk memastikan tidak ada error.")
 }
 
 // ============================================================
 // CHARACTERS
 // ============================================================
 func SeedCharacters() {
-	var count int64
-	config.DB.Model(&models.Character{}).Count(&count)
-	if count > 0 {
-		log.Println("ℹ️  Characters sudah ada, skip")
-		return
-	}
 	characters := []models.Character{
 		{ID: 1, Name: "Ucok", Image: "char_ucok.png", Description: "Anak laki-laki Batak yang cerdas dan pemberani"},
 		{ID: 2, Name: "Butet", Image: "char_butet.png", Description: "Anak perempuan Batak yang ceria dan pintar"},
 	}
-	for _, c := range characters {
-		config.DB.Create(&c)
+
+	for _, character := range characters {
+		var existing models.Character
+		err := config.DB.First(&existing, character.ID).Error
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			if err := config.DB.Create(&character).Error; err != nil {
+				log.Printf("❌ Gagal membuat character %s: %v", character.Name, err)
+				continue
+			}
+			log.Printf("✅ Character ditambahkan: %s", character.Name)
+			continue
+		}
+
+		if err != nil {
+			log.Printf("❌ Gagal mengecek character %s: %v", character.Name, err)
+			continue
+		}
+
+		log.Printf("ℹ️ Character sudah ada, dipertahankan: %s", character.Name)
 	}
-	log.Println("✅ Characters selesai")
 }
 
 // ============================================================
 // TITLES — sesuai field Title: TitleName, MinimumLevel
 // ============================================================
 func SeedTitles() {
-	var count int64
-	config.DB.Model(&models.Title{}).Count(&count)
-	if count > 0 {
-		log.Println("ℹ️  Titles sudah ada, skip")
-		return
-	}
 	titles := []models.Title{
 		{ID: 1, TitleName: "Wisatawan Pemula", MinimumLevel: 1},
 		{ID: 2, TitleName: "Penjelajah Budaya", MinimumLevel: 5},
@@ -66,10 +72,27 @@ func SeedTitles() {
 		{ID: 4, TitleName: "Ahli Budaya", MinimumLevel: 15},
 		{ID: 5, TitleName: "Maestro Budaya", MinimumLevel: 20},
 	}
-	for _, t := range titles {
-		config.DB.Create(&t)
+
+	for _, title := range titles {
+		var existing models.Title
+		err := config.DB.First(&existing, title.ID).Error
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			if err := config.DB.Create(&title).Error; err != nil {
+				log.Printf("❌ Gagal membuat title %s: %v", title.TitleName, err)
+				continue
+			}
+			log.Printf("✅ Title ditambahkan: %s", title.TitleName)
+			continue
+		}
+
+		if err != nil {
+			log.Printf("❌ Gagal mengecek title %s: %v", title.TitleName, err)
+			continue
+		}
+
+		log.Printf("ℹ️ Title sudah ada, dipertahankan: %s", title.TitleName)
 	}
-	log.Println("✅ Titles selesai")
 }
 
 // ============================================================
@@ -109,67 +132,96 @@ func SeedLocations() {
 }
 
 // ============================================================
-// LOCATION FACTS (3 fakta per lokasi = 30 total)
+// LOCATION FACTS (4 fakta per lokasi = 40 total)
 // ============================================================
 func SeedLocationFacts() {
 	facts := []models.LocationFact{
-		// IT Del
+		// IT DEL
 		{LocationID: 1, Fact: "IT Del didirikan pada tahun 2001 atas inisiatif BJ Habibie sebagai wujud kepedulian terhadap pendidikan di kawasan Danau Toba."},
 		{LocationID: 1, Fact: "Kampus IT Del terletak di Laguboti, Kabupaten Toba, tepat di tepi Danau Toba yang memiliki pemandangan spektakuler."},
 		{LocationID: 1, Fact: "IT Del adalah singkatan dari Institut Teknologi Del, perguruan tinggi swasta berbasis teknologi di Sumatera Utara."},
-		// Taman Eden 100
+		{LocationID: 1, Fact: "IT Del menjadi salah satu institusi pendidikan tinggi yang berfokus pada pengembangan ilmu pengetahuan dan teknologi di kawasan Danau Toba."},
+
+		// TAMAN EDEN 100
 		{LocationID: 2, Fact: "Taman Eden 100 memiliki lebih dari 100 hektar hutan tropis yang dijaga kelestariannya oleh masyarakat lokal Batak."},
 		{LocationID: 2, Fact: "Di Taman Eden 100 terdapat beragam flora dan fauna endemik Sumatera yang langka dan dilindungi."},
 		{LocationID: 2, Fact: "Kawasan ini dikenal dengan program konservasi hutan yang melibatkan aktif masyarakat Batak setempat."},
-		// Kaldera Toba
-		{LocationID: 3, Fact: "Danau Toba terbentuk dari letusan supervulcano sekitar 74.000 tahun lalu, salah satu letusan terbesar dalam sejarah Bumi."},
+		{LocationID: 2, Fact: "Taman Eden 100 menawarkan wisata alam berupa kawasan hutan dan air terjun."},
+
+		// KALDERA TOBA
+		{LocationID: 3, Fact: "Danau Toba terbentuk dari letusan supervolcano sekitar 74.000 tahun lalu, salah satu letusan terbesar dalam sejarah Bumi."},
 		{LocationID: 3, Fact: "Kaldera Toba adalah kaldera terbesar di dunia dengan panjang 100 km, lebar 30 km, dan kedalaman hingga 505 meter."},
 		{LocationID: 3, Fact: "Di tengah Danau Toba terdapat Pulau Samosir yang merupakan pulau vulkanik terbesar di dunia yang berada di dalam danau."},
-		// Parapat
+		{LocationID: 3, Fact: "Danau Toba merupakan danau vulkanik yang terbentuk dari aktivitas letusan gunung api purba."},
+
+		// PARAPAT
 		{LocationID: 4, Fact: "Parapat berjarak sekitar 176 km dari Medan dan bisa ditempuh dalam waktu 4-5 jam perjalanan darat."},
 		{LocationID: 4, Fact: "Pelabuhan Parapat adalah titik keberangkatan utama kapal ferry menuju Pulau Samosir yang beroperasi setiap hari."},
 		{LocationID: 4, Fact: "Mie Gomak adalah kuliner khas Parapat yang sering disebut spaghetti-nya orang Batak karena bentuk mienya yang tebal."},
-		// Ajibata
+		{LocationID: 4, Fact: "Parapat dikenal sebagai salah satu pintu gerbang wisata menuju Pulau Samosir."},
+
+		// AJIBATA
 		{LocationID: 5, Fact: "Pelabuhan Ajibata adalah pelabuhan terbesar di sisi Parapat yang melayani penyeberangan ferry ke Pulau Samosir."},
 		{LocationID: 5, Fact: "Dari Ajibata, perjalanan naik ferry ke Tomok di Pulau Samosir memakan waktu sekitar 30-45 menit."},
 		{LocationID: 5, Fact: "Di kawasan Ajibata terdapat berbagai rumah makan yang menyajikan ikan bakar khas Danau Toba yang lezat."},
-		// Tomok
+		{LocationID: 5, Fact: "Pelabuhan Ajibata menjadi salah satu jalur transportasi penting yang menghubungkan kawasan Parapat dengan Pulau Samosir."},
+
+		// TOMOK
 		{LocationID: 6, Fact: "Tomok adalah desa pertama yang dikunjungi wisatawan saat tiba di Pulau Samosir dari Pelabuhan Ajibata."},
 		{LocationID: 6, Fact: "Di Tomok terdapat makam Raja Sidabutar, raja pertama Tomok, yang diperkirakan berusia lebih dari 500 tahun."},
 		{LocationID: 6, Fact: "Pertunjukan Sigale-gale di Tomok adalah atraksi boneka kayu yang bisa menari mengikuti irama musik Batak."},
-		// Tuktuk
+		{LocationID: 6, Fact: "Tomok dikenal sebagai kawasan wisata yang memiliki pasar souvenir khas Batak."},
+
+		// TUKTUK
 		{LocationID: 7, Fact: "Tuktuk adalah semenanjung berbentuk unik di Pulau Samosir yang dikelilingi Danau Toba dari hampir semua sisi."},
 		{LocationID: 7, Fact: "Kawasan Tuktuk menjadi pusat akomodasi dan pariwisata di Pulau Samosir dengan banyak hotel dan resort tepi danau."},
 		{LocationID: 7, Fact: "Dari Tuktuk wisatawan bisa menyewa sepeda motor atau sepeda untuk mengelilingi Pulau Samosir yang indah."},
-		// Batuhoda
+		{LocationID: 7, Fact: "Pemandangan Danau Toba menjadi salah satu daya tarik wisata utama kawasan Tuktuk."},
+
+		// BATUHODA
 		{LocationID: 8, Fact: "Batuhoda berasal dari kata Batu dan Hoda (kuda dalam Bahasa Batak) karena ada batu berbentuk kuda di kawasan ini."},
-		{LocationID: 8, Fact: "Pantai Batuhoda memiliki air danau yang sangat jernih dan dangkal sehingga sangat aman untuk berenang keluarga."},
+		{LocationID: 8, Fact: "Pantai Batuhoda memiliki air danau yang sangat jernih dan dangkal sehingga cocok untuk berenang keluarga."},
 		{LocationID: 8, Fact: "Aksara Batak Toba memiliki 19 huruf induk yang masing-masing memiliki bunyi vokal a secara default."},
-		// Tanah Ponggol
+		{LocationID: 8, Fact: "Kawasan Pantai Batuhoda memiliki fasilitas wisata seperti restoran dan penginapan."},
+
+		// TANAH PONGGOL
 		{LocationID: 9, Fact: "Jembatan Tanah Ponggol menghubungkan daratan Kabupaten Samosir dengan Pulau Samosir sepanjang sekitar 100 meter."},
 		{LocationID: 9, Fact: "Melalui Tanah Ponggol wisatawan bisa mencapai Pulau Samosir dengan kendaraan tanpa harus naik kapal ferry."},
 		{LocationID: 9, Fact: "Upacara adat pernikahan Batak Toba disebut pesta unjuk yang melibatkan banyak tahapan dan kedua keluarga besar."},
-		// Sibea-bea
+		{LocationID: 9, Fact: "Hasapi merupakan alat musik tradisional Batak Toba yang dimainkan dengan cara dipetik."},
+
+		// SIBEA-BEA
 		{LocationID: 10, Fact: "Patung Yesus Kristus di Sibea-bea setinggi 61 meter menjadikannya salah satu patung Yesus tertinggi di Asia Tenggara."},
 		{LocationID: 10, Fact: "Dari Sibea-bea wisatawan bisa menikmati panorama Danau Toba 360 derajat yang sangat memukau dari ketinggian."},
 		{LocationID: 10, Fact: "Tulila adalah alat musik tiup tradisional Batak Toba yang terbuat dari bambu dan menghasilkan suara lembut dan merdu."},
+		{LocationID: 10, Fact: "Tulila dimainkan dengan cara ditiup dan dikenal menghasilkan alunan musik yang lembut serta penuh perasaan."},
 	}
+
 	for _, f := range facts {
 		var existing models.LocationFact
-		result := config.DB.Where("location_id = ? AND fact = ?", f.LocationID, f.Fact).First(&existing)
+
+		result := config.DB.Where(
+			"location_id = ? AND fact = ?",
+			f.LocationID,
+			f.Fact,
+		).First(&existing)
+
 		if result.Error == nil {
 			continue
 		}
+
 		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			log.Printf("❌ Gagal mengecek fact: %v", result.Error)
 			continue
 		}
+
 		if err := config.DB.Create(&f).Error; err != nil {
 			log.Printf("❌ Gagal seed fact: %v", err)
 			continue
 		}
 	}
-	log.Println("✅ Location Facts selesai (30 fakta)")
+
+	log.Printf("✅ Location Facts selesai (%d fakta)", len(facts))
 }
 
 // ============================================================
@@ -325,22 +377,29 @@ func SeedLocationQuestions() {
 
 		// ══════════════════════════════════════════════════════
 		// LOKASI 8: BATUHODA (15 soal)
+		// Lima soal awal mengikuti materi Batuhoda yang tersedia.
+		// Catatan: glyph khusus untuk kata "panatapan" tidak tersedia
+		// pada berkas sumber yang diterima; karena itu soal ke-4
+		// menguji arti kata yang memang tercantum pada materi Tuktuk,
+		// bukan mengarang bentuk aksara Bataknya.
 		// ══════════════════════════════════════════════════════
-		{8, "Kata 'saksang' dalam aksara Batak adalah...", "Saksang ditulis dalam aksara Batak sebagai ᯘᯐᯘᯉᯱ.", []Opt{{"ᯔᯘᯰᯘᯰ", false}, {"ᯘᯘᯔᯰᯘ", false}, {"ᯘᯘᯘᯰ", false}, {"ᯘᯐᯘᯉᯱ", true}}},
-		{8, "Kata 'pakaian' (amon-amon) dalam aksara Batak adalah...", "'Amon-amon' ditulis dalam aksara Batak sebagai ᯀᯔ᯲ᯀᯔ᯲.", []Opt{{"ᯀᯔ᯲ᯀᯔ᯲", true}, {"ᯀᯝᯀᯝ", false}, {"ᯀᯉ᯲ᯀᯉ᯲", false}, {"ᯀᯔᯰᯀᯔᯰ", false}}},
-		{8, "Aksara Batak terdiri dari huruf-huruf yang disebut...", "Huruf dalam aksara Batak disebut 'surat'. Ada 19 induk surat dalam aksara Batak Toba.", []Opt{{"Aksara", false}, {"Surat", true}, {"Huruf", false}, {"Karakter", false}}},
-		{8, "Tanda untuk menghilangkan bunyi vokal 'a' dalam aksara Batak disebut...", "Tanda bunuh atau pangolat digunakan untuk menghilangkan bunyi vokal a pada akhir suku kata.", []Opt{{"Pangolat", true}, {"Anak surat", false}, {"Induk surat", false}, {"Pangkat", false}}},
-		{8, "Batuhoda berasal dari kata Batak Batu dan Hoda yang berarti...", "'Hoda' dalam Bahasa Batak berarti kuda. Batuhoda dinamai karena ada batu menyerupai kuda.", []Opt{{"Batu karang", false}, {"Batu dan kuda", true}, {"Batu hitam", false}, {"Batu besar", false}}},
-		{8, "Berapa jumlah induk aksara (huruf utama) dalam aksara Batak Toba?", "Aksara Batak Toba memiliki 19 huruf induk yang masing-masing bervokal a secara default.", []Opt{{"15", false}, {"17", false}, {"19", true}, {"21", false}}},
-		{8, "Anak surat '-i' dalam aksara Batak digunakan untuk...", "Anak surat -i dalam aksara Batak ditambahkan ke huruf induk untuk mengubah bunyi vokal menjadi i.", []Opt{{"Menambah bunyi a", false}, {"Menambah bunyi i", true}, {"Menambah bunyi u", false}, {"Menambah bunyi e", false}}},
-		{8, "Kata 'indahan' (nasi) dalam aksara Batak adalah...", "Indahan ditulis dalam aksara Batak sebagai ᯤᯉᯑᯂᯉᯉᯱ.", []Opt{{"ᯤᯉᯑᯂᯉᯉᯱ", true}, {"ᯉᯑᯂᯉ", false}, {"ᯤᯉᯑᯂ", false}, {"ᯉᯑᯂᯉᯉ", false}}},
-		{8, "Aksara Batak Toba termasuk dalam kategori aksara...", "Aksara Batak Toba adalah abugida, yaitu sistem tulisan yang setiap huruf mewakili konsonan dengan vokal inheren.", []Opt{{"Alfabet", false}, {"Abugida", true}, {"Abjad", false}, {"Logografi", false}}},
-		{8, "Kata 'mangan' (makan) dalam aksara Batak adalah...", "Mangan ditulis dalam aksara Batak dengan kombinasi induk surat ma-nga-n.", []Opt{{"ᯔ ᯑ ᯔ", true}, {"ᯔ ᯉ ᯔ", false}, {"ᯔ ᯉ ᯑ", false}, {"ᯔ ᯑ ᯉ", false}}},
-		{8, "Penulisan 'Batuhoda' dalam aksara Batak adalah...", "Batuhoda dalam aksara Batak ditulis dengan kombinasi ba-tu-ho-da menggunakan anak surat -u dan -o.", []Opt{{"ᯅ ᯗᯂᯑ", true}, {"ᯅ ᯗ ᯂ ᯑ", false}, {"ᯅᯗᯂᯑ", false}, {"ᯅ ᯗᯂ ᯑ", false}}},
-		{8, "Anak surat '-u' dalam aksara Batak digunakan untuk...", "Anak surat -u ditambahkan ke huruf induk untuk mengubah bunyi vokal menjadi u.", []Opt{{"Menambah bunyi a", false}, {"Menambah bunyi i", false}, {"Menambah bunyi u", true}, {"Menambah bunyi e", false}}},
-		{8, "Kata 'lappet' dalam aksara Batak adalah...", "Lappet ditulis dalam aksara Batak sebagai ᯖᯇᯇᯄ᯲.", []Opt{{"ᯂᯇᯇ᯲", false}, {"ᯂᯇᯇ᯲ᯖ", false}, {"ᯖᯇᯇᯄ᯲", true}, {"ᯂᯇᯇᯖ᯲", false}}},
-		{8, "Aksara Batak ditulis dari arah...", "Aksara Batak ditulis dari kiri ke kanan, sama seperti tulisan Latin.", []Opt{{"Kanan ke kiri", false}, {"Kiri ke kanan", true}, {"Atas ke bawah", false}, {"Bawah ke atas", false}}},
-		{8, "Kata 'dali' dalam aksara Batak adalah...", "Dali ditulis dalam aksara Batak sebagai ᯑᯖᯤ.", []Opt{{"ᯑᯖᯤ", true}, {"ᯑᯂᯤ", false}, {"ᯑᯖᯪ", false}, {"ᯑᯖᯮ", false}}},
+		{8, "Penulisan 'Batuhoda' dalam aksara Batak adalah...", "Materi sumber menandai bentuk ᯅ ᯗᯂᯑ sebagai jawaban yang benar.", []Opt{{"ᯅ ᯗᯂᯑ", true}, {"ᯔ ᯗ", false}, {"ᯅ ᯇ ᯉ", false}, {"ᯅ ᯉ", false}}},
+		{8, "Kata 'saksang' dalam aksara Batak adalah...", "Materi sumber menandai bentuk ᯘᯐᯘᯉᯱ sebagai jawaban yang benar.", []Opt{{"ᯔᯘᯰᯘᯰ", false}, {"ᯘᯘᯔᯰᯘ", false}, {"ᯘᯘᯘᯰ", false}, {"ᯘᯐᯘᯉᯱ", true}}},
+		{8, "Tulisan ᯔ ᯑ ᯔ dibaca...", "Bank soal sebelumnya pada file seed mengaitkan rangkaian aksara ᯔ ᯑ ᯔ dengan kata mangan (makan).", []Opt{{"Bapana", false}, {"Mangan", true}, {"Mata", false}, {"Amon-amon", false}}},
+		{8, "Apa arti kata 'panatapan' dalam Bahasa Batak?", "Materi Tuktuk yang diberikan pengguna mencantumkan panatapan dengan arti pemandangan. Glyph untuk penulisan kata ini tidak tersedia pada sumber Batuhoda yang dapat diperiksa.", []Opt{{"Pelabuhan", false}, {"Jalan-jalan", false}, {"Pemandangan", true}, {"Berdagang", false}}},
+		{8, "Kata pakaian (amon-amon) dalam aksara Batak adalah...", "Materi sumber menandai bentuk ᯀᯔ᯲ᯀᯔ᯲ sebagai jawaban yang benar.", []Opt{{"ᯀᯔ᯲ᯀᯔ᯲", true}, {"ᯀᯝᯀᯝ", false}, {"ᯀᯉ᯲ᯀᯉ᯲", false}, {"ᯀᯔᯰᯀᯔᯰ", false}}},
+
+		// Sepuluh soal tambahan berdasarkan materi lokasi dan aksara.
+		{8, "Pantai Batuhoda berada di pulau...", "Materi lokasi menyebut Batuhoda berada di Pulau Samosir.", []Opt{{"Pulau Jawa", false}, {"Pulau Samosir", true}, {"Pulau Nias", false}, {"Pulau Bangka", false}}},
+		{8, "Apa ciri pasir yang disebutkan pada materi Pantai Batuhoda?", "Materi Batuhoda menyebut pantai dengan pasir putih.", []Opt{{"Pasir hitam", false}, {"Pasir berbatu", false}, {"Pasir putih", true}, {"Pasir merah", false}}},
+		{8, "Bagaimana kondisi air danau di kawasan Pantai Batuhoda menurut materi?", "Materi menyebut air danau yang jernih.", []Opt{{"Keruh", false}, {"Berlumpur", false}, {"Kering", false}, {"Jernih", true}}},
+		{8, "Kegiatan yang cocok dilakukan di danau kawasan Batuhoda adalah...", "Materi menyebut danau di kawasan Batuhoda cocok untuk berenang.", []Opt{{"Berenang", true}, {"Berselancar di laut", false}, {"Menyelam di samudra", false}, {"Bermain ski salju", false}}},
+		{8, "Fasilitas wisata yang disebutkan tersedia di kawasan Pantai Batuhoda adalah...", "Materi menyebut adanya restoran dan penginapan.", []Opt{{"Bandara dan terminal", false}, {"Restoran dan penginapan", true}, {"Pabrik dan gudang", false}, {"Stasiun kereta", false}}},
+		{8, "Salah satu kegiatan yang sesuai dilakukan pengunjung di Pantai Batuhoda adalah...", "Materi menyebut kawasan Batuhoda cocok untuk berfoto.", []Opt{{"Mendaki gunung es", false}, {"Berkemah di gurun", false}, {"Berfoto", true}, {"Berselancar di samudra", false}}},
+		{8, "Berapa jumlah induk aksara dalam aksara Batak Toba menurut materi?", "Materi aksara Batak Toba menyebut 19 induk aksara.", []Opt{{"15", false}, {"17", false}, {"21", false}, {"19", true}}},
+		{8, "Penggabungan induk aksara dengan anak surat digunakan untuk...", "Anak surat ditambahkan pada induk aksara untuk membentuk bunyi dengan vokal yang sesuai.", []Opt{{"Mengubah bentuk huruf menjadi angka", false}, {"Menghapus seluruh konsonan", false}, {"Membentuk bunyi aksara dengan vokal tertentu", true}, {"Mengubah arah penulisan", false}}},
+		{8, "Anak surat '-i' pada aksara Batak digunakan untuk...", "Anak surat -i mengubah bunyi vokal pada induk aksara menjadi i.", []Opt{{"Menghilangkan semua konsonan", false}, {"Menambah bunyi i", true}, {"Menambah bunyi u", false}, {"Mengubah aksara menjadi angka", false}}},
+		{8, "Apa fungsi tanda pangolat dalam aksara Batak?", "Pangolat atau tanda bunuh digunakan untuk menghilangkan bunyi vokal a pada akhir suku kata.", []Opt{{"Menambah bunyi vokal a", false}, {"Mengubah huruf menjadi angka", false}, {"Menghilangkan bunyi vokal a pada akhir suku kata", true}, {"Menambah bunyi vokal i", false}}},
 
 		// ══════════════════════════════════════════════════════
 		// LOKASI 9: TANAH PONGGOL (15 soal)
@@ -414,43 +473,92 @@ func SeedLocationQuestions() {
 }
 
 // ============================================================
-// TRIVIA CATEGORIES
+// TRIVIA CATEGORIES (5 KATEGORI FINAL)
 // ============================================================
 func SeedTriviaCategories() {
 	categories := []models.TriviaCategory{
-		{ID: 1, Name: "Makanan Khas", Description: "Kenali makanan tradisional khas Batak Toba dan bahasanya", DisplayOrder: 1, IsActive: true},
-		{ID: 2, Name: "Pakaian Adat", Description: "Pelajari ulos dan pakaian tradisional Batak Toba", DisplayOrder: 2, IsActive: true},
-		{ID: 3, Name: "Alat Musik Tradisional", Description: "Kenali alat musik khas Batak Toba", DisplayOrder: 3, IsActive: true},
-		{ID: 4, Name: "Adat Istiadat", Description: "Pelajari tradisi dan adat budaya Batak Toba", DisplayOrder: 4, IsActive: true},
-		{ID: 5, Name: "Aksara Batak", Description: "Belajar membaca dan menulis aksara Batak Toba", DisplayOrder: 5, IsActive: true},
+		{
+			ID:           1,
+			Name:         "Bahasa dan Kosakata Batak",
+			Description:  "Pelajari kosakata, ungkapan, dan istilah Bahasa Batak Toba.",
+			DisplayOrder: 1,
+			IsActive:     true,
+		},
+		{
+			ID:           2,
+			Name:         "Makanan dan Unsur Adat Batak Toba",
+			Description:  "Kenali makanan tradisional dan unsur adat Batak Toba.",
+			DisplayOrder: 2,
+			IsActive:     true,
+		},
+		{
+			ID:           3,
+			Name:         "Musik Tradisional",
+			Description:  "Kenali alat musik, teknik permainan, dan ansambel musik Batak Toba.",
+			DisplayOrder: 3,
+			IsActive:     true,
+		},
+		{
+			ID:           4,
+			Name:         "Ulos dan Adat Pernikahan",
+			Description:  "Pelajari jenis, makna, dan penggunaan ulos serta adat pernikahan Batak Toba.",
+			DisplayOrder: 4,
+			IsActive:     true,
+		},
+		{
+			ID:           5,
+			Name:         "Kekerabatan dan Falsafah Adat",
+			Description:  "Pelajari partuturan, tarombo, Dalihan Na Tolu, dan falsafah adat Batak Toba.",
+			DisplayOrder: 5,
+			IsActive:     true,
+		},
 	}
+
 	for _, c := range categories {
 		var existing models.TriviaCategory
-		result := config.DB.Where("id = ?", c.ID).First(&existing)
-		if result.Error == nil {
-			log.Printf("ℹ️  Trivia Category sudah ada: %s", c.Name)
+		err := config.DB.First(&existing, c.ID).Error
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			if err := config.DB.Create(&c).Error; err != nil {
+				log.Printf("❌ Gagal membuat kategori %s: %v", c.Name, err)
+				continue
+			}
+			log.Printf("✅ Kategori ditambahkan: %s", c.Name)
 			continue
 		}
-		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			log.Printf("❌ Gagal mengecek trivia category %s: %v", c.Name, result.Error)
+
+		if err != nil {
+			log.Printf("❌ Gagal mengecek kategori %s: %v", c.Name, err)
 			continue
 		}
-		if err := config.DB.Create(&c).Error; err != nil {
-			log.Printf("❌ Gagal seed trivia category %s: %v", c.Name, err)
+
+		if err := config.DB.Model(&existing).Updates(map[string]interface{}{
+			"name":          c.Name,
+			"description":   c.Description,
+			"display_order": c.DisplayOrder,
+			"is_active":     c.IsActive,
+		}).Error; err != nil {
+			log.Printf("❌ Gagal memperbarui kategori %s: %v", c.Name, err)
 			continue
 		}
+
+		log.Printf("✅ Kategori diperbarui: %s", c.Name)
 	}
-	log.Println("✅ Trivia Categories selesai")
+
+	log.Println("✅ Trivia Categories selesai (5 kategori)")
 }
 
 // ============================================================
-// TRIVIA QUESTIONS (10 soal per kategori = 50 total)
+// TRIVIA QUESTIONS
+// 5 soal per kategori = 25 soal
+// Sumber dan kunci jawaban sudah ditinjau
 // ============================================================
 func SeedTriviaQuestions() {
 	type Opt struct {
 		Text    string
 		Correct bool
 	}
+
 	type Q struct {
 		CatID       uint
 		Question    string
@@ -459,107 +567,440 @@ func SeedTriviaQuestions() {
 	}
 
 	questions := []Q{
-		// ── KATEGORI 1: MAKANAN KHAS (10 soal) ───────────────
-		{1, "Apa makanan Batak berbahan dasar ikan mas yang tidak dimasak dengan api?", "Naniura adalah hidangan ikan mas khas Batak Toba yang dimasak tanpa api menggunakan bumbu dan asam jeruk.", []Opt{{"Saksang", false}, {"Arsik", false}, {"Naniura", true}, {"Lappet", false}}},
-		{1, "Dali ni horbo terbuat dari...", "Dali ni horbo adalah keju khas Batak Toba yang terbuat dari susu kerbau yang dipadatkan.", []Opt{{"Susu kerbau", true}, {"Susu sapi", false}, {"Kelapa", false}, {"Air jeruk", false}}},
-		{1, "Makanan berbahan beras dan parutan kelapa disebut...", "Itak gurgur adalah makanan tradisional Batak Toba berbahan beras dan parutan kelapa.", []Opt{{"Itak gurgur", true}, {"Ombus-ombus", false}, {"Na tinombur", false}, {"Lappet", false}}},
-		{1, "Ombus-ombus biasanya dimakan saat...", "Ombus-ombus dihidangkan saat pesta adat Batak Toba.", []Opt{{"Ujian", false}, {"Pesta adat", true}, {"Upacara kematian", false}, {"Acara resmi", false}}},
-		{1, "Lappet biasanya dibungkus dengan...", "Lappet adalah kue tradisional Batak yang dibungkus dengan daun pisang.", []Opt{{"Daun singkong", false}, {"Daun kelapa", false}, {"Daun pisang", true}, {"Daun sirih", false}}},
-		{1, "Makanan khas Batak berbahan daging dan darah adalah...", "Saksang adalah masakan khas Batak menggunakan daging dengan bumbu darah dan rempah khas.", []Opt{{"Naniura", false}, {"Arsik", false}, {"Saksang", true}, {"Itak gurgur", false}}},
-		{1, "Apa arti dari kalimat 'Male au'?", "'Male au' berarti Saya lapar dalam Bahasa Batak.", []Opt{{"Saya kenyang", false}, {"Saya lapar", true}, {"Saya haus", false}, {"Saya mengantuk", false}}},
-		{1, "Kalimat Bahasa Batak untuk 'Saya mau makan' adalah...", "'Naeng mangan au' artinya Saya mau makan.", []Opt{{"Sai ro au mangan", false}, {"Naeng mangan au", true}, {"Mangan ho do", false}, {"Au do manang", false}}},
-		{1, "Apa nama mie khas Batak yang disebut 'spaghetti Batak'?", "Mie Gomak adalah mie khas Batak Toba yang tebal dan panjang seperti spaghetti.", []Opt{{"Mie Ayam", false}, {"Mie Aceh", false}, {"Mie Gomak", true}, {"Mie Saksang", false}}},
-		{1, "'Butong au' dalam Bahasa Batak berarti...", "'Butong' berarti kenyang. Butong au artinya Saya kenyang.", []Opt{{"Saya lapar", false}, {"Saya haus", false}, {"Saya kenyang", true}, {"Saya tidur", false}}},
 
-		// ── KATEGORI 2: PAKAIAN ADAT (10 soal) ───────────────
-		{2, "Apa arti dari kata 'ulos'?", "Ulos adalah kain tenun tradisional khas Batak Toba yang memiliki nilai budaya dan spiritual tinggi.", []Opt{{"Topi", false}, {"Sarung", false}, {"Kain tradisional", true}, {"Sepatu", false}}},
-		{2, "Kalimat Bahasa Batak untuk 'Saya memakai ulos' adalah...", "'Au Mamakke Ulos' berarti Saya memakai ulos.", []Opt{{"Au do mangulosi", false}, {"Mangulosi do ho", false}, {"Au Mamakke Ulos", true}, {"Sai mangulosi ho", false}}},
-		{2, "Ulos yang dipakai saat pernikahan adat Batak disebut...", "Ulos Ragi Hotang adalah jenis ulos yang paling sering digunakan dalam upacara pernikahan adat Batak Toba.", []Opt{{"Ulos Sadum", false}, {"Ulos Ragi Hotang", true}, {"Ulos Mangiring", false}, {"Ulos Tumtuman", false}}},
-		{2, "Apa fungsi utama ulos dalam upacara adat Batak?", "Ulos berfungsi sebagai simbol kasih sayang dan restu dari pemberi kepada penerima.", []Opt{{"Pelindung dari hujan", false}, {"Hiasan rumah", false}, {"Simbol kasih dan restu", true}, {"Bahan pertunjukan seni", false}}},
-		{2, "Siapa yang biasanya memberikan ulos dalam acara adat (mangulosi)?", "Dalam adat Batak ulos diberikan oleh orang yang lebih tua kepada yang lebih muda.", []Opt{{"Anak kepada orang tua", false}, {"Tamu kepada tuan rumah", false}, {"Orang yang lebih tua kepada yang lebih muda", true}, {"Teman kepada sahabat", false}}},
-		{2, "Ulos Ragi Hotang melambangkan...", "Ulos Ragi Hotang melambangkan persatuan dan kekuatan.", []Opt{{"Kesuburan", false}, {"Keindahan", false}, {"Persatuan dan kekuatan", true}, {"Kekayaan", false}}},
-		{2, "Aksesoris kepala tradisional pria Batak disebut...", "Sortali adalah ikat kepala tradisional khas pria Batak Toba dalam berbagai upacara adat.", []Opt{{"Sortali", true}, {"Tali-tali", false}, {"Songket", false}, {"Sarung", false}}},
-		{2, "Dalam struktur adat Batak, pemberi ulos disebut...", "Hula-hula adalah kelompok yang memberikan ulos kepada boru dalam adat Batak.", []Opt{{"Boru", false}, {"Hula-hula", true}, {"Dongan tubu", false}, {"Pariban", false}}},
-		{2, "Mengapa ulos tidak boleh dipakai sembarangan?", "Ulos memiliki nilai sakral dan spiritual yang tinggi, penggunaannya terikat dengan konteks upacara adat.", []Opt{{"Karena mudah rusak", false}, {"Karena ulos memiliki nilai sakral dan digunakan dalam upacara adat", true}, {"Karena hanya boleh dipakai oleh raja", false}, {"Karena hanya wanita yang boleh memakainya", false}}},
-		{2, "Ulos Batak dibuat menggunakan alat tradisional yang disebut...", "Sorha adalah alat tenun tradisional Batak yang digunakan untuk membuat ulos.", []Opt{{"Tenun ikat", false}, {"Gorga", false}, {"Sorha", true}, {"Giling pahat", false}}},
+		// ====================================================
+		// KATEGORI 1: BAHASA DAN KOSAKATA BATAK
+		// ====================================================
 
-		// ── KATEGORI 3: ALAT MUSIK (10 soal) ─────────────────
-		{3, "Taganing dimainkan dengan cara...", "Taganing dimainkan dengan dipukul stik dan berfungsi sebagai pembawa melodi dan ritme.", []Opt{{"Dipukul dengan stik", true}, {"Ditiup seperti seruling", false}, {"Dipetik seperti gitar", false}, {"Digesek seperti biola", false}}},
-		{3, "Taganing terdiri dari berapa gendang?", "Taganing terdiri dari 5 gendang berukuran berbeda.", []Opt{{"3", false}, {"5", true}, {"7", false}, {"9", false}}},
-		{3, "Siapa yang disebut 'dirigen' di ansambel Gondang Sabangunan?", "Penabuh Taganing berperan sebagai dirigen karena menentukan tempo dan irama musik.", []Opt{{"Peniup Sarune", false}, {"Penabuh Taganing", true}, {"Penabuh Ogung", false}, {"Penabuh Hasapi", false}}},
-		{3, "Bahan utama Sarune Bolon adalah...", "Sarune Bolon adalah alat tiup tradisional Batak yang terbuat dari tanduk kerbau.", []Opt{{"Tanduk kerbau", true}, {"Bambu", false}, {"Kayu nangka", false}, {"Kulit sapi", false}}},
-		{3, "Sarune Bolon memiliki lubang sebanyak...", "Sarune Bolon memiliki 4 lubang untuk mengatur nada.", []Opt{{"2", false}, {"4", true}, {"6", false}, {"8", false}}},
-		{3, "Hasapi adalah alat musik seperti...", "Hasapi adalah alat musik tradisional Batak yang menyerupai gitar kecil dengan dua senar.", []Opt{{"Gitar kecil", true}, {"Drum", false}, {"Piano", false}, {"Seruling", false}}},
-		{3, "Ogung terbuat dari bahan apa?", "Ogung atau gong adalah alat musik Batak yang terbuat dari logam kuningan.", []Opt{{"Logam (kuningan)", true}, {"Kayu", false}, {"Bambu", false}, {"Plastik", false}}},
-		{3, "Garantung dimainkan dengan cara...", "Garantung dimainkan dengan dipukul menggunakan bilah kayu kecil dan mirip xylophone.", []Opt{{"Ditiup", false}, {"Dipetik", false}, {"Dipukul dengan bilah kayu", true}, {"Digesek", false}}},
-		{3, "Cara memainkan Tulila adalah dengan...", "Tulila adalah alat musik tiup tradisional Batak Toba yang ditiup.", []Opt{{"Digesek", false}, {"Dipukul", false}, {"Dipetik", false}, {"Ditiup", true}}},
-		{3, "Hesek terbuat dari bahan...", "Hesek adalah alat musik sederhana Batak Toba yang terbuat dari botol dan logam kecil.", []Opt{{"Botol dan logam kecil", true}, {"Kayu dan tali", false}, {"Plastik dan kertas", false}, {"Daun dan bambu", false}}},
+		{
+			1,
+			"Apa arti kata dior?",
+			"Menurut Kamus Hata Batak Toba karya Op. Faustin Panjaitan, dior berarti mencari.",
+			[]Opt{
+				{"Mengawali", false},
+				{"Mencari", true},
+				{"Mengawasi", false},
+				{"Mengeluarkan", false},
+			},
+		},
+		{
+			1,
+			"Manakah pasangan kata dan arti yang tepat?",
+			"Panjar berarti uang muka atau pembayaran awal.",
+			[]Opt{
+				{"Panjar — pancaran air", false},
+				{"Panjar — uang muka", true},
+				{"Panjar — tempat tinggi", false},
+				{"Panjar — keturunan", false},
+			},
+		},
+		{
+			1,
+			"Seseorang disebut nunut ketika ia melakukan pekerjaan dengan ...",
+			"Nunut berkaitan dengan ketekunan dan keuletan. Ulaon nunut merupakan pekerjaan yang membutuhkan kesabaran dan ketekunan.",
+			[]Opt{
+				{"Cepat tanpa memperhatikan hasil", false},
+				{"Sesekali saja", false},
+				{"Tekun dan sabar", true},
+				{"Terpaksa karena disuruh", false},
+			},
+		},
+		{
+			1,
+			"Jika arah yang dimaksud adalah timur, nama arah dalam Desa Na Ualu adalah ...",
+			"Dalam pembagian delapan arah mata angin Batak Toba, Purba menunjukkan arah timur.",
+			[]Opt{
+				{"Manabia", false},
+				{"Purba", true},
+				{"Pastima", false},
+				{"Dangsina", false},
+			},
+		},
+		{
+			1,
+			"Es yang dibiarkan di bawah panas matahari berubah menjadi air. Kata yang paling sesuai dengan perubahan tersebut adalah ...",
+			"Maderder berarti meleleh atau mencair.",
+			[]Opt{
+				{"Masarsar", false},
+				{"Maderder", true},
+				{"Suhar", false},
+				{"Sundar", false},
+			},
+		},
 
-		// ── KATEGORI 4: ADAT ISTIADAT (10 soal) ──────────────
-		{4, "Apa arti dari 'Dalihan Na Tolu' dalam adat Batak?", "Dalihan Na Tolu berarti tiga tungku yang melambangkan tiga pilar relasi sosial: hula-hula, dongan tubu, dan boru.", []Opt{{"Tiga macam ulos", false}, {"Tiga jenis makanan", false}, {"Tiga pilar relasi sosial", true}, {"Tiga generasi marga", false}}},
-		{4, "Siapakah yang disebut 'hula-hula' dalam adat Batak?", "Hula-hula adalah keluarga dari pihak istri yang sangat dihormati dalam adat Batak.", []Opt{{"Saudara dari pihak ibu", false}, {"Saudara ayah", false}, {"Keluarga dari istri", true}, {"Anak laki-laki", false}}},
-		{4, "Istilah 'martumpol' berarti...", "Martumpol adalah upacara pertunangan secara adat Batak sebelum pernikahan.", []Opt{{"Pesta adat", false}, {"Lamaran secara adat Batak", true}, {"Upacara kematian", false}, {"Penabalan marga", false}}},
-		{4, "Apa yang dimaksud dengan 'marhata sinamot'?", "Marhata sinamot adalah proses pembicaraan mas kawin antara keluarga kedua pengantin.", []Opt{{"Penabalan gelar", false}, {"Pembicaraan tentang mas kawin", true}, {"Penaburan bunga", false}, {"Pembagian ulos", false}}},
-		{4, "Apa nama tarian tradisional dalam upacara adat Batak?", "Tor-tor adalah tarian tradisional khas Batak Toba yang ditampilkan dalam berbagai upacara adat.", []Opt{{"Tor-tor", true}, {"Poco-poco", false}, {"Saman", false}, {"Serimpi", false}}},
-		{4, "Upacara adat menggali tulang leluhur dalam Batak disebut...", "Mangokkal holi adalah tradisi menggali kembali tulang belulang leluhur untuk dipindahkan.", []Opt{{"Manortor", false}, {"Mangulosi", false}, {"Mangokkal holi", true}, {"Marunjuk", false}}},
-		{4, "Dalam adat Batak, 'dongan tubu' berarti...", "Dongan tubu berarti teman satu marga atau orang yang lahir dari garis keturunan yang sama.", []Opt{{"Teman kerja", false}, {"Teman sekampung", false}, {"Satu marga dari garis keturunan yang sama", true}, {"Tetangga dekat", false}}},
-		{4, "Dalam pemberian ulos, posisi tangan menunjukkan...", "Posisi tangan dalam pemberian ulos menunjukkan hierarki sosial pemberi dan penerima.", []Opt{{"Keberanian", false}, {"Hierarki sosial", true}, {"Jumlah anggota marga", false}, {"Besar cinta kasih", false}}},
-		{4, "Dalam struktur adat Batak, siapakah 'anak boru'?", "Anak boru atau boru adalah keluarga dari pihak istri yang berperan melayani dalam upacara adat.", []Opt{{"Keluarga dari suami", false}, {"Keluarga dari istri", true}, {"Saudara laki-laki", false}, {"Penari adat", false}}},
-		{4, "Ulos sering digunakan pada saat...", "Ulos digunakan dalam upacara kelahiran, pernikahan, dan kematian dalam adat Batak.", []Opt{{"Bekerja di ladang", false}, {"Makan malam bersama", false}, {"Upacara kelahiran, pernikahan, dan kematian", true}, {"Festival musik", false}}},
+		// ====================================================
+		// KATEGORI 2: MAKANAN DAN UNSUR ADAT BATAK TOBA
+		// ====================================================
 
-		// ── KATEGORI 5: AKSARA BATAK (10 soal) ───────────────
-		{5, "ᯤᯉᯑᯂᯉᯉᯱ dalam aksara Batak dibaca...", "ᯤᯉᯑᯂᯉᯉᯱ dibaca 'indahan' yang berarti nasi.", []Opt{{"Indahan", true}, {"Nasi", false}, {"Inang", false}, {"Indadang", false}}},
-		{5, "ᯘᯐᯘᯉᯱ adalah penulisan aksara Batak untuk kata...", "ᯘᯐᯘᯉᯱ adalah kata saksang dalam aksara Batak.", []Opt{{"Saksang", true}, {"Sarang", false}, {"Saring", false}, {"Sanggar", false}}},
-		{5, "Kata 'ulos' dalam aksara Batak adalah...", "Ulos dalam aksara Batak ditulis sebagai ᯗᯞᯮ.", []Opt{{"ᯖᯮᯞᯮ", false}, {"ᯎᯞᯬ", false}, {"ᯗᯞᯮ", true}, {"ᯂᯞᯬ", false}}},
-		{5, "Kata 'mangulosi' dalam aksara Batak adalah...", "Mangulosi dalam aksara Batak ditulis sebagai ᯔᯉᯮᯞᯬᯘᯪ.", []Opt{{"ᯔᯉᯮᯞᯬᯘᯪ", true}, {"ᯔᯝᯮᯂᯬᯘᯪ", false}, {"ᯔᯝᯂᯬᯘ", false}, {"ᯔᯝᯞᯮᯘᯪ", false}}},
-		{5, "Kata 'sortali' dalam aksara Batak ditulis sebagai...", "Sortali dalam aksara Batak ditulis sebagai ᯘᯬᯒᯖᯞᯪ.", []Opt{{"ᯘᯬᯒᯖᯞᯪ", true}, {"ᯘᯮᯒᯖᯂᯪ", false}, {"ᯘᯬᯒᯂᯪ", false}, {"ᯘᯬᯒᯖᯞ", false}}},
-		{5, "Aksara Batak untuk kata 'parboru' adalah...", "Parboru dalam aksara Batak ditulis sebagai ᯇᯒᯅᯮᯒᯮ.", []Opt{{"ᯇᯒᯅᯮᯒᯮ", true}, {"ᯇᯒᯅᯮᯂᯮ", false}, {"ᯇᯒᯅᯂᯮᯮ", false}, {"ᯇᯒᯅᯜᯮ", false}}},
-		{5, "Kata 'martumpol' dalam aksara Batak adalah...", "Martumpol dalam aksara Batak ditulis sebagai ᯔᯒᯖᯮᯔᯇᯞ᯲.", []Opt{{"ᯔᯒᯖᯮᯔᯇᯞ᯲", true}, {"ᯔᯒᯖᯮᯇᯞ᯲", false}, {"ᯔᯒᯖᯮᯔᯂᯞ᯲", false}, {"ᯔᯒᯖᯮᯇᯂᯞ᯲", false}}},
-		{5, "ᯖᯒᯖᯒ᯲ dalam aksara Batak membentuk kata...", "ᯖᯒᯖᯒ᯲ adalah penulisan kata tortor yaitu tarian tradisional Batak.", []Opt{{"Tortor", true}, {"Tari", false}, {"Tarom", false}, {"Torap", false}}},
-		{5, "Kata 'lappet' dalam aksara Batak adalah...", "Lappet dalam aksara Batak ditulis sebagai ᯖᯇᯇᯄ᯲.", []Opt{{"ᯂᯇᯇ᯲", false}, {"ᯂᯇᯇ᯲ᯖ", false}, {"ᯖᯇᯇᯄ᯲", true}, {"ᯂᯇᯇᯖ᯲", false}}},
-		{5, "ᯎᯑᯂᯂ᯲ adalah penulisan aksara Batak untuk kata...", "ᯎᯑᯂᯂ᯲ adalah kata gomak dalam aksara Batak.", []Opt{{"Gomak", true}, {"Gomar", false}, {"Gomuk", false}, {"Gamok", false}}},
+		{
+			2,
+			"Apa kesimpulan yang paling tepat dari dicantumkannya sipitu dai dalam inventarisasi makanan adat Batak Toba?",
+			"Inventarisasi makanan adat Batak Toba mencakup beragam hidangan, seperti sipitu dai, naniura, nani arsik, dan makanan tradisional lainnya.",
+			[]Opt{
+				{"Semua makanan adat Batak Toba harus berbahan ikan.", false},
+				{"Ragam makanan adat Batak Toba mencakup hidangan selain arsik dan naniura.", true},
+				{"Semua makanan adat Batak Toba disajikan sebagai camilan.", false},
+				{"Sipitu dai merupakan nama lain dari dekke naniura.", false},
+			},
+		},
+		{
+			2,
+			"Apa perbedaan utama dekke naniura dengan dekke natinombur?",
+			"Perbedaan pengolahannya terletak pada proses pemasakan. Naniura diolah tanpa pemasakan panas, sedangkan natinombur dipanggang terlebih dahulu sebelum diberi bumbu.",
+			[]Opt{
+				{"Naniura diasamkan tanpa pemasakan panas, sedangkan natinombur dipanggang terlebih dahulu.", true},
+				{"Naniura dipanggang terlebih dahulu, sedangkan natinombur diasamkan tanpa pemasakan panas.", false},
+				{"Naniura direbus dengan bumbu, sedangkan natinombur dikukus dengan rempah.", false},
+				{"Naniura digoreng dengan bumbu, sedangkan natinombur direbus dengan asam.", false},
+			},
+		},
+		{
+			2,
+			"Indahan sipaet-paet tercatat sebagai salah satu ...",
+			"Indahan sipaet-paet termasuk makanan tradisional Batak Toba yang berkaitan dengan tradisi mangapuli atau penghiburan dalam suasana duka.",
+			[]Opt{
+				{"Jenis pakaian adat", false},
+				{"Jenis tarian tradisional", false},
+				{"Alat musik tradisional", false},
+				{"Makanan adat Batak Toba", true},
+			},
+		},
+		{
+			2,
+			"Pernyataan manakah yang paling tepat tentang makanan tradisional dan kegiatan adat Batak Toba?",
+			"Makanan tradisional Batak Toba mempunyai ragam bahan, cara pengolahan, serta fungsi yang dapat berkaitan dengan kegiatan adat dan konteks penyajiannya.",
+			[]Opt{
+				{"Semua makanan tradisional hanya boleh dimakan saat upacara.", false},
+				{"Semua makanan sehari-hari memiliki fungsi adat yang sama.", false},
+				{"Makanan adat selalu menggunakan bahan yang mahal.", false},
+				{"Jenis makanan dan cara penyajiannya dapat berkaitan dengan konteks acara.", true},
+			},
+		},
+		{
+			2,
+			"Apa makna penggunaan kerbau dalam upacara kematian Saur Matua pada masyarakat Batak Toba?",
+			"Penggunaan kerbau dalam upacara Saur Matua berkaitan dengan kedudukan adat serta status sosial dan ekonomi orang yang meninggal.",
+			[]Opt{
+				{"Menunjukkan hubungan antarkeluarga", false},
+				{"Menandakan kedudukan adat dan sosial orang yang meninggal", true},
+				{"Menunjukkan perbedaan mata pencaharian setiap keluarga", false},
+				{"Menjadi syarat untuk seluruh kegiatan adat Batak Toba", false},
+			},
+		},
+
+		// ====================================================
+		// KATEGORI 3: MUSIK TRADISIONAL
+		// ====================================================
+
+		{
+			3,
+			"Bagaimana cara memainkan alat musik tradisional Batak Toba yang bernama hasapi?",
+			"Hasapi merupakan alat musik berdawai dalam tradisi Batak Toba yang dimainkan dengan teknik petikan.",
+			[]Opt{
+				{"Dipetik", true},
+				{"Ditiup", false},
+				{"Digesek", false},
+				{"Dipukul", false},
+			},
+		},
+		{
+			3,
+			"Dalam ansambel Gondang Hasapi, alat musik yang berperan menghasilkan melodi melalui tiupan adalah ...",
+			"Sulim merupakan alat musik tiup yang menjadi bagian dari formasi instrumen Gondang Hasapi.",
+			[]Opt{
+				{"Hasapi", false},
+				{"Ogung", false},
+				{"Sulim", true},
+				{"Hesek", false},
+			},
+		},
+		{
+			3,
+			"Alat musik Batak Toba yang memiliki beberapa gendang dengan tinggi nada berbeda adalah ...",
+			"Taganing merupakan perangkat gendang Batak Toba yang terdiri dari lima gendang dengan ukuran berbeda.",
+			[]Opt{
+				{"Gordang", false},
+				{"Taganing", true},
+				{"Garantung", false},
+				{"Hesek", false},
+			},
+		},
+		{
+			3,
+			"Bagaimana cara memainkan alat musik tradisional Batak Toba yang bernama ogung?",
+			"Ogung merupakan alat musik gong dalam ansambel musik Batak Toba yang dimainkan dengan cara dipukul.",
+			[]Opt{
+				{"Digesek", false},
+				{"Dipetik", false},
+				{"Ditiup", false},
+				{"Dipukul", true},
+			},
+		},
+		{
+			3,
+			"Teknik marsiulak hosa berkaitan dengan permainan alat musik ...",
+			"Marsiulak hosa merupakan teknik pernapasan melingkar atau circular breathing yang digunakan pemain Sarune Bolon untuk memainkan frasa musik panjang tanpa jeda napas dalam Gondang Sabangunan.",
+			[]Opt{
+				{"Tarian tradisional", false},
+				{"Ansambel musik tradisional", true},
+				{"Pakaian adat", false},
+				{"Upacara adat", false},
+			},
+		},
+
+		// ====================================================
+		// KATEGORI 4: ULOS DAN ADAT PERNIKAHAN
+		// ====================================================
+
+		{
+			4,
+			"Dalam upacara pernikahan adat Batak Toba, siapa yang pertama kali memberikan ulos dalam rangkaian marunjuk?",
+			"Pada tahapan pemberian ulos dalam marunjuk, pemberian pertama dilakukan oleh orang tua pengantin wanita kepada orang tua pengantin pria.",
+			[]Opt{
+				{"Orang tua pengantin wanita", true},
+				{"Orang tua pengantin pria", false},
+				{"Kedua mempelai", false},
+				{"Para tamu undangan", false},
+			},
+		},
+		{
+			4,
+			"Bagaimana cara tradisional membuat kain ulos?",
+			"Kain ulos dibuat melalui proses menenun benang oleh para penenun.",
+			[]Opt{
+				{"Dengan mengukir kayu", false},
+				{"Dengan mencetak tanah liat", false},
+				{"Dengan menenun benang", true},
+				{"Dengan menganyam daun", false},
+			},
+		},
+		{
+			4,
+			"Manakah yang termasuk jenis ulos dalam upacara marunjuk?",
+			"Ulos Passamot merupakan salah satu jenis ulos yang digunakan dalam rangkaian upacara adat marunjuk.",
+			[]Opt{
+				{"Ulos Passamot", true},
+				{"Ulos Tujung", false},
+				{"Ulos Saput", false},
+				{"Ulos Bolean", false},
+			},
+		},
+		{
+			4,
+			"Nama Ulos Ragi Idup berkaitan dengan simbol ...",
+			"Ragi berarti pola, sedangkan idup berarti kehidupan. Ulos Ragi Idup berkaitan dengan simbol kehidupan.",
+			[]Opt{
+				{"Perdagangan", false},
+				{"Kedudukan", false},
+				{"Kehidupan", true},
+				{"Peperangan", false},
+			},
+		},
+		{
+			4,
+			"Ulos Ragi Hotang digunakan dengan harapan agar penerimanya ...",
+			"Ulos Ragi Hotang diberikan dengan harapan agar penerimanya memperoleh hasil yang baik dan rajin bekerja.",
+			[]Opt{
+				{"Memiliki kedudukan tinggi.", false},
+				{"Mendapat hasil baik dan rajin bekerja.", true},
+				{"Menjadi pemimpin adat.", false},
+				{"Selalu memperoleh kekayaan.", false},
+			},
+		},
+
+		// ====================================================
+		// KATEGORI 5: KEKERABATAN DAN FALSAFAH ADAT
+		// ====================================================
+
+		{
+			5,
+			"Menurut sistem partuturan Batak Toba, siapakah yang disebut bona ni ari?",
+			"Bona ni ari merupakan istilah kekerabatan yang berkaitan dengan kelompok marga dari garis kerabat leluhur, termasuk saudara laki-laki dari pihak yang melahirkan kakek. Hubungan ini memiliki variasi penjelasan dalam silsilah adat.",
+			[]Opt{
+				{"Tulang dari pihak ibu kita", false},
+				{"Tulang dari pihak ayah kita", false},
+				{"Tulang dari oppung doli kita", true},
+				{"Tulang dari pihak istri kita", false},
+			},
+		},
+		{
+			5,
+			"Apa yang paling membedakan pembagian jambar dalam adat dari pembagian makanan biasa?",
+			"Parjambaron merupakan pembagian daging dalam pesta adat yang mengikuti aturan penghormatan dan kedudukan kekerabatan berdasarkan Dalihan Na Tolu.",
+			[]Opt{
+				{"Jambar selalu dibagikan kepada orang yang datang pertama", false},
+				{"Jambar memiliki aturan pembagian yang berkaitan dengan adat", true},
+				{"Jambar hanya boleh diberikan kepada keluarga satu marga", false},
+				{"Jambar selalu dibagikan dalam jumlah yang sama kepada setiap orang", false},
+			},
+		},
+		{
+			5,
+			"Siapakah leluhur yang dikenal dalam berbagai tradisi tarombo Batak Toba?",
+			"Si Raja Batak dikenal sebagai leluhur dalam berbagai tradisi silsilah atau tarombo Batak Toba.",
+			[]Opt{
+				{"Gajah Mada", false},
+				{"Si Raja Batak", true},
+				{"Pangeran Diponegoro", false},
+				{"Pattimura", false},
+			},
+		},
+		{
+			5,
+			"Menurut tradisi tarombo Batak Toba yang umum dikenal, siapa dua putra Si Raja Batak?",
+			"Dalam tradisi tarombo Batak Toba, Si Raja Batak dikenal memiliki dua putra, yaitu Guru Tatea Bulan dan Raja Isombaon.",
+			[]Opt{
+				{"Guru Tatea Bulan dan Raja Isombaon", true},
+				{"Raja Sisingamangaraja dan Si Singamangaraja XII", false},
+				{"Raja Uti dan Raja Ihat Manisia", false},
+				{"Raja Marpaung dan Raja Simanjuntak", false},
+			},
+		},
+		{
+			5,
+			"Dalam suatu pesta adat, seseorang harus menghormati keluarga dari pihak pemberi istri. Dalam Dalihan Na Tolu, pihak tersebut disebut ...",
+			"Hula-hula adalah pihak keluarga pemberi istri yang memiliki kedudukan terhormat dalam sistem kekerabatan Dalihan Na Tolu.",
+			[]Opt{
+				{"Boru", false},
+				{"Dongan Tubu", false},
+				{"Hula-hula", true},
+				{"Pargonsi", false},
+			},
+		},
 	}
 
+	// Validasi jumlah soal dan jawaban sebelum masuk database.
 	for _, q := range questions {
-		var existing models.TriviaQuestion
-		result := config.DB.Where("category_id = ? AND question = ?", q.CatID, q.Question).First(&existing)
-		if result.Error == nil {
-			continue
-		}
-		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			log.Printf("❌ Gagal mengecek soal trivia: %v", result.Error)
-			continue
+		if len(q.Opts) != 4 {
+			log.Printf("❌ Soal tidak memiliki 4 opsi: %s", q.Question)
+			return
 		}
 
-		newQ := models.TriviaQuestion{
-			CategoryID:  q.CatID,
-			Question:    q.Question,
-			Explanation: q.Explanation,
-			IsActive:    true,
-		}
-		if err := config.DB.Create(&newQ).Error; err != nil {
-			log.Printf("❌ Gagal seed trivia: %v", err)
-			continue
-		}
+		correctCount := 0
 		for _, opt := range q.Opts {
-			config.DB.Create(&models.TriviaQuestionOption{
-				QuestionID: newQ.ID,
-				OptionText: opt.Text,
-				IsCorrect:  opt.Correct,
-			})
+			if opt.Correct {
+				correctCount++
+			}
+		}
+
+		if correctCount != 1 {
+			log.Printf("❌ Soal harus memiliki tepat 1 jawaban benar: %s", q.Question)
+			return
 		}
 	}
-	log.Println("✅ Trivia Questions selesai (50 soal)")
+
+	// Tandai soal lama yang tidak termasuk bank soal V2 sebagai nonaktif.
+	wanted := make(map[string]bool)
+	for _, q := range questions {
+		wanted[fmt.Sprintf("%d|%s", q.CatID, q.Question)] = true
+	}
+
+	if err := config.DB.Transaction(func(tx *gorm.DB) error {
+		var activeQuestions []models.TriviaQuestion
+
+		if err := tx.Where("is_active = ?", true).Find(&activeQuestions).Error; err != nil {
+			return err
+		}
+
+		for _, oldQ := range activeQuestions {
+			key := fmt.Sprintf("%d|%s", oldQ.CategoryID, oldQ.Question)
+
+			if !wanted[key] {
+				if err := tx.Model(&oldQ).Update("is_active", false).Error; err != nil {
+					return err
+				}
+			}
+		}
+
+		for _, q := range questions {
+			var existing models.TriviaQuestion
+
+			err := tx.Where(
+				"category_id = ? AND question = ? AND is_active = ?",
+				q.CatID,
+				q.Question,
+				true,
+			).First(&existing).Error
+
+			if err == nil {
+				var oldOptions []models.TriviaQuestionOption
+
+				if err := tx.Where(
+					"question_id = ?",
+					existing.ID,
+				).Order("id ASC").Find(&oldOptions).Error; err != nil {
+					return err
+				}
+
+				same := existing.Explanation == q.Explanation &&
+					len(oldOptions) == len(q.Opts)
+
+				if same {
+					for i, opt := range q.Opts {
+						if oldOptions[i].OptionText != opt.Text ||
+							oldOptions[i].IsCorrect != opt.Correct {
+							same = false
+							break
+						}
+					}
+				}
+
+				if same {
+					continue
+				}
+
+				// Versi lama dinonaktifkan, riwayat jawabannya tetap tersimpan.
+				if err := tx.Model(&existing).Update("is_active", false).Error; err != nil {
+					return err
+				}
+
+			} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+				return err
+			}
+
+			newQ := models.TriviaQuestion{
+				CategoryID:  q.CatID,
+				Question:    q.Question,
+				Explanation: q.Explanation,
+				IsActive:    true,
+			}
+
+			if err := tx.Create(&newQ).Error; err != nil {
+				return err
+			}
+
+			for _, opt := range q.Opts {
+				newOpt := models.TriviaQuestionOption{
+					QuestionID: newQ.ID,
+					OptionText: opt.Text,
+					IsCorrect:  opt.Correct,
+				}
+
+				if err := tx.Create(&newOpt).Error; err != nil {
+					return err
+				}
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("❌ Gagal menjalankan Trivia Questions V2: %v", err)
+		return
+	}
+
+	log.Println("✅ Trivia Questions V2 selesai (25 soal, 5 kategori)")
 }
 
 // ============================================================
-// BATTLE QUESTIONS (15 soal)
+// BATTLE QUESTIONS (25 SOAL BANK)
+// 5 soal dipilih untuk setiap pertandingan
 // ============================================================
 func SeedBattleQuestions() {
 	type Opt struct {
 		Text    string
 		Correct bool
 	}
+
 	type Q struct {
 		Question    string
 		Explanation string
@@ -567,52 +1008,474 @@ func SeedBattleQuestions() {
 	}
 
 	questions := []Q{
-		{"Apa arti kata 'horas' dalam Bahasa Batak?", "'Horas' adalah salam khas Batak Toba yang berarti selamat, sehat, dan sejahtera.", []Opt{{"Selamat/Sehat", true}, {"Terima kasih", false}, {"Sampai jumpa", false}, {"Maaf", false}}},
-		{"Danau Toba terletak di provinsi...", "Danau Toba adalah danau vulkanik terbesar di dunia yang terletak di Sumatera Utara.", []Opt{{"Sumatera Barat", false}, {"Sumatera Utara", true}, {"Riau", false}, {"Aceh", false}}},
-		{"'Mauliate' dalam Bahasa Batak berarti...", "'Mauliate' adalah ungkapan terima kasih dalam Bahasa Batak Toba.", []Opt{{"Maaf", false}, {"Halo", false}, {"Terima kasih", true}, {"Selamat datang", false}}},
-		{"Apa nama sistem kekerabatan khas Batak yang terdiri dari tiga unsur?", "Dalihan Na Tolu adalah sistem kekerabatan Batak yang terdiri dari hula-hula, dongan tubu, dan boru.", []Opt{{"Dalihan Na Tolu", true}, {"Gorga Batak", false}, {"Adat Sinamot", false}, {"Marga Tiga", false}}},
-		{"Pulau yang berada di tengah Danau Toba disebut...", "Pulau Samosir adalah pulau vulkanik yang berada di tengah Danau Toba.", []Opt{{"Pulau Nias", false}, {"Pulau Samosir", true}, {"Pulau Berhala", false}, {"Pulau Sibolga", false}}},
-		{"Apa yang dimaksud dengan 'marga' dalam adat Batak?", "Marga adalah nama klan atau kelompok kekerabatan patrilineal dalam masyarakat Batak.", []Opt{{"Nama desa", false}, {"Nama klan/garis keturunan", true}, {"Nama gelar bangsawan", false}, {"Nama upacara adat", false}}},
-		{"Alat musik Batak yang terdiri dari 5 gendang adalah...", "Taganing adalah gendang khas Batak Toba yang terdiri dari 5 buah gendang berbeda ukuran.", []Opt{{"Gondang", false}, {"Taganing", true}, {"Ogung", false}, {"Sarune", false}}},
-		{"Arsik adalah masakan Batak berbahan dasar...", "Arsik adalah masakan khas Batak Toba yang berbahan dasar ikan mas yang dimasak dengan bumbu kuning.", []Opt{{"Daging kerbau", false}, {"Ikan mas", true}, {"Ayam kampung", false}, {"Daging babi", false}}},
-		{"Rumah adat Batak Toba disebut...", "Jabu atau Ruma Adat adalah rumah tradisional Batak Toba yang memiliki atap melengkung.", []Opt{{"Joglo", false}, {"Gadang", false}, {"Jabu/Ruma Batak", true}, {"Honai", false}}},
-		{"Apa arti kata 'au' dalam Bahasa Batak?", "'Au' dalam Bahasa Batak berarti saya atau aku.", []Opt{{"Kamu", false}, {"Kita", false}, {"Saya/Aku", true}, {"Mereka", false}}},
-		{"Ornamen ukiran khas yang menghiasi rumah adat Batak disebut...", "Gorga adalah ornamen atau ukiran tradisional khas Batak Toba yang menghiasi rumah adat.", []Opt{{"Batik", false}, {"Gorga", true}, {"Tenun", false}, {"Songket", false}}},
-		{"Kata 'inang' dalam Bahasa Batak berarti...", "'Inang' dalam Bahasa Batak berarti ibu.", []Opt{{"Ayah", false}, {"Kakek", false}, {"Ibu", true}, {"Nenek", false}}},
-		{"Apa nama festival budaya Batak yang dirayakan di Danau Toba?", "Pesta Danau Toba adalah festival budaya tahunan yang merayakan kekayaan budaya Batak Toba.", []Opt{{"Pesta Danau Toba", true}, {"Festival Nias", false}, {"Karnaval Batak", false}, {"Pekan Budaya Melayu", false}}},
-		{"'Amang' dalam Bahasa Batak berarti...", "'Amang' dalam Bahasa Batak berarti ayah.", []Opt{{"Ibu", false}, {"Ayah", true}, {"Kakak", false}, {"Paman", false}}},
-		{"Alat musik modern yang mirip dengan Garantung Batak adalah...", "Garantung mirip xylophone karena terdiri dari bilah kayu yang dipukul untuk menghasilkan nada.", []Opt{{"Drum", false}, {"Xylophone", true}, {"Gitar", false}, {"Piano", false}}},
+
+		// ====================================================
+		// SOAL 1-15: BANK SOAL LAMA (DIPERTAHANKAN)
+		// ====================================================
+
+		{
+			"Apa arti kata 'horas' dalam Bahasa Batak?",
+			"'Horas' adalah salam khas Batak Toba yang berarti selamat, sehat, dan sejahtera.",
+			[]Opt{
+				{"Selamat/Sehat", true},
+				{"Terima kasih", false},
+				{"Sampai jumpa", false},
+				{"Maaf", false},
+			},
+		},
+		{
+			"Danau Toba terletak di provinsi...",
+			"Danau Toba adalah danau vulkanik terbesar di dunia yang terletak di Sumatera Utara.",
+			[]Opt{
+				{"Sumatera Barat", false},
+				{"Sumatera Utara", true},
+				{"Riau", false},
+				{"Aceh", false},
+			},
+		},
+		{
+			"'Mauliate' dalam Bahasa Batak berarti...",
+			"'Mauliate' adalah ungkapan terima kasih dalam Bahasa Batak Toba.",
+			[]Opt{
+				{"Maaf", false},
+				{"Halo", false},
+				{"Terima kasih", true},
+				{"Selamat datang", false},
+			},
+		},
+		{
+			"Apa nama sistem kekerabatan khas Batak yang terdiri dari tiga unsur?",
+			"Dalihan Na Tolu adalah sistem kekerabatan Batak yang terdiri dari hula-hula, dongan tubu, dan boru.",
+			[]Opt{
+				{"Dalihan Na Tolu", true},
+				{"Gorga Batak", false},
+				{"Adat Sinamot", false},
+				{"Marga Tiga", false},
+			},
+		},
+		{
+			"Pulau yang berada di tengah Danau Toba disebut...",
+			"Pulau Samosir adalah pulau vulkanik yang berada di tengah Danau Toba.",
+			[]Opt{
+				{"Pulau Nias", false},
+				{"Pulau Samosir", true},
+				{"Pulau Berhala", false},
+				{"Pulau Sibolga", false},
+			},
+		},
+		{
+			"Apa yang dimaksud dengan 'marga' dalam adat Batak?",
+			"Marga adalah nama klan atau kelompok kekerabatan patrilineal dalam masyarakat Batak.",
+			[]Opt{
+				{"Nama desa", false},
+				{"Nama klan/garis keturunan", true},
+				{"Nama gelar bangsawan", false},
+				{"Nama upacara adat", false},
+			},
+		},
+		{
+			"Alat musik Batak yang terdiri dari 5 gendang adalah...",
+			"Taganing adalah gendang khas Batak Toba yang terdiri dari 5 buah gendang berbeda ukuran.",
+			[]Opt{
+				{"Gondang", false},
+				{"Taganing", true},
+				{"Ogung", false},
+				{"Sarune", false},
+			},
+		},
+		{
+			"Arsik adalah masakan Batak berbahan dasar...",
+			"Arsik adalah masakan khas Batak Toba yang berbahan dasar ikan mas yang dimasak dengan bumbu kuning.",
+			[]Opt{
+				{"Daging kerbau", false},
+				{"Ikan mas", true},
+				{"Ayam kampung", false},
+				{"Daging babi", false},
+			},
+		},
+		{
+			"Rumah adat Batak Toba disebut...",
+			"Jabu atau Ruma Adat adalah rumah tradisional Batak Toba yang memiliki atap melengkung.",
+			[]Opt{
+				{"Joglo", false},
+				{"Gadang", false},
+				{"Jabu/Ruma Batak", true},
+				{"Honai", false},
+			},
+		},
+		{
+			"Apa arti kata 'au' dalam Bahasa Batak?",
+			"'Au' dalam Bahasa Batak berarti saya atau aku.",
+			[]Opt{
+				{"Kamu", false},
+				{"Kita", false},
+				{"Saya/Aku", true},
+				{"Mereka", false},
+			},
+		},
+		{
+			"Ornamen ukiran khas yang menghiasi rumah adat Batak disebut...",
+			"Gorga adalah ornamen atau ukiran tradisional khas Batak Toba yang menghiasi rumah adat.",
+			[]Opt{
+				{"Batik", false},
+				{"Gorga", true},
+				{"Tenun", false},
+				{"Songket", false},
+			},
+		},
+		{
+			"Kata 'inang' dalam Bahasa Batak berarti...",
+			"'Inang' dalam Bahasa Batak berarti ibu.",
+			[]Opt{
+				{"Ayah", false},
+				{"Kakek", false},
+				{"Ibu", true},
+				{"Nenek", false},
+			},
+		},
+		{
+			"Apa nama festival budaya Batak yang dirayakan di Danau Toba?",
+			"Pesta Danau Toba adalah festival budaya yang merayakan kekayaan budaya Batak Toba.",
+			[]Opt{
+				{"Pesta Danau Toba", true},
+				{"Festival Nias", false},
+				{"Karnaval Batak", false},
+				{"Pekan Budaya Melayu", false},
+			},
+		},
+		{
+			"'Amang' dalam Bahasa Batak berarti...",
+			"'Amang' dalam Bahasa Batak berarti ayah.",
+			[]Opt{
+				{"Ibu", false},
+				{"Ayah", true},
+				{"Kakak", false},
+				{"Paman", false},
+			},
+		},
+		{
+			"Alat musik modern yang mirip dengan Garantung Batak adalah...",
+			"Garantung mirip xylophone karena terdiri dari bilah kayu yang dipukul untuk menghasilkan nada.",
+			[]Opt{
+				{"Drum", false},
+				{"Xylophone", true},
+				{"Gitar", false},
+				{"Piano", false},
+			},
+		},
+
+		// ====================================================
+		// SOAL 16-25: TAMBAHAN BANK SOAL
+		// Berdasarkan materi Trivia yang sudah tersedia
+		// ====================================================
+
+		{
+			"Dalam ansambel Gondang Hasapi, alat musik yang menghasilkan melodi melalui tiupan adalah...",
+			"Sulim merupakan alat musik tiup yang menjadi bagian dari formasi instrumen Gondang Hasapi.",
+			[]Opt{
+				{"Hasapi", false},
+				{"Ogung", false},
+				{"Sulim", true},
+				{"Hesek", false},
+			},
+		},
+		{
+			"Perbedaan utama dekke naniura dengan dekke natinombur terletak pada...",
+			"Naniura diolah tanpa pemasakan panas, sedangkan natinombur dipanggang terlebih dahulu sebelum diberi bumbu.",
+			[]Opt{
+				{"Cara pengolahan ikan", true},
+				{"Jenis kain yang digunakan", false},
+				{"Alat musik pengiring", false},
+				{"Bentuk rumah adat", false},
+			},
+		},
+		{
+			"Indahan sipaet-paet tercatat sebagai salah satu...",
+			"Indahan sipaet-paet termasuk makanan tradisional Batak Toba yang berkaitan dengan tradisi mangapuli atau penghiburan dalam suasana duka.",
+			[]Opt{
+				{"Jenis pakaian adat", false},
+				{"Jenis tarian tradisional", false},
+				{"Alat musik tradisional", false},
+				{"Makanan tradisional Batak Toba", true},
+			},
+		},
+		{
+			"Nama Ulos Ragi Idup berkaitan dengan simbol...",
+			"Ragi berarti pola, sedangkan idup berarti kehidupan. Ulos Ragi Idup berkaitan dengan simbol kehidupan.",
+			[]Opt{
+				{"Perdagangan", false},
+				{"Kehidupan", true},
+				{"Peperangan", false},
+				{"Perjalanan", false},
+			},
+		},
+		{
+			"Bagaimana cara tradisional membuat kain ulos?",
+			"Kain ulos dibuat melalui proses menenun benang oleh para penenun.",
+			[]Opt{
+				{"Dengan mengukir kayu", false},
+				{"Dengan mencetak tanah liat", false},
+				{"Dengan menenun benang", true},
+				{"Dengan menganyam daun", false},
+			},
+		},
+		{
+			"Dalam upacara pernikahan adat Batak Toba, siapa yang pertama kali memberikan ulos dalam rangkaian marunjuk?",
+			"Pada tahapan pemberian ulos dalam marunjuk, pemberian pertama dilakukan oleh orang tua pengantin wanita kepada orang tua pengantin pria.",
+			[]Opt{
+				{"Orang tua pengantin pria", false},
+				{"Kedua mempelai", false},
+				{"Para tamu undangan", false},
+				{"Orang tua pengantin wanita", true},
+			},
+		},
+		{
+			"Ulos Passamot merupakan salah satu jenis ulos yang digunakan dalam rangkaian...",
+			"Ulos Passamot merupakan salah satu jenis ulos yang digunakan dalam rangkaian upacara adat marunjuk.",
+			[]Opt{
+				{"Marunjuk", true},
+				{"Upacara kematian", false},
+				{"Penyambutan wisatawan", false},
+				{"Permainan tradisional", false},
+			},
+		},
+		{
+			"Menurut tradisi tarombo Batak Toba yang umum dikenal, dua putra Si Raja Batak adalah...",
+			"Dalam tradisi tarombo Batak Toba, Si Raja Batak dikenal memiliki dua putra, yaitu Guru Tatea Bulan dan Raja Isombaon.",
+			[]Opt{
+				{"Raja Uti dan Raja Ihat Manisia", false},
+				{"Raja Sisingamangaraja dan Raja Isombaon", false},
+				{"Guru Tatea Bulan dan Raja Isombaon", true},
+				{"Guru Tatea Bulan dan Raja Uti", false},
+			},
+		},
+		{
+			"Dalam pembagian delapan arah mata angin Batak Toba, Purba menunjukkan arah...",
+			"Dalam pembagian delapan arah mata angin Batak Toba, Purba menunjukkan arah timur.",
+			[]Opt{
+				{"Barat", false},
+				{"Timur", true},
+				{"Utara", false},
+				{"Selatan", false},
+			},
+		},
+		{
+			"Penggunaan kerbau dalam upacara kematian Saur Matua berkaitan dengan...",
+			"Penggunaan kerbau dalam upacara Saur Matua berkaitan dengan kedudukan adat serta status sosial dan ekonomi orang yang meninggal.",
+			[]Opt{
+				{"Hubungan perdagangan antarwilayah", false},
+				{"Penentuan arah rumah adat", false},
+				{"Penanda jenis alat musik", false},
+				{"Kedudukan adat dan sosial-ekonomi orang yang meninggal", true},
+			},
+		},
 	}
+
+	// ========================================================
+	// VALIDASI BANK SOAL SEBELUM DISIMPAN
+	// ========================================================
+
+	if len(questions) != 25 {
+		log.Printf("❌ Jumlah Battle Questions harus 25, ditemukan %d", len(questions))
+		return
+	}
+
+	seenQuestions := make(map[string]bool)
 
 	for _, q := range questions {
-		var existing models.BattleQuestion
-		result := config.DB.Where("question = ?", q.Question).First(&existing)
-		if result.Error == nil {
-			continue
-		}
-		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			log.Printf("❌ Gagal mengecek soal battle: %v", result.Error)
-			continue
+		if q.Question == "" || q.Explanation == "" {
+			log.Printf("❌ Pertanyaan atau penjelasan kosong: %s", q.Question)
+			return
 		}
 
-		newQ := models.BattleQuestion{
-			Question:    q.Question,
-			Explanation: q.Explanation,
-			IsActive:    true,
+		if seenQuestions[q.Question] {
+			log.Printf("❌ Pertanyaan duplikat: %s", q.Question)
+			return
 		}
-		if err := config.DB.Create(&newQ).Error; err != nil {
-			log.Printf("❌ Gagal seed battle: %v", err)
-			continue
+		seenQuestions[q.Question] = true
+
+		if len(q.Opts) != 4 {
+			log.Printf("❌ Soal harus memiliki 4 opsi: %s", q.Question)
+			return
 		}
+
+		correctCount := 0
+		seenOptions := make(map[string]bool)
+
 		for _, opt := range q.Opts {
-			config.DB.Create(&models.BattleQuestionOption{
-				QuestionID: newQ.ID,
-				OptionText: opt.Text,
-				IsCorrect:  opt.Correct,
-			})
+			if opt.Text == "" || seenOptions[opt.Text] {
+				log.Printf("❌ Opsi kosong atau duplikat: %s", q.Question)
+				return
+			}
+
+			seenOptions[opt.Text] = true
+
+			if opt.Correct {
+				correctCount++
+			}
+		}
+
+		if correctCount != 1 {
+			log.Printf("❌ Soal harus memiliki tepat 1 jawaban benar: %s", q.Question)
+			return
 		}
 	}
-	log.Println("✅ Battle Questions selesai (15 soal)")
+
+	// ========================================================
+	// SINKRONISASI BANK SOAL BATTLE (25 SOAL AKTIF)
+	// Riwayat pertandingan lama tetap dipertahankan.
+	// ========================================================
+
+	wanted := make(map[string]struct{}, len(questions))
+	for _, q := range questions {
+		wanted[q.Question] = struct{}{}
+	}
+
+	if err := config.DB.Transaction(func(tx *gorm.DB) error {
+
+		// 1. Nonaktifkan soal lama yang tidak masuk bank terbaru.
+		var allQuestions []models.BattleQuestion
+
+		if err := tx.Find(&allQuestions).Error; err != nil {
+			return err
+		}
+
+		for _, oldQ := range allQuestions {
+			if _, exists := wanted[oldQ.Question]; !exists && oldQ.IsActive {
+				if err := tx.Model(&models.BattleQuestion{}).
+					Where("id = ?", oldQ.ID).
+					Update("is_active", false).Error; err != nil {
+					return fmt.Errorf("gagal mengarsipkan soal ID %d: %w", oldQ.ID, err)
+				}
+			}
+		}
+
+		// 2. Sinkronkan setiap soal dalam bank terbaru.
+		for _, q := range questions {
+
+			var candidates []models.BattleQuestion
+
+			if err := tx.Where(
+				"question = ?",
+				q.Question,
+			).Order("id DESC").Find(&candidates).Error; err != nil {
+				return err
+			}
+
+			var exactMatch *models.BattleQuestion
+
+			// Cari versi soal yang konten dan opsinya identik.
+			for i := range candidates {
+
+				var oldOptions []models.BattleQuestionOption
+
+				if err := tx.Where(
+					"question_id = ?",
+					candidates[i].ID,
+				).Order("id ASC").Find(&oldOptions).Error; err != nil {
+					return err
+				}
+
+				same := candidates[i].Explanation == q.Explanation &&
+					len(oldOptions) == len(q.Opts)
+
+				if same {
+					for j, opt := range q.Opts {
+						if oldOptions[j].OptionText != opt.Text ||
+							oldOptions[j].IsCorrect != opt.Correct {
+							same = false
+							break
+						}
+					}
+				}
+
+				if same {
+					if exactMatch == nil ||
+						(!exactMatch.IsActive && candidates[i].IsActive) {
+
+						candidate := candidates[i]
+						exactMatch = &candidate
+					}
+				}
+			}
+
+			// 3. Nonaktifkan versi lain dari pertanyaan yang sama.
+			for _, oldQ := range candidates {
+				if oldQ.IsActive &&
+					(exactMatch == nil || oldQ.ID != exactMatch.ID) {
+
+					if err := tx.Model(&models.BattleQuestion{}).
+						Where("id = ?", oldQ.ID).
+						Update("is_active", false).Error; err != nil {
+						return err
+					}
+				}
+			}
+
+			// 4. Gunakan kembali soal jika kontennya identik.
+			if exactMatch != nil {
+
+				if !exactMatch.IsActive {
+					if err := tx.Model(&models.BattleQuestion{}).
+						Where("id = ?", exactMatch.ID).
+						Update("is_active", true).Error; err != nil {
+						return err
+					}
+				}
+
+				continue
+			}
+
+			// 5. Buat versi baru jika belum ada konten identik.
+			newQ := models.BattleQuestion{
+				Question:    q.Question,
+				Explanation: q.Explanation,
+				IsActive:    true,
+			}
+
+			if err := tx.Create(&newQ).Error; err != nil {
+				return fmt.Errorf("gagal membuat soal Battle: %w", err)
+			}
+
+			for _, opt := range q.Opts {
+
+				newOpt := models.BattleQuestionOption{
+					QuestionID: newQ.ID,
+					OptionText: opt.Text,
+					IsCorrect:  opt.Correct,
+				}
+
+				if err := tx.Create(&newOpt).Error; err != nil {
+					return fmt.Errorf("gagal membuat opsi Battle: %w", err)
+				}
+			}
+		}
+
+		// 6. Pastikan jumlah soal aktif tepat 25.
+		var activeCount int64
+
+		if err := tx.Model(&models.BattleQuestion{}).
+			Where("is_active = ?", true).
+			Count(&activeCount).Error; err != nil {
+			return err
+		}
+
+		if activeCount != int64(len(questions)) {
+			return fmt.Errorf(
+				"jumlah soal Battle aktif harus %d, ditemukan %d",
+				len(questions),
+				activeCount,
+			)
+		}
+
+		return nil
+
+	}); err != nil {
+		log.Printf("❌ Gagal menjalankan Battle Questions V2: %v", err)
+		return
+	}
+
+	log.Println("✅ Battle Questions V2 selesai (25 soal aktif)")
 }
 
 // ============================================================
@@ -751,7 +1614,7 @@ func SeedWeeklyChallenges() {
 			IsActive:    false,
 			StartDate:   now.AddDate(0, 0, -7),
 			EndDate:     now.AddDate(0, 0, -1),
-			DataJSON:    `{"words":[{"scrambled":"SOLU","answer":"ULOS","hint":"Kain tenun khas Batak"},{"scrambled":"SAROH","answer":"HORAS","hint":"Salam khas Batak"},{"scrambled":"NAGNOM","answer":"MANGAN","hint":"Kegiatan makan"}]}`,
+			DataJSON:    `{"words":[{"scrambled":"SOLU","answer":"ULOS","hint":"Kain tenun khas Batak"},{"scrambled":"SAROH","answer":"HORAS","hint":"Salam khas Batak"},{"scrambled":"NAGMAN","answer":"MANGAN","hint":"Kegiatan makan"}]}`,
 		},
 		{
 			Title:       "Memory Card Budaya Batak!",
@@ -766,23 +1629,43 @@ func SeedWeeklyChallenges() {
 		},
 	}
 
-	for _, c := range challenges {
+	for _, challenge := range challenges {
 		var existing models.WeeklyChallenge
-		result := config.DB.Where("title = ? AND game_type = ?", c.Title, c.GameType).First(&existing)
+		result := config.DB.Where(
+			"title = ? AND game_type = ?",
+			challenge.Title,
+			challenge.GameType,
+		).First(&existing)
+
 		if result.Error == nil {
-			log.Printf("ℹ️  Weekly Challenge sudah ada: %s", c.Title)
+			// Perbaiki hanya typo scramble lama pada record yang sudah ada.
+			// Data challenge lain dan tanggal/progres yang sudah tersimpan dipertahankan.
+			if challenge.GameType == "WORD_ARRANGE" && strings.Contains(existing.DataJSON, "NAGNOM") {
+				updatedData := strings.ReplaceAll(existing.DataJSON, "NAGNOM", "NAGMAN")
+				if err := config.DB.Model(&existing).Update("data_json", updatedData).Error; err != nil {
+					log.Printf("❌ Gagal memperbaiki DataJSON Weekly Challenge %s: %v", challenge.Title, err)
+				} else {
+					log.Printf("✅ Typo scramble Weekly Challenge diperbaiki: %s", challenge.Title)
+				}
+			} else {
+				log.Printf("ℹ️ Weekly Challenge sudah ada, dipertahankan: %s", challenge.Title)
+			}
 			continue
 		}
+
 		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			log.Printf("❌ Gagal mengecek weekly challenge %s: %v", c.Title, result.Error)
+			log.Printf("❌ Gagal mengecek Weekly Challenge %s: %v", challenge.Title, result.Error)
 			continue
 		}
-		if err := config.DB.Create(&c).Error; err != nil {
-			log.Printf("❌ Gagal seed weekly challenge %s: %v", c.Title, err)
+
+		if err := config.DB.Create(&challenge).Error; err != nil {
+			log.Printf("❌ Gagal seed Weekly Challenge %s: %v", challenge.Title, err)
 			continue
 		}
+		log.Printf("✅ Weekly Challenge ditambahkan: %s", challenge.Title)
 	}
-	log.Println("✅ Weekly Challenges selesai (3 contoh)")
+
+	log.Println("✅ Weekly Challenges selesai")
 }
 
 // ============================================================
