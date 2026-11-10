@@ -11,7 +11,7 @@ public class ChallengeComingSoonScreen : BaseScreen
     private static readonly Dictionary<string, (string emoji, string name, string desc)>
         INFO = new()
     {
-        ["FIND_OBJECT"] = ("🔍", "Cari Benda Budaya",
+        ["FIND_OBJECT"] = ("<b><color=#F2E4C7>⌕</color></b>", "Cari Benda Budaya",
             "Temukan benda budaya Batak yang tersembunyi\ndalam gambar!"),
         ["PUZZLE"]      = ("🧩", "Puzzle Gambar Budaya",
             "Susun kepingan puzzle menjadi\ngambar budaya Batak yang utuh!"),

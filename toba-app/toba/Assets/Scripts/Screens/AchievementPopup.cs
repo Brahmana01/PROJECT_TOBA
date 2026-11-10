@@ -36,12 +36,12 @@ public static class AchievementPopup
             "Banner", TOBATheme.BatakGold, new Vector2(860, 100), new Vector2(0, 240f));
 
         UIBuilder.CreateTextSized(banner.transform,
-            "🏆 ACHIEVEMENT DIBUKA!", 38, TOBATheme.WoodDark, TextAlignmentOptions.Center,
+            "<b><color=#D6A84B>♛</color></b> ACHIEVEMENT DIBUKA!", 38, TOBATheme.WoodDark, TextAlignmentOptions.Center,
             new Vector2(820, 80), Vector2.zero);
 
         // Icon achievement
         UIBuilder.CreateTextSized(card.transform,
-            string.IsNullOrEmpty(achievement.icon) ? "⭐" : achievement.icon,
+            string.IsNullOrEmpty(achievement.icon) ? "<b><color=#D6A84B>★</color></b>" : achievement.icon,
             100, TOBATheme.BatakGold, TextAlignmentOptions.Center,
             new Vector2(200, 140), new Vector2(0, 100f));
 
@@ -61,7 +61,7 @@ public static class AchievementPopup
         // Reward
         string rewardStr = "";
         if (achievement.reward_xp > 0)   rewardStr += "✨ +" + achievement.reward_xp + " XP  ";
-        if (achievement.reward_stars > 0) rewardStr += "⭐ +" + achievement.reward_stars;
+        if (achievement.reward_stars > 0) rewardStr += "<b><color=#D6A84B>★</color></b> +" + achievement.reward_stars;
 
         if (!string.IsNullOrEmpty(rewardStr))
         {

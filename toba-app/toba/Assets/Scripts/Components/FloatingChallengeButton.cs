@@ -9,7 +9,7 @@ public static class FloatingChallengeButton
     private static ChallengeData _cachedChallenge;
 
     private static readonly string[] TEXTS = {
-        "Tantangan baru! 🎯", "Ayo main! ✨", "Ada hadiah nih! 🎁",
+        "Tantangan baru! <b><color=#A83232>◎</color></b>", "Ayo main! ✨", "Ada hadiah nih! 🎁",
         "Coba sekarang! 🔥", "Uji kemampuanmu! 💪"
     };
 

@@ -62,7 +62,7 @@ public class BattleMatchmakingScreen : BaseScreen
 
         // Label mencari
         UIBuilder.CreateTextSized(panel.transform,
-            "⚔️ MENCARI LAWAN", 52, TOBATheme.BatakGold,
+            "<b><color=#A83232>⚔</color></b> MENCARI LAWAN", 52, TOBATheme.BatakGold,
             TextAlignmentOptions.Center, new Vector2(820, 75),
             new Vector2(0, 220f))
             .GetComponent<TextMeshProUGUI>().raycastTarget = false;
@@ -94,7 +94,7 @@ public class BattleMatchmakingScreen : BaseScreen
 
         // Tips
         TextMeshProUGUI tipsTmp = UIBuilder.CreateTextSized(panel.transform,
-            "💡 Jika tidak ada lawan dalam 3 menit,\ncari ulang atau buat room manual",
+            "<b><color=#D6A84B>✧</color></b> Jika tidak ada lawan dalam 3 menit,\ncari ulang atau buat room manual",
             26, new Color(1f, 1f, 1f, 0.55f), TextAlignmentOptions.Center,
             new Vector2(800, 80), new Vector2(0, -150f))
             .GetComponent<TextMeshProUGUI>();

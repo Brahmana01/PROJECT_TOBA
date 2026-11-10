@@ -182,7 +182,7 @@ public class MapScreen : BaseScreen
                 {
                     EmptyState.Show(
                         screenObj.transform,
-                        "🗺️",
+                        "	◆",
                         "Belum ada lokasi tersedia",
                         "Hubungi admin untuk menambahkan lokasi"
                     );
@@ -216,7 +216,7 @@ public class MapScreen : BaseScreen
 
                 EmptyState.Show(
                     screenObj.transform,
-                    "🗺️",
+                    "	◆",
                     "Gagal memuat peta",
                     "Periksa koneksi internet",
                     () => FetchData()

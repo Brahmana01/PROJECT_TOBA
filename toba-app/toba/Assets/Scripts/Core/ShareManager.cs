@@ -6,7 +6,7 @@ public static class ShareManager
         int total, int stars)
     {
         string s = "";
-        for (int i = 0; i < stars; i++) s += "⭐";
+        for (int i = 0; i < stars; i++) s += "<b><color=#D6A84B>★</color></b>";
         string msg =
             "🎮 TOBA — Game Edukasi Budaya Batak Toba\n\n" +
             $"Aku baru selesai tantangan di *{locationName}*!\n" +
@@ -29,12 +29,12 @@ public static class ShareManager
 
     public static void ShareBattleResult(bool won, bool isDraw, string oppName)
     {
-        string emoji  = isDraw ? "🤝" : won ? "🏆" : "💪";
+        string emoji  = isDraw ? "🤝" : won ? "<b><color=#D6A84B>♛</color></b>" : "💪";
         string result = isDraw ? "Seri" : won ? "Menang" : "Kalah (tapi tetap semangat!)";
         string msg =
             $"🎮 TOBA — Battle Quiz Budaya Batak Toba\n\n" +
             $"{emoji} {result} melawan {oppName}!\n\n" +
-            "Ayo battle quiz budaya Batak bersamaku! ⚔️\n" +
+            "Ayo battle quiz budaya Batak bersamaku! <b><color=#A83232>⚔</color></b>\n" +
             "#TOBA #BattleQuiz #BudayaBatak";
         Share(msg);
     }

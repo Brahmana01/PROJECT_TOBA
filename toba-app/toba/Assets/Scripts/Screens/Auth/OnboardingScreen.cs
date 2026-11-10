@@ -11,7 +11,7 @@ public class OnboardingScreen : BaseScreen
 
     private static readonly (string emoji, string title, string desc)[] SLIDES =
     {
-        ("🗺️",
+        ("	◆",
          "Jelajah Budaya",
          "Kunjungi 10 lokasi bersejarah Batak Toba.\nJawab kuis dan kumpulkan bintang!"),
 
@@ -19,11 +19,11 @@ public class OnboardingScreen : BaseScreen
          "Trivia Budaya",
          "Uji pengetahuanmu tentang budaya Batak!\n5 kategori, 50+ soal seru menanti."),
 
-        ("⚔️",
+        ("<b><color=#A83232>⚔</color></b>",
          "Battle Quiz",
          "Tantang temanmu dalam duel soal real-time!\nSiapa yang tercepat dan terpintar?"),
 
-        ("🏆",
+        ("<b><color=#D6A84B>♛</color></b>",
          "Kumpulkan Reward",
          "Naik level, raih gelar, dan buka galeri kartu budaya Batak Toba!"),
     };

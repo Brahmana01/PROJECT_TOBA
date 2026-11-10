@@ -358,7 +358,7 @@ public class LeaderboardScreen : BaseScreen
                 {
                     emptyStateObj = EmptyState.Show(
                         screenObj.transform,
-                        "⭐",
+                        "<b><color=#D6A84B>★</color></b>",
                         "Leaderboard masih kosong",
                         "Belum ada pemain di papan peringkat",
                         () => RetryFetchLeaderboard()
@@ -381,7 +381,7 @@ public class LeaderboardScreen : BaseScreen
 
                 emptyStateObj = EmptyState.Show(
                     screenObj.transform,
-                    "⭐",
+                    "<b><color=#D6A84B>★</color></b>",
                     "Gagal memuat leaderboard",
                     "Periksa koneksi internet",
                     () => RetryFetchLeaderboard()
@@ -433,7 +433,7 @@ public class LeaderboardScreen : BaseScreen
         Stretch(bg.rectTransform);
 
         string txt = myRank > 0
-            ? "Posisimu : #" + myRank + "  ⭐ " + myStars
+            ? "Posisimu : #" + myRank + "  <b><color=#D6A84B>★</color></b> " + myStars
             : "Kamu belum di papan";
 
         TextMeshProUGUI t = MakeText(barRt, txt, 38, TOBATheme.BatakGold,
@@ -489,7 +489,7 @@ public class LeaderboardScreen : BaseScreen
                 new Vector2(0.5f, 1f), new Vector2(0f, 10f * k), Vector2.zero);
 
             // Bintang
-            TextMeshProUGUI stars = MakeText(col, "⭐ " + entry.stars, Mathf.RoundToInt(32 * k),
+            TextMeshProUGUI stars = MakeText(col, "<b><color=#D6A84B>★</color></b> " + entry.stars, Mathf.RoundToInt(32 * k),
                 TOBATheme.BatakGold, TextAlignmentOptions.Center, true, true);
             SetRect(stars.rectTransform, new Vector2(0.5f, hFrac[p]), new Vector2(0.5f, hFrac[p]),
                 new Vector2(0.5f, 0f), new Vector2(280f, 44f * k), new Vector2(0f, 8f * k));
@@ -615,7 +615,7 @@ public class LeaderboardScreen : BaseScreen
         st.rectTransform.offsetMin = st.rectTransform.offsetMax = Vector2.zero;
 
         // Bintang
-        TextMeshProUGUI stars = MakeText(row, "⭐ " + entry.stars, 38, TOBATheme.BatakGold,
+        TextMeshProUGUI stars = MakeText(row, "<b><color=#D6A84B>★</color></b> " + entry.stars, 38, TOBATheme.BatakGold,
             TextAlignmentOptions.Right, true, true);
         stars.rectTransform.anchorMin = new Vector2(0.74f, 0.2f);
         stars.rectTransform.anchorMax = new Vector2(0.96f, 0.8f);

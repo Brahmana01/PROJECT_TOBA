@@ -991,8 +991,8 @@ public class RegisterPinScreen : BaseScreen
         text.alignment =
             TextAlignmentOptions.MidlineLeft;
 
-        text.enableWordWrapping =
-            false;
+        text.textWrappingMode =
+            TextWrappingModes.NoWrap;
 
         text.overflowMode =
             TextOverflowModes.Overflow;
@@ -1415,32 +1415,29 @@ public class RegisterPinScreen : BaseScreen
         }
     }
 
-    IEnumerator AnimateButtonPress(
-        Transform target)
-    {
-        if (target == null)
-            yield break;
+IEnumerator AnimateButtonPress(Transform target)
+{
+    if (target == null || screenObj == null)
+        yield break;
 
-        Vector3 original =
-            target.localScale;
+    Vector3 original = target.localScale;
 
-        target.localScale =
-            original * .91f;
+    target.localScale = original * .91f;
 
-        yield return new WaitForSeconds(
-            .09f
-        );
+    yield return new WaitForSeconds(.09f);
 
-        target.localScale =
-            original * 1.04f;
+    if (target == null || screenObj == null)
+        yield break;
 
-        yield return new WaitForSeconds(
-            .07f
-        );
+    target.localScale = original * 1.04f;
 
-        target.localScale =
-            original;
-    }
+    yield return new WaitForSeconds(.07f);
+
+    if (target == null || screenObj == null)
+        yield break;
+
+    target.localScale = original;
+}
 
     // ============================================================
     // STEP INDICATOR

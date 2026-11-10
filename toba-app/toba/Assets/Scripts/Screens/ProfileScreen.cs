@@ -250,7 +250,7 @@ public class ProfileScreen : BaseScreen
         );
 
         UIBuilder.CreateTextSized(
-            avatar.transform, "👤", 80, TOBATheme.WoodDark,
+            avatar.transform, "<b><color=#F2E4C7>♙</color></b>", 80, TOBATheme.WoodDark,
             TextAlignmentOptions.Center, new Vector2(160, 160), Vector2.zero
         );
 
@@ -282,7 +282,7 @@ public class ProfileScreen : BaseScreen
 
         // Bintang
         starTxt = UIBuilder.CreateTextSized(
-            topCard.transform, "⭐ 0", 38, TOBATheme.BatakGold,
+            topCard.transform, "<b><color=#D6A84B>★</color></b> 0", 38, TOBATheme.BatakGold,
             TextAlignmentOptions.Right, new Vector2(240, 55), new Vector2(300f, -45f)
         ).GetComponent<TextMeshProUGUI>();
 
@@ -427,7 +427,7 @@ public class ProfileScreen : BaseScreen
             }
 
             emptyStateObj = EmptyState.Show(
-                screenObj.transform, "👤", "Profil tidak tersedia",
+                screenObj.transform, "<b><color=#F2E4C7>♙</color></b>", "Profil tidak tersedia",
                 "Silakan login terlebih dahulu", () => {
                     ScreenManager.Instance.ChangeScreen(new WelcomeScreen(container));
                 }
@@ -454,7 +454,7 @@ public class ProfileScreen : BaseScreen
                     Debug.LogWarning("[Profile] Data profile kosong / gagal di-parse.");
 
                     emptyStateObj = EmptyState.Show(
-                        screenObj.transform, "👤", "Profil tidak tersedia",
+                        screenObj.transform, "<b><color=#F2E4C7>♙</color></b>", "Profil tidak tersedia",
                         "Coba muat ulang data profil", () => RetryFetchProfile()
                     );
 
@@ -476,7 +476,7 @@ public class ProfileScreen : BaseScreen
                 }
 
                 emptyStateObj = EmptyState.Show(
-                    screenObj.transform, "👤", "Gagal memuat profil",
+                    screenObj.transform, "<b><color=#F2E4C7>♙</color></b>", "Gagal memuat profil",
                     "Periksa koneksi internetmu", () => RetryFetchProfile()
                 );
             }
@@ -517,7 +517,7 @@ public class ProfileScreen : BaseScreen
         if (usernameTxt != null) usernameTxt.text = "@" + profileData.username;
         if (titleTxt != null) titleTxt.text = profileData.title_name;
         if (levelTxt != null) levelTxt.text = "Level " + profileData.level;
-        if (starTxt != null) starTxt.text = "⭐ " + profileData.stars;
+        if (starTxt != null) starTxt.text = "<b><color=#D6A84B>★</color></b> " + profileData.stars;
         if (locationTxt != null) locationTxt.text = profileData.location_done.ToString();
         if (achievementTxt != null) achievementTxt.text = profileData.achievement_count.ToString();
         if (galleryTxt != null) galleryTxt.text = profileData.gallery_count.ToString();

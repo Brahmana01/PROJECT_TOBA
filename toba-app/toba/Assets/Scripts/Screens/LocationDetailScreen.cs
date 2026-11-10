@@ -305,7 +305,7 @@ public class LocationDetailScreen : BaseScreen
             "✨ +" + locationData.reward_xp + " XP", TOBATheme.BatakGold);
 
         MakeChip("ChipStar", new Vector2(0.52f, 0.545f), new Vector2(0.94f, 0.592f),
-            "⭐ +" + locationData.reward_stars + " Bintang", TOBATheme.StarActive);
+            "<b><color=#D6A84B>★</color></b> +" + locationData.reward_stars + " Bintang", TOBATheme.StarActive);
     }
 
     private void MakeChip(string name, Vector2 aMin, Vector2 aMax, string label, Color textColor)
@@ -330,7 +330,7 @@ public class LocationDetailScreen : BaseScreen
             new Vector2(0.06f, 0.335f), new Vector2(0.94f, 0.535f),
             "panel_deskripsi", TOBATheme.CardBG, 70f);
 
-        MakeText(face, "📍 TENTANG LOKASI", 36, TOBATheme.WoodDark,
+        MakeText(face, "<b><color=#A83232>⌖</color></b> TENTANG LOKASI", 36, TOBATheme.WoodDark,
             TextAlignmentOptions.Left,
             new Vector2(0f, 0.76f), Vector2.one,
             new Vector4(10, 0, 10, 4), FontStyles.Bold);
@@ -355,7 +355,7 @@ public class LocationDetailScreen : BaseScreen
             new Vector2(0.06f, 0.185f), new Vector2(0.94f, 0.325f),
             "panel_fakta", FactFace, 70f);
 
-        MakeText(face, "💡 FAKTA MENARIK", 34, TOBATheme.BatakGold,
+        MakeText(face, "<b><color=#D6A84B>✧</color></b> FAKTA MENARIK", 34, TOBATheme.BatakGold,
             TextAlignmentOptions.Left,
             new Vector2(0f, 0.66f), Vector2.one,
             new Vector4(10, 0, 10, 2), FontStyles.Bold);

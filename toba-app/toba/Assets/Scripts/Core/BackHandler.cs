@@ -91,7 +91,7 @@ public class BackHandler : MonoBehaviour
             UIBuilder.AnimateScaleIn(panel.transform, 0.22f));
 
         // Ikon
-        UIBuilder.CreateTextSized(panel.transform, "🏠", 95,
+        UIBuilder.CreateTextSized(panel.transform, "<b><color=#D6A84B>⌂</color></b>", 95,
             Color.white, TextAlignmentOptions.Center,
             new Vector2(200, 120), new Vector2(0, 135f))
             .GetComponent<TextMeshProUGUI>().raycastTarget = false;

@@ -89,7 +89,7 @@ public static class LevelUpPopup
 
     static void SpawnConfetti(Transform parent)
     {
-        string[] confetti = { "✨", "⭐", "🎊", "🎉", "💛" };
+        string[] confetti = { "✨", "<b><color=#D6A84B>★</color></b>", "🎊", "🎉", "💛" };
         System.Random rng = new System.Random();
 
         GameObject c = new GameObject("Confetti");

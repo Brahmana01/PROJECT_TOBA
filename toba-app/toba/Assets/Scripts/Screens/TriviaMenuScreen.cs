@@ -1,20 +1,32 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class TriviaMenuScreen : BaseScreen
 {
     private List<TriviaCategoryData> categories = new List<TriviaCategoryData>();
+
     private GameObject loadingObj;
     private GameObject emptyStateObj;
-    private Coroutine introCoroutine;
 
-    // Posisi gambar menu. Tombol kategori mengikuti posisi ini.
-    private const float frameImageWidth = 980f;
-    private const float frameBorder = 12f;
-    private readonly Vector2 visualPos = new Vector2(0f, -36f);
+    // Carousel kategori: empat kartu per halaman (2 kolom x 2 baris).
+    private const int CategoriesPerPage = 4;
+    private int currentPage = 0;
+    private int totalPages = 0;
+
+    private GameObject carouselFrameObj;
+    private RectTransform carouselViewport;
+    private GameObject currentPageObj;
+
+    private Button previousPageButton;
+    private Button nextPageButton;
+    private TextMeshProUGUI pageCounterText;
+
+    private Tween pageTransitionTween;
+    private bool isPageTransitioning = false;
+    private bool isOpeningCategory = false;
 
     // ───────── HEADER: papan judul + tombol kembali ─────────
     // Area papan judul (anchor 0-1 terhadap layar)
@@ -35,6 +47,7 @@ public class TriviaMenuScreen : BaseScreen
 
     private static Sprite roundedSprite;
     private static Sprite chevronSprite;
+    private static Sprite circleSprite;
 
     public TriviaMenuScreen(Transform parent) : base(parent, "TriviaMenu") { }
 
@@ -42,8 +55,8 @@ public class TriviaMenuScreen : BaseScreen
     {
         CreateBackground();
         CreateHeader();
-        BuildTriviaVisual();
         CreateRibbon();
+        CreateCarouselFrame();
         CreateHintPill();
 
         ShowLoading();
@@ -86,6 +99,39 @@ public class TriviaMenuScreen : BaseScreen
             SpriteMeshType.FullRect,
             new Vector4(border, border, border, border)
         );
+    }
+
+    // Sprite lingkaran untuk tombol carousel dan indikator halaman.
+    private static Sprite GetCircleSprite()
+    {
+        if (circleSprite != null) return circleSprite;
+
+        const int size = 96;
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        tex.filterMode = FilterMode.Bilinear;
+
+        Vector2 center = new Vector2((size - 1) * 0.5f, (size - 1) * 0.5f);
+        float radius = (size - 1) * 0.5f;
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float distance = Vector2.Distance(new Vector2(x, y), center);
+                float alpha = Mathf.Clamp01(radius - distance + 0.75f);
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+            }
+        }
+
+        tex.Apply();
+        circleSprite = Sprite.Create(
+            tex,
+            new Rect(0, 0, size, size),
+            new Vector2(0.5f, 0.5f),
+            100f
+        );
+
+        return circleSprite;
     }
 
     // Ikon panah kiri digambar lewat kode (tidak bergantung pada font)
@@ -193,6 +239,22 @@ public class TriviaMenuScreen : BaseScreen
         shadow.effectDistance = new Vector2(0f, -6f);
 
         face = CreateInsetImage(frame.transform, "Face", faceColor, 5f);
+
+        // Animasi pop-in ringan agar panel terasa hidup, tetapi tetap selaras
+        // dengan papan kayu dan ornamen emas pada Main Menu.
+        CanvasGroup group = frame.AddComponent<CanvasGroup>();
+        group.alpha = 0f;
+        frame.transform.localScale = Vector3.one * 0.94f;
+
+        if (screenObj != null)
+        {
+            Sequence intro = DOTween.Sequence();
+            intro.SetUpdate(true);
+            intro.SetTarget(screenObj.transform);
+            intro.Append(frame.transform.DOScale(1f, 0.32f).SetEase(Ease.OutBack));
+            intro.Join(group.DOFade(1f, 0.24f));
+        }
+
         return frame;
     }
 
@@ -263,14 +325,15 @@ public class TriviaMenuScreen : BaseScreen
         shadeRt.offsetMax = Vector2.zero;
 
         Image shadeImg = shade.AddComponent<Image>();
-        shadeImg.color = new Color(0.02f, 0.08f, 0.08f, 0.35f);
+        shadeImg.color = new Color(0.02f, 0.08f, 0.08f, 0.24f);
         shadeImg.raycastTarget = false;
     }
 
     // ───────────────── HEADER + TOMBOL KEMBALI ─────────────────
+
+    // ───────────────── HEADER + TOMBOL KEMBALI ─────────────────
     private void CreateHeader()
     {
-        // Container header memenuhi area layar
         GameObject headerContainer = new GameObject("TriviaHeaderContainer");
         headerContainer.transform.SetParent(screenObj.transform, false);
 
@@ -280,141 +343,173 @@ public class TriviaMenuScreen : BaseScreen
         containerRT.offsetMin = Vector2.zero;
         containerRT.offsetMax = Vector2.zero;
 
-        // =====================================
-        // 1. PAPAN JUDUL - SELALU DI TENGAH
-        // =====================================
-
+        // Papan judul bergambar yang sama dengan identitas visual TOBA.
         Sprite headerSprite = Resources.Load<Sprite>("gambar/trivia_header");
 
-        if (headerSprite == null)
+        if (headerSprite != null)
         {
-            Debug.LogError("[Trivia] Gambar trivia_header tidak ditemukan!");
-            return;
+            GameObject header = new GameObject("TriviaWoodHeader");
+            header.transform.SetParent(headerContainer.transform, false);
+
+            RectTransform headerRT = header.AddComponent<RectTransform>();
+            headerRT.anchorMin = new Vector2(0.02f, HeaderMinY);
+            headerRT.anchorMax = new Vector2(0.98f, HeaderMaxY);
+            headerRT.offsetMin = Vector2.zero;
+            headerRT.offsetMax = Vector2.zero;
+
+            Image headerImg = header.AddComponent<Image>();
+            headerImg.sprite = headerSprite;
+            headerImg.type = Image.Type.Simple;
+            headerImg.preserveAspect = true;
+            headerImg.color = Color.white;
+            headerImg.raycastTarget = false;
+
+            headerRT.localScale = Vector3.one * 0.94f;
+
+            Sequence headerIntro = DOTween.Sequence();
+            headerIntro.SetUpdate(true);
+            headerIntro.SetTarget(screenObj.transform);
+            headerIntro.Append(headerRT.DOScale(1f, 0.42f).SetEase(Ease.OutBack));
+        }
+        else
+        {
+            Debug.LogWarning(
+                "[Trivia] gambar/trivia_header tidak ditemukan. " +
+                "Menggunakan header kayu cadangan."
+            );
+
+            Image fallbackFace;
+            CreateFramedPill(
+                "TriviaHeaderFallback",
+                new Vector2(0.12f, HeaderMinY),
+                new Vector2(0.88f, HeaderMaxY),
+                TOBATheme.WoodDark,
+                out fallbackFace
+            );
+
+            MakeText(
+                fallbackFace.transform,
+                "TRIVIA BUDAYA",
+                42,
+                TOBATheme.BatakGold,
+                new Vector2(650f, 90f),
+                Vector2.zero,
+                FontStyles.Bold
+            );
         }
 
-        GameObject header = new GameObject("TriviaWoodHeader");
-        header.transform.SetParent(headerContainer.transform, false);
-
-        RectTransform headerRT = header.AddComponent<RectTransform>();
-
-        // Lebar papan simetris terhadap layar
-        headerRT.anchorMin = new Vector2(0.02f, HeaderMinY);
-        headerRT.anchorMax = new Vector2(0.98f, HeaderMaxY);
-        headerRT.offsetMin = Vector2.zero;
-        headerRT.offsetMax = Vector2.zero;
-
-        Image headerImg = header.AddComponent<Image>();
-        headerImg.sprite = headerSprite;
-        headerImg.type = Image.Type.Simple;
-        headerImg.preserveAspect = true;
-        headerImg.color = Color.white;
-        headerImg.raycastTarget = false;
-
-        // =====================================
-        // 2. TOMBOL KEMBALI
-        // Titik tengahnya = titik tengah KAYU papan (HeaderCenterY),
-        // ukuran dan jarak kiri sama dengan layar kuis & hasil.
-        // =====================================
-
-        Sprite back = TOBATheme.LoadSprite(
+        // Tombol kembali: gunakan sprite proyek jika tersedia.
+        Sprite backSprite = TOBATheme.LoadSprite(
             "RegisterNameScreen/register_name_back_button_v2"
         );
 
-        if (back == null)
+        GameObject backObject = new GameObject(
+            "BackButton",
+            typeof(RectTransform),
+            typeof(Image),
+            typeof(Button)
+        );
+        backObject.transform.SetParent(headerContainer.transform, false);
+
+        RectTransform backRT = backObject.GetComponent<RectTransform>();
+        backRT.anchorMin = new Vector2(0f, HeaderCenterY);
+        backRT.anchorMax = new Vector2(0f, HeaderCenterY);
+        backRT.pivot = new Vector2(0f, 0.5f);
+        backRT.sizeDelta = new Vector2(BackButtonSize, BackButtonSize);
+        backRT.anchoredPosition = new Vector2(BackButtonLeft, 0f);
+
+        Image backImage = backObject.GetComponent<Image>();
+        backImage.raycastTarget = true;
+        backImage.preserveAspect = true;
+
+        if (backSprite != null)
         {
-            Debug.LogError("[Trivia] Back button sprite tidak ditemukan!");
+            backImage.sprite = backSprite;
+            backImage.color = Color.white;
+        }
+        else
+        {
+            backImage.sprite = GetCircleSprite();
+            backImage.color = TOBATheme.BatakGold;
+
+            GameObject inner = new GameObject(
+                "BackButtonInner",
+                typeof(RectTransform),
+                typeof(Image)
+            );
+            inner.transform.SetParent(backObject.transform, false);
+
+            RectTransform innerRT = inner.GetComponent<RectTransform>();
+            innerRT.anchorMin = Vector2.zero;
+            innerRT.anchorMax = Vector2.one;
+            innerRT.offsetMin = new Vector2(7f, 7f);
+            innerRT.offsetMax = new Vector2(-7f, -7f);
+
+            Image innerImage = inner.GetComponent<Image>();
+            innerImage.sprite = GetCircleSprite();
+            innerImage.color = TOBATheme.WoodDark;
+            innerImage.raycastTarget = false;
+
+            GameObject arrow = new GameObject(
+                "BackChevron",
+                typeof(RectTransform),
+                typeof(Image)
+            );
+            arrow.transform.SetParent(inner.transform, false);
+
+            RectTransform arrowRT = arrow.GetComponent<RectTransform>();
+            arrowRT.anchorMin = new Vector2(0.22f, 0.22f);
+            arrowRT.anchorMax = new Vector2(0.78f, 0.78f);
+            arrowRT.offsetMin = Vector2.zero;
+            arrowRT.offsetMax = Vector2.zero;
+
+            Image arrowImage = arrow.GetComponent<Image>();
+            arrowImage.sprite = GetChevronSprite();
+            arrowImage.color = TOBATheme.BatakGold;
+            arrowImage.preserveAspect = true;
+            arrowImage.raycastTarget = false;
+        }
+
+        Button backButton = backObject.GetComponent<Button>();
+        backButton.targetGraphic = backImage;
+        backButton.transition = Selectable.Transition.None;
+        backButton.onClick.AddListener(() => GoBackToMainMenu(backObject.transform));
+
+        // Gerakan mengambang sangat halus, tidak mengganggu tombol.
+        backRT.DOAnchorPosY(3f, 1.15f)
+            .SetRelative()
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetUpdate(true)
+            .SetTarget(screenObj.transform);
+    }
+
+    private void GoBackToMainMenu(Transform target)
+    {
+        if (target == null || isOpeningCategory || isPageTransitioning)
             return;
-        }
-
-        GameObject buttonObject = new GameObject("BackButton");
-        buttonObject.transform.SetParent(headerContainer.transform, false);
-
-        RectTransform buttonRT = buttonObject.AddComponent<RectTransform>();
-        buttonRT.anchorMin = new Vector2(0f, HeaderCenterY);
-        buttonRT.anchorMax = new Vector2(0f, HeaderCenterY);
-        buttonRT.pivot = new Vector2(0f, 0.5f);
-        buttonRT.sizeDelta = new Vector2(BackButtonSize, BackButtonSize);
-        buttonRT.anchoredPosition = new Vector2(BackButtonLeft, 0f);
-
-        Image buttonImage = buttonObject.AddComponent<Image>();
-        buttonImage.sprite = back;
-        buttonImage.preserveAspect = true;
-        buttonImage.raycastTarget = true;
-
-        Button button = buttonObject.AddComponent<Button>();
-        button.targetGraphic = buttonImage;
-        button.transition = Selectable.Transition.None;
-
-        button.onClick.AddListener(() =>
-        {
-            if (ScreenManager.Instance != null)
-            {
-                ScreenManager.Instance.StartCoroutine(
-                    BackButtonPress(buttonObject.transform)
-                );
-            }
-        });
-
-        if (ScreenManager.Instance != null)
-        {
-            ScreenManager.Instance.StartCoroutine(
-                BackButtonFloat(buttonObject.transform)
-            );
-        }
-    }
-
-    private IEnumerator BackButtonFloat(Transform target)
-    {
-        if (target == null)
-            yield break;
-
-        Vector3 origin = target.localPosition;
-        float time = 0f;
-
-        while (target != null)
-        {
-            time += Time.deltaTime;
-
-            target.localPosition = new Vector3(
-                origin.x,
-                origin.y + Mathf.Sin(time * 1.1f) * 2f,
-                origin.z
-            );
-
-            yield return null;
-        }
-    }
-
-    private IEnumerator BackButtonPress(Transform target)
-    {
-        if (target == null)
-            yield break;
-
-        Vector3 original = target.localScale;
-
-        target.localScale = original * 0.88f;
-        yield return new WaitForSeconds(0.07f);
-
-        if (target == null)
-            yield break;
-
-        target.localScale = original * 1.06f;
-        yield return new WaitForSeconds(0.07f);
-
-        if (target == null)
-            yield break;
-
-        target.localScale = original;
 
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySFX("sfx_click");
 
-        ScreenManager.Instance.ChangeScreen(
-            new MainMenuScreen(container)
-        );
+        Sequence press = DOTween.Sequence();
+        press.SetUpdate(true);
+        press.SetTarget(screenObj.transform);
+        press.Append(target.DOScale(0.86f, 0.07f).SetEase(Ease.OutQuad));
+        press.Append(target.DOScale(1.06f, 0.10f).SetEase(Ease.OutBack));
+        press.Append(target.DOScale(1f, 0.08f).SetEase(Ease.OutQuad));
+        press.OnComplete(() =>
+        {
+            if (ScreenManager.Instance != null)
+            {
+                ScreenManager.Instance.ChangeScreen(
+                    new MainMenuScreen(container)
+                );
+            }
+        });
     }
 
-    // ───────────────── PITA JUDUL + PETUNJUK ─────────────────
+        // ───────────────── PITA JUDUL + PETUNJUK ─────────────────
     private void CreateRibbon()
     {
         Image face;
@@ -454,7 +549,7 @@ public class TriviaMenuScreen : BaseScreen
 
         TextMeshProUGUI txt = MakeText(
             face.transform,
-            "Ketuk kartu kategori untuk mulai bermain",
+            "Pilih kategori dan mulai petualangan budaya!",
             34,
             TOBATheme.TextLight,
             new Vector2(800f, 100f),
@@ -466,6 +561,191 @@ public class TriviaMenuScreen : BaseScreen
         txt.enableAutoSizing = true;
         txt.fontSizeMin = 22;
         txt.fontSizeMax = 34;
+    }
+
+    // ───────────────── CAROUSEL FRAME ─────────────────
+    private void CreateCarouselFrame()
+    {
+        if (screenObj == null) return;
+
+        // Bingkai utama area kategori.
+        carouselFrameObj = new GameObject("TriviaCarouselFrame");
+        carouselFrameObj.transform.SetParent(screenObj.transform, false);
+
+        RectTransform frameRT = carouselFrameObj.AddComponent<RectTransform>();
+        frameRT.anchorMin = new Vector2(0.105f, 0.265f);
+        frameRT.anchorMax = new Vector2(0.895f, 0.735f);
+        frameRT.offsetMin = Vector2.zero;
+        frameRT.offsetMax = Vector2.zero;
+
+        Image frameImage = carouselFrameObj.AddComponent<Image>();
+        frameImage.sprite = GetRoundedSprite();
+        frameImage.type = Image.Type.Sliced;
+        frameImage.color = TOBATheme.BatakGold;
+        frameImage.raycastTarget = false;
+
+        Shadow frameShadow = carouselFrameObj.AddComponent<Shadow>();
+        frameShadow.effectColor = new Color(0f, 0f, 0f, 0.48f);
+        frameShadow.effectDistance = new Vector2(0f, -7f);
+
+        CanvasGroup frameGroup = carouselFrameObj.AddComponent<CanvasGroup>();
+        frameGroup.alpha = 0f;
+        frameRT.localScale = Vector3.one * 0.95f;
+
+        Sequence frameIntro = DOTween.Sequence();
+        frameIntro.SetUpdate(true);
+        frameIntro.SetTarget(screenObj.transform);
+        frameIntro.Append(frameRT.DOScale(1f, 0.38f).SetEase(Ease.OutBack));
+        frameIntro.Join(frameGroup.DOFade(1f, 0.28f));
+
+        // Lapisan dalam berwarna kayu/cokelat.
+        Image innerFrame = CreateInsetImage(
+            carouselFrameObj.transform,
+            "CarouselInnerFrame",
+            TOBATheme.CardBorder,
+            7f
+        );
+
+        // Viewport menjadi area pemotong halaman. Kartu tidak keluar dari bingkai.
+        GameObject viewportObj = new GameObject(
+            "CategoryViewport",
+            typeof(RectTransform),
+            typeof(RectMask2D)
+        );
+        viewportObj.transform.SetParent(innerFrame.transform, false);
+
+        carouselViewport = viewportObj.GetComponent<RectTransform>();
+        carouselViewport.anchorMin = Vector2.zero;
+        carouselViewport.anchorMax = Vector2.one;
+        carouselViewport.offsetMin = new Vector2(17f, 17f);
+        carouselViewport.offsetMax = new Vector2(-17f, -17f);
+
+        // Tombol navigasi berada di sisi kiri dan kanan bingkai.
+        previousPageButton = CreateCarouselArrow(
+            "PreviousPageButton",
+            false,
+            new Vector2(0.052f, 0.50f)
+        );
+
+        nextPageButton = CreateCarouselArrow(
+            "NextPageButton",
+            true,
+            new Vector2(0.948f, 0.50f)
+        );
+
+        // Indikator menggunakan format angka agar tetap rapi meskipun halaman banyak.
+        GameObject counterObj = new GameObject("PageCounter");
+        counterObj.transform.SetParent(screenObj.transform, false);
+
+        RectTransform counterRT = counterObj.AddComponent<RectTransform>();
+        counterRT.anchorMin = new Vector2(0.5f, 0.215f);
+        counterRT.anchorMax = new Vector2(0.5f, 0.215f);
+        counterRT.pivot = new Vector2(0.5f, 0.5f);
+        counterRT.sizeDelta = new Vector2(260f, 42f);
+        counterRT.anchoredPosition = Vector2.zero;
+
+        pageCounterText = MakeText(
+            counterObj.transform,
+            "1 / 1",
+            25,
+            TOBATheme.BatakGold,
+            new Vector2(260f, 42f),
+            Vector2.zero,
+            FontStyles.Bold
+        );
+    }
+
+    private Button CreateCarouselArrow(
+        string objectName,
+        bool pointsRight,
+        Vector2 screenAnchor)
+    {
+        GameObject arrowObj = new GameObject(
+            objectName,
+            typeof(RectTransform),
+            typeof(Image),
+            typeof(Button)
+        );
+        arrowObj.transform.SetParent(screenObj.transform, false);
+
+        RectTransform arrowRT = arrowObj.GetComponent<RectTransform>();
+        arrowRT.anchorMin = screenAnchor;
+        arrowRT.anchorMax = screenAnchor;
+        arrowRT.pivot = new Vector2(0.5f, 0.5f);
+        arrowRT.sizeDelta = new Vector2(94f, 94f);
+        arrowRT.anchoredPosition = Vector2.zero;
+
+        // Lingkaran emas sebagai bingkai tombol.
+        Image outerImage = arrowObj.GetComponent<Image>();
+        outerImage.sprite = GetCircleSprite();
+        outerImage.color = TOBATheme.BatakGold;
+        outerImage.raycastTarget = true;
+
+        // Lingkaran kayu di bagian dalam.
+        GameObject innerObj = new GameObject(
+            "InnerCircle",
+            typeof(RectTransform),
+            typeof(Image)
+        );
+        innerObj.transform.SetParent(arrowObj.transform, false);
+
+        RectTransform innerRT = innerObj.GetComponent<RectTransform>();
+        innerRT.anchorMin = Vector2.zero;
+        innerRT.anchorMax = Vector2.one;
+        innerRT.offsetMin = new Vector2(6f, 6f);
+        innerRT.offsetMax = new Vector2(-6f, -6f);
+
+        Image innerImage = innerObj.GetComponent<Image>();
+        innerImage.sprite = GetCircleSprite();
+        innerImage.color = TOBATheme.WoodDark;
+        innerImage.raycastTarget = false;
+
+        // Sprite chevron bawaan menghadap kiri; tombol kanan diputar 180 derajat.
+        GameObject iconObj = new GameObject(
+            "Chevron",
+            typeof(RectTransform),
+            typeof(Image)
+        );
+        iconObj.transform.SetParent(innerObj.transform, false);
+
+        RectTransform iconRT = iconObj.GetComponent<RectTransform>();
+        iconRT.anchorMin = new Vector2(0.22f, 0.22f);
+        iconRT.anchorMax = new Vector2(0.78f, 0.78f);
+        iconRT.offsetMin = Vector2.zero;
+        iconRT.offsetMax = Vector2.zero;
+
+        Image iconImage = iconObj.GetComponent<Image>();
+        iconImage.sprite = GetChevronSprite();
+        iconImage.preserveAspect = true;
+        iconImage.color = TOBATheme.BatakGold;
+        iconImage.raycastTarget = false;
+
+        if (pointsRight)
+            iconRT.localRotation = Quaternion.Euler(0f, 0f, 180f);
+
+        Button button = arrowObj.GetComponent<Button>();
+        button.targetGraphic = outerImage;
+        button.transition = Selectable.Transition.ColorTint;
+
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.white;
+        colors.highlightedColor = new Color(1f, 0.92f, 0.68f, 1f);
+        colors.pressedColor = new Color(0.82f, 0.68f, 0.38f, 1f);
+        colors.disabledColor = new Color(1f, 1f, 1f, 0.35f);
+        button.colors = colors;
+
+        button.onClick.AddListener(() =>
+        {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX("sfx_click");
+
+            ChangePage(
+                currentPage + (pointsRight ? 1 : -1),
+                pointsRight ? 1 : -1
+            );
+        });
+
+        return button;
     }
 
     // ───────────────── LOADING ─────────────────
@@ -508,7 +788,7 @@ public class TriviaMenuScreen : BaseScreen
         }
     }
 
-    // ───────────────── DATA ─────────────────
+    // ───────────────── DATA KATEGORI DARI API ─────────────────
     private void FetchCategories()
     {
         ClearEmptyState();
@@ -516,20 +796,49 @@ public class TriviaMenuScreen : BaseScreen
         if (APIManager.Instance == null)
         {
             Debug.LogError("TriviaMenuScreen: APIManager tidak ditemukan.");
+            if (loadingObj != null)
+            {
+                Object.Destroy(loadingObj);
+                loadingObj = null;
+            }
+
+            emptyStateObj = EmptyState.Show(
+                screenObj.transform,
+                "!",
+                "Koneksi game belum siap",
+                "Coba buka halaman ini kembali",
+                () => RetryFetchCategories()
+            );
             return;
         }
 
         APIManager.Instance.GetRequest(
             "/trivia/categories",
-            (response) => {
+            (response) =>
+            {
                 if (screenObj == null) return;
 
-                string wrapped = "{\"categories\":" + response + "}";
-                TriviaCategoryListResponse res =
-                    JsonUtility.FromJson<TriviaCategoryListResponse>(wrapped);
+                TriviaCategoryListResponse res = null;
+
+                try
+                {
+                    string json = string.IsNullOrWhiteSpace(response)
+                        ? "[]"
+                        : response.Trim();
+
+                    string wrapped = json.StartsWith("{")
+                        ? json
+                        : "{\"categories\":" + json + "}";
+
+                    res = JsonUtility.FromJson<TriviaCategoryListResponse>(wrapped);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError("[Trivia] Gagal membaca JSON kategori: " + ex.Message);
+                }
 
                 categories = res != null && res.categories != null
-                    ? res.categories
+                    ? res.categories.FindAll(c => c != null)
                     : new List<TriviaCategoryData>();
 
                 if (loadingObj != null)
@@ -540,6 +849,16 @@ public class TriviaMenuScreen : BaseScreen
 
                 if (categories.Count == 0)
                 {
+                    if (currentPageObj != null)
+                    {
+                        Object.Destroy(currentPageObj);
+                        currentPageObj = null;
+                    }
+
+                    totalPages = 0;
+                    currentPage = 0;
+                    UpdateCarouselControls();
+
                     emptyStateObj = EmptyState.Show(
                         screenObj.transform,
                         "?",
@@ -550,9 +869,10 @@ public class TriviaMenuScreen : BaseScreen
                     return;
                 }
 
-                BuildCategoryButtons();
+                BuildCategoryPages();
             },
-            (err) => {
+            (err) =>
+            {
                 if (screenObj == null) return;
 
                 Debug.LogWarning("[Trivia] Gagal memuat kategori: " + err);
@@ -581,192 +901,515 @@ public class TriviaMenuScreen : BaseScreen
         FetchCategories();
     }
 
-    // ───────────────── TOMBOL KATEGORI (di atas gambar) ─────────────────
-    private void BuildCategoryButtons()
+    // ───────────────── MEMBANGUN HALAMAN KATEGORI ─────────────────
+    private void BuildCategoryPages()
     {
-        if (screenObj == null) return;
+        if (screenObj == null || carouselViewport == null) return;
 
-        Transform parent = screenObj.transform;
-
-        // Tombol mengikuti ukuran gambar di dalam bingkai
-        float k = frameImageWidth / 1080f;
-
-        float cardWidth = 480f * k;
-        float cardHeight = 430f * k;
-
-        float leftX = visualPos.x - 260f * k;
-        float rightX = visualPos.x + 260f * k;
-        float topY = visualPos.y + 290f * k;
-        float bottomY = visualPos.y - 210f * k;
-
-        for (int i = 0; i < categories.Count && i < 4; i++)
+        if (currentPageObj != null)
         {
-            TriviaCategoryData cat = categories[i];
-
-            float x = (i % 2 == 0) ? leftX : rightX;
-            float y = (i < 2) ? topY : bottomY;
-
-            CreateInvisibleCategoryButton(
-                parent,
-                cat,
-                new Vector2(cardWidth, cardHeight),
-                new Vector2(x, y)
-            );
+            Object.Destroy(currentPageObj);
+            currentPageObj = null;
         }
+
+        totalPages = Mathf.CeilToInt(
+            categories.Count / (float)CategoriesPerPage
+        );
+
+        currentPage = 0;
+        isPageTransitioning = false;
+
+        DisplayPage(currentPage, 0, false);
+        UpdateCarouselControls();
+
+        Debug.Log(
+            $"[Trivia] {categories.Count} kategori dimuat dalam {totalPages} halaman."
+        );
     }
 
-    private void CreateInvisibleCategoryButton(
-        Transform parent,
-        TriviaCategoryData cat,
-        Vector2 size,
-        Vector2 position)
+    private void ChangePage(int targetPage, int direction)
     {
-        GameObject buttonObj = new GameObject("CategoryButton_" + cat.id);
-        buttonObj.transform.SetParent(parent, false);
+        if (isPageTransitioning) return;
+        if (targetPage < 0 || targetPage >= totalPages) return;
+        if (targetPage == currentPage) return;
 
-        RectTransform rect = buttonObj.AddComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 0.5f);
-        rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = size;
-        rect.anchoredPosition = position;
+        currentPage = targetPage;
+        DisplayPage(currentPage, direction, true);
+        UpdateCarouselControls();
+    }
 
-        Image image = buttonObj.AddComponent<Image>();
-        image.color = new Color(1f, 1f, 1f, 0f);
 
-        Button button = buttonObj.AddComponent<Button>();
-        button.targetGraphic = image;
+    private void DisplayPage(int pageIndex, int direction, bool animate)
+    {
+        if (carouselViewport == null || screenObj == null)
+            return;
 
-        button.onClick.AddListener(() =>
+        GameObject oldPage = currentPageObj;
+
+        GameObject newPage = new GameObject(
+            "TriviaCategoryPage_" + (pageIndex + 1),
+            typeof(RectTransform),
+            typeof(CanvasGroup)
+        );
+        newPage.transform.SetParent(carouselViewport, false);
+
+        RectTransform newPageRT = newPage.GetComponent<RectTransform>();
+        newPageRT.anchorMin = Vector2.zero;
+        newPageRT.anchorMax = Vector2.one;
+        newPageRT.offsetMin = Vector2.zero;
+        newPageRT.offsetMax = Vector2.zero;
+        newPageRT.anchoredPosition = Vector2.zero;
+
+        CanvasGroup newPageGroup = newPage.GetComponent<CanvasGroup>();
+        newPageGroup.alpha = 1f;
+        newPageGroup.interactable = true;
+        newPageGroup.blocksRaycasts = true;
+
+        int startIndex = pageIndex * CategoriesPerPage;
+        int endIndex = Mathf.Min(
+            startIndex + CategoriesPerPage,
+            categories.Count
+        );
+
+        int slotIndex = 0;
+        for (int i = startIndex; i < endIndex; i++)
         {
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySFX("sfx_click");
+            TriviaCategoryData category = categories[i];
+            if (category == null)
+                continue;
 
-            if (ScreenManager.Instance != null)
-                ScreenManager.Instance.ChangeScreen(
-                    new TriviaQuizScreen(container, cat));
+            CreateCategoryCard(
+                newPage.transform,
+                category,
+                i + 1,
+                slotIndex
+            );
+
+            slotIndex++;
+        }
+
+        currentPageObj = newPage;
+
+        if (oldPage == null || !animate)
+        {
+            if (oldPage != null)
+                Object.Destroy(oldPage);
+
+            newPageRT.anchoredPosition = Vector2.zero;
+            newPageGroup.alpha = 1f;
+            newPageGroup.interactable = true;
+            newPageGroup.blocksRaycasts = true;
+            isPageTransitioning = false;
+            return;
+        }
+
+        isPageTransitioning = true;
+
+        CanvasGroup oldPageGroup = oldPage.GetComponent<CanvasGroup>();
+        RectTransform oldPageRT = oldPage.GetComponent<RectTransform>();
+
+        if (oldPageGroup != null)
+        {
+            oldPageGroup.interactable = false;
+            oldPageGroup.blocksRaycasts = false;
+        }
+
+        float width = carouselViewport.rect.width;
+        if (width < 100f)
+            width = 800f;
+
+        float distance = width * 0.24f;
+        newPageRT.anchoredPosition = new Vector2(direction * distance, 0f);
+        newPageGroup.alpha = 0f;
+        newPageGroup.interactable = false;
+        newPageGroup.blocksRaycasts = false;
+
+        Sequence transition = DOTween.Sequence();
+        transition.SetUpdate(true);
+        transition.SetTarget(screenObj.transform);
+
+        transition.Join(
+            newPageRT.DOAnchorPos(Vector2.zero, 0.34f)
+                .SetEase(Ease.OutCubic)
+        );
+        transition.Join(
+            newPageGroup.DOFade(1f, 0.28f)
+                .SetEase(Ease.OutQuad)
+        );
+
+        if (oldPageRT != null)
+        {
+            transition.Join(
+                oldPageRT.DOAnchorPos(
+                    new Vector2(-direction * distance, 0f),
+                    0.34f
+                ).SetEase(Ease.InCubic)
+            );
+        }
+
+        if (oldPageGroup != null)
+        {
+            transition.Join(
+                oldPageGroup.DOFade(0f, 0.25f)
+                    .SetEase(Ease.InQuad)
+            );
+        }
+
+        pageTransitionTween = transition;
+        transition.OnComplete(() =>
+        {
+            if (oldPage != null)
+                Object.Destroy(oldPage);
+
+            if (newPage != null)
+            {
+                RectTransform finalRT = newPage.GetComponent<RectTransform>();
+                CanvasGroup finalGroup = newPage.GetComponent<CanvasGroup>();
+
+                if (finalRT != null)
+                    finalRT.anchoredPosition = Vector2.zero;
+
+                if (finalGroup != null)
+                {
+                    finalGroup.alpha = 1f;
+                    finalGroup.interactable = true;
+                    finalGroup.blocksRaycasts = true;
+                }
+            }
+
+            pageTransitionTween = null;
+            isPageTransitioning = false;
+            UpdateCarouselControls();
         });
     }
 
-    // ───────────────── GAMBAR MENU (dalam bingkai) ─────────────────
-    private void BuildTriviaVisual()
+        // ───────────────── KARTU KATEGORI DINAMIS ─────────────────
+
+    private void CreateCategoryCard(
+        Transform parent,
+        TriviaCategoryData category,
+        int displayNumber,
+        int slotIndex)
     {
-        if (screenObj == null)
-        {
-            Debug.LogError("[Trivia] screenObj NULL!");
-            return;
-        }
+        int column = slotIndex % 2;
+        int row = slotIndex / 2;
 
-        Sprite sprite = Resources.Load<Sprite>("Trivia/trivia_menu");
+        float xMin = column == 0 ? 0.035f : 0.515f;
+        float xMax = column == 0 ? 0.485f : 0.965f;
 
-        if (sprite == null)
-        {
-            Debug.LogError(
-                "[Trivia] GAGAL LOAD GAMBAR! " +
-                "Pastikan file ada di " +
-                "Assets/Resources/Trivia/trivia_menu.png"
-            );
-            return;
-        }
+        // Baris pertama di atas, baris kedua di bawah.
+        float yMin = row == 0 ? 0.515f : 0.035f;
+        float yMax = row == 0 ? 0.965f : 0.485f;
 
-        float imgW = frameImageWidth;
-        float imgH = imgW * sprite.rect.height / sprite.rect.width;
+        GameObject card = new GameObject(
+            "CategoryCard_" + category.id,
+            typeof(RectTransform),
+            typeof(Image),
+            typeof(Button),
+            typeof(Shadow),
+            typeof(CanvasGroup)
+        );
+        card.transform.SetParent(parent, false);
 
-        // Lapis 1: bingkai emas
-        GameObject frame = new GameObject("TriviaVisualFrame");
-        frame.transform.SetParent(screenObj.transform, false);
+        RectTransform cardRT = card.GetComponent<RectTransform>();
+        cardRT.anchorMin = new Vector2(xMin, yMin);
+        cardRT.anchorMax = new Vector2(xMax, yMax);
+        cardRT.offsetMin = Vector2.zero;
+        cardRT.offsetMax = Vector2.zero;
 
-        RectTransform rect = frame.AddComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 0.5f);
-        rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(
-            imgW + frameBorder * 2f,
-            imgH + frameBorder * 2f);
-        rect.anchoredPosition = visualPos;
+        // Tiga lapisan: emas, cokelat ukiran, lalu permukaan kayu.
+        Image outerFrame = card.GetComponent<Image>();
+        outerFrame.sprite = GetRoundedSprite();
+        outerFrame.type = Image.Type.Sliced;
+        outerFrame.color = TOBATheme.BatakGold;
+        outerFrame.raycastTarget = true;
 
-        Image frameImg = frame.AddComponent<Image>();
-        frameImg.sprite = GetRoundedSprite();
-        frameImg.type = Image.Type.Sliced;
-        frameImg.color = TOBATheme.BatakGold;
-        frameImg.raycastTarget = false;
+        Shadow shadow = card.GetComponent<Shadow>();
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.48f);
+        shadow.effectDistance = new Vector2(0f, -6f);
 
-        Shadow shadow = frame.AddComponent<Shadow>();
-        shadow.effectColor = new Color(0f, 0f, 0f, 0.5f);
-        shadow.effectDistance = new Vector2(0f, -8f);
-
-        // Lapis 2: cokelat
         CreateInsetImage(
-            frame.transform, "FrameBorder", TOBATheme.CardBorder, 4f);
+            card.transform,
+            "CarvedBorder",
+            TOBATheme.CardBorder,
+            5f
+        );
 
-        // Lapis 3: gambar menu (tepinya tertutup bingkai)
-        // Masker membulat agar sudut gambar halus
-        Image maskImg = CreateInsetImage(
-            frame.transform, "VisualMask", Color.white, frameBorder);
-        Mask mask = maskImg.gameObject.AddComponent<Mask>();
-        mask.showMaskGraphic = false;
+        Image woodFace = CreateInsetImage(
+            card.transform,
+            "WoodFace",
+            TOBATheme.WoodDark,
+            10f
+        );
+        woodFace.raycastTarget = false;
 
-        GameObject visual = new GameObject("TriviaVisual");
-        visual.transform.SetParent(maskImg.transform, false);
+        // Aksen sudut dan garis emas memberi kesan papan kayu berornamen.
+        CreateCardCorner(woodFace.transform, new Vector2(0f, 1f), new Vector2(17f, -17f));
+        CreateCardCorner(woodFace.transform, new Vector2(1f, 1f), new Vector2(-17f, -17f));
+        CreateCardCorner(woodFace.transform, new Vector2(0f, 0f), new Vector2(17f, 17f));
+        CreateCardCorner(woodFace.transform, new Vector2(1f, 0f), new Vector2(-17f, 17f));
 
-        RectTransform vr = visual.AddComponent<RectTransform>();
-        vr.anchorMin = Vector2.zero;
-        vr.anchorMax = Vector2.one;
-        vr.offsetMin = Vector2.zero;
-        vr.offsetMax = Vector2.zero;
+        CreateCardDivider(
+            woodFace.transform,
+            new Vector2(0.18f, 0.25f),
+            new Vector2(0.82f, 0.25f)
+        );
 
-        Image image = visual.AddComponent<Image>();
-        image.sprite = sprite;
-        image.type = Image.Type.Simple;
-        image.preserveAspect = false;
-        image.raycastTarget = false;
+        MakeText(
+            woodFace.transform,
+            "TRIVIA BUDAYA",
+            16,
+            TOBATheme.BatakGold,
+            new Vector2(320f, 36f),
+            new Vector2(0f, 158f),
+            FontStyles.Bold
+        );
 
-        // Muncul perlahan dengan efek membesar
-        CanvasGroup group = frame.AddComponent<CanvasGroup>();
-        group.alpha = 0f;
-        rect.localScale = Vector3.one * 0.92f;
+        // Medali nomor kategori.
+        GameObject medal = new GameObject(
+            "CategoryMedal",
+            typeof(RectTransform),
+            typeof(Image)
+        );
+        medal.transform.SetParent(woodFace.transform, false);
 
-        if (ScreenManager.Instance != null)
-            introCoroutine = ScreenManager.Instance.StartCoroutine(
-                PlayIntro(group, rect));
-        else
+        RectTransform medalRT = medal.GetComponent<RectTransform>();
+        medalRT.anchorMin = new Vector2(0.5f, 0.68f);
+        medalRT.anchorMax = new Vector2(0.5f, 0.68f);
+        medalRT.pivot = new Vector2(0.5f, 0.5f);
+        medalRT.sizeDelta = new Vector2(56f, 56f);
+        medalRT.anchoredPosition = Vector2.zero;
+
+        Image medalOuter = medal.GetComponent<Image>();
+        medalOuter.sprite = GetCircleSprite();
+        medalOuter.color = TOBATheme.BatakGold;
+        medalOuter.raycastTarget = false;
+
+        GameObject medalInner = new GameObject(
+            "MedalInner",
+            typeof(RectTransform),
+            typeof(Image)
+        );
+        medalInner.transform.SetParent(medal.transform, false);
+
+        RectTransform medalInnerRT = medalInner.GetComponent<RectTransform>();
+        medalInnerRT.anchorMin = Vector2.zero;
+        medalInnerRT.anchorMax = Vector2.one;
+        medalInnerRT.offsetMin = new Vector2(5f, 5f);
+        medalInnerRT.offsetMax = new Vector2(-5f, -5f);
+
+        Image medalInnerImage = medalInner.GetComponent<Image>();
+        medalInnerImage.sprite = GetCircleSprite();
+        medalInnerImage.color = TOBATheme.WoodDark;
+        medalInnerImage.raycastTarget = false;
+
+        MakeText(
+            medalInner.transform,
+            displayNumber.ToString("00"),
+            22,
+            TOBATheme.BatakGold,
+            new Vector2(48f, 48f),
+            Vector2.zero,
+            FontStyles.Bold
+        );
+
+        // Nama kategori selalu berasal dari API, bukan ditanam pada gambar.
+        string categoryName = string.IsNullOrWhiteSpace(category.name)
+            ? "Kategori Trivia"
+            : category.name.Trim();
+
+        TextMeshProUGUI title = MakeText(
+            woodFace.transform,
+            categoryName,
+            34,
+            TOBATheme.TextLight,
+            new Vector2(370f, 132f),
+            new Vector2(0f, -28f),
+            FontStyles.Bold
+        );
+
+        title.textWrappingMode = TextWrappingModes.Normal;
+        title.alignment = TextAlignmentOptions.Center;
+        title.enableAutoSizing = true;
+        title.fontSizeMin = 19;
+        title.fontSizeMax = 34;
+        title.raycastTarget = false;
+
+        TextMeshProUGUI actionText = MakeText(
+            woodFace.transform,
+            "KETUK UNTUK MEMULAI",
+            15,
+            TOBATheme.BatakGold,
+            new Vector2(330f, 34f),
+            new Vector2(0f, -142f),
+            FontStyles.Bold
+        );
+        actionText.enableAutoSizing = true;
+        actionText.fontSizeMin = 12;
+        actionText.fontSizeMax = 15;
+
+        // Animasi kartu masuk secara berurutan.
+        CanvasGroup cardGroup = card.GetComponent<CanvasGroup>();
+        cardGroup.alpha = 0f;
+        cardGroup.interactable = true;
+        cardGroup.blocksRaycasts = true;
+        cardRT.localScale = Vector3.one * 0.86f;
+
+        Sequence cardIntro = DOTween.Sequence();
+        cardIntro.SetUpdate(true);
+        cardIntro.SetTarget(screenObj.transform);
+        cardIntro.AppendInterval(slotIndex * 0.055f);
+        cardIntro.Append(
+            cardRT.DOScale(1f, 0.34f)
+                .SetEase(Ease.OutBack)
+        );
+        cardIntro.Join(
+            cardGroup.DOFade(1f, 0.24f)
+                .SetEase(Ease.OutQuad)
+        );
+
+        Button button = card.GetComponent<Button>();
+        button.targetGraphic = outerFrame;
+        button.transition = Selectable.Transition.ColorTint;
+
+        ColorBlock buttonColors = button.colors;
+        buttonColors.normalColor = Color.white;
+        buttonColors.highlightedColor = new Color(1f, 0.94f, 0.76f, 1f);
+        buttonColors.pressedColor = new Color(0.82f, 0.69f, 0.43f, 1f);
+        buttonColors.selectedColor = Color.white;
+        button.colors = buttonColors;
+        button.navigation = new Navigation { mode = Navigation.Mode.None };
+
+        TriviaCategoryData selectedCategory = category;
+        button.onClick.AddListener(() =>
         {
-            group.alpha = 1f;
-            rect.localScale = Vector3.one;
-        }
+            if (isPageTransitioning || isOpeningCategory)
+                return;
+
+            isOpeningCategory = true;
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySFX("sfx_click");
+
+            Sequence press = DOTween.Sequence();
+            press.SetUpdate(true);
+            press.SetTarget(screenObj.transform);
+            press.Append(cardRT.DOScale(0.94f, 0.07f).SetEase(Ease.OutQuad));
+            press.Append(cardRT.DOScale(1.045f, 0.11f).SetEase(Ease.OutBack));
+            press.Append(cardRT.DOScale(1f, 0.08f).SetEase(Ease.OutQuad));
+            press.OnComplete(() =>
+            {
+                if (ScreenManager.Instance != null)
+                {
+                    ScreenManager.Instance.ChangeScreen(
+                        new TriviaQuizScreen(container, selectedCategory)
+                    );
+                }
+                else
+                {
+                    isOpeningCategory = false;
+                }
+            });
+        });
     }
 
-    private IEnumerator PlayIntro(CanvasGroup group, RectTransform rect)
+    private void CreateCardCorner(
+        Transform parent,
+        Vector2 anchor,
+        Vector2 offset)
     {
-        float t = 0f;
-        const float dur = 0.5f;
+        GameObject dot = new GameObject(
+            "GoldCornerOrnament",
+            typeof(RectTransform),
+            typeof(Image)
+        );
+        dot.transform.SetParent(parent, false);
 
-        while (t < dur)
+        RectTransform rt = dot.GetComponent<RectTransform>();
+        rt.anchorMin = anchor;
+        rt.anchorMax = anchor;
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(13f, 13f);
+        rt.anchoredPosition = offset;
+
+        Image img = dot.GetComponent<Image>();
+        img.sprite = GetCircleSprite();
+        img.color = TOBATheme.BatakGold;
+        img.raycastTarget = false;
+    }
+
+    private void CreateCardDivider(
+        Transform parent,
+        Vector2 anchorMin,
+        Vector2 anchorMax)
+    {
+        GameObject line = new GameObject(
+            "GoldDivider",
+            typeof(RectTransform),
+            typeof(Image)
+        );
+        line.transform.SetParent(parent, false);
+
+        RectTransform rt = line.GetComponent<RectTransform>();
+        rt.anchorMin = anchorMin;
+        rt.anchorMax = anchorMax;
+        rt.offsetMin = new Vector2(0f, -1.5f);
+        rt.offsetMax = new Vector2(0f, 1.5f);
+
+        Image img = line.GetComponent<Image>();
+        img.sprite = GetRoundedSprite();
+        img.type = Image.Type.Sliced;
+        img.color = new Color(
+            TOBATheme.BatakGold.r,
+            TOBATheme.BatakGold.g,
+            TOBATheme.BatakGold.b,
+            0.72f
+        );
+        img.raycastTarget = false;
+    }
+
+    private void UpdateCarouselControls()
+    {
+        bool hasMultiplePages = totalPages > 1;
+
+        if (previousPageButton != null)
         {
-            if (screenObj == null || group == null || rect == null) yield break;
-
-            t += Time.unscaledDeltaTime;
-            float k = Mathf.Clamp01(t / dur);
-            float ease = 1f - Mathf.Pow(1f - k, 3f);
-
-            group.alpha = ease;
-            rect.localScale = Vector3.one * Mathf.Lerp(0.92f, 1f, ease);
-            yield return null;
+            previousPageButton.gameObject.SetActive(hasMultiplePages);
+            previousPageButton.interactable = hasMultiplePages && !isPageTransitioning && currentPage > 0;
         }
 
-        if (group != null) group.alpha = 1f;
-        if (rect != null) rect.localScale = Vector3.one;
+        if (nextPageButton != null)
+        {
+            nextPageButton.gameObject.SetActive(hasMultiplePages);
+            nextPageButton.interactable =
+                hasMultiplePages && !isPageTransitioning && currentPage < totalPages - 1;
+        }
 
-        introCoroutine = null;
+        if (pageCounterText != null)
+        {
+            int displayPage = totalPages > 0 ? currentPage + 1 : 0;
+            pageCounterText.text = $"HALAMAN {displayPage:00} / {totalPages:00}";
+            pageCounterText.gameObject.SetActive(totalPages > 1);
+        }
     }
+
 
     public override void Hide()
     {
-        if (introCoroutine != null && ScreenManager.Instance != null)
-            ScreenManager.Instance.StopCoroutine(introCoroutine);
+        // Hentikan seluruh tween yang ditargetkan ke root layar sebelum layar ditutup.
+        if (screenObj != null)
+            DOTween.Kill(screenObj.transform, false);
 
-        introCoroutine = null;
+        if (pageTransitionTween != null)
+        {
+            pageTransitionTween.Kill(false);
+            pageTransitionTween = null;
+        }
+
+        isPageTransitioning = false;
+        isOpeningCategory = false;
 
         base.Hide();
     }
+
 }
