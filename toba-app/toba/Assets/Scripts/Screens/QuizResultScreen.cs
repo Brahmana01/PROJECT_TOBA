@@ -1110,6 +1110,8 @@ public class QuizResultScreen : BaseScreen
             return;
         }
 
+        isPass = res.passed;
+
         if (statusTxt != null)
         {
             statusTxt.text = isPass
@@ -1122,10 +1124,10 @@ public class QuizResultScreen : BaseScreen
         }
 
         if (xpTxt != null)
-            xpTxt.text = "+" + res.xp;
+            xpTxt.text = "+" + res.reward_xp;
 
         if (starsTxt != null)
-            starsTxt.text = "+" + res.stars;
+            starsTxt.text = "+" + res.reward_stars;
 
         RemoveLoading();
 

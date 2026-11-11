@@ -21,18 +21,54 @@ public class ChallengeMatchingScreen : BaseScreen
 
     public override void Show()
     {
+        if (challenge == null)
+        {
+            Debug.LogWarning("[ChallengeMatching] Data challenge kosong.");
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container));
+            return;
+        }
+
         SetBackground(TOBATheme.BGDark);
         Sprite bg = TOBATheme.LoadSprite("bg_toba");
         UIBuilder.CreateBackground(screenObj.transform, bg);
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0, 0.04f, 0, 0.5f), Vector2.zero, Vector2.one);
 
-        HeaderBar.Create(screenObj.transform, challenge.title.ToUpper(), () => {
+        string challengeTitle = string.IsNullOrWhiteSpace(challenge.title)
+            ? "TANTANGAN"
+            : challenge.title.ToUpperInvariant();
+
+        HeaderBar.Create(screenObj.transform, challengeTitle, () => {
             ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
         });
 
-        var data = JsonUtility.FromJson<MatchingData>(challenge.data_json);
-        pairs = data.pairs;
+        MatchingData data = null;
+
+        if (!string.IsNullOrWhiteSpace(challenge.data_json))
+        {
+            try
+            {
+                data = JsonUtility.FromJson<MatchingData>(challenge.data_json);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning("[ChallengeMatching] JSON tidak valid: " + ex.Message);
+            }
+        }
+
+        pairs = data?.pairs?.FindAll(pair =>
+            pair != null &&
+            !string.IsNullOrWhiteSpace(pair.batak) &&
+            !string.IsNullOrWhiteSpace(pair.indo)
+        );
+
+        if (pairs == null || pairs.Count == 0)
+        {
+            Debug.LogWarning("[ChallengeMatching] Data pasangan kata kosong.");
+            NetworkManager.Instance?.ShowToast("Data tantangan tidak tersedia.", true);
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container));
+            return;
+        }
 
         // Instruksi
         UIBuilder.CreateTextSized(screenObj.transform,
@@ -97,6 +133,9 @@ public class ChallengeMatchingScreen : BaseScreen
 
     void OnWordClicked(string text, bool isBatak, Image img)
     {
+        if (img == null || pairs == null || pairs.Count == 0)
+            return;
+
         SoundManager.Instance?.PlaySFX("sfx_click");
         if (isBatak)
         {

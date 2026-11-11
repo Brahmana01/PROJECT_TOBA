@@ -167,9 +167,18 @@ public class SubmitQuizRequest
 [Serializable]
 public class SubmitQuizResponse
 {
-    public string status;
-    public int xp;
-    public int stars;
+    public int location_id;
+    public int correct_count;
+    public int total_questions;
+    public int minimum_correct;
+
+    public bool passed;
+
+    public int reward_xp;
+    public int reward_stars;
+
+    public bool is_new_pass;
+
     public int level;
     public int total_xp;
     public int total_stars;
