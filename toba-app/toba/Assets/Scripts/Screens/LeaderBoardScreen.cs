@@ -216,12 +216,19 @@ public class LeaderboardScreen : BaseScreen
 
     static string SafeName(LeaderboardEntryData e)
     {
-        return string.IsNullOrEmpty(e.name) ? "?" : e.name;
+        if (e == null || string.IsNullOrWhiteSpace(e.name))
+            return "?";
+
+        return e.name.Trim();
     }
 
     static string SafeInitial(LeaderboardEntryData e)
     {
-        return string.IsNullOrEmpty(e.name) ? "?" : e.name.Substring(0, 1).ToUpper();
+        string name = SafeName(e);
+
+        return name == "?"
+            ? "?"
+            : name.Substring(0, 1).ToUpperInvariant();
     }
 
     // ───────────────────────── HEADER ─────────────────────────
@@ -341,17 +348,56 @@ public class LeaderboardScreen : BaseScreen
             (response) => {
                 if (screenObj == null) return;
 
-                string wrapped = "{\"entries\":" + response + "}";
-                LeaderboardListResponse res = JsonUtility.FromJson<LeaderboardListResponse>(wrapped);
+                bool invalidResponse = false;
 
-                entries = res != null && res.entries != null
-                    ? res.entries
-                    : new List<LeaderboardEntryData>();
+                try
+                {
+                    string json = string.IsNullOrWhiteSpace(response)
+                        ? "[]"
+                        : response.Trim();
+
+                    if (!json.StartsWith("[") && !json.StartsWith("{"))
+                        throw new System.FormatException("Format JSON leaderboard tidak valid.");
+
+                    string wrapped = json.StartsWith("{")
+                        ? json
+                        : "{\"entries\":" + json + "}";
+
+                    LeaderboardListResponse res =
+                        JsonUtility.FromJson<LeaderboardListResponse>(wrapped);
+
+                    if (res == null)
+                        throw new System.FormatException("Respons leaderboard kosong atau tidak valid.");
+
+                    entries = res.entries ?? new List<LeaderboardEntryData>();
+
+                    // Buang entry null agar tidak menyebabkan NullReferenceException.
+                    entries.RemoveAll(entry => entry == null);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("[Leaderboard] Parsing gagal: " + ex.Message);
+
+                    entries = new List<LeaderboardEntryData>();
+                    invalidResponse = true;
+                }
 
                 if (loadingObj != null)
                 {
                     Object.Destroy(loadingObj);
                     loadingObj = null;
+                }
+
+                if (invalidResponse)
+                {
+                    emptyStateObj = EmptyState.Show(
+                        screenObj.transform,
+                        "<color=#D6A84B><sprite name=\"star\" tint=1></color>",
+                        "Data leaderboard bermasalah",
+                        "Silakan muat ulang leaderboard",
+                        () => RetryFetchLeaderboard()
+                    );
+                    return;
                 }
 
                 if (entries.Count == 0)
@@ -407,10 +453,15 @@ public class LeaderboardScreen : BaseScreen
 
         for (int i = 0; i < entries.Count; i++)
         {
-            if (entries[i].id == myPlayerID)
+            LeaderboardEntryData entry = entries[i];
+
+            if (entry == null)
+                continue;
+
+            if (entry.id == myPlayerID)
             {
-                myRank = entries[i].rank;
-                myStars = entries[i].stars;
+                myRank = entry.rank;
+                myStars = entry.stars;
                 break;
             }
         }
@@ -466,6 +517,10 @@ public class LeaderboardScreen : BaseScreen
             if (entries.Count < rank) continue;
 
             LeaderboardEntryData entry = entries[rank - 1];
+
+            if (entry == null)
+                continue;
+
             Color mc = medalColors[p];
 
             // Kolom
@@ -551,9 +606,21 @@ public class LeaderboardScreen : BaseScreen
 
         for (int i = 3; i < entries.Count; i++)
         {
+            LeaderboardEntryData entry = entries[i];
+
+            if (entry == null)
+                continue;
+
             float y = 10f + (i - 3) * (RowHeight + RowGap);
-            CreateLeaderboardRow(content, entries[i], y, entries[i].id == myPlayerID,
-                rowSprite, meSprite);
+
+            CreateLeaderboardRow(
+                content,
+                entry,
+                y,
+                entry.id == myPlayerID,
+                rowSprite,
+                meSprite
+            );
         }
     }
 
