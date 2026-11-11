@@ -243,16 +243,46 @@ public class ProfileScreen : BaseScreen
         ApplyCardSprite(topCard, "gambar/panel_fakta");
         PlaceFromTop(topCard.GetComponent<RectTransform>(), 0.08f, new Vector2(1000, 460), s);
 
-        // Avatar
+
+        // AVATAR — Batak Toba Profile Medallion
         GameObject avatar = UIBuilder.CreatePanelSized(
-            topCard.transform, "Avatar", TOBATheme.BatakGold,
+            topCard.transform, "Avatar", TOBATheme.WoodDark,
             new Vector2(160, 160), new Vector2(-330f, 75f)
         );
 
-        UIBuilder.CreateTextSized(
-            avatar.transform, "<b><color=#F2E4C7>♙</color></b>", 80, TOBATheme.WoodDark,
-            TextAlignmentOptions.Center, new Vector2(160, 160), Vector2.zero
+        Image avatarBackground = avatar.GetComponent<Image>();
+        avatarBackground.color = TOBATheme.WoodDark;
+        avatarBackground.raycastTarget = false;
+
+        Outline avatarOutline = avatar.AddComponent<Outline>();
+        avatarOutline.effectColor = TOBATheme.BatakGold;
+        avatarOutline.effectDistance = new Vector2(4f, 4f);
+
+        // Satu gambar siluet, tanpa TMP atau emoji.
+        GameObject portraitObj = new GameObject(
+            "AvatarPortrait",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image)
         );
+
+        portraitObj.transform.SetParent(avatar.transform, false);
+
+        RectTransform portraitRect =
+            portraitObj.GetComponent<RectTransform>();
+
+        portraitRect.anchorMin = Vector2.zero;
+        portraitRect.anchorMax = Vector2.one;
+        portraitRect.pivot = new Vector2(0.5f, 0.5f);
+        portraitRect.offsetMin = new Vector2(5f, 5f);
+        portraitRect.offsetMax = new Vector2(-5f, -5f);
+
+        Image portraitImage = portraitObj.GetComponent<Image>();
+        portraitImage.sprite = GetProfilePortraitSprite();
+        portraitImage.color = TOBATheme.CardBG;
+        portraitImage.type = Image.Type.Simple;
+        portraitImage.preserveAspect = true;
+        portraitImage.raycastTarget = false;
 
         // Nama
         nameTxt = UIBuilder.CreateTextSized(
@@ -282,7 +312,7 @@ public class ProfileScreen : BaseScreen
 
         // Bintang
         starTxt = UIBuilder.CreateTextSized(
-            topCard.transform, "<b><color=#D6A84B>★</color></b> 0", 38, TOBATheme.BatakGold,
+            topCard.transform, "<color=#D6A84B><sprite name=\"star\" tint=1></color> 0", 38, TOBATheme.BatakGold,
             TextAlignmentOptions.Right, new Vector2(240, 55), new Vector2(300f, -45f)
         ).GetComponent<TextMeshProUGUI>();
 
@@ -321,6 +351,9 @@ public class ProfileScreen : BaseScreen
             statsCard.transform, "STATISTIK", 36, TOBATheme.WoodDark,
             TextAlignmentOptions.Left, new Vector2(900, 55), new Vector2(-10f, 92f)
         );
+
+        
+
 
         CreateStatBox(statsCard.transform, "Lokasi", "0", -280f);
         CreateStatBox(statsCard.transform, "Achievement", "0", 0f);
@@ -387,6 +420,86 @@ public class ProfileScreen : BaseScreen
         rtLogout.anchoredPosition = new Vector2(0, -75f);
     }
 
+
+    // Membuat ikon avatar transparan secara prosedural.
+    // Tidak membutuhkan font, emoji, atau aset eksternal.
+    private static Sprite profilePortraitSprite;
+
+    private static Sprite GetProfilePortraitSprite()
+    {
+        if (profilePortraitSprite != null)
+            return profilePortraitSprite;
+
+        const int size = 128;
+        const int samples = 4;
+
+        Texture2D texture = new Texture2D(
+            size, size, TextureFormat.RGBA32, false
+        );
+
+        texture.name = "TOBA_ProfilePortrait";
+        texture.filterMode = FilterMode.Bilinear;
+        texture.wrapMode = TextureWrapMode.Clamp;
+
+        Color32[] pixels = new Color32[size * size];
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                int covered = 0;
+
+                for (int sy = 0; sy < samples; sy++)
+                {
+                    for (int sx = 0; sx < samples; sx++)
+                    {
+                        float px = x + (sx + 0.5f) / samples;
+                        float py = y + (sy + 0.5f) / samples;
+
+                        // Kepala
+                        float hx = px - 64f;
+                        float hy = py - 94f;
+                        bool head = hx * hx + hy * hy <= 20f * 20f;
+
+                        // Leher
+                        bool neck =
+                            px >= 53f && px <= 75f &&
+                            py >= 61f && py <= 82f;
+
+                        // Bahu dan badan
+                        float bx = (px - 64f) / 52f;
+                        float by = (py - 39f) / 34f;
+                        bool body = bx * bx + by * by <= 1f;
+
+                        if (head || neck || body)
+                            covered++;
+                    }
+                }
+
+                byte alpha = (byte)Mathf.RoundToInt(
+                    covered * 255f / (samples * samples)
+                );
+
+                pixels[y * size + x] =
+                    new Color32(255, 255, 255, alpha);
+            }
+        }
+
+        texture.SetPixels32(pixels);
+        texture.Apply(false, true);
+
+        profilePortraitSprite = Sprite.Create(
+            texture,
+            new Rect(0, 0, size, size),
+            new Vector2(0.5f, 0.5f),
+            128f
+        );
+
+        profilePortraitSprite.name = "TOBA_ProfilePortrait";
+        return profilePortraitSprite;
+    }
+
+
     // Parameter icon dihapus (emoji tampil sebagai kotak hitam).
     void CreateStatBox(Transform parent, string label, string value, float xPos)
     {
@@ -427,7 +540,7 @@ public class ProfileScreen : BaseScreen
             }
 
             emptyStateObj = EmptyState.Show(
-                screenObj.transform, "<b><color=#F2E4C7>♙</color></b>", "Profil tidak tersedia",
+                screenObj.transform, "<color=#F2E4C7><sprite name=\"profile\" tint=1></color>", "Profil tidak tersedia",
                 "Silakan login terlebih dahulu", () => {
                     ScreenManager.Instance.ChangeScreen(new WelcomeScreen(container));
                 }
@@ -454,7 +567,7 @@ public class ProfileScreen : BaseScreen
                     Debug.LogWarning("[Profile] Data profile kosong / gagal di-parse.");
 
                     emptyStateObj = EmptyState.Show(
-                        screenObj.transform, "<b><color=#F2E4C7>♙</color></b>", "Profil tidak tersedia",
+                        screenObj.transform, "<color=#F2E4C7><sprite name=\"profile\" tint=1></color>", "Profil tidak tersedia",
                         "Coba muat ulang data profil", () => RetryFetchProfile()
                     );
 
@@ -476,7 +589,7 @@ public class ProfileScreen : BaseScreen
                 }
 
                 emptyStateObj = EmptyState.Show(
-                    screenObj.transform, "<b><color=#F2E4C7>♙</color></b>", "Gagal memuat profil",
+                    screenObj.transform, "<color=#F2E4C7><sprite name=\"profile\" tint=1></color>", "Gagal memuat profil",
                     "Periksa koneksi internetmu", () => RetryFetchProfile()
                 );
             }
@@ -517,7 +630,7 @@ public class ProfileScreen : BaseScreen
         if (usernameTxt != null) usernameTxt.text = "@" + profileData.username;
         if (titleTxt != null) titleTxt.text = profileData.title_name;
         if (levelTxt != null) levelTxt.text = "Level " + profileData.level;
-        if (starTxt != null) starTxt.text = "<b><color=#D6A84B>★</color></b> " + profileData.stars;
+        if (starTxt != null) starTxt.text = "<color=#D6A84B><sprite name=\"star\" tint=1></color> " + profileData.stars;
         if (locationTxt != null) locationTxt.text = profileData.location_done.ToString();
         if (achievementTxt != null) achievementTxt.text = profileData.achievement_count.ToString();
         if (galleryTxt != null) galleryTxt.text = profileData.gallery_count.ToString();

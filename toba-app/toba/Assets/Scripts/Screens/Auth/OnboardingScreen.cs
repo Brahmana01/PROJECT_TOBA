@@ -19,11 +19,11 @@ public class OnboardingScreen : BaseScreen
          "Trivia Budaya",
          "Uji pengetahuanmu tentang budaya Batak!\n5 kategori, 50+ soal seru menanti."),
 
-        ("<b><color=#A83232>⚔</color></b>",
+        ("<color=#A83232><sprite name=\"battle\" tint=1></color>",
          "Battle Quiz",
          "Tantang temanmu dalam duel soal real-time!\nSiapa yang tercepat dan terpintar?"),
 
-        ("<b><color=#D6A84B>♛</color></b>",
+        ("<color=#D6A84B><sprite name=\"leaderboard\" tint=1></color>",
          "Kumpulkan Reward",
          "Naik level, raih gelar, dan buka galeri kartu budaya Batak Toba!"),
     };

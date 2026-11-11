@@ -75,7 +75,7 @@ public class GalleryScreen : BaseScreen
                 {
                     emptyStateObj = EmptyState.Show(
                         screenObj.transform,
-                        "<b><color=#D6A84B>▣</color></b>",
+                        "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
                         "Belum ada koleksi",
                         "Selesaikan lokasi untuk mendapatkan kartu budaya",
                         () => RetryFetchGallery()
@@ -98,7 +98,7 @@ public class GalleryScreen : BaseScreen
 
                 emptyStateObj = EmptyState.Show(
                     screenObj.transform,
-                    "<b><color=#D6A84B>▣</color></b>",
+                    "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
                     "Gagal memuat galeri",
                     "Periksa koneksi internet",
                     () => RetryFetchGallery()

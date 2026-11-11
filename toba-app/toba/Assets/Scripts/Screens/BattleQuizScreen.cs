@@ -497,7 +497,7 @@ UIBuilder.CreatePanel( screenObj.transform, "ResultOverlay", new Color(0, 0, 0, 
         string resultText =
             isDraw
                 ? "🤝 SERI!"
-: ( iWin ? "<b><color=#D6A84B>♛</color></b> KAMU MENANG!" : "😔 KAMU KALAH" );
+: ( iWin ? "<color=#D6A84B><sprite name=\"leaderboard\" tint=1></color> KAMU MENANG!" : "😔 KAMU KALAH" );
         Color resultColor =
             isDraw
                 ? TOBATheme.Warning
@@ -526,7 +526,7 @@ UIBuilder.CreateTextSized( overlay.transform, myName + " : " + myFinalScore, 46,
 UIBuilder.CreateTextSized( overlay.transform, oppName + " : " + oppFinalScore, 46, TOBATheme.TextLight, TextAlignmentOptions.Center, new Vector2(800, 70), new Vector2(0, 20f) );
         if (iWin)
         {
-UIBuilder.CreateTextSized( overlay.transform, "✨ +50 XP  <b><color=#D6A84B>★</color></b> +2 Bintang", 40, TOBATheme.BatakGold, TextAlignmentOptions.Center, new Vector2(800, 60), new Vector2(0, -80f) );
+UIBuilder.CreateTextSized( overlay.transform, "✨ +50 XP  <color=#D6A84B><sprite name=\"star\" tint=1></color> +2 Bintang", 40, TOBATheme.BatakGold, TextAlignmentOptions.Center, new Vector2(800, 60), new Vector2(0, -80f) );
         }
         GameObject btnBack =
 UIBuilder.CreateButton( overlay.transform, "BtnBack", "KEMBALI KE MENU", new Vector2(700, 130), TOBATheme.BtnPrimary, () =>

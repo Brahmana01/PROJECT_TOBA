@@ -169,27 +169,29 @@ public class TriviaResultScreen : BaseScreen
             categoryName,
             38,
             TOBATheme.WoodDark,
-            new Vector2(850f, 65f),
-            new Vector2(0f, 425f),
+            new Vector2(820f, 54f),
+            new Vector2(0f, 430f),
             FontStyles.Bold
         );
         categoryTxt.enableAutoSizing = true;
-        categoryTxt.fontSizeMin = 24f;
-        categoryTxt.fontSizeMax = 38f;
+        categoryTxt.fontSizeMin = 20f;
+        categoryTxt.fontSizeMax = 30f;
+        categoryTxt.overflowMode = TextOverflowModes.Ellipsis;
 
         // Status hasil berdasarkan kualitas jawaban, bukan reward database.
         TextMeshProUGUI statusTxt = MakeText(
             card.transform,
             GetResultMessage(),
-            66,
+            54,
             starsEarned >= 2 ? TOBATheme.BtnPrimary : TOBATheme.Warning,
-            new Vector2(880f, 95f),
-            new Vector2(0f, 345f),
+            new Vector2(860f, 78f),
+            new Vector2(0f, 320f),
             FontStyles.Bold
         );
         statusTxt.enableAutoSizing = true;
-        statusTxt.fontSizeMin = 38f;
-        statusTxt.fontSizeMax = 66f;
+        statusTxt.fontSizeMin = 32f;
+        statusTxt.fontSizeMax = 54f;
+        statusTxt.overflowMode = TextOverflowModes.Ellipsis;
 
         // Tiga bintang visual, dengan animasi kemunculan satu per satu.
         CreateStars(card.transform);
@@ -250,7 +252,7 @@ public class TriviaResultScreen : BaseScreen
         // XP dan level tetap berasal dari response API Trivia.
         xpTxt = MakeText(
             card.transform,
-            "✨ XP Diperoleh : +0",
+            "XP DIPEROLEH : +0",
             38,
             TOBATheme.TextDark,
             new Vector2(820f, 58f),
@@ -285,9 +287,8 @@ public class TriviaResultScreen : BaseScreen
 
     private void CreateStars(Transform parent)
     {
-        float[] xPositions = { -190f, 0f, 190f };
-        float[] sizes = { 145f, 165f, 145f };
-
+        float[] xPositions = { -175f, 0f, 175f };
+        float[] sizes = { 130f, 150f, 130f };
         for (int i = 0; i < 3; i++)
         {
             GameObject starObject = new GameObject("Star_" + (i + 1));
@@ -296,7 +297,7 @@ public class TriviaResultScreen : BaseScreen
             RectTransform rect = starObject.AddComponent<RectTransform>();
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = new Vector2(sizes[i], sizes[i]);
-            rect.anchoredPosition = new Vector2(xPositions[i], 220f);
+            rect.anchoredPosition = new Vector2(xPositions[i], 200f);
 
             Image starImage = starObject.AddComponent<Image>();
             starImage.sprite = GetStarSprite();
@@ -678,7 +679,7 @@ public class TriviaResultScreen : BaseScreen
                 if (result != null)
                 {
                     if (xpTxt != null)
-                        xpTxt.text = "✨ XP Diperoleh : +" + result.xp;
+                        xpTxt.text = "XP DIPEROLEH : +" + result.xp;
 
                     if (levelTxt != null)
                         levelTxt.text = "LEVEL : " + result.level;
@@ -688,7 +689,7 @@ public class TriviaResultScreen : BaseScreen
                 else
                 {
                     if (xpTxt != null)
-                        xpTxt.text = "✨ XP Diperoleh : (data tidak terbaca)";
+                        xpTxt.text = "XP DIPEROLEH : (data tidak terbaca)";
                 }
 
                 DestroyLoadingText();
@@ -706,7 +707,7 @@ public class TriviaResultScreen : BaseScreen
     private void ShowOfflineResult()
     {
         if (xpTxt != null)
-            xpTxt.text = "✨ XP Diperoleh : OFFLINE";
+            xpTxt.text = "XP DIPEROLEH : OFFLINE";
 
         if (levelTxt != null)
             levelTxt.text = "LEVEL : " + PlayerPrefs.GetInt("PlayerLevel", 1);

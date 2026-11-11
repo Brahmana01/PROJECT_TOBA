@@ -8,6 +8,8 @@ public class LocationDetailScreen : BaseScreen
     private TextMeshProUGUI factTxt;
 
     private static Sprite roundedSprite;
+    private static Sprite circleSprite;
+    private static Sprite starSprite;
 
     // Papan judul (sama dengan layar kuis)
     private const float HeaderMinX = 0.15f, HeaderMaxX = 0.85f;
@@ -70,6 +72,154 @@ public class LocationDetailScreen : BaseScreen
             new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect,
             new Vector4(border, border, border, border));
         return roundedSprite;
+    }
+
+    // Ikon UI dibuat sebagai grafik Unity UI, bukan emoji atau TMP Sprite Tag.
+    private static Sprite GetCircleSprite()
+    {
+        if (circleSprite != null) return circleSprite;
+
+        const int size = 64;
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        tex.filterMode = FilterMode.Bilinear;
+        tex.wrapMode = TextureWrapMode.Clamp;
+
+        for (int y = 0; y < size; y++)
+        for (int x = 0; x < size; x++)
+        {
+            float dx = (x + 0.5f - size * 0.5f) / (size * 0.5f);
+            float dy = (y + 0.5f - size * 0.5f) / (size * 0.5f);
+            float distance = Mathf.Sqrt(dx * dx + dy * dy);
+            float alpha = Mathf.Clamp01((1f - distance) * size * 0.5f + 0.5f);
+            tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+        }
+
+        tex.Apply();
+        circleSprite = Sprite.Create(tex, new Rect(0, 0, size, size),
+            new Vector2(0.5f, 0.5f), 100f);
+        return circleSprite;
+    }
+
+    private static Sprite GetStarSprite()
+    {
+        if (starSprite != null) return starSprite;
+
+        const int size = 96;
+        Vector2[] points = new Vector2[10];
+        for (int i = 0; i < points.Length; i++)
+        {
+            float angle = -Mathf.PI * 0.5f + i * Mathf.PI / 5f;
+            float radius = (i % 2 == 0) ? 0.48f : 0.22f;
+            points[i] = new Vector2(0.5f + Mathf.Cos(angle) * radius,
+                                    0.5f + Mathf.Sin(angle) * radius);
+        }
+
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        tex.filterMode = FilterMode.Bilinear;
+        tex.wrapMode = TextureWrapMode.Clamp;
+
+        for (int y = 0; y < size; y++)
+        for (int x = 0; x < size; x++)
+        {
+            Vector2 p = new Vector2((x + 0.5f) / size, (y + 0.5f) / size);
+            bool inside = false;
+            for (int i = 0, j = points.Length - 1; i < points.Length; j = i++)
+            {
+                if (((points[i].y > p.y) != (points[j].y > p.y)) &&
+                    (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) /
+                     (points[j].y - points[i].y) + points[i].x))
+                    inside = !inside;
+            }
+            tex.SetPixel(x, y, new Color(1f, 1f, 1f, inside ? 1f : 0f));
+        }
+
+        tex.Apply();
+        starSprite = Sprite.Create(tex, new Rect(0, 0, size, size),
+            new Vector2(0.5f, 0.5f), 100f);
+        return starSprite;
+    }
+
+    private void MakeMedallion(Transform parent, string name,
+        Vector2 aMin, Vector2 aMax, string label, Color accent, bool useStar = false)
+    {
+        GameObject root = new GameObject(name);
+        root.transform.SetParent(parent, false);
+        RectTransform rt = root.AddComponent<RectTransform>();
+        rt.anchorMin = aMin;
+        rt.anchorMax = aMax;
+        rt.offsetMin = rt.offsetMax = Vector2.zero;
+
+        Image rim = root.AddComponent<Image>();
+        rim.sprite = GetCircleSprite();
+        rim.color = TOBATheme.BatakGold;
+        rim.raycastTarget = false;
+
+        GameObject inner = new GameObject("Inner");
+        inner.transform.SetParent(root.transform, false);
+        RectTransform irt = inner.AddComponent<RectTransform>();
+        irt.anchorMin = new Vector2(0.12f, 0.12f);
+        irt.anchorMax = new Vector2(0.88f, 0.88f);
+        irt.offsetMin = irt.offsetMax = Vector2.zero;
+
+        Image face = inner.AddComponent<Image>();
+        face.sprite = GetCircleSprite();
+        face.color = TOBATheme.WoodDark;
+        face.raycastTarget = false;
+
+        if (useStar)
+        {
+            GameObject icon = new GameObject("StarIcon");
+            icon.transform.SetParent(inner.transform, false);
+            RectTransform srt = icon.AddComponent<RectTransform>();
+            srt.anchorMin = new Vector2(0.20f, 0.20f);
+            srt.anchorMax = new Vector2(0.80f, 0.80f);
+            srt.offsetMin = srt.offsetMax = Vector2.zero;
+            Image star = icon.AddComponent<Image>();
+            star.sprite = GetStarSprite();
+            star.color = accent;
+            star.preserveAspect = true;
+            star.raycastTarget = false;
+        }
+        else
+        {
+            MakeText(inner.transform, label, 22, accent,
+                TextAlignmentOptions.Center, Vector2.zero, Vector2.one,
+                Vector4.zero, FontStyles.Bold);
+        }
+    }
+
+    private void MakeSwordEmblem(Transform parent)
+    {
+        // Dua bilah silang dibuat dari Image biasa agar tidak bergantung pada font/emoji.
+        Image bladeA = MakeImage(parent, "SwordBladeA",
+            new Vector2(0.105f, 0.28f), new Vector2(0.135f, 0.78f),
+            Vector2.zero, Vector2.zero, TOBATheme.TextLight);
+        bladeA.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 32f);
+
+        Image bladeB = MakeImage(parent, "SwordBladeB",
+            new Vector2(0.145f, 0.28f), new Vector2(0.175f, 0.78f),
+            Vector2.zero, Vector2.zero, TOBATheme.BatakGold);
+        bladeB.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -32f);
+
+        Image guardA = MakeImage(parent, "SwordGuardA",
+            new Vector2(0.075f, 0.29f), new Vector2(0.165f, 0.34f),
+            Vector2.zero, Vector2.zero, TOBATheme.BatakGold);
+        guardA.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 32f);
+
+        Image guardB = MakeImage(parent, "SwordGuardB",
+            new Vector2(0.115f, 0.29f), new Vector2(0.205f, 0.34f),
+            Vector2.zero, Vector2.zero, TOBATheme.TextLight);
+        guardB.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -32f);
+
+        Image handleA = MakeImage(parent, "SwordHandleA",
+            new Vector2(0.105f, 0.15f), new Vector2(0.135f, 0.32f),
+            Vector2.zero, Vector2.zero, TOBATheme.WoodMedium);
+        handleA.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 32f);
+
+        Image handleB = MakeImage(parent, "SwordHandleB",
+            new Vector2(0.145f, 0.15f), new Vector2(0.175f, 0.32f),
+            Vector2.zero, Vector2.zero, TOBATheme.WoodMedium);
+        handleB.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -32f);
     }
 
     private Image MakeImage(Transform parent, string name,
@@ -302,25 +452,30 @@ public class LocationDetailScreen : BaseScreen
     private void CreateRewardChips()
     {
         MakeChip("ChipXP", new Vector2(0.06f, 0.545f), new Vector2(0.48f, 0.592f),
-            "✨ +" + locationData.reward_xp + " XP", TOBATheme.BatakGold);
+            "XP", false, "+" + locationData.reward_xp + " XP", TOBATheme.BatakGold);
 
         MakeChip("ChipStar", new Vector2(0.52f, 0.545f), new Vector2(0.94f, 0.592f),
-            "<b><color=#D6A84B>★</color></b> +" + locationData.reward_stars + " Bintang", TOBATheme.StarActive);
+            "", true, "+" + locationData.reward_stars + " BINTANG", TOBATheme.StarActive);
     }
 
-    private void MakeChip(string name, Vector2 aMin, Vector2 aMax, string label, Color textColor)
+    private void MakeChip(string name, Vector2 aMin, Vector2 aMax,
+        string emblem, bool useStar, string label, Color textColor)
     {
         Image gold = MakeImage(screenObj.transform, name, aMin, aMax,
             Vector2.zero, Vector2.zero, TOBATheme.BatakGold);
         Image face = MakeImage(gold.transform, "Face", Vector2.zero, Vector2.one,
             new Vector2(4f, 4f), new Vector2(-4f, -4f), TOBATheme.WoodDark);
 
-        TextMeshProUGUI t = MakeText(face.transform, label, 34, textColor,
-            TextAlignmentOptions.Center, Vector2.zero, Vector2.one,
-            new Vector4(10, 0, 10, 0), FontStyles.Bold);
+        MakeMedallion(face.transform, "RewardMedallion",
+            new Vector2(0.025f, 0.12f), new Vector2(0.235f, 0.88f),
+            emblem, textColor, useStar);
+
+        TextMeshProUGUI t = MakeText(face.transform, label, 30, textColor,
+            TextAlignmentOptions.Center, new Vector2(0.24f, 0f), Vector2.one,
+            new Vector4(2f, 0f, 8f, 0f), FontStyles.Bold);
         t.enableAutoSizing = true;
-        t.fontSizeMin = 22;
-        t.fontSizeMax = 34;
+        t.fontSizeMin = 20;
+        t.fontSizeMax = 30;
     }
 
     // ───────────── DESKRIPSI ─────────────
@@ -330,10 +485,14 @@ public class LocationDetailScreen : BaseScreen
             new Vector2(0.06f, 0.335f), new Vector2(0.94f, 0.535f),
             "panel_deskripsi", TOBATheme.CardBG, 70f);
 
-        MakeText(face, "<b><color=#A83232>⌖</color></b> TENTANG LOKASI", 36, TOBATheme.WoodDark,
+        MakeMedallion(face, "AboutMedallion",
+            new Vector2(0.025f, 0.78f), new Vector2(0.12f, 0.96f),
+            "01", TOBATheme.TextLight);
+
+        MakeText(face, "TENTANG LOKASI", 36, TOBATheme.WoodDark,
             TextAlignmentOptions.Left,
-            new Vector2(0f, 0.76f), Vector2.one,
-            new Vector4(10, 0, 10, 4), FontStyles.Bold);
+            new Vector2(0.15f, 0.76f), Vector2.one,
+            new Vector4(4, 0, 10, 4), FontStyles.Bold);
 
         // Garis pemisah emas tipis
         MakeImage(face, "Divider", new Vector2(0.02f, 0.755f), new Vector2(0.98f, 0.765f),
@@ -355,10 +514,14 @@ public class LocationDetailScreen : BaseScreen
             new Vector2(0.06f, 0.185f), new Vector2(0.94f, 0.325f),
             "panel_fakta", FactFace, 70f);
 
-        MakeText(face, "<b><color=#D6A84B>✧</color></b> FAKTA MENARIK", 34, TOBATheme.BatakGold,
+        MakeMedallion(face, "FactMedallion",
+            new Vector2(0.025f, 0.68f), new Vector2(0.12f, 0.96f),
+            "02", TOBATheme.TextLight);
+
+        MakeText(face, "FAKTA MENARIK", 34, TOBATheme.BatakGold,
             TextAlignmentOptions.Left,
-            new Vector2(0f, 0.66f), Vector2.one,
-            new Vector4(10, 0, 10, 2), FontStyles.Bold);
+            new Vector2(0.15f, 0.66f), Vector2.one,
+            new Vector4(4, 0, 10, 2), FontStyles.Bold);
 
         factTxt = MakeText(face, "Memuat fakta...", 30, TOBATheme.TextLight,
             TextAlignmentOptions.TopLeft,
@@ -408,10 +571,12 @@ public class LocationDetailScreen : BaseScreen
             target = face;
         }
 
-        TextMeshProUGUI t = MakeText(root.transform, "⚔ MULAI TANTANGAN", 46,
+        MakeSwordEmblem(root.transform);
+
+        TextMeshProUGUI t = MakeText(root.transform, "MULAI TANTANGAN", 46,
             ai != null ? TOBATheme.WoodDark : Color.white,
-            TextAlignmentOptions.Center, Vector2.zero, Vector2.one,
-            new Vector4(40, 0, 40, 0), FontStyles.Bold);
+            TextAlignmentOptions.Center, new Vector2(0.22f, 0f), Vector2.one,
+            new Vector4(8, 0, 30, 0), FontStyles.Bold);
         t.enableAutoSizing = true;
         t.fontSizeMin = 28;
         t.fontSizeMax = 46;

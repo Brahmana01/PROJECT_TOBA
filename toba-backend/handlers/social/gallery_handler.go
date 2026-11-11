@@ -25,5 +25,8 @@ func GetPlayerGallery(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(result)
+	return c.JSON(fiber.Map{
+		"total": len(result),
+		"cards": result,
+	})
 }

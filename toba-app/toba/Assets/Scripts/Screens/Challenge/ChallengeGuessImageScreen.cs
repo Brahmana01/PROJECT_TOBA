@@ -48,7 +48,7 @@ public class ChallengeGuessImageScreen : BaseScreen
 
         if (questions.Count == 0)
         {
-            EmptyState.Show(screenObj.transform, "<b><color=#D6A84B>▣</color></b>",
+            EmptyState.Show(screenObj.transform, "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
                 "Data tantangan kosong", "Hubungi admin");
             return;
         }

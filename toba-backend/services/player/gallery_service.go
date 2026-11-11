@@ -6,7 +6,7 @@ import (
 )
 
 func GetPlayerGallery(playerID uint) ([]models.PlayerGalleryCard, error) {
-	var gallery []models.PlayerGalleryCard
+	gallery := make([]models.PlayerGalleryCard, 0)
 
 	if err := config.DB.
 		Preload("Card").

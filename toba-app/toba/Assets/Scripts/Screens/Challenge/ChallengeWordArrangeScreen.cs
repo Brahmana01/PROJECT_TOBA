@@ -110,7 +110,7 @@ public class ChallengeWordArrangeScreen : BaseScreen
         var w = words[index];
 
         if (progressTxt) progressTxt.text = (index+1) + "/" + words.Count;
-        if (hintTxt) hintTxt.text = "<b><color=#D6A84B>✧</color></b> " + w.hint;
+        if (hintTxt) hintTxt.text = "<color=#D6A84B><sprite name=\"fact\" tint=1></color> " + w.hint;
         UpdateAnswerDisplay();
 
         // Hapus tombol huruf lama

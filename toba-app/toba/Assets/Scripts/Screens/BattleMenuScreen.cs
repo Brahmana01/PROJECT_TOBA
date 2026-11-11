@@ -6,10 +6,10 @@ using TMPro;
 using DG.Tweening;
 
 /// <summary>
-/// Battle lobby TOBA - Modern Batak Arena.
-/// UI dibuat secara runtime tanpa bergantung pada sprite panel kayu lama.
-/// Menggunakan TextMeshPro untuk tipografi dan DOTween untuk animasi.
-/// Alur API dan navigasi dipertahankan dari BattleMenuScreen sebelumnya.
+/// Battle lobby TOBA.
+/// Visual diselaraskan dengan halaman Profil dan Jelajah Budaya:
+/// lanskap Danau Toba siang hari, panel kayu, bingkai emas, dan aksen Gorga.
+/// Seluruh UI dibuat runtime; alur API, matchmaking, dan navigasi dipertahankan.
 /// </summary>
 public class BattleMenuScreen : BaseScreen
 {
@@ -17,22 +17,21 @@ public class BattleMenuScreen : BaseScreen
     // PALET WARNA
     // ---------------------------------------------------------------------
 
-    // Palet visual terinspirasi Ulos dan Gorga Batak Toba.
-    // Marun, merah bata, hitam, krem, dan emas menjadi warna utama.
-    private static readonly Color C_BG_TOP       = Hex("#4A2428");
-    private static readonly Color C_BG_BOTTOM    = Hex("#120F13");
-    private static readonly Color C_PANEL_TOP    = Hex("#54272A");
-    private static readonly Color C_PANEL_BOTTOM = Hex("#28171B");
-    private static readonly Color C_GOLD         = Hex("#D7A84D");
-    private static readonly Color C_GOLD_LIGHT   = Hex("#F5DDA5");
-    private static readonly Color C_CREAM        = Hex("#F7EAD2");
-    private static readonly Color C_MUTED        = Hex("#D7C5AA");
-    private static readonly Color C_GREEN_TOP    = Hex("#47705B");
-    private static readonly Color C_GREEN_BOTTOM = Hex("#263F35");
-    private static readonly Color C_RED          = Hex("#D95A48");
-    private static readonly Color C_INPUT        = Hex("#1B1115");
-    private static readonly Color C_GORGA_RED    = Hex("#A93232");
-    private static readonly Color C_GORGA_BLACK  = Hex("#211619");
+    // Palet disamakan dengan TOBATheme: kayu, emas, krem, dan hijau alam.
+    private static readonly Color C_BG_TOP       = Hex("#65B7E8");
+    private static readonly Color C_BG_BOTTOM    = Hex("#173D2B");
+    private static readonly Color C_PANEL_TOP    = Hex("#75451F");
+    private static readonly Color C_PANEL_BOTTOM = Hex("#3D1F0A");
+    private static readonly Color C_GOLD         = Hex("#D4AF37");
+    private static readonly Color C_GOLD_LIGHT   = Hex("#F5E6B8");
+    private static readonly Color C_CREAM        = Hex("#FFF5DD");
+    private static readonly Color C_MUTED        = Hex("#E7D2AE");
+    private static readonly Color C_GREEN_TOP    = Hex("#6B963C");
+    private static readonly Color C_GREEN_BOTTOM = Hex("#28552B");
+    private static readonly Color C_RED          = Hex("#B83A2E");
+    private static readonly Color C_INPUT        = Hex("#2C190F");
+    private static readonly Color C_GORGA_RED    = Hex("#A83232");
+    private static readonly Color C_GORGA_BLACK  = Hex("#2A1A10");
 
     // Seluruh sprite dibuat runtime. Tidak membutuhkan aset kayu lama.
     private static Sprite roundedSprite;
@@ -42,7 +41,7 @@ public class BattleMenuScreen : BaseScreen
     private static Sprite goldButtonSprite;
     private static Sprite greenButtonSprite;
     private static Sprite redButtonSprite;
-    private static Sprite panelGradientSprite;
+    private static Sprite panelGradientSprite; // Procedural wood grain panel.
     private static Sprite ulosPatternSprite;
 
     // ---------------------------------------------------------------------
@@ -109,7 +108,7 @@ public class BattleMenuScreen : BaseScreen
     private void CreateBackground()
     {
         GameObject bg = new GameObject(
-            "TobaLakeAtDuskBackground",
+            "TobaLakeDaylightBackground",
             typeof(RectTransform),
             typeof(Image)
         );
@@ -126,57 +125,56 @@ public class BattleMenuScreen : BaseScreen
         bgImage.color = Color.white;
         bgImage.raycastTarget = false;
 
-        // Lapisan gelap transparan agar teks tetap terbaca di atas lanskap.
+        // Overlay sangat tipis: menjaga keterbacaan tanpa menggelapkan lanskap.
         GameObject shade = new GameObject(
             "BackgroundReadabilityShade",
             typeof(RectTransform),
             typeof(Image)
         );
         shade.transform.SetParent(screenObj.transform, false);
-        // Background dibuat terlebih dahulu; shade berada tepat di atasnya.
 
         RectTransform shadeRT = shade.GetComponent<RectTransform>();
         Stretch(shadeRT);
 
         Image shadeImage = shade.GetComponent<Image>();
-        shadeImage.color = new Color(0.10f, 0.035f, 0.045f, 0.26f);
+        shadeImage.color = new Color(0.035f, 0.09f, 0.055f, 0.075f);
         shadeImage.raycastTarget = false;
 
-        // Cahaya senja lembut pada area Danau Toba.
+        // Cahaya hangat lembut, bukan dominasi warna senja.
         CreateGlow(
             screenObj.transform,
-            "SunsetGlow",
-            new Vector2(700f, 700f),
-            new Vector2(330f, 390f),
-            new Color(1f, 0.55f, 0.22f, 0.18f)
+            "NaturalSunGlow",
+            new Vector2(650f, 650f),
+            new Vector2(300f, 420f),
+            new Color(1f, 0.82f, 0.48f, 0.10f)
         );
 
-        // Garis motif Ulos di bagian atas dan bawah layar.
+        // Motif Ulos hanya sebagai aksen tipis di tepi layar.
         CreateUlosBand(
             screenObj.transform,
             "HeaderUlosBand",
-            new Vector2(900f, 34f),
+            new Vector2(900f, 26f),
             new Vector2(0f, 765f),
-            1f
+            0.48f
         );
 
         CreateUlosBand(
             screenObj.transform,
             "FooterUlosBand",
-            new Vector2(900f, 34f),
+            new Vector2(900f, 26f),
             new Vector2(0f, -865f),
-            0.95f
+            0.34f
         );
 
-        // Garis bingkai emas tipis sebagai pengikat komposisi.
         CreateAccentLine(
             screenObj.transform,
             "HeaderGoldLine",
             new Vector2(900f, 3f),
             new Vector2(0f, 790f),
-            new Color(C_GOLD.r, C_GOLD.g, C_GOLD.b, 0.82f)
+            new Color(C_GOLD.r, C_GOLD.g, C_GOLD.b, 0.78f)
         );
     }
+
 
     private void CreateGlow(
         Transform parent,
@@ -332,7 +330,7 @@ public class BattleMenuScreen : BaseScreen
             "PENJELAJAH",
             new Vector2(235f, 58f),
             new Vector2(-285f, -43f),
-            Hex("#2A171B"),
+            C_GORGA_BLACK,
             C_GOLD_LIGHT,
             25
         );
@@ -343,7 +341,7 @@ public class BattleMenuScreen : BaseScreen
             "PENANTANG",
             new Vector2(235f, 58f),
             new Vector2(285f, -43f),
-            Hex("#2A171B"),
+            C_GORGA_BLACK,
             C_GOLD_LIGHT,
             25
         );
@@ -720,7 +718,7 @@ public class BattleMenuScreen : BaseScreen
             "CARI LAWAN",
             new Vector2(460f, 76f),
             new Vector2(0f, -77f),
-            ButtonVisual.Red,
+            ButtonVisual.Green,
             OnAutoMatchmaking
         );
     }
@@ -805,12 +803,12 @@ public class BattleMenuScreen : BaseScreen
         borderImage.raycastTarget = false;
 
         Shadow shadow = borderObject.AddComponent<Shadow>();
-        shadow.effectColor = new Color(0f, 0f, 0f, 0.42f);
-        shadow.effectDistance = new Vector2(0f, -10f);
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.38f);
+        shadow.effectDistance = new Vector2(0f, -8f);
         shadow.useGraphicAlpha = true;
 
         GameObject fillObject = new GameObject(
-            "MaroonPanelFill",
+            "WoodPanelFill",
             typeof(RectTransform),
             typeof(Image)
         );
@@ -819,25 +817,25 @@ public class BattleMenuScreen : BaseScreen
 
         RectTransform fillRT = fillObject.GetComponent<RectTransform>();
         Stretch(fillRT);
-        fillRT.offsetMin = new Vector2(5f, 5f);
-        fillRT.offsetMax = new Vector2(-5f, -5f);
+        fillRT.offsetMin = new Vector2(6f, 6f);
+        fillRT.offsetMax = new Vector2(-6f, -6f);
 
         Image fillImage = fillObject.GetComponent<Image>();
         fillImage.sprite = panelGradientSprite;
         fillImage.type = Image.Type.Sliced;
-        fillImage.color = Color.Lerp(Color.white, fillTint, 0.12f);
+        fillImage.color = Color.Lerp(Color.white, fillTint, 0.06f);
         fillImage.raycastTarget = false;
 
-        // Tenunan Ulos sebagai detail tepi panel.
+        // Satu garis Ulos tipis sebagai aksen, bukan dekorasi dominan.
         CreateUlosBand(
             fillObject.transform,
             "UlosTopTrim",
-            new Vector2(size.x - 24f, 18f),
-            new Vector2(0f, size.y * 0.5f - 18f),
-            0.96f
+            new Vector2(size.x - 34f, 12f),
+            new Vector2(0f, size.y * 0.5f - 15f),
+            0.58f
         );
 
-        // Garis merah tipis di bawah panel untuk aksen Gorga.
+        // Aksen merah Gorga sangat tipis di sisi bawah panel.
         GameObject lowerAccent = new GameObject(
             "GorgaLowerAccent",
             typeof(RectTransform),
@@ -849,7 +847,7 @@ public class BattleMenuScreen : BaseScreen
         lowerRT.anchorMin = new Vector2(0f, 0f);
         lowerRT.anchorMax = new Vector2(1f, 0f);
         lowerRT.pivot = new Vector2(0.5f, 0f);
-        lowerRT.sizeDelta = new Vector2(-34f, 4f);
+        lowerRT.sizeDelta = new Vector2(-38f, 3f);
         lowerRT.anchoredPosition = new Vector2(0f, 8f);
 
         Image lowerImage = lowerAccent.GetComponent<Image>();
@@ -858,12 +856,31 @@ public class BattleMenuScreen : BaseScreen
         lowerImage.color = C_GORGA_RED;
         lowerImage.raycastTarget = false;
 
-        // Ornamen sudut kecil agar panel tidak terlihat seperti kartu dashboard generik.
-        CreateGorgaCorner(fillObject.transform, "GorgaCornerLeft", new Vector2(-size.x * 0.5f + 25f, -size.y * 0.5f + 24f));
-        CreateGorgaCorner(fillObject.transform, "GorgaCornerRight", new Vector2(size.x * 0.5f - 25f, -size.y * 0.5f + 24f));
+        // Ornamen sudut kecil mengikat panel dengan bingkai halaman lain.
+        CreateGorgaCorner(
+            fillObject.transform,
+            "GorgaCornerTopLeft",
+            new Vector2(-size.x * 0.5f + 24f, size.y * 0.5f - 24f)
+        );
+        CreateGorgaCorner(
+            fillObject.transform,
+            "GorgaCornerTopRight",
+            new Vector2(size.x * 0.5f - 24f, size.y * 0.5f - 24f)
+        );
+        CreateGorgaCorner(
+            fillObject.transform,
+            "GorgaCornerBottomLeft",
+            new Vector2(-size.x * 0.5f + 24f, -size.y * 0.5f + 24f)
+        );
+        CreateGorgaCorner(
+            fillObject.transform,
+            "GorgaCornerBottomRight",
+            new Vector2(size.x * 0.5f - 24f, -size.y * 0.5f + 24f)
+        );
 
         return root;
     }
+
 
     private void CreateUlosBand(
         Transform parent,
@@ -1485,13 +1502,13 @@ public class BattleMenuScreen : BaseScreen
         );
 
         backgroundGradientSprite = CreateTobaLandscapeSprite(
-            "TOBA_DanauToba_Dusk",
+            "TOBA_DanauToba_Daylight",
             512,
             1024
         );
 
         glowSprite = CreateRadialGlowSprite(
-            "TOBA_SunsetGlow",
+            "TOBA_NaturalSunGlow",
             128
         );
 
@@ -1525,14 +1542,10 @@ public class BattleMenuScreen : BaseScreen
             new Vector4(16f, 16f, 16f, 16f)
         );
 
-        panelGradientSprite = CreateRoundedGradientSprite(
-            "TOBA_MaroonPanel",
-            256,
-            64,
-            15f,
-            Hex("#653035"),
-            Hex("#2A171B"),
-            new Vector4(16f, 16f, 16f, 16f)
+        panelGradientSprite = CreateWoodPanelSprite(
+            "TOBA_WoodPanel",
+            512,
+            128
         );
 
         ulosPatternSprite = CreateUlosPatternSprite(
@@ -1553,12 +1566,17 @@ public class BattleMenuScreen : BaseScreen
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.hideFlags = HideFlags.DontSave;
 
-        Color skyTop = Hex("#32191F");
-        Color skyMid = Hex("#8A4540");
-        Color sunset = Hex("#D18B52");
-        Color lake = Hex("#172B31");
-        Color farMountain = Hex("#493039");
-        Color nearMountain = Hex("#28191F");
+        Color skyTop = Hex("#4CA8E6");
+        Color skyHorizon = Hex("#D5EFFB");
+        Color lakeTop = Hex("#62B4C8");
+        Color lakeBottom = Hex("#1E6478");
+        Color farMountain = Hex("#668B68");
+        Color nearMountain = Hex("#315D3D");
+        Color forest = Hex("#17442D");
+        Color forestLight = Hex("#397344");
+        Color path = Hex("#C69B61");
+        Color pathEdge = Hex("#76502D");
+        Color cloud = Hex("#FFFDF4");
 
         Color32[] pixels = new Color32[width * height];
 
@@ -1567,25 +1585,32 @@ public class BattleMenuScreen : BaseScreen
             float ny = (float)y / (height - 1);
 
             Color rowColor;
-            if (ny > 0.66f)
+            if (ny > 0.58f)
             {
-                float t = Mathf.InverseLerp(0.66f, 1f, ny);
-                rowColor = Color.Lerp(skyMid, skyTop, t);
+                float t = Mathf.InverseLerp(0.58f, 1f, ny);
+                rowColor = Color.Lerp(skyHorizon, skyTop, t);
             }
-            else if (ny > 0.57f)
+            else if (ny > 0.43f)
             {
-                float t = Mathf.InverseLerp(0.57f, 0.66f, ny);
-                rowColor = Color.Lerp(sunset, skyMid, t);
+                float t = Mathf.InverseLerp(0.43f, 0.58f, ny);
+                rowColor = Color.Lerp(lakeTop, skyHorizon, t);
+            }
+            else if (ny > 0.16f)
+            {
+                float t = Mathf.InverseLerp(0.16f, 0.43f, ny);
+                rowColor = Color.Lerp(lakeBottom, lakeTop, t);
             }
             else
             {
-                float t = Mathf.InverseLerp(0.12f, 0.57f, ny);
-                rowColor = Color.Lerp(lake, Hex("#344044"), t);
+                float t = Mathf.InverseLerp(0f, 0.16f, ny);
+                rowColor = Color.Lerp(forest, forestLight, t);
             }
 
             for (int x = 0; x < width; x++)
             {
                 float nx = (float)x / (width - 1);
+                Color pixel = rowColor;
+
                 float ridgeFar =
                     0.535f +
                     0.035f * Mathf.Sin(nx * 12.5f) +
@@ -1596,34 +1621,83 @@ public class BattleMenuScreen : BaseScreen
                     0.045f * Mathf.Sin(nx * 9.5f + 1.7f) +
                     0.022f * Mathf.Sin(nx * 24f);
 
-                Color pixel = rowColor;
-
-                // Dua lapis siluet perbukitan di atas permukaan danau.
-                // Area di bawah garis pantai tetap berupa air, bukan tertutup gunung.
+                // Pegunungan hijau berlapis di seberang Danau Toba.
                 if (ny >= 0.455f && ny <= ridgeFar)
-                    pixel = farMountain;
-
-                if (ny >= 0.435f && ny <= ridgeNear)
-                    pixel = nearMountain;
-
-                // Permukaan Danau Toba: garis pantulan cahaya horizontal.
-                if (ny < 0.43f && ny > 0.16f)
                 {
-                    int waveBand = (int)(ny * 520f);
-                    float wave = Mathf.Abs(
-                        Mathf.Sin(nx * 82f + waveBand * 0.12f)
+                    float mountainShade = 0.92f + 0.08f * Mathf.Sin(nx * 18f + ny * 8f);
+                    pixel = new Color(
+                        farMountain.r * mountainShade,
+                        farMountain.g * mountainShade,
+                        farMountain.b * mountainShade,
+                        1f
                     );
-
-                    if (wave > 0.965f && ((x + waveBand * 3) % 19) < 13)
-                        pixel = Color.Lerp(pixel, Hex("#A66E52"), 0.30f);
                 }
 
-                // Kilau senja di tengah danau.
-                float glowX = Mathf.Abs(nx - 0.52f);
-                float glowY = Mathf.Abs(ny - 0.43f);
-                float glow = Mathf.Clamp01(1f - glowX * 3.5f - glowY * 5f);
-                if (ny < 0.46f && ny > 0.28f)
-                    pixel = Color.Lerp(pixel, Hex("#A96A4C"), glow * 0.20f);
+                if (ny >= 0.435f && ny <= ridgeNear)
+                {
+                    float mountainShade = 0.90f + 0.10f * Mathf.Sin(nx * 23f + ny * 10f);
+                    pixel = new Color(
+                        nearMountain.r * mountainShade,
+                        nearMountain.g * mountainShade,
+                        nearMountain.b * mountainShade,
+                        1f
+                    );
+                }
+
+                // Awan putih lembut pada langit.
+                if (ny > 0.62f)
+                {
+                    float cloudMask = 0f;
+
+                    float dx1 = (nx - 0.22f) / 0.17f;
+                    float dy1 = (ny - 0.77f) / 0.075f;
+                    cloudMask = Mathf.Max(cloudMask, Mathf.Clamp01(1f - dx1 * dx1 - dy1 * dy1));
+
+                    float dx2 = (nx - 0.34f) / 0.13f;
+                    float dy2 = (ny - 0.80f) / 0.085f;
+                    cloudMask = Mathf.Max(cloudMask, Mathf.Clamp01(1f - dx2 * dx2 - dy2 * dy2));
+
+                    float dx3 = (nx - 0.76f) / 0.19f;
+                    float dy3 = (ny - 0.75f) / 0.09f;
+                    cloudMask = Mathf.Max(cloudMask, Mathf.Clamp01(1f - dx3 * dx3 - dy3 * dy3));
+
+                    float cloudTexture = 0.88f + 0.12f * Mathf.Sin(nx * 55f + ny * 28f);
+                    pixel = Color.Lerp(pixel, cloud, cloudMask * cloudTexture * 0.88f);
+                }
+
+                // Kilau dan riak halus di permukaan danau.
+                if (ny < 0.43f && ny > 0.16f)
+                {
+                    float wave = Mathf.Abs(Mathf.Sin(nx * 95f + ny * 310f));
+                    float waveLine = Mathf.Abs(Mathf.Sin(ny * 250f + nx * 14f));
+
+                    if (wave > 0.965f && waveLine > 0.45f)
+                        pixel = Color.Lerp(pixel, Hex("#D3E8D7"), 0.24f);
+
+                    float reflection = Mathf.Clamp01(
+                        1f - Mathf.Abs(nx - 0.52f) * 4.5f
+                    );
+                    pixel = Color.Lerp(pixel, Hex("#A9D9D1"), reflection * 0.10f);
+                }
+
+                // Jalur tanah kecil pada tepian depan agar menyatu dengan tema jelajah.
+                if (ny < 0.16f)
+                {
+                    float pathCenter = 0.50f + 0.075f * Mathf.Sin((0.16f - ny) * 13f);
+                    float pathWidth = Mathf.Lerp(0.115f, 0.022f, ny / 0.16f);
+                    float distanceFromPath = Mathf.Abs(nx - pathCenter);
+
+                    if (distanceFromPath < pathWidth)
+                    {
+                        float edge = Mathf.InverseLerp(pathWidth, pathWidth * 0.72f, distanceFromPath);
+                        pixel = Color.Lerp(pathEdge, path, edge);
+                    }
+                    else
+                    {
+                        float grassNoise = Mathf.PerlinNoise(nx * 32f, ny * 95f);
+                        pixel = Color.Lerp(forest, forestLight, grassNoise * 0.48f);
+                    }
+                }
 
                 pixels[y * width + x] = pixel;
             }
@@ -1638,10 +1712,12 @@ public class BattleMenuScreen : BaseScreen
             new Vector2(0.5f, 0.5f),
             100f
         );
+
         sprite.name = spriteName;
         sprite.hideFlags = HideFlags.DontSave;
         return sprite;
     }
+
 
     private static Sprite CreateUlosPatternSprite(
         string spriteName,
@@ -1654,11 +1730,11 @@ public class BattleMenuScreen : BaseScreen
         texture.wrapMode = TextureWrapMode.Repeat;
         texture.hideFlags = HideFlags.DontSave;
 
-        Color maroon = Hex("#3A171D");
-        Color red = Hex("#B43B35");
-        Color cream = Hex("#E9D6B1");
-        Color gold = Hex("#D5A64C");
-        Color black = Hex("#211317");
+        Color maroon = Hex("#4A2B18");
+        Color red = Hex("#A83232");
+        Color cream = Hex("#F3E4C2");
+        Color gold = Hex("#D4AF37");
+        Color black = Hex("#2C190F");
 
         Color32[] pixels = new Color32[width * height];
 
@@ -1838,6 +1914,74 @@ public class BattleMenuScreen : BaseScreen
         sprite.name = spriteName;
         sprite.hideFlags = HideFlags.DontSave;
 
+        return sprite;
+    }
+
+    private static Sprite CreateWoodPanelSprite(string spriteName, int width, int height)
+    {
+        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        texture.name = spriteName + "_Texture";
+        texture.filterMode = FilterMode.Bilinear;
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.hideFlags = HideFlags.DontSave;
+
+        Color woodDark = Hex("#3D1F0A");
+        Color woodLight = Hex("#80502A");
+        Color32[] pixels = new Color32[width * height];
+
+        for (int y = 0; y < height; y++)
+        {
+            float vertical = (float)y / (height - 1);
+
+            for (int x = 0; x < width; x++)
+            {
+                float grainA = Mathf.Sin(y * 0.34f + Mathf.Sin(x * 0.018f) * 2.2f);
+                float grainB = Mathf.Sin(y * 0.105f + Mathf.Sin(x * 0.006f) * 3.4f);
+                float noise = Mathf.PerlinNoise(x * 0.035f, y * 0.16f) - 0.5f;
+                float grain = grainA * 0.035f + grainB * 0.025f + noise * 0.11f;
+
+                Color baseColor = Color.Lerp(woodDark, woodLight, 0.28f + vertical * 0.48f);
+                float brightness = Mathf.Clamp(1f + grain, 0.78f, 1.16f);
+
+                Color pixel = new Color(
+                    Mathf.Clamp01(baseColor.r * brightness),
+                    Mathf.Clamp01(baseColor.g * brightness),
+                    Mathf.Clamp01(baseColor.b * brightness),
+                    1f
+                );
+
+                // Garis serat kayu horizontal yang sangat halus.
+                if (Mathf.Abs(grainA) > 0.985f)
+                    pixel = Color.Lerp(pixel, woodDark, 0.16f);
+
+                float distance = RoundedBoxDistance(
+                    x + 0.5f,
+                    y + 0.5f,
+                    width,
+                    height,
+                    18f
+                );
+                pixel.a = Mathf.Clamp01(0.5f - distance);
+
+                pixels[y * width + x] = pixel;
+            }
+        }
+
+        texture.SetPixels32(pixels);
+        texture.Apply(false, false);
+
+        Sprite sprite = Sprite.Create(
+            texture,
+            new Rect(0f, 0f, width, height),
+            new Vector2(0.5f, 0.5f),
+            100f,
+            0,
+            SpriteMeshType.FullRect,
+            new Vector4(20f, 20f, 20f, 20f)
+        );
+
+        sprite.name = spriteName;
+        sprite.hideFlags = HideFlags.DontSave;
         return sprite;
     }
 
