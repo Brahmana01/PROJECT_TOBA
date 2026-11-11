@@ -626,7 +626,12 @@ public class ProfileScreen : BaseScreen
 
     void UpdateUI()
     {
-        if (nameTxt != null) nameTxt.text = profileData.name.ToUpper();
+        if (nameTxt != null)
+        {
+            nameTxt.text = string.IsNullOrWhiteSpace(profileData.name)
+                ? "PEMAIN"
+                : profileData.name.ToUpperInvariant();
+        }
         if (usernameTxt != null) usernameTxt.text = "@" + profileData.username;
         if (titleTxt != null) titleTxt.text = profileData.title_name;
         if (levelTxt != null) levelTxt.text = "Level " + profileData.level;
@@ -670,10 +675,17 @@ public class ProfileScreen : BaseScreen
                 if (screenObj == null) return;
 
                 NewAchievementResponse res = JsonUtility.FromJson<NewAchievementResponse>(response);
-
-                if (res != null && res.count > 0)
+                
+                if (res != null &&
+                    res.count > 0 &&
+                    res.newly_unlocked != null &&
+                    res.newly_unlocked.Count > 0 &&
+                    res.newly_unlocked[0] != null)
                 {
-                    AchievementPopup.Show(screenObj.transform, res.newly_unlocked[0]);
+                    AchievementPopup.Show(
+                        screenObj.transform,
+                        res.newly_unlocked[0]
+                    );
                 }
             },
             (err) => { }

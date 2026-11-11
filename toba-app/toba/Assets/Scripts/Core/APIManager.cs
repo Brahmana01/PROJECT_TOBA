@@ -124,12 +124,22 @@ public class APIManager : MonoBehaviour
                 ? req.downloadHandler.text
                 : "";
 
-            Debug.LogError(
-                $"[API] POST GAGAL | URL={url} | " +
+            string logMessage =
+                $"[API] GET GAGAL | URL={url} | " +
                 $"HTTP={req.responseCode} | " +
                 $"Result={req.result} | " +
-                $"Error={req.error} | Body={body}"
-            );
+                $"Error={req.error} | Body={body}";
+
+            if (req.result == UnityWebRequest.Result.ConnectionError ||
+                (req.result == UnityWebRequest.Result.ProtocolError &&
+                req.responseCode < 500))
+            {
+                Debug.LogWarning(logMessage);
+            }
+            else
+            {
+                Debug.LogError(logMessage);
+            }
 
             string errMsg = GetFriendlyError(req.result, req.error);
             onError?.Invoke(errMsg);

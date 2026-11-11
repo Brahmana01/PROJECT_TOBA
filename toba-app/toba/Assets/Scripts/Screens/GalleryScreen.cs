@@ -189,7 +189,7 @@ public class GalleryScreen : BaseScreen
 
     void CreateGalleryCard(Transform parent, PlayerGalleryCardData cardData, float x, float y, float w, float h, int slotNumber)
     {
-        bool isOwned = cardData != null;
+        bool isOwned = cardData != null && cardData.card != null;
 
         GameObject border = UIBuilder.CreatePanelSized(
             parent, "CardBorder_" + slotNumber,

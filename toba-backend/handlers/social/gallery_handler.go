@@ -3,16 +3,15 @@ package social
 import (
 	"strconv"
 
+	"toba-backend/models"
 	"toba-backend/services/player"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetPlayerGallery(c *fiber.Ctx) error {
-	playerID := c.Params("id")
-
-	id, err := strconv.ParseUint(playerID, 10, 64)
-	if err != nil {
+	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	if err != nil || id == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Player ID tidak valid",
 		})
@@ -23,6 +22,10 @@ func GetPlayerGallery(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal mengambil gallery",
 		})
+	}
+
+	if result == nil {
+		result = make([]models.PlayerGalleryCard, 0)
 	}
 
 	return c.JSON(fiber.Map{
