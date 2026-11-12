@@ -7,64 +7,30 @@ using System.Collections.Generic;
 public class MapScreen : BaseScreen
 {
     // ============================================================
-    // DATA - TETAP MENGIKUTI SISTEM LAMA
+    // DATA
     // ============================================================
 
-    private List<LocationData> locationList =
-        new List<LocationData>();
-
-    private List<PlayerProgressData> progressList =
-        new List<PlayerProgressData>();
+    private List<LocationData> locationList = new List<LocationData>();
+    private List<PlayerProgressData> progressList = new List<PlayerProgressData>();
 
     // ============================================================
-    // WORLD CONFIG
+    // WORLD CONFIGURATION
     // ============================================================
 
     private const float WORLD_WIDTH = 1080f;
     private const float SEGMENT_HEIGHT = 2200f;
-
-    // Ruang aman agar Level 1 tidak tertutup header.
     private const float WORLD_TOP_PADDING = 180f;
-
     private const float NODE_SIZE = 150f;
-
-    // ============================================================
-    // MASTER 6-SLOT PATTERN
-    //
-    // Ini BUKAN posisi Level 1, 2, 3 secara permanen.
-    //
-    // Ini adalah pattern yang berulang:
-    //
-    // Slot 0 = kiri
-    // Slot 1 = kanan
-    // Slot 2 = kiri
-    // Slot 3 = kanan
-    // Slot 4 = kiri
-    // Slot 5 = kanan
-    //
-    // Jarak vertikal mengikuti pattern yang kita tanam
-    // ke 7 background:
-    //
-    // 400 -> 760  = 360
-    // 760 -> 1120 = 360
-    // 1120 -> 1480 = 360
-    // 1480 -> 1840 = 360
-    // 1840 -> 2040 = 200
-    // ============================================================
 
     private static readonly Vector2[] MASTER_PATTERN =
     {
-        new Vector2(350f, 400f),   // L1
-        new Vector2(680f, 675f),   // L2
-        new Vector2(350f, 950f),   // L3
-        new Vector2(680f, 1225f),  // L4
-        new Vector2(350f, 1500f),  // L5
-        new Vector2(680f, 1775f)   // L6
+        new Vector2(350f, 400f),
+        new Vector2(680f, 675f),
+        new Vector2(350f, 950f),
+        new Vector2(680f, 1225f),
+        new Vector2(350f, 1500f),
+        new Vector2(680f, 1775f)
     };
-
-    // ============================================================
-    // 7 BACKGROUND ASSETS
-    // ============================================================
 
     private static readonly string[] SEGMENT_ASSETS =
     {
@@ -78,16 +44,13 @@ public class MapScreen : BaseScreen
     };
 
     // ============================================================
-    // REFERENCES
+    // REFERENCES / STATE
     // ============================================================
 
     private RectTransform worldContent;
     private ScrollRect scrollRect;
     private bool isFetching;
-
-    // ============================================================
-    // CONSTRUCTOR
-    // ============================================================
+    private bool isNavigating;
 
     public MapScreen(Transform parent)
         : base(parent, "MapScreen")
@@ -95,7 +58,7 @@ public class MapScreen : BaseScreen
     }
 
     // ============================================================
-    // SHOW
+    // SHOW / LOADING
     // ============================================================
 
     public override void Show()
@@ -103,22 +66,17 @@ public class MapScreen : BaseScreen
         if (screenObj == null)
             return;
 
+        isNavigating = false;
         SetBackground(TOBATheme.ForestGreen);
         FetchData();
     }
-
-    // ============================================================
-    // LOADING
-    // ============================================================
 
     private void ShowLoading()
     {
         if (screenObj == null)
             return;
 
-        Transform existing = screenObj.transform.Find("Loading");
-        if (existing != null)
-            UnityEngine.Object.Destroy(existing.gameObject);
+        RemoveMapLoading();
 
         GameObject loading = new GameObject("Loading");
         loading.transform.SetParent(screenObj.transform, false);
@@ -137,9 +95,28 @@ public class MapScreen : BaseScreen
         text.raycastTarget = false;
     }
 
+    private void RemoveMapLoading()
+    {
+        if (screenObj == null)
+            return;
+
+        Transform loading = screenObj.transform.Find("Loading");
+        if (loading != null)
+            UnityEngine.Object.Destroy(loading.gameObject);
+    }
+
+    private void RemoveEmptyState()
+    {
+        if (screenObj == null)
+            return;
+
+        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
+        if (oldEmptyState != null)
+            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
+    }
+
     // ============================================================
     // API
-    // TETAP MENGIKUTI KODE LAMA
     // ============================================================
 
     private void FetchData()
@@ -147,26 +124,22 @@ public class MapScreen : BaseScreen
         if (screenObj == null || isFetching)
             return;
 
-        isFetching = true;
-        RemoveMapLoading();
-
-        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
-        if (oldEmptyState != null)
-            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
-
-        ShowLoading();
-
-        int playerID = PlayerPrefs.GetInt("PlayerID", 0);
-
         if (APIManager.Instance == null)
         {
-            isFetching = false;
             ShowMapLoadError(
                 "Layanan tidak tersedia",
                 "Silakan coba kembali."
             );
             return;
         }
+
+        isFetching = true;
+        isNavigating = false;
+
+        RemoveEmptyState();
+        ShowLoading();
+
+        int playerID = PlayerPrefs.GetInt("PlayerID", 0);
 
         APIManager.Instance.GetRequest(
             "/locations",
@@ -184,16 +157,18 @@ public class MapScreen : BaseScreen
                         throw new System.FormatException("Response lokasi kosong.");
 
                     string json = locationResponse.Trim();
+
                     if (json.StartsWith("["))
                         json = "{\"locations\":" + json + "}";
 
-                    LocationListResponse locations =
+                    LocationListResponse response =
                         JsonUtility.FromJson<LocationListResponse>(json);
 
-                    if (locations == null)
-                        throw new System.FormatException("Data lokasi tidak valid.");
+                    if (response == null)
+                        throw new System.FormatException("Struktur data lokasi tidak valid.");
 
-                    locationList = locations.locations ?? new List<LocationData>();
+                    locationList = response.locations ?? new List<LocationData>();
+
                     locationList.RemoveAll(location =>
                         location == null || location.id <= 0
                     );
@@ -201,9 +176,11 @@ public class MapScreen : BaseScreen
                 catch (System.Exception ex)
                 {
                     isFetching = false;
+
                     Debug.LogWarning(
                         "[Map] Gagal membaca data lokasi: " + ex.Message
                     );
+
                     ShowMapLoadError(
                         "Data lokasi bermasalah",
                         "Silakan muat ulang peta."
@@ -216,6 +193,7 @@ public class MapScreen : BaseScreen
                     isFetching = false;
                     RemoveMapLoading();
                     ClearMapVisuals();
+
                     EmptyState.Show(
                         screenObj.transform,
                         "◆",
@@ -249,19 +227,19 @@ public class MapScreen : BaseScreen
                             if (!string.IsNullOrWhiteSpace(progressResponse))
                             {
                                 string json = progressResponse.Trim();
+
                                 if (json.StartsWith("["))
                                     json = "{\"progress\":" + json + "}";
 
-                                PlayerProgressResponse progress =
+                                PlayerProgressResponse response =
                                     JsonUtility.FromJson<PlayerProgressResponse>(json);
 
-                                if (progress == null)
-                                    throw new System.FormatException(
-                                        "Data progress tidak valid."
-                                    );
+                                if (response == null)
+                                    throw new System.FormatException("Struktur data progress tidak valid.");
 
-                                progressList = progress.progress ??
+                                progressList = response.progress ??
                                     new List<PlayerProgressData>();
+
                                 progressList.RemoveAll(item => item == null);
                             }
                         }
@@ -270,13 +248,14 @@ public class MapScreen : BaseScreen
                             Debug.LogWarning(
                                 "[Map] Gagal membaca progress: " + ex.Message
                             );
+
                             progressList.Clear();
                         }
 
                         isFetching = false;
                         BuildMap();
                     },
-                    err =>
+                    error =>
                     {
                         if (screenObj == null)
                         {
@@ -285,15 +264,16 @@ public class MapScreen : BaseScreen
                         }
 
                         Debug.LogWarning(
-                            "[Map] Gagal mengambil progress: " + err
+                            "[Map] Gagal mengambil progress: " + error
                         );
+
                         progressList.Clear();
                         isFetching = false;
                         BuildMap();
                     }
                 );
             },
-            err =>
+            error =>
             {
                 if (screenObj == null)
                 {
@@ -302,25 +282,17 @@ public class MapScreen : BaseScreen
                 }
 
                 isFetching = false;
+
                 Debug.LogWarning(
-                    "[Map] Gagal mengambil locations: " + err
+                    "[Map] Gagal mengambil lokasi: " + error
                 );
+
                 ShowMapLoadError(
                     "Gagal memuat peta",
                     "Periksa koneksi internet."
                 );
             }
         );
-    }
-
-    private void RemoveMapLoading()
-    {
-        if (screenObj == null)
-            return;
-
-        Transform loading = screenObj.transform.Find("Loading");
-        if (loading != null)
-            UnityEngine.Object.Destroy(loading.gameObject);
     }
 
     private void ShowMapLoadError(string title, string message)
@@ -331,10 +303,7 @@ public class MapScreen : BaseScreen
         isFetching = false;
         RemoveMapLoading();
         ClearMapVisuals();
-
-        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
-        if (oldEmptyState != null)
-            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
+        RemoveEmptyState();
 
         EmptyState.Show(
             screenObj.transform,
@@ -362,19 +331,36 @@ public class MapScreen : BaseScreen
         scrollRect = null;
     }
 
+    // ============================================================
+    // COROUTINE HELPER
+    // ============================================================
+
     private void StartMapCoroutine(IEnumerator routine)
     {
-        if (routine == null || screenObj == null)
+        if (routine == null || screenObj == null || isNavigating)
             return;
 
         if (ScreenManager.Instance == null)
+        {
+            Debug.LogWarning("[Map] ScreenManager tidak tersedia; animasi dilewati.");
             return;
+        }
 
+        // Coroutine harus dijalankan oleh MonoBehaviour ScreenManager.
+        // Jangan memanggil StartMapCoroutine(routine) dari dalam fungsi ini.
         ScreenManager.Instance.StartCoroutine(routine);
     }
 
+    private bool IsMapRunning(Transform target)
+    {
+        return target != null &&
+               screenObj != null &&
+               screenObj.activeInHierarchy &&
+               !isNavigating;
+    }
+
     // ============================================================
-    // BUILD
+    // BUILD MAP
     // ============================================================
 
     private void BuildMap()
@@ -384,12 +370,9 @@ public class MapScreen : BaseScreen
 
         isFetching = false;
         RemoveMapLoading();
-
-        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
-        if (oldEmptyState != null)
-            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
-
+        RemoveEmptyState();
         ClearMapVisuals();
+
         CreateWorld();
 
         if (scrollRect == null || worldContent == null)
@@ -411,91 +394,48 @@ public class MapScreen : BaseScreen
 
     private void CreateWorld()
     {
-        scrollRect =
-            UIBuilder.CreateScrollView(
-                screenObj.transform,
-                "MapScroll",
-                Vector2.zero,
-                Vector2.one
-            );
+        if (screenObj == null)
+            return;
+
+        scrollRect = UIBuilder.CreateScrollView(
+            screenObj.transform,
+            "MapScroll",
+            Vector2.zero,
+            Vector2.one
+        );
 
         if (scrollRect == null)
         {
-            Debug.LogError(
-                "[Map] ScrollView gagal dibuat."
-            );
-
+            Debug.LogError("[Map] ScrollView gagal dibuat.");
             return;
         }
 
-        scrollRect.horizontal =
-            false;
+        scrollRect.horizontal = false;
+        scrollRect.vertical = true;
+        scrollRect.movementType = ScrollRect.MovementType.Clamped;
+        scrollRect.inertia = true;
+        scrollRect.decelerationRate = 0.12f;
+        scrollRect.scrollSensitivity = 38f;
 
-        scrollRect.vertical =
-            true;
-
-        scrollRect.movementType =
-            ScrollRect.MovementType.Clamped;
-
-        scrollRect.inertia =
-            true;
-
-        scrollRect.decelerationRate =
-            0.12f;
-
-        scrollRect.scrollSensitivity =
-            38f;
-
-        worldContent =
-            scrollRect.content;
+        worldContent = scrollRect.content;
 
         if (worldContent == null)
         {
-            Debug.LogError(
-                "[Map] Scroll content null."
-            );
-
+            Debug.LogError("[Map] Scroll content null.");
             return;
         }
 
-        worldContent.anchorMin =
-            new Vector2(
-                0f,
-                1f
-            );
-
-        worldContent.anchorMax =
-            new Vector2(
-                1f,
-                1f
-            );
-
-        worldContent.pivot =
-            new Vector2(
-                0.5f,
-                1f
-            );
-
-        /*
-         * Ini penting:
-         *
-         * World digeser sedikit ke bawah agar
-         * area Segment 01 tidak langsung bertabrakan
-         * dengan header fixed.
-         */
-        worldContent.anchoredPosition =
-            new Vector2(
-                0f,
-                -WORLD_TOP_PADDING
-            );
+        // Anchor horizontal dibuat stretch mengikuti lebar viewport.
+        // Karena itu sizeDelta.x = 0 berarti mengikuti lebar parent,
+        // bukan membuat lebar content menjadi nol.
+        worldContent.anchorMin = new Vector2(0f, 1f);
+        worldContent.anchorMax = new Vector2(1f, 1f);
+        worldContent.pivot = new Vector2(0.5f, 1f);
+        worldContent.anchoredPosition = new Vector2(0f, -WORLD_TOP_PADDING);
 
         CreateSegmentBackgrounds();
-
         CreateEnvironmentEffects();
-
         SetWorldHeight();
-
-
     }
 
     // ============================================================
@@ -504,117 +444,46 @@ public class MapScreen : BaseScreen
 
     private void CreateSegmentBackgrounds()
     {
-        if (
-            worldContent == null ||
-            locationList == null ||
-            locationList.Count == 0
-        )
-        {
+        if (worldContent == null || locationList == null || locationList.Count == 0)
             return;
-        }
 
-        int segmentCount =
-            Mathf.CeilToInt(
-                locationList.Count / 6f
-            );
+        int segmentCount = Mathf.CeilToInt(locationList.Count / 6f);
 
-        for (
-            int segmentIndex = 0;
-            segmentIndex < segmentCount;
-            segmentIndex++
-        )
-        {
-            CreateSingleSegment(
-                segmentIndex
-            );
-        }
+        for (int segmentIndex = 0; segmentIndex < segmentCount; segmentIndex++)
+            CreateSingleSegment(segmentIndex);
     }
 
-    private void CreateSingleSegment(
-        int segmentIndex)
+    private void CreateSingleSegment(int segmentIndex)
     {
-        string assetPath =
-            SEGMENT_ASSETS[
-                segmentIndex %
-                SEGMENT_ASSETS.Length
-            ];
+        if (worldContent == null || SEGMENT_ASSETS.Length == 0)
+            return;
 
-        Sprite background =
-            TOBATheme.LoadSprite(
-                assetPath
-            );
+        string assetPath = SEGMENT_ASSETS[segmentIndex % SEGMENT_ASSETS.Length];
+        Sprite background = TOBATheme.LoadSprite(assetPath);
 
         if (background == null)
         {
-            Debug.LogError(
-                "[Map] Background tidak ditemukan: " +
-                assetPath
-            );
-
+            Debug.LogWarning("[Map] Background tidak ditemukan: " + assetPath);
             return;
         }
 
-        GameObject bg =
-            new GameObject(
-                "MapSegment_" +
-                (segmentIndex + 1)
-            );
+        GameObject bg = new GameObject("MapSegment_" + (segmentIndex + 1));
+        bg.transform.SetParent(worldContent, false);
 
-        bg.transform.SetParent(
-            worldContent,
-            false
+        RectTransform rt = bg.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.sizeDelta = new Vector2(WORLD_WIDTH, SEGMENT_HEIGHT);
+        rt.anchoredPosition = new Vector2(
+            0f,
+            -(segmentIndex * SEGMENT_HEIGHT)
         );
 
-        RectTransform rt =
-            bg.AddComponent<RectTransform>();
-
-        rt.anchorMin =
-            rt.anchorMax =
-            new Vector2(
-                0.5f,
-                1f
-            );
-
-        rt.pivot =
-            new Vector2(
-                0.5f,
-                1f
-            );
-
-        rt.sizeDelta =
-            new Vector2(
-                WORLD_WIDTH,
-                SEGMENT_HEIGHT
-            );
-
-        /*
-         * Karena worldContent sudah punya TOP PADDING,
-         * setiap background hanya perlu ditempatkan
-         * berdasarkan segment.
-         */
-        rt.anchoredPosition =
-            new Vector2(
-                0f,
-                -(
-                    segmentIndex *
-                    SEGMENT_HEIGHT
-                )
-            );
-
-        Image image =
-            bg.AddComponent<Image>();
-
-        image.sprite =
-            background;
-
-        image.type =
-            Image.Type.Simple;
-
-        image.preserveAspect =
-            false;
-
-        image.raycastTarget =
-            false;
+        Image image = bg.AddComponent<Image>();
+        image.sprite = background;
+        image.type = Image.Type.Simple;
+        image.preserveAspect = false;
+        image.raycastTarget = false;
     }
 
     // ============================================================
@@ -626,72 +495,29 @@ public class MapScreen : BaseScreen
         if (worldContent == null)
             return;
 
-        if (
-            locationList == null ||
-            locationList.Count == 0
-        )
+        if (locationList == null || locationList.Count == 0)
         {
-            worldContent.sizeDelta =
-                new Vector2(
-                    0f,
-                    SEGMENT_HEIGHT
-                );
-
+            worldContent.sizeDelta = new Vector2(0f, SEGMENT_HEIGHT);
             return;
         }
 
-        int lastIndex =
-            locationList.Count - 1;
+        int lastIndex = locationList.Count - 1;
+        int lastSegment = lastIndex / 6;
+        int lastSlot = lastIndex % 6;
 
-        int lastSegment =
-            lastIndex / 6;
+        float lastSlotY = MASTER_PATTERN[lastSlot].y;
 
-        int lastSlot =
-            lastIndex % 6;
-
-        float lastSlotY =
-            MASTER_PATTERN[
-                lastSlot
-            ].y;
-
-        /*
-         * Tinggi sampai lokasi terakhir.
-         */
         float gameplayEnd =
-            lastSegment *
-            SEGMENT_HEIGHT
-            +
-            lastSlotY
-            +
+            lastSegment * SEGMENT_HEIGHT +
+            lastSlotY +
             350f;
 
-        /*
-         * Minimum untuk satu segment.
-         */
-        float minimum =
-            (
-                lastSegment + 1
-            ) *
-            SEGMENT_HEIGHT;
+        float minimum = (lastSegment + 1) * SEGMENT_HEIGHT;
+        float finalHeight = Mathf.Max(gameplayEnd, minimum);
+        finalHeight += WORLD_TOP_PADDING;
 
-        float finalHeight =
-            Mathf.Max(
-                gameplayEnd,
-                minimum
-            );
-
-        /*
-         * Tambahkan top padding karena worldContent
-         * kita sudah digeser ke bawah.
-         */
-        finalHeight +=
-            WORLD_TOP_PADDING;
-
-        worldContent.sizeDelta =
-            new Vector2(
-                0f,
-                finalHeight
-            );
+        // Lebar tetap mengikuti viewport karena anchor horizontal stretch.
+        worldContent.sizeDelta = new Vector2(0f, finalHeight);
     }
 
     // ============================================================
@@ -700,176 +526,101 @@ public class MapScreen : BaseScreen
 
     private void CreateFixedHeader()
     {
-        GameObject layer =
-            new GameObject(
-                "HeaderLayer"
-            );
+        if (screenObj == null)
+            return;
 
-        layer.transform.SetParent(
-            screenObj.transform,
-            false
-        );
+        GameObject layer = new GameObject("HeaderLayer");
+        layer.transform.SetParent(screenObj.transform, false);
 
-        RectTransform layerRT =
-            layer.AddComponent<RectTransform>();
-
-        layerRT.anchorMin =
-            Vector2.zero;
-
-        layerRT.anchorMax =
-            Vector2.one;
-
-        layerRT.offsetMin =
-            Vector2.zero;
-
-        layerRT.offsetMax =
-            Vector2.zero;
+        RectTransform layerRT = layer.AddComponent<RectTransform>();
+        layerRT.anchorMin = Vector2.zero;
+        layerRT.anchorMax = Vector2.one;
+        layerRT.offsetMin = Vector2.zero;
+        layerRT.offsetMax = Vector2.zero;
 
         layer.transform.SetAsLastSibling();
 
-        CreateHeaderBoard(
-            layer.transform
-        );
-
-        CreateBackButton(
-            layer.transform
-        );
+        CreateHeaderBoard(layer.transform);
+        CreateBackButton(layer.transform);
     }
 
-    // ============================================================
-    // HEADER BOARD
-    // ============================================================
-
-    private void CreateHeaderBoard(
-        Transform parent)
+    private void CreateHeaderBoard(Transform parent)
     {
-        Sprite header =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_header_board"
-            );
+        if (parent == null)
+            return;
+
+        Sprite header = TOBATheme.LoadSprite("MapScreen/map_header_board");
 
         if (header == null)
         {
-            Debug.LogError(
-                "[Map] map_header_board tidak ditemukan."
-            );
-
+            Debug.LogWarning("[Map] map_header_board tidak ditemukan.");
             return;
         }
 
-        /*
-         * Header sedikit lebih tinggi agar benar-benar
-         * menjadi elemen tersendiri di atas world.
-         */
-        GameObject board =
-            UIBuilder.CreateImage(
-                parent,
-                "MapHeader",
-                header,
-                new Vector2(
-                    980f,
-                    225f
-                ),
-                new Vector2(
-                    0f,
-                    770f
-                )
-            );
+        GameObject board = UIBuilder.CreateImage(
+            parent,
+            "MapHeader",
+            header,
+            new Vector2(980f, 225f),
+            new Vector2(0f, 770f)
+        );
 
-        Image image =
-            board.GetComponent<Image>();
+        if (board == null)
+            return;
 
+        Image image = board.GetComponent<Image>();
         if (image != null)
         {
-            image.preserveAspect =
-                true;
-
-            image.raycastTarget =
-                false;
+            image.preserveAspect = true;
+            image.raycastTarget = false;
         }
 
-        CreateHeaderShine(
-            board.transform
-        );
+        CreateHeaderShine(board.transform);
     }
 
-    // ============================================================
-    // HEADER SHINE
-    // ============================================================
-
-    private void CreateHeaderShine(
-        Transform parent)
+    private void CreateHeaderShine(Transform parent)
     {
-        // Aset ini pernah tidak ditemukan di build sebelumnya.
-        // Resources.Load tidak mengeluarkan warning jika aset opsional belum tersedia.
-        Sprite shine =
-            Resources.Load<Sprite>("MapScreen/map_header_shine");
+        if (parent == null)
+            return;
+
+        // Shine merupakan aset dekoratif opsional. Resources.Load tidak
+        // menghasilkan log error ketika aset ini memang tidak tersedia.
+        Sprite shine = Resources.Load<Sprite>("MapScreen/map_header_shine");
 
         if (shine == null)
             return;
 
-        GameObject shineObject =
-            UIBuilder.CreateImage(
-                parent,
-                "HeaderShine",
-                shine,
-                new Vector2(
-                    170f,
-                    100f
-                ),
-                new Vector2(
-                    -500f,
-                    0f
-                ),
-                new Color(
-                    1f,
-                    1f,
-                    1f,
-                    0.55f
-                )
-            );
+        GameObject shineObject = UIBuilder.CreateImage(
+            parent,
+            "HeaderShine",
+            shine,
+            new Vector2(170f, 100f),
+            new Vector2(-500f, 0f),
+            new Color(1f, 1f, 1f, 0.55f)
+        );
 
-        Image image =
-            shineObject.GetComponent<Image>();
+        if (shineObject == null)
+            return;
 
+        Image image = shineObject.GetComponent<Image>();
         if (image != null)
         {
-            image.preserveAspect =
-                true;
-
-            image.raycastTarget =
-                false;
+            image.preserveAspect = true;
+            image.raycastTarget = false;
         }
 
-        StartMapCoroutine(
-            HeaderShineLoop(
-                shineObject.transform
-            )
-        );
+        StartMapCoroutine(HeaderShineLoop(shineObject.transform));
     }
 
-    private IEnumerator HeaderShineLoop(
-        Transform target)
+    private IEnumerator HeaderShineLoop(Transform target)
     {
         if (target == null)
             yield break;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            float p =
-                Mathf.Repeat(
-                    Time.time * 0.17f,
-                    1.35f
-                );
-
-            target.localPosition =
-                new Vector3(
-                    -500f +
-                    p * 1000f,
-                    0f,
-                    0f
-                );
-
+            float p = Mathf.Repeat(Time.unscaledTime * 0.17f, 1.35f);
+            target.localPosition = new Vector3(-500f + p * 1000f, 0f, 0f);
             yield return null;
         }
     }
@@ -878,236 +629,140 @@ public class MapScreen : BaseScreen
     // BACK BUTTON
     // ============================================================
 
-    private void CreateBackButton(
-        Transform parent)
+    private void CreateBackButton(Transform parent)
     {
-        Sprite back =
-            TOBATheme.LoadSprite(
-                "RegisterNameScreen/register_name_back_button_v2"
-            );
-
-        if (back == null)
+        if (parent == null)
             return;
 
-        GameObject buttonObject =
-            UIBuilder.CreateImage(
-                parent,
-                "BackButton",
-                back,
-                new Vector2(
-                    145f,
-                    145f
-                ),
-                new Vector2(
-                    -450f,
-                    765f
-                )
-            );
+        Sprite back = TOBATheme.LoadSprite(
+            "RegisterNameScreen/register_name_back_button_v2"
+        );
 
-        Image image =
-            buttonObject.GetComponent<Image>();
-
-        if (image != null)
+        if (back == null)
         {
-            image.preserveAspect =
-                true;
-
-            image.raycastTarget =
-                true;
+            Debug.LogWarning("[Map] Back button sprite tidak ditemukan.");
+            return;
         }
 
-        Button button =
-            buttonObject.AddComponent<Button>();
-
-        button.targetGraphic =
-            image;
-
-        button.transition =
-            Selectable.Transition.None;
-
-        button.onClick.AddListener(
-            () =>
-            {
-                StartMapCoroutine(
-                    BackButtonPress(
-                        buttonObject.transform
-                    )
-                );
-            }
+        GameObject buttonObject = UIBuilder.CreateImage(
+            parent,
+            "BackButton",
+            back,
+            new Vector2(145f, 145f),
+            new Vector2(-450f, 765f)
         );
 
-        StartMapCoroutine(
-            BackButtonFloat(
-                buttonObject.transform
-            )
-        );
+        if (buttonObject == null)
+            return;
+
+        Image image = buttonObject.GetComponent<Image>();
+        if (image != null)
+        {
+            image.preserveAspect = true;
+            image.raycastTarget = true;
+        }
+
+        Button button = buttonObject.GetComponent<Button>();
+        if (button == null)
+            button = buttonObject.AddComponent<Button>();
+
+        button.targetGraphic = image;
+        button.transition = Selectable.Transition.None;
+
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(() =>
+        {
+            if (isNavigating)
+                return;
+
+            StartMapCoroutine(BackButtonPress(buttonObject.transform));
+        });
+
+        StartMapCoroutine(BackButtonFloat(buttonObject.transform));
     }
 
-    private IEnumerator BackButtonFloat(
-        Transform target)
+    private IEnumerator BackButtonFloat(Transform target)
     {
         if (target == null)
             yield break;
 
-        Vector3 origin =
-            target.localPosition;
-
+        Vector3 origin = target.localPosition;
         float time = 0f;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            time +=
-                Time.deltaTime;
-
-            target.localPosition =
-                new Vector3(
-                    origin.x,
-                    origin.y +
-                    Mathf.Sin(
-                        time * 1.1f
-                    ) * 2f,
-                    origin.z
-                );
-
+            time += Time.unscaledDeltaTime;
+            target.localPosition = new Vector3(
+                origin.x,
+                origin.y + Mathf.Sin(time * 1.1f) * 2f,
+                origin.z
+            );
             yield return null;
         }
     }
 
-    private IEnumerator BackButtonPress(
-        Transform target)
+    private IEnumerator BackButtonPress(Transform target)
     {
         if (target == null)
             yield break;
 
-        Vector3 original =
-            target.localScale;
-
-        target.localScale =
-            original * 0.88f;
-
+        Vector3 original = target.localScale;
+        target.localScale = original * 0.88f;
         yield return new WaitForSecondsRealtime(0.07f);
 
         if (target == null)
             yield break;
 
-        target.localScale =
-            original * 1.06f;
-
+        target.localScale = original * 1.06f;
         yield return new WaitForSecondsRealtime(0.07f);
 
-        if (target == null)
+        if (target == null || screenObj == null || ScreenManager.Instance == null)
             yield break;
 
-        target.localScale =
-            original;
+        target.localScale = original;
+        isNavigating = true;
 
         SoundManager.Instance?.PlaySFX("sfx_click");
-
-        if (screenObj == null || ScreenManager.Instance == null)
-            yield break;
-
-        ScreenManager.Instance.ChangeScreen(
-            new MainMenuScreen(container)
-        );
+        ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
     }
 
     // ============================================================
-    // NODE CREATION
+    // NODE CREATION / POSITION
     // ============================================================
 
     private void CreateNodes()
     {
-        if (
-            worldContent == null ||
-            locationList == null
-        )
-        {
+        if (worldContent == null || locationList == null)
             return;
-        }
 
-        for (
-            int i = 0;
-            i < locationList.Count;
-            i++
-        )
+        for (int i = 0; i < locationList.Count; i++)
         {
-            LocationData location =
-                locationList[i];
+            LocationData location = locationList[i];
 
             if (location == null || location.id <= 0)
                 continue;
 
-            Vector2 position =
-                GetPatternPosition(i);
+            Vector2 position = GetPatternPosition(i);
+            bool unlocked = IsUnlocked(location.id, i);
+            bool completed = IsCompleted(location.id);
 
-            bool unlocked =
-                IsUnlocked(
-                    location.id,
-                    i
-                );
-
-            bool completed =
-                IsCompleted(
-                    location.id
-                );
-
-            CreateNode(
-                location,
-                i,
-                position,
-                unlocked,
-                completed
-            );
+            CreateNode(location, i, position, unlocked, completed);
         }
     }
 
-    // ============================================================
-    // PATTERN POSITION
-    //
-    // Ini inti sistem:
-    //
-    // index 0..5  = pattern 1 segment
-    // index 6..11 = pattern berikutnya
-    // index 12..17 = pattern berikutnya
-    //
-    // dst.
-    // ============================================================
-
-    private Vector2 GetPatternPosition(
-        int locationIndex)
+    private Vector2 GetPatternPosition(int locationIndex)
     {
-        int segmentIndex =
-            locationIndex / 6;
+        int safeIndex = Mathf.Max(0, locationIndex);
+        int segmentIndex = safeIndex / MASTER_PATTERN.Length;
+        int slotIndex = safeIndex % MASTER_PATTERN.Length;
 
-        int slotIndex =
-            locationIndex % 6;
+        Vector2 pattern = MASTER_PATTERN[slotIndex];
 
-        Vector2 pattern =
-            MASTER_PATTERN[
-                slotIndex
-            ];
+        float x = pattern.x - WORLD_WIDTH / 2f;
+        float y = -(segmentIndex * SEGMENT_HEIGHT + pattern.y);
 
-        float x =
-            pattern.x -
-            WORLD_WIDTH / 2f;
-
-        float y =
-            -(
-                segmentIndex *
-                SEGMENT_HEIGHT
-                +
-                pattern.y
-            );
-
-        return new Vector2(
-            x,
-            y
-        );
+        return new Vector2(x, y);
     }
-
-    // ============================================================
-    // NODE
-    // ============================================================
 
     private void CreateNode(
         LocationData location,
@@ -1116,63 +771,40 @@ public class MapScreen : BaseScreen
         bool unlocked,
         bool completed)
     {
-        if (location == null || location.id <= 0 || screenObj == null || worldContent == null)
+        if (location == null || screenObj == null || worldContent == null)
             return;
 
-        string asset =
-            completed
-                ? "MapScreen/map_node_completed"
-                : unlocked
-                    ? "MapScreen/map_node_active"
-                    : "MapScreen/map_node_locked";
+        string asset = completed
+            ? "MapScreen/map_node_completed"
+            : unlocked
+                ? "MapScreen/map_node_active"
+                : "MapScreen/map_node_locked";
 
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                asset
-            );
+        Sprite sprite = TOBATheme.LoadSprite(asset);
 
         if (sprite == null)
         {
-            Debug.LogWarning(
-                "[Map] Node sprite missing: " +
-                asset
-            );
-
+            Debug.LogWarning("[Map] Node sprite tidak ditemukan: " + asset);
             return;
         }
 
-        GameObject node =
-            CreateWorldImage(
-                "Node_" +
-                (index + 1),
-                sprite,
-                new Vector2(
-                    NODE_SIZE,
-                    NODE_SIZE
-                ),
-                position
-            );
+        GameObject node = CreateWorldImage(
+            "Node_" + (index + 1),
+            sprite,
+            new Vector2(NODE_SIZE, NODE_SIZE),
+            position
+        );
 
         if (node == null)
             return;
 
-        Image image =
-            node.GetComponent<Image>();
-
+        Image image = node.GetComponent<Image>();
         if (image == null)
             return;
 
-        image.raycastTarget =
-            true;
+        image.raycastTarget = true;
 
-        /*
-         * Nomor tetap ditampilkan.
-         */
-        string number =
-            completed
-                ? "✓"
-                : (index + 1).ToString();
-
+        string number = completed ? "✓" : (index + 1).ToString();
         CreateNodeNumber(
             node.transform,
             number,
@@ -1180,71 +812,54 @@ public class MapScreen : BaseScreen
             unlocked
         );
 
-        Button button =
-            node.AddComponent<Button>();
+        Button button = node.GetComponent<Button>();
+        if (button == null)
+            button = node.AddComponent<Button>();
 
-        button.targetGraphic =
-            image;
-
-        button.transition =
-            Selectable.Transition.None;
+        button.targetGraphic = image;
+        button.transition = Selectable.Transition.None;
 
         if (unlocked)
         {
-            LocationData captured =
-                location;
+            LocationData capturedLocation = location;
+            Transform capturedNode = node.transform;
 
-            button.onClick.AddListener(
-                () =>
-                {
-                    SoundManager.Instance?.PlaySFX("sfx_click");
-                    StartMapCoroutine(
-                        OpenLocationAfterTouch(
-                            node.transform,
-                            captured
-                        )
-                    );
-                }
-            );
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                if (isNavigating)
+                    return;
+
+                SoundManager.Instance?.PlaySFX("sfx_click");
+                StartMapCoroutine(
+                    OpenLocationAfterTouch(capturedNode, capturedLocation)
+                );
+            });
 
             if (completed)
             {
-                StartMapCoroutine(
-                    CompletedNodeLoop(
-                        node.transform
-                    )
-                );
+                StartMapCoroutine(CompletedNodeLoop(node.transform));
             }
             else
             {
-                CreateActiveNodeEffect(
-                    node.transform,
-                    index
-                );
+                CreateActiveNodeEffect(node.transform, index);
             }
         }
         else
         {
-            button.onClick.AddListener(
-                () =>
-                {
-                    SoundManager.Instance?.PlaySFX(
-                        "sfx_click"
-                    );
+            Transform capturedNode = node.transform;
 
-                    StartMapCoroutine(
-                        LockedTouch(
-                            node.transform
-                        )
-                    );
-                }
-            );
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                if (isNavigating)
+                    return;
+
+                SoundManager.Instance?.PlaySFX("sfx_click");
+                StartMapCoroutine(LockedTouch(capturedNode));
+            });
         }
     }
-
-    // ============================================================
-    // LEVEL NUMBER
-    // ============================================================
 
     private void CreateNodeNumber(
         Transform parent,
@@ -1252,325 +867,159 @@ public class MapScreen : BaseScreen
         int fontSize,
         bool unlocked)
     {
-        GameObject obj =
-            new GameObject(
-                "LevelNumber"
-            );
+        if (parent == null)
+            return;
 
-        obj.transform.SetParent(
-            parent,
-            false
-        );
+        GameObject obj = new GameObject("LevelNumber");
+        obj.transform.SetParent(parent, false);
 
-        RectTransform rt =
-            obj.AddComponent<RectTransform>();
+        RectTransform rt = obj.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(120f, 90f);
+        rt.anchoredPosition = new Vector2(0f, 5f);
 
-        rt.anchorMin =
-            rt.anchorMax =
-            new Vector2(
-                0.5f,
-                0.5f
-            );
+        TextMeshProUGUI text = obj.AddComponent<TextMeshProUGUI>();
+        text.text = value;
+        text.fontSize = fontSize;
+        text.fontStyle = FontStyles.Bold;
+        text.alignment = TextAlignmentOptions.Center;
+        text.enableWordWrapping = false;
+        text.raycastTarget = false;
 
-        rt.sizeDelta =
-            new Vector2(
-                120f,
-                90f
-            );
+        text.color = unlocked
+            ? new Color(1f, 0.84f, 0.34f, 1f)
+            : new Color(0.76f, 0.64f, 0.35f, 0.75f);
 
-        rt.anchoredPosition =
-            new Vector2(
-                0f,
-                5f
-            );
+        Outline outline = obj.AddComponent<Outline>();
+        outline.effectColor = new Color(0.20f, 0.06f, 0.015f, 0.95f);
+        outline.effectDistance = new Vector2(2f, -2f);
 
-        TextMeshProUGUI text =
-            obj.AddComponent<TextMeshProUGUI>();
-
-        text.text =
-            value;
-
-        text.fontSize =
-            fontSize;
-
-        text.fontStyle =
-            FontStyles.Bold;
-
-        text.alignment =
-            TextAlignmentOptions.Center;
-
-        text.enableWordWrapping =
-            false;
-
-        text.raycastTarget =
-            false;
-
-        text.color =
-            unlocked
-                ? new Color(
-                    1f,
-                    0.84f,
-                    0.34f,
-                    1f
-                )
-                : new Color(
-                    0.76f,
-                    0.64f,
-                    0.35f,
-                    0.75f
-                );
-
-        Outline outline =
-            obj.AddComponent<Outline>();
-
-        outline.effectColor =
-            new Color(
-                0.20f,
-                0.06f,
-                0.015f,
-                0.95f
-            );
-
-        outline.effectDistance =
-            new Vector2(
-                2f,
-                -2f
-            );
-
-        Shadow shadow =
-            obj.AddComponent<Shadow>();
-
-        shadow.effectColor =
-            new Color(
-                0f,
-                0f,
-                0f,
-                0.35f
-            );
-
-        shadow.effectDistance =
-            new Vector2(
-                1f,
-                -2f
-            );
+        Shadow shadow = obj.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.35f);
+        shadow.effectDistance = new Vector2(1f, -2f);
     }
 
     // ============================================================
-    // ACTIVE NODE
+    // ACTIVE / COMPLETED NODE EFFECTS
     // ============================================================
 
-    private void CreateActiveNodeEffect(
-        Transform node,
-        int index)
+    private void CreateActiveNodeEffect(Transform node, int index)
     {
-        CreateNodeGlow(
-            node,
-            index
-        );
+        if (node == null)
+            return;
 
-        CreateNodeSparkles(
-            node,
-            index
-        );
-
-        StartMapCoroutine(
-            ActiveNodeLoop(
-                node,
-                index * 0.35f
-            )
-        );
+        CreateNodeGlow(node, index);
+        CreateNodeSparkles(node, index);
+        StartMapCoroutine(ActiveNodeLoop(node, index * 0.35f));
     }
 
-    private IEnumerator ActiveNodeLoop(
-        Transform target,
-        float phase)
+    private IEnumerator ActiveNodeLoop(Transform target, float phase)
     {
         if (target == null)
             yield break;
 
-        Vector3 original =
-            target.localScale;
+        Vector3 original = target.localScale;
+        float time = phase;
 
-        float t =
-            phase;
-
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            t +=
-                Time.deltaTime * 1.25f;
-
-            target.localScale =
-                original *
-                (
-                    1f +
-                    Mathf.Abs(
-                        Mathf.Sin(t)
-                    ) * 0.035f
-                );
-
+            time += Time.unscaledDeltaTime * 1.25f;
+            target.localScale = original *
+                (1f + Mathf.Abs(Mathf.Sin(time)) * 0.035f);
             yield return null;
         }
     }
 
-    // ============================================================
-    // NODE GLOW
-    // ============================================================
-
-    private void CreateNodeGlow(
-        Transform node,
-        int index)
+    private void CreateNodeGlow(Transform node, int index)
     {
-        RectTransform nodeRT =
-            node.GetComponent<RectTransform>();
+        if (node == null || worldContent == null)
+            return;
 
+        RectTransform nodeRT = node.GetComponent<RectTransform>();
         if (nodeRT == null)
             return;
 
-        GameObject glow =
-            CreateWorldPanel(
-                "NodeGlow_" + index,
-                new Color(
-                    TOBATheme.BatakGold.r,
-                    TOBATheme.BatakGold.g,
-                    TOBATheme.BatakGold.b,
-                    0.11f
-                ),
-                new Vector2(
-                    NODE_SIZE + 36f,
-                    NODE_SIZE + 36f
-                ),
-                nodeRT.anchoredPosition
-            );
+        GameObject glow = CreateWorldPanel(
+            "NodeGlow_" + index,
+            new Color(
+                TOBATheme.BatakGold.r,
+                TOBATheme.BatakGold.g,
+                TOBATheme.BatakGold.b,
+                0.11f
+            ),
+            new Vector2(NODE_SIZE + 36f, NODE_SIZE + 36f),
+            nodeRT.anchoredPosition
+        );
 
-        Image glowImage =
-            glow.GetComponent<Image>();
+        if (glow == null)
+            return;
 
+        Image glowImage = glow.GetComponent<Image>();
         if (glowImage != null)
-        {
-            glowImage.raycastTarget =
-                false;
-        }
-
-        /*
-         * Glow dibuat tepat sebelum node.
-         */
-        int nodeIndex =
-            node.GetSiblingIndex();
+            glowImage.raycastTarget = false;
 
         glow.transform.SetSiblingIndex(
-            Mathf.Max(
-                0,
-                nodeIndex
-            )
+            Mathf.Max(0, node.GetSiblingIndex())
         );
 
-        StartMapCoroutine(
-            GlowLoop(
-                glow.transform,
-                glowImage
-            )
-        );
+        StartMapCoroutine(GlowLoop(glow.transform, glowImage));
     }
 
-    private IEnumerator GlowLoop(
-        Transform target,
-        Image image)
+    private IEnumerator GlowLoop(Transform target, Image image)
     {
-        if (
-            target == null ||
-            image == null
-        )
-        {
+        if (target == null || image == null)
             yield break;
-        }
 
         float time = 0f;
 
-        while (target != null)
+        while (IsMapRunning(target) && image != null)
         {
-            time +=
-                Time.deltaTime * 1.35f;
+            time += Time.unscaledDeltaTime * 1.35f;
 
-            image.color =
-                new Color(
-                    TOBATheme.BatakGold.r,
-                    TOBATheme.BatakGold.g,
-                    TOBATheme.BatakGold.b,
-                    0.05f +
-                    Mathf.Abs(
-                        Mathf.Sin(time)
-                    ) * 0.18f
-                );
+            image.color = new Color(
+                TOBATheme.BatakGold.r,
+                TOBATheme.BatakGold.g,
+                TOBATheme.BatakGold.b,
+                0.05f + Mathf.Abs(Mathf.Sin(time)) * 0.18f
+            );
 
-            target.localScale =
-                Vector3.one *
-                (
-                    1f +
-                    Mathf.Abs(
-                        Mathf.Sin(time)
-                    ) * 0.045f
-                );
+            target.localScale = Vector3.one *
+                (1f + Mathf.Abs(Mathf.Sin(time)) * 0.045f);
 
             yield return null;
         }
     }
 
-    // ============================================================
-    // NODE SPARKLES
-    // ============================================================
-
-    private void CreateNodeSparkles(
-        Transform node,
-        int nodeIndex)
+    private void CreateNodeSparkles(Transform node, int nodeIndex)
     {
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_path_glint"
-            );
+        if (node == null || worldContent == null)
+            return;
 
+        Sprite sprite = TOBATheme.LoadSprite("MapScreen/map_path_glint");
         if (sprite == null)
             return;
 
-        RectTransform nodeRT =
-            node.GetComponent<RectTransform>();
-
+        RectTransform nodeRT = node.GetComponent<RectTransform>();
         if (nodeRT == null)
             return;
 
-        for (
-            int i = 0;
-            i < 3;
-            i++
-        )
+        for (int i = 0; i < 3; i++)
         {
-            float angle =
-                i *
-                Mathf.PI *
-                0.666f;
+            float angle = i * Mathf.PI * 0.666f;
 
-            GameObject sparkle =
-                CreateWorldImage(
-                    "NodeSpark_" +
-                    nodeIndex +
-                    "_" +
-                    i,
-                    sprite,
-                    new Vector2(
-                        20f,
-                        20f
-                    ),
-                    nodeRT.anchoredPosition +
-                    new Vector2(
-                        Mathf.Cos(angle) * 65f,
-                        Mathf.Sin(angle) * 65f
-                    ),
-                    new Color(
-                        1f,
-                        1f,
-                        1f,
-                        0.80f
-                    )
-                );
+            GameObject sparkle = CreateWorldImage(
+                "NodeSpark_" + nodeIndex + "_" + i,
+                sprite,
+                new Vector2(20f, 20f),
+                nodeRT.anchoredPosition + new Vector2(
+                    Mathf.Cos(angle) * 65f,
+                    Mathf.Sin(angle) * 65f
+                ),
+                new Color(1f, 1f, 1f, 0.80f)
+            );
+
+            if (sparkle == null)
+                continue;
 
             StartMapCoroutine(
                 NodeSparkLoop(
@@ -1590,92 +1039,56 @@ public class MapScreen : BaseScreen
         if (target == null)
             yield break;
 
-        RectTransform rt =
-            target.GetComponent<
-                RectTransform
-            >();
-
+        RectTransform rt = target.GetComponent<RectTransform>();
         if (rt == null)
             yield break;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            float t =
-                Time.time * 0.82f +
-                phase;
+            float time = Time.unscaledTime * 0.82f + phase;
 
-            rt.anchoredPosition =
-                center +
-                new Vector2(
-                    Mathf.Cos(t) * 65f,
-                    Mathf.Sin(t * 1.2f) * 65f
-                );
+            rt.anchoredPosition = center + new Vector2(
+                Mathf.Cos(time) * 65f,
+                Mathf.Sin(time * 1.2f) * 65f
+            );
 
-            target.localScale =
-                Vector3.one *
-                (
-                    0.65f +
-                    Mathf.Abs(
-                        Mathf.Sin(t)
-                    ) * 0.30f
-                );
+            target.localScale = Vector3.one *
+                (0.65f + Mathf.Abs(Mathf.Sin(time)) * 0.30f);
 
-            Image image =
-                target.GetComponent<Image>();
-
+            Image image = target.GetComponent<Image>();
             if (image != null)
             {
-                image.color =
-                    new Color(
-                        1f,
-                        1f,
-                        1f,
-                        0.10f +
-                        Mathf.Abs(
-                            Mathf.Sin(t)
-                        ) * 0.80f
-                    );
+                image.color = new Color(
+                    1f,
+                    1f,
+                    1f,
+                    0.10f + Mathf.Abs(Mathf.Sin(time)) * 0.80f
+                );
             }
 
             yield return null;
         }
     }
 
-    // ============================================================
-    // COMPLETED NODE
-    // ============================================================
-
-    private IEnumerator CompletedNodeLoop(
-        Transform target)
+    private IEnumerator CompletedNodeLoop(Transform target)
     {
         if (target == null)
             yield break;
 
-        Vector3 original =
-            target.localScale;
+        Vector3 original = target.localScale;
+        float time = 0f;
 
-        float t = 0f;
-
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            t +=
-                Time.deltaTime * 0.75f;
-
-            target.localScale =
-                original *
-                (
-                    1f +
-                    Mathf.Abs(
-                        Mathf.Sin(t)
-                    ) * 0.02f
-                );
-
+            time += Time.unscaledDeltaTime * 0.75f;
+            target.localScale = original *
+                (1f + Mathf.Abs(Mathf.Sin(time)) * 0.02f);
             yield return null;
         }
     }
 
     // ============================================================
-    // TOUCH ACTIVE
+    // NODE TOUCH / NAVIGATION
     // ============================================================
 
     private IEnumerator OpenLocationAfterTouch(
@@ -1684,85 +1097,75 @@ public class MapScreen : BaseScreen
     {
         yield return NodeTouch(target);
 
-        if (screenObj == null || location == null || ScreenManager.Instance == null)
+        if (screenObj == null ||
+            location == null ||
+            ScreenManager.Instance == null ||
+            isNavigating)
+        {
             yield break;
+        }
 
+        isNavigating = true;
         ScreenManager.Instance.ChangeScreen(
             new LocationDetailScreen(container, location)
         );
     }
 
-    private IEnumerator NodeTouch(
-        Transform target)
+    private IEnumerator NodeTouch(Transform target)
     {
         if (target == null)
             yield break;
 
-        Vector3 original =
-            target.localScale;
-
-        target.localScale =
-            original * 0.88f;
+        Vector3 original = target.localScale;
+        target.localScale = original * 0.88f;
 
         yield return new WaitForSecondsRealtime(0.06f);
 
         if (target == null)
             yield break;
 
-        target.localScale =
-            original * 1.07f;
+        target.localScale = original * 1.07f;
 
         yield return new WaitForSecondsRealtime(0.08f);
 
-        if (target == null)
-            yield break;
-
-        target.localScale =
-            original;
+        if (target != null)
+            target.localScale = original;
     }
 
-    // ============================================================
-    // TOUCH LOCKED
-    // ============================================================
-
-    private IEnumerator LockedTouch(
-        Transform target)
+    private IEnumerator LockedTouch(Transform target)
     {
         if (target == null)
             yield break;
 
         float elapsed = 0f;
 
-        while (
-            elapsed < 0.20f &&
-            target != null
-        )
+        while (elapsed < 0.20f && IsMapRunning(target))
         {
-            elapsed +=
-                Time.deltaTime;
-
-            target.localRotation =
-                Quaternion.Euler(
-                    0f,
-                    0f,
-                    Mathf.Sin(
-                        elapsed * 80f
-                    ) * 6f
-                );
+            elapsed += Time.unscaledDeltaTime;
+            target.localRotation = Quaternion.Euler(
+                0f,
+                0f,
+                Mathf.Sin(elapsed * 80f) * 6f
+            );
 
             yield return null;
         }
 
         if (target != null)
-        {
-            target.localRotation =
-                Quaternion.identity;
-        }
+            target.localRotation = Quaternion.identity;
     }
 
     // ============================================================
     // ENVIRONMENT EFFECTS
     // ============================================================
+
+    private int GetSegmentCount()
+    {
+        if (locationList == null || locationList.Count == 0)
+            return 0;
+
+        return Mathf.CeilToInt(locationList.Count / 6f);
+    }
 
     private void CreateEnvironmentEffects()
     {
@@ -1774,13 +1177,6 @@ public class MapScreen : BaseScreen
         CreateWaterfallSpray();
         CreateForegroundLeaves();
         CreateHouseSmoke();
-
-        /*
-         * CLOUD CUMA DI SEAM SEGMENT.
-         *
-         * Bukan cloud kecil satu-satu.
-         * 1 boundary = 1 curtain.
-         */
         CreateCloudTransitions();
     }
 
@@ -1790,86 +1186,44 @@ public class MapScreen : BaseScreen
 
     private void CreateFireflies()
     {
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_firefly"
-            );
-
+        Sprite sprite = TOBATheme.LoadSprite("MapScreen/map_firefly");
         if (sprite == null)
             return;
 
-        int segmentCount =
-            Mathf.Max(
-                1,
-                Mathf.CeilToInt(
-                    locationList.Count / 6f
-                )
+        int segmentCount = GetSegmentCount();
+        int total = segmentCount * 6;
+
+        for (int i = 0; i < total; i++)
+        {
+            int segment = i / 6;
+            float x = UnityEngine.Random.Range(-440f, 440f);
+
+            if (x > -120f && x < 120f)
+                x = x < 0f ? -170f : 170f;
+
+            float y = UnityEngine.Random.Range(300f, 1880f);
+
+            GameObject firefly = CreateWorldImage(
+                "Firefly_" + i,
+                sprite,
+                new Vector2(34f, 34f),
+                new Vector2(
+                    x,
+                    -(segment * SEGMENT_HEIGHT + y)
+                ),
+                new Color(1f, 0.98f, 0.42f, 0.78f)
             );
 
-        int total =
-            segmentCount * 6;
+            if (firefly == null)
+                continue;
 
-        for (
-            int i = 0;
-            i < total;
-            i++
-        )
-        {
-            int segment =
-                i / 6;
-
-            float x =
-                Random.Range(
-                    -440f,
-                    440f
-                );
-
-            if (
-                x > -120f &&
-                x < 120f
-            )
-            {
-                x =
-                    x < 0f
-                        ? -170f
-                        : 170f;
-            }
-
-            float y =
-                Random.Range(
-                    300f,
-                    1880f
-                );
-
-            GameObject firefly =
-                CreateWorldImage(
-                    "Firefly_" + i,
-                    sprite,
-                    new Vector2(
-                        34f,
-                        34f
-                    ),
-                    new Vector2(
-                        x,
-                        -(
-                            segment *
-                            SEGMENT_HEIGHT +
-                            y
-                        )
-                    ),
-                    new Color(
-                        1f,
-                        0.98f,
-                        0.42f,
-                        0.78f
-                    )
-                );
+            Image image = firefly.GetComponent<Image>();
 
             StartMapCoroutine(
                 FireflyLoop(
                     firefly.transform,
-                    firefly.GetComponent<Image>(),
-                    Random.Range(0f, 10f)
+                    image,
+                    UnityEngine.Random.Range(0f, 10f)
                 )
             );
         }
@@ -1880,46 +1234,30 @@ public class MapScreen : BaseScreen
         Image image,
         float phase)
     {
-        if (
-            target == null ||
-            image == null
-        )
-        {
+        if (target == null || image == null)
             yield break;
-        }
 
-        RectTransform rt =
-            target.GetComponent<RectTransform>();
-
+        RectTransform rt = target.GetComponent<RectTransform>();
         if (rt == null)
             yield break;
 
-        Vector2 origin =
-            rt.anchoredPosition;
+        Vector2 origin = rt.anchoredPosition;
 
-        while (target != null)
+        while (IsMapRunning(target) && image != null)
         {
-            float t =
-                Time.time * 0.72f +
-                phase;
+            float time = Time.unscaledTime * 0.72f + phase;
 
-            rt.anchoredPosition =
-                origin +
-                new Vector2(
-                    Mathf.Sin(t * 0.65f) * 20f,
-                    Mathf.Cos(t * 0.48f) * 15f
-                );
+            rt.anchoredPosition = origin + new Vector2(
+                Mathf.Sin(time * 0.65f) * 20f,
+                Mathf.Cos(time * 0.48f) * 15f
+            );
 
-            image.color =
-                new Color(
-                    1f,
-                    0.98f,
-                    0.42f,
-                    0.15f +
-                    Mathf.Abs(
-                        Mathf.Sin(t * 1.45f)
-                    ) * 0.80f
-                );
+            image.color = new Color(
+                1f,
+                0.98f,
+                0.42f,
+                0.15f + Mathf.Abs(Mathf.Sin(time * 1.45f)) * 0.80f
+            );
 
             yield return null;
         }
@@ -1931,121 +1269,68 @@ public class MapScreen : BaseScreen
 
     private void CreateWaterShimmer()
     {
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_water_shimmer"
-            );
-
+        Sprite sprite = TOBATheme.LoadSprite("MapScreen/map_water_shimmer");
         if (sprite == null)
             return;
 
-        int segmentCount =
-            Mathf.Max(
-                1,
-                Mathf.CeilToInt(
-                    locationList.Count / 6f
-                )
-            );
+        int segmentCount = GetSegmentCount();
 
-        for (
-            int segment = 0;
-            segment < segmentCount;
-            segment++
-        )
+        for (int segment = 0; segment < segmentCount; segment++)
         {
-            for (
-                int i = 0;
-                i < 3;
-                i++
-            )
+            for (int i = 0; i < 3; i++)
             {
-                float y =
-                    320f +
-                    i * 560f;
+                float y = 320f + i * 560f;
 
-                GameObject shimmer =
-                    CreateWorldImage(
-                        "WaterShimmer_" +
-                        segment +
-                        "_" +
-                        i,
-                        sprite,
-                        new Vector2(
-                            190f,
-                            62f
-                        ),
-                        new Vector2(
-                            405f,
-                            -(
-                                segment *
-                                SEGMENT_HEIGHT +
-                                y
-                            )
-                        ),
-                        new Color(
-                            1f,
-                            1f,
-                            1f,
-                            0.20f
-                        )
-                    );
+                GameObject shimmer = CreateWorldImage(
+                    "WaterShimmer_" + segment + "_" + i,
+                    sprite,
+                    new Vector2(190f, 62f),
+                    new Vector2(
+                        405f,
+                        -(segment * SEGMENT_HEIGHT + y)
+                    ),
+                    new Color(1f, 1f, 1f, 0.20f)
+                );
+
+                if (shimmer == null)
+                    continue;
 
                 StartMapCoroutine(
-                    WaterShimmerLoop(
-                        shimmer.transform,
-                        i
-                    )
+                    WaterShimmerLoop(shimmer.transform, i)
                 );
             }
         }
     }
 
-    private IEnumerator WaterShimmerLoop(
-        Transform target,
-        int index)
+    private IEnumerator WaterShimmerLoop(Transform target, int index)
     {
         if (target == null)
             yield break;
 
-        RectTransform rt =
-            target.GetComponent<
-                RectTransform
-            >();
-
+        RectTransform rt = target.GetComponent<RectTransform>();
         if (rt == null)
             yield break;
 
-        Vector2 origin =
-            rt.anchoredPosition;
+        Vector2 origin = rt.anchoredPosition;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            float t =
-                Time.time * 0.50f +
-                index;
+            float time = Time.unscaledTime * 0.50f + index;
 
-            rt.anchoredPosition =
-                origin +
-                new Vector2(
-                    Mathf.Sin(t) * 28f,
-                    Mathf.Sin(t * 0.75f) * 5f
-                );
+            rt.anchoredPosition = origin + new Vector2(
+                Mathf.Sin(time) * 28f,
+                Mathf.Sin(time * 0.75f) * 5f
+            );
 
-            Image image =
-                target.GetComponent<Image>();
-
+            Image image = target.GetComponent<Image>();
             if (image != null)
             {
-                image.color =
-                    new Color(
-                        1f,
-                        1f,
-                        1f,
-                        0.08f +
-                        Mathf.Abs(
-                            Mathf.Sin(t * 1.30f)
-                        ) * 0.30f
-                    );
+                image.color = new Color(
+                    1f,
+                    1f,
+                    1f,
+                    0.08f + Mathf.Abs(Mathf.Sin(time * 1.30f)) * 0.30f
+                );
             }
 
             yield return null;
@@ -2058,85 +1343,50 @@ public class MapScreen : BaseScreen
 
     private void CreateWaterfallSpray()
     {
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_waterfall_spray"
-            );
-
+        Sprite sprite = TOBATheme.LoadSprite("MapScreen/map_waterfall_spray");
         if (sprite == null)
             return;
 
-        int segmentCount =
-            Mathf.Max(
-                1,
-                Mathf.CeilToInt(
-                    locationList.Count / 6f
-                )
+        int segmentCount = GetSegmentCount();
+
+        for (int segment = 0; segment < segmentCount; segment++)
+        {
+            GameObject spray = CreateWorldImage(
+                "WaterfallSpray_" + segment,
+                sprite,
+                new Vector2(90f, 90f),
+                new Vector2(
+                    410f,
+                    -(segment * SEGMENT_HEIGHT + 480f)
+                ),
+                new Color(1f, 1f, 1f, 0.24f)
             );
 
-        for (
-            int segment = 0;
-            segment < segmentCount;
-            segment++
-        )
-        {
-            GameObject spray =
-                CreateWorldImage(
-                    "WaterfallSpray_" +
-                    segment,
-                    sprite,
-                    new Vector2(
-                        90f,
-                        90f
-                    ),
-                    new Vector2(
-                        410f,
-                        -(
-                            segment *
-                            SEGMENT_HEIGHT +
-                            480f
-                        )
-                    ),
-                    new Color(
-                        1f,
-                        1f,
-                        1f,
-                        0.24f
-                    )
-                );
+            if (spray == null)
+                continue;
 
             StartMapCoroutine(
-                WaterfallSprayLoop(
-                    spray.transform,
-                    segment
-                )
+                WaterfallSprayLoop(spray.transform, segment)
             );
         }
     }
 
-    private IEnumerator WaterfallSprayLoop(
-        Transform target,
-        int index)
+    private IEnumerator WaterfallSprayLoop(Transform target, int index)
     {
         if (target == null)
             yield break;
 
-        Vector3 origin =
-            target.localPosition;
+        Vector3 origin = target.localPosition;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            float t =
-                Time.time * 1.10f +
-                index * 0.8f;
+            float time = Time.unscaledTime * 1.10f + index * 0.8f;
 
-            target.localPosition =
-                origin +
-                new Vector3(
-                    Mathf.Sin(t) * 6f,
-                    Mathf.Cos(t * 1.3f) * 4f,
-                    0f
-                );
+            target.localPosition = origin + new Vector3(
+                Mathf.Sin(time) * 6f,
+                Mathf.Cos(time * 1.3f) * 4f,
+                0f
+            );
 
             yield return null;
         }
@@ -2148,93 +1398,53 @@ public class MapScreen : BaseScreen
 
     private void CreateForegroundLeaves()
     {
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_leaf_sway"
-            );
-
+        Sprite sprite = TOBATheme.LoadSprite("MapScreen/map_leaf_sway");
         if (sprite == null)
             return;
 
-        int segmentCount =
-            Mathf.Max(
-                1,
-                Mathf.CeilToInt(
-                    locationList.Count / 6f
-                )
-            );
+        int segmentCount = GetSegmentCount();
 
-        for (
-            int segment = 0;
-            segment < segmentCount;
-            segment++
-        )
+        for (int segment = 0; segment < segmentCount; segment++)
         {
-            for (
-                int i = 0;
-                i < 3;
-                i++
-            )
+            for (int i = 0; i < 3; i++)
             {
-                float x =
-                    i % 2 == 0
-                        ? -465f
-                        : 455f;
+                float x = i % 2 == 0 ? -465f : 455f;
+                float y = 600f + i * 560f;
 
-                float y =
-                    600f +
-                    i * 560f;
+                GameObject leaves = CreateWorldImage(
+                    "LeafSway_" + segment + "_" + i,
+                    sprite,
+                    new Vector2(125f, 80f),
+                    new Vector2(
+                        x,
+                        -(segment * SEGMENT_HEIGHT + y)
+                    )
+                );
 
-                GameObject leaves =
-                    CreateWorldImage(
-                        "LeafSway_" +
-                        segment +
-                        "_" +
-                        i,
-                        sprite,
-                        new Vector2(
-                            125f,
-                            80f
-                        ),
-                        new Vector2(
-                            x,
-                            -(
-                                segment *
-                                SEGMENT_HEIGHT +
-                                y
-                            )
-                        )
-                    );
+                if (leaves == null)
+                    continue;
 
                 StartMapCoroutine(
-                    LeafSwayLoop(
-                        leaves.transform,
-                        i
-                    )
+                    LeafSwayLoop(leaves.transform, i)
                 );
             }
         }
     }
 
-    private IEnumerator LeafSwayLoop(
-        Transform target,
-        int index)
+    private IEnumerator LeafSwayLoop(Transform target, int index)
     {
         if (target == null)
             yield break;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            float t =
-                Time.time * 0.72f +
-                index * 0.8f;
+            float time = Time.unscaledTime * 0.72f + index * 0.8f;
 
-            target.localEulerAngles =
-                new Vector3(
-                    0f,
-                    0f,
-                    Mathf.Sin(t) * 4f
-                );
+            target.localEulerAngles = new Vector3(
+                0f,
+                0f,
+                Mathf.Sin(time) * 4f
+            );
 
             yield return null;
         }
@@ -2246,291 +1456,144 @@ public class MapScreen : BaseScreen
 
     private void CreateHouseSmoke()
     {
-        Sprite sprite =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_smoke"
-            );
-
+        Sprite sprite = TOBATheme.LoadSprite("MapScreen/map_smoke");
         if (sprite == null)
             return;
 
-        int segmentCount =
-            Mathf.Max(
-                1,
-                Mathf.CeilToInt(
-                    locationList.Count / 6f
-                )
+        int segmentCount = GetSegmentCount();
+
+        for (int segment = 0; segment < segmentCount; segment++)
+        {
+            GameObject smoke = CreateWorldImage(
+                "HouseSmoke_" + segment,
+                sprite,
+                new Vector2(44f, 66f),
+                new Vector2(
+                    -360f,
+                    -(segment * SEGMENT_HEIGHT + 300f)
+                ),
+                new Color(1f, 1f, 1f, 0.05f)
             );
 
-        for (
-            int segment = 0;
-            segment < segmentCount;
-            segment++
-        )
-        {
-            GameObject smoke =
-                CreateWorldImage(
-                    "HouseSmoke_" +
-                    segment,
-                    sprite,
-                    new Vector2(
-                        44f,
-                        66f
-                    ),
-                    new Vector2(
-                        -360f,
-                        -(
-                            segment *
-                            SEGMENT_HEIGHT +
-                            300f
-                        )
-                    ),
-                    new Color(
-                        1f,
-                        1f,
-                        1f,
-                        0.05f
-                    )
-                );
+            if (smoke == null)
+                continue;
 
             StartMapCoroutine(
-                SmokeLoop(
-                    smoke.transform,
-                    segment
-                )
+                SmokeLoop(smoke.transform, segment)
             );
         }
     }
 
-    private IEnumerator SmokeLoop(
-        Transform target,
-        int index)
+    private IEnumerator SmokeLoop(Transform target, int index)
     {
         if (target == null)
             yield break;
 
-        RectTransform rt =
-            target.GetComponent<
-                RectTransform
-            >();
-
+        RectTransform rt = target.GetComponent<RectTransform>();
         if (rt == null)
             yield break;
 
-        Vector2 origin =
-            rt.anchoredPosition;
+        Vector2 origin = rt.anchoredPosition;
 
-        while (target != null)
+        while (IsMapRunning(target))
         {
-            float t =
-                Time.time * 0.32f +
-                index;
+            float time = Time.unscaledTime * 0.32f + index;
 
-            rt.anchoredPosition =
-                origin +
-                new Vector2(
-                    Mathf.Sin(t) * 12f,
-                    Mathf.Abs(
-                        Mathf.Sin(t * 0.65f)
-                    ) * 28f
-                );
+            rt.anchoredPosition = origin + new Vector2(
+                Mathf.Sin(time) * 12f,
+                Mathf.Abs(Mathf.Sin(time * 0.65f)) * 28f
+            );
 
             yield return null;
         }
     }
 
     // ============================================================
-    // CLOUD TRANSITION
-    //
-    // SATU OBJECT PER BOUNDARY.
-    //
-    // TIDAK ADA:
-    // - 7 cloud kecil
-    // - smoke kecil berjejer
-    // - cloud di antara level
-    //
-    // HANYA:
-    // L6 -> CLOUD -> segment berikutnya
+    // CLOUD TRANSITIONS
     // ============================================================
 
     private void CreateCloudTransitions()
     {
-        /*
-         * Kita sengaja pakai SATU sprite map_smoke
-         * yang diregangkan sebagai curtain.
-         *
-         * Tidak membuat kumpulan child cloud.
-         */
-        Sprite cloud =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_smoke"
-            );
-
+        Sprite cloud = TOBATheme.LoadSprite("MapScreen/map_smoke");
         if (cloud == null)
-        {
-            Debug.LogWarning(
-                "[Map] map_smoke tidak ditemukan."
-            );
-
             return;
-        }
 
-        int segmentCount =
-            Mathf.CeilToInt(
-                locationList.Count / 6f
-            );
-
+        int segmentCount = GetSegmentCount();
         if (segmentCount <= 1)
             return;
 
-        for (
-            int boundary = 1;
-            boundary < segmentCount;
-            boundary++
-        )
-        {
-            CreateSingleCloudCurtain(
-                cloud,
-                boundary
-            );
-        }
+        for (int boundary = 1; boundary < segmentCount; boundary++)
+            CreateSingleCloudCurtain(cloud, boundary);
     }
 
-    private void CreateSingleCloudCurtain(
-        Sprite cloud,
-        int boundary)
+    private void CreateSingleCloudCurtain(Sprite cloud, int boundary)
     {
-        float boundaryY =
-            -(
-                boundary *
-                SEGMENT_HEIGHT
-            );
+        if (cloud == null || worldContent == null)
+            return;
 
-        /*
-         * Satu GameObject.
-         * Satu Image.
-         * Satu texture.
-         */
-        GameObject curtain =
-            CreateWorldImage(
-                "CloudCurtain_" +
-                boundary,
-                cloud,
-                new Vector2(
-                    WORLD_WIDTH + 100f,
-                    300f
-                ),
-                new Vector2(
-                    0f,
-                    boundaryY
-                ),
-                new Color(
-                    0.95f,
-                    0.98f,
-                    1f,
-                    0.80f
-                )
-            );
+        float boundaryY = -(boundary * SEGMENT_HEIGHT);
 
-        Image image =
-            curtain.GetComponent<Image>();
+        GameObject curtain = CreateWorldImage(
+            "CloudCurtain_" + boundary,
+            cloud,
+            new Vector2(WORLD_WIDTH + 100f, 300f),
+            new Vector2(0f, boundaryY),
+            new Color(0.95f, 0.98f, 1f, 0.80f)
+        );
 
+        if (curtain == null)
+            return;
+
+        Image image = curtain.GetComponent<Image>();
         if (image != null)
         {
-            image.preserveAspect =
-                false;
-
-            image.type =
-                Image.Type.Simple;
+            image.preserveAspect = false;
+            image.type = Image.Type.Simple;
         }
 
-        /*
-         * Curtain harus di atas background,
-         * tapi tetap sebagai bagian dari world.
-         */
         curtain.transform.SetAsLastSibling();
-
         StartMapCoroutine(
-            CloudCurtainLoop(
-                curtain.transform,
-                image
-            )
+            CloudCurtainLoop(curtain.transform, image)
         );
     }
 
-    private IEnumerator CloudCurtainLoop(
-        Transform target,
-        Image image)
+    private IEnumerator CloudCurtainLoop(Transform target, Image image)
     {
-        if (
-            target == null ||
-            image == null
-        )
-        {
+        if (target == null || image == null)
             yield break;
-        }
 
-        Vector3 origin =
-            target.localPosition;
+        Vector3 origin = target.localPosition;
 
-        while (target != null)
+        while (IsMapRunning(target) && image != null)
         {
-            float t =
-                Time.time * 0.16f;
+            float time = Time.unscaledTime * 0.16f;
 
-            /*
-             * Drift horizontal sangat kecil.
-             */
-            target.localPosition =
-                origin +
-                new Vector3(
-                    Mathf.Sin(t) * 35f,
-                    Mathf.Sin(t * 0.65f) * 5f,
-                    0f
-                );
+            target.localPosition = origin + new Vector3(
+                Mathf.Sin(time) * 35f,
+                Mathf.Sin(time * 0.65f) * 5f,
+                0f
+            );
 
-            /*
-             * Brightness / opacity bernapas perlahan.
-             */
-            image.color =
-                new Color(
-                    0.95f,
-                    0.98f,
-                    1f,
-                    0.62f +
-                    Mathf.Abs(
-                        Mathf.Sin(
-                            t * 0.45f
-                        )
-                    ) * 0.18f
-                );
+            image.color = new Color(
+                0.95f,
+                0.98f,
+                1f,
+                0.62f + Mathf.Abs(Mathf.Sin(time * 0.45f)) * 0.18f
+            );
 
-            /*
-             * Sangat subtle breathing.
-             */
-            float scale =
-                0.985f +
-                Mathf.Sin(
-                    t * 0.35f
-                ) * 0.015f;
-
-            target.localScale =
-                new Vector3(
-                    scale,
-                    scale,
-                    1f
-                );
+            float scale = 0.985f + Mathf.Sin(time * 0.35f) * 0.015f;
+            target.localScale = new Vector3(scale, scale, 1f);
 
             yield return null;
         }
     }
 
     // ============================================================
-    // WORLD IMAGE HELPER
+    // WORLD IMAGE / PANEL HELPERS
     // ============================================================
 
     private GameObject CreateWorldImage(
-        string name,
+        string objectName,
         Sprite sprite,
         Vector2 size,
         Vector2 position,
@@ -2539,65 +1602,27 @@ public class MapScreen : BaseScreen
         if (worldContent == null)
             return null;
 
-        GameObject obj =
-            new GameObject(name);
+        GameObject obj = new GameObject(objectName);
+        obj.transform.SetParent(worldContent, false);
 
-        obj.transform.SetParent(
-            worldContent,
-            false
-        );
+        RectTransform rt = obj.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = size;
+        rt.anchoredPosition = position;
 
-        RectTransform rt =
-            obj.AddComponent<RectTransform>();
-
-        rt.anchorMin =
-            rt.anchorMax =
-            new Vector2(
-                0.5f,
-                1f
-            );
-
-        rt.pivot =
-            new Vector2(
-                0.5f,
-                0.5f
-            );
-
-        rt.sizeDelta =
-            size;
-
-        rt.anchoredPosition =
-            position;
-
-        Image image =
-            obj.AddComponent<Image>();
-
-        image.sprite =
-            sprite ??
-            UIBuilder.GetDefaultSprite();
-
-        image.type =
-            Image.Type.Simple;
-
-        image.preserveAspect =
-            true;
-
-        image.color =
-            tint ??
-            Color.white;
-
-        image.raycastTarget =
-            false;
+        Image image = obj.AddComponent<Image>();
+        image.sprite = sprite != null ? sprite : UIBuilder.GetDefaultSprite();
+        image.type = Image.Type.Simple;
+        image.preserveAspect = true;
+        image.color = tint ?? Color.white;
+        image.raycastTarget = false;
 
         return obj;
     }
 
-    // ============================================================
-    // WORLD PANEL
-    // ============================================================
-
     private GameObject CreateWorldPanel(
-        string name,
+        string objectName,
         Color color,
         Vector2 size,
         Vector2 position)
@@ -2605,97 +1630,61 @@ public class MapScreen : BaseScreen
         if (worldContent == null)
             return null;
 
-        GameObject obj =
-            new GameObject(name);
+        GameObject obj = new GameObject(objectName);
+        obj.transform.SetParent(worldContent, false);
 
-        obj.transform.SetParent(
-            worldContent,
-            false
-        );
+        RectTransform rt = obj.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = size;
+        rt.anchoredPosition = position;
 
-        RectTransform rt =
-            obj.AddComponent<RectTransform>();
-
-        rt.anchorMin =
-            rt.anchorMax =
-            new Vector2(
-                0.5f,
-                1f
-            );
-
-        rt.pivot =
-            new Vector2(
-                0.5f,
-                0.5f
-            );
-
-        rt.sizeDelta =
-            size;
-
-        rt.anchoredPosition =
-            position;
-
-        Image image =
-            obj.AddComponent<Image>();
-
-        image.sprite =
-            UIBuilder.GetDefaultSprite();
-
-        image.color =
-            color;
-
-        image.raycastTarget =
-            false;
+        Image image = obj.AddComponent<Image>();
+        image.sprite = UIBuilder.GetDefaultSprite();
+        image.color = color;
+        image.raycastTarget = false;
 
         return obj;
     }
 
     // ============================================================
-    // STATE
+    // LOCATION STATE
     // ============================================================
 
-    private bool IsUnlocked(
-        int id,
-        int index)
+    private bool IsUnlocked(int id, int index)
     {
         if (index == 0)
             return true;
 
-        foreach (
-            PlayerProgressData progress
-            in progressList
-        )
+        if (progressList == null)
+            return false;
+
+        foreach (PlayerProgressData progress in progressList)
         {
-            if (
-                progress.location_id == id &&
-                progress.is_unlocked
-            )
-            {
+            if (progress == null)
+                continue;
+
+            if (progress.location_id == id && progress.is_unlocked)
                 return true;
-            }
         }
 
         return false;
     }
 
-    private bool IsCompleted(
-        int id)
+    private bool IsCompleted(int id)
     {
-        foreach (
-            PlayerProgressData progress
-            in progressList
-        )
+        if (progressList == null)
+            return false;
+
+        foreach (PlayerProgressData progress in progressList)
         {
-            if (
-                progress.location_id == id &&
-                progress.is_completed
-            )
-            {
+            if (progress == null)
+                continue;
+
+            if (progress.location_id == id && progress.is_completed)
                 return true;
-            }
         }
 
         return false;
     }
-
 }
