@@ -48,7 +48,17 @@ public class ChallengeOrderScreen : BaseScreen
         {
             Debug.LogWarning("[ChallengeOrder] JSON tidak valid: " + ex.Message);
         }
+
         if (data == null || data.correct_order == null)
+        {
+            EmptyState.Show(
+                screenObj.transform,
+                "📋",
+                "Data kosong",
+                "Hubungi admin"
+            );
+            return;
+        }
 
         data.correct_order.RemoveAll(
             item => string.IsNullOrWhiteSpace(item)
@@ -62,13 +72,9 @@ public class ChallengeOrderScreen : BaseScreen
                 "Data urutan tidak lengkap",
                 "Hubungi admin"
             );
+            return;
+        }
 
-            return;
-        }
-        {
-            EmptyState.Show(screenObj.transform, "📋", "Data kosong", "Hubungi admin");
-            return;
-        }
 
         question     = data.question;
         correctOrder = new List<string>(data.correct_order);
