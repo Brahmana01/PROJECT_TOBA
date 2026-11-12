@@ -83,6 +83,7 @@ public class MapScreen : BaseScreen
 
     private RectTransform worldContent;
     private ScrollRect scrollRect;
+    private bool isFetching;
 
     // ============================================================
     // CONSTRUCTOR
@@ -99,11 +100,10 @@ public class MapScreen : BaseScreen
 
     public override void Show()
     {
-        SetBackground(
-            TOBATheme.ForestGreen
-        );
+        if (screenObj == null)
+            return;
 
-        ShowLoading();
+        SetBackground(TOBATheme.ForestGreen);
         FetchData();
     }
 
@@ -113,42 +113,27 @@ public class MapScreen : BaseScreen
 
     private void ShowLoading()
     {
-        GameObject loading =
-            new GameObject("Loading");
+        if (screenObj == null)
+            return;
 
-        loading.transform.SetParent(
-            screenObj.transform,
-            false
-        );
+        Transform existing = screenObj.transform.Find("Loading");
+        if (existing != null)
+            UnityEngine.Object.Destroy(existing.gameObject);
 
-        RectTransform rt =
-            loading.AddComponent<RectTransform>();
+        GameObject loading = new GameObject("Loading");
+        loading.transform.SetParent(screenObj.transform, false);
 
-        rt.anchorMin =
-            rt.anchorMax =
-            new Vector2(0.5f, 0.5f);
+        RectTransform rt = loading.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(700f, 80f);
+        rt.anchoredPosition = Vector2.zero;
 
-        rt.sizeDelta =
-            new Vector2(
-                700f,
-                80f
-            );
-
-        rt.anchoredPosition =
-            Vector2.zero;
-
-        TextMeshProUGUI text =
-            loading.AddComponent<TextMeshProUGUI>();
-
-        text.text =
-            "Memuat peta...";
-
+        TextMeshProUGUI text = loading.AddComponent<TextMeshProUGUI>();
+        text.text = "Memuat peta...";
         text.fontSize = 38f;
         text.fontStyle = FontStyles.Bold;
         text.color = TOBATheme.BatakGold;
-        text.alignment =
-            TextAlignmentOptions.Center;
-
+        text.alignment = TextAlignmentOptions.Center;
         text.raycastTarget = false;
     }
 
@@ -157,22 +142,25 @@ public class MapScreen : BaseScreen
     // TETAP MENGIKUTI KODE LAMA
     // ============================================================
 
-    
     private void FetchData()
     {
-        if (screenObj == null)
+        if (screenObj == null || isFetching)
             return;
 
-        int playerID = PlayerPrefs.GetInt("PlayerID");
+        isFetching = true;
+        RemoveMapLoading();
 
         Transform oldEmptyState = screenObj.transform.Find("EmptyState");
         if (oldEmptyState != null)
             UnityEngine.Object.Destroy(oldEmptyState.gameObject);
 
-        RemoveMapLoading();
+        ShowLoading();
+
+        int playerID = PlayerPrefs.GetInt("PlayerID", 0);
 
         if (APIManager.Instance == null)
         {
+            isFetching = false;
             ShowMapLoadError(
                 "Layanan tidak tersedia",
                 "Silakan coba kembali."
@@ -182,11 +170,13 @@ public class MapScreen : BaseScreen
 
         APIManager.Instance.GetRequest(
             "/locations",
-
             locationResponse =>
             {
                 if (screenObj == null)
+                {
+                    isFetching = false;
                     return;
+                }
 
                 try
                 {
@@ -194,7 +184,6 @@ public class MapScreen : BaseScreen
                         throw new System.FormatException("Response lokasi kosong.");
 
                     string json = locationResponse.Trim();
-
                     if (json.StartsWith("["))
                         json = "{\"locations\":" + json + "}";
 
@@ -204,19 +193,17 @@ public class MapScreen : BaseScreen
                     if (locations == null)
                         throw new System.FormatException("Data lokasi tidak valid.");
 
-                    locationList = locations.locations ??
-                        new List<LocationData>();
-
+                    locationList = locations.locations ?? new List<LocationData>();
                     locationList.RemoveAll(location =>
                         location == null || location.id <= 0
                     );
                 }
                 catch (System.Exception ex)
                 {
+                    isFetching = false;
                     Debug.LogWarning(
                         "[Map] Gagal membaca data lokasi: " + ex.Message
                     );
-
                     ShowMapLoadError(
                         "Data lokasi bermasalah",
                         "Silakan muat ulang peta."
@@ -226,8 +213,9 @@ public class MapScreen : BaseScreen
 
                 if (locationList.Count == 0)
                 {
+                    isFetching = false;
                     RemoveMapLoading();
-
+                    ClearMapVisuals();
                     EmptyState.Show(
                         screenObj.transform,
                         "◆",
@@ -241,24 +229,26 @@ public class MapScreen : BaseScreen
 
                 if (playerID <= 0 || APIManager.Instance == null)
                 {
+                    isFetching = false;
                     BuildMap();
                     return;
                 }
 
                 APIManager.Instance.GetRequest(
                     "/player/" + playerID + "/progress",
-
                     progressResponse =>
                     {
                         if (screenObj == null)
+                        {
+                            isFetching = false;
                             return;
+                        }
 
                         try
                         {
                             if (!string.IsNullOrWhiteSpace(progressResponse))
                             {
                                 string json = progressResponse.Trim();
-
                                 if (json.StartsWith("["))
                                     json = "{\"progress\":" + json + "}";
 
@@ -272,7 +262,6 @@ public class MapScreen : BaseScreen
 
                                 progressList = progress.progress ??
                                     new List<PlayerProgressData>();
-
                                 progressList.RemoveAll(item => item == null);
                             }
                         }
@@ -281,29 +270,41 @@ public class MapScreen : BaseScreen
                             Debug.LogWarning(
                                 "[Map] Gagal membaca progress: " + ex.Message
                             );
-
                             progressList.Clear();
                         }
 
+                        isFetching = false;
                         BuildMap();
                     },
-
                     err =>
                     {
                         if (screenObj == null)
+                        {
+                            isFetching = false;
                             return;
+                        }
 
+                        Debug.LogWarning(
+                            "[Map] Gagal mengambil progress: " + err
+                        );
                         progressList.Clear();
+                        isFetching = false;
                         BuildMap();
                     }
                 );
             },
-
             err =>
             {
                 if (screenObj == null)
+                {
+                    isFetching = false;
                     return;
+                }
 
+                isFetching = false;
+                Debug.LogWarning(
+                    "[Map] Gagal mengambil locations: " + err
+                );
                 ShowMapLoadError(
                     "Gagal memuat peta",
                     "Periksa koneksi internet."
@@ -318,7 +319,6 @@ public class MapScreen : BaseScreen
             return;
 
         Transform loading = screenObj.transform.Find("Loading");
-
         if (loading != null)
             UnityEngine.Object.Destroy(loading.gameObject);
     }
@@ -328,10 +328,11 @@ public class MapScreen : BaseScreen
         if (screenObj == null)
             return;
 
+        isFetching = false;
         RemoveMapLoading();
+        ClearMapVisuals();
 
         Transform oldEmptyState = screenObj.transform.Find("EmptyState");
-
         if (oldEmptyState != null)
             UnityEngine.Object.Destroy(oldEmptyState.gameObject);
 
@@ -344,12 +345,32 @@ public class MapScreen : BaseScreen
         );
     }
 
-    private void StartMapCoroutine(IEnumerator routine)
+    private void ClearMapVisuals()
     {
-        if (routine == null || ScreenManager.Instance == null)
+        if (screenObj == null)
             return;
 
-        StartMapCoroutine(routine);
+        Transform oldMap = screenObj.transform.Find("MapScroll");
+        if (oldMap != null)
+            UnityEngine.Object.Destroy(oldMap.gameObject);
+
+        Transform oldHeader = screenObj.transform.Find("HeaderLayer");
+        if (oldHeader != null)
+            UnityEngine.Object.Destroy(oldHeader.gameObject);
+
+        worldContent = null;
+        scrollRect = null;
+    }
+
+    private void StartMapCoroutine(IEnumerator routine)
+    {
+        if (routine == null || screenObj == null)
+            return;
+
+        if (ScreenManager.Instance == null)
+            return;
+
+        ScreenManager.Instance.StartCoroutine(routine);
     }
 
     // ============================================================
@@ -361,17 +382,25 @@ public class MapScreen : BaseScreen
         if (screenObj == null)
             return;
 
-        Transform loading =
-            screenObj.transform.Find("Loading");
+        isFetching = false;
+        RemoveMapLoading();
 
-        if (loading != null)
+        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
+        if (oldEmptyState != null)
+            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
+
+        ClearMapVisuals();
+        CreateWorld();
+
+        if (scrollRect == null || worldContent == null)
         {
-            UnityEngine.Object.Destroy(
-                loading.gameObject
+            ShowMapLoadError(
+                "Peta gagal dibuat",
+                "Silakan coba muat ulang peta."
             );
+            return;
         }
 
-        CreateWorld();
         CreateFixedHeader();
         CreateNodes();
     }
@@ -431,13 +460,13 @@ public class MapScreen : BaseScreen
 
         worldContent.anchorMin =
             new Vector2(
-                0.5f,
+                0f,
                 1f
             );
 
         worldContent.anchorMax =
             new Vector2(
-                0.5f,
+                1f,
                 1f
             );
 
@@ -771,10 +800,10 @@ public class MapScreen : BaseScreen
     private void CreateHeaderShine(
         Transform parent)
     {
+        // Aset ini pernah tidak ditemukan di build sebelumnya.
+        // Resources.Load tidak mengeluarkan warning jika aset opsional belum tersedia.
         Sprite shine =
-            TOBATheme.LoadSprite(
-                "MapScreen/map_header_shine"
-            );
+            Resources.Load<Sprite>("MapScreen/map_header_shine");
 
         if (shine == null)
             return;
@@ -956,9 +985,7 @@ public class MapScreen : BaseScreen
         target.localScale =
             original * 0.88f;
 
-        yield return new WaitForSeconds(
-            0.07f
-        );
+        yield return new WaitForSecondsRealtime(0.07f);
 
         if (target == null)
             yield break;
@@ -966,9 +993,7 @@ public class MapScreen : BaseScreen
         target.localScale =
             original * 1.06f;
 
-        yield return new WaitForSeconds(
-            0.07f
-        );
+        yield return new WaitForSecondsRealtime(0.07f);
 
         if (target == null)
             yield break;
@@ -976,15 +1001,13 @@ public class MapScreen : BaseScreen
         target.localScale =
             original;
 
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySFX("sfx_click");
-        }
+        SoundManager.Instance?.PlaySFX("sfx_click");
+
+        if (screenObj == null || ScreenManager.Instance == null)
+            yield break;
 
         ScreenManager.Instance.ChangeScreen(
-            new MainMenuScreen(
-                container
-            )
+            new MainMenuScreen(container)
         );
     }
 
@@ -1008,7 +1031,8 @@ public class MapScreen : BaseScreen
             i++
         )
         {
-            LocationData location = locationList[i];
+            LocationData location =
+                locationList[i];
 
             if (location == null || location.id <= 0)
                 continue;
@@ -1092,8 +1116,9 @@ public class MapScreen : BaseScreen
         bool unlocked,
         bool completed)
     {
-        if (location == null || screenObj == null)
+        if (location == null || location.id <= 0 || screenObj == null || worldContent == null)
             return;
+
         string asset =
             completed
                 ? "MapScreen/map_node_completed"
@@ -1127,6 +1152,9 @@ public class MapScreen : BaseScreen
                 ),
                 position
             );
+
+        if (node == null)
+            return;
 
         Image image =
             node.GetComponent<Image>();
@@ -1169,23 +1197,10 @@ public class MapScreen : BaseScreen
             button.onClick.AddListener(
                 () =>
                 {
-                    if (SoundManager.Instance != null)
-                    {
-                        SoundManager.Instance.PlaySFX("sfx_click");
-                    }
-
+                    SoundManager.Instance?.PlaySFX("sfx_click");
                     StartMapCoroutine(
-                        NodeTouch(
-                            node.transform
-                        )
-                    );
-
-                    if (ScreenManager.Instance == null)
-                        return; 
-
-                    ScreenManager.Instance.ChangeScreen(
-                        new LocationDetailScreen(
-                            container,
+                        OpenLocationAfterTouch(
+                            node.transform,
                             captured
                         )
                     );
@@ -1213,10 +1228,9 @@ public class MapScreen : BaseScreen
             button.onClick.AddListener(
                 () =>
                 {
-                    if (SoundManager.Instance != null)
-                    {
-                        SoundManager.Instance.PlaySFX("sfx_click");
-                    }
+                    SoundManager.Instance?.PlaySFX(
+                        "sfx_click"
+                    );
 
                     StartMapCoroutine(
                         LockedTouch(
@@ -1664,6 +1678,20 @@ public class MapScreen : BaseScreen
     // TOUCH ACTIVE
     // ============================================================
 
+    private IEnumerator OpenLocationAfterTouch(
+        Transform target,
+        LocationData location)
+    {
+        yield return NodeTouch(target);
+
+        if (screenObj == null || location == null || ScreenManager.Instance == null)
+            yield break;
+
+        ScreenManager.Instance.ChangeScreen(
+            new LocationDetailScreen(container, location)
+        );
+    }
+
     private IEnumerator NodeTouch(
         Transform target)
     {
@@ -1676,9 +1704,7 @@ public class MapScreen : BaseScreen
         target.localScale =
             original * 0.88f;
 
-        yield return new WaitForSeconds(
-            0.06f
-        );
+        yield return new WaitForSecondsRealtime(0.06f);
 
         if (target == null)
             yield break;
@@ -1686,9 +1712,7 @@ public class MapScreen : BaseScreen
         target.localScale =
             original * 1.07f;
 
-        yield return new WaitForSeconds(
-            0.08f
-        );
+        yield return new WaitForSecondsRealtime(0.08f);
 
         if (target == null)
             yield break;
@@ -2512,6 +2536,9 @@ public class MapScreen : BaseScreen
         Vector2 position,
         Color? tint = null)
     {
+        if (worldContent == null)
+            return null;
+
         GameObject obj =
             new GameObject(name);
 
@@ -2575,6 +2602,9 @@ public class MapScreen : BaseScreen
         Vector2 size,
         Vector2 position)
     {
+        if (worldContent == null)
+            return null;
+
         GameObject obj =
             new GameObject(name);
 
@@ -2668,31 +2698,4 @@ public class MapScreen : BaseScreen
         return false;
     }
 
-    // ============================================================
-    // DEBUG
-    // ============================================================
-
-    /*
-     * Hapus komentar ini bila sudah tidak diperlukan.
-     *
-     * Fungsi ini membantu mengecek bahwa pattern yang dipakai
-     * benar-benar berulang.
-     */
-
-    private void LogPatternForDebug()
-    {
-        for (
-            int i = 0;
-            i < MASTER_PATTERN.Length;
-            i++
-        )
-        {
-            Debug.Log(
-                "[Map Pattern] Slot " +
-                (i + 1) +
-                " = " +
-                MASTER_PATTERN[i]
-            );
-        }
-    }
 }
