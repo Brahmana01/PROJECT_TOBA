@@ -1798,13 +1798,36 @@ public class MainMenuScreen : BaseScreen
                     return;
 
 
-                ProfileResponse res =
-                    JsonUtility.FromJson<ProfileResponse>(
-                        response
+                ProfileResponse res = null;
+
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(response))
+                        throw new System.FormatException("Response profil kosong.");
+
+                    res = JsonUtility.FromJson<ProfileResponse>(response);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning(
+                        "[MainMenu] Gagal membaca response profil: " + ex.Message
                     );
 
-                if (res == null)
+                    if (nameTxt != null)
+                        nameTxt.text = "OFFLINE";
+
                     return;
+                }
+
+                if (res == null)
+                {
+                    Debug.LogWarning("[MainMenu] Data profil tidak tersedia.");
+
+                    if (nameTxt != null)
+                        nameTxt.text = "OFFLINE";
+
+                    return;
+                }
 
 
                 // ====================================================
@@ -1834,18 +1857,25 @@ public class MainMenuScreen : BaseScreen
                 // PROFILE DATA
                 // ====================================================
 
-                nameTxt.text =
-                    res.name.ToUpper();
+                if (nameTxt != null)
+                {
+                    nameTxt.text = string.IsNullOrWhiteSpace(res.name)
+                        ? "PEMAIN"
+                        : res.name.Trim().ToUpperInvariant();
+                }
 
-                titleTxt.text =
-                    res.title_name;
+                if (titleTxt != null)
+                {
+                    titleTxt.text = string.IsNullOrWhiteSpace(res.title_name)
+                        ? "PENJELAJAH"
+                        : res.title_name;
+                }
 
-                levelTxt.text =
-                    "Level " +
-                    res.level;
+                if (levelTxt != null)
+                    levelTxt.text = "Level " + Mathf.Max(1, res.level);
 
-                starTxt.text =
-                    res.stars.ToString();
+                if (starTxt != null)
+                    starTxt.text = Mathf.Max(0, res.stars).ToString();
 
 
                 float xpRatio =

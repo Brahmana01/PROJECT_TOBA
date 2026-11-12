@@ -60,7 +60,60 @@ public class GalleryScreen : BaseScreen
             (response) => {
                 if (screenObj == null) return;
 
-                galleryData = JsonUtility.FromJson<GalleryResponse>(response);
+                bool invalidResponse = false;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(response))
+                throw new System.FormatException("Response galeri kosong.");
+
+
+            bool invalidResponse = false;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(response))
+                throw new System.FormatException("Response galeri kosong.");
+
+            galleryData = JsonUtility.FromJson<GalleryResponse>(response);
+
+            if (galleryData == null)
+                throw new System.FormatException("Objek galeri tidak ditemukan.");
+
+            if (galleryData.cards == null)
+                galleryData.cards = new List<PlayerGalleryCardData>();
+
+            galleryData.cards.RemoveAll(card => card == null);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning(
+                "[Gallery] Gagal membaca response: " + ex.Message
+            );
+
+            galleryData = null;
+            invalidResponse = true;
+        }
+
+
+    if (galleryData == null)
+        throw new System.FormatException("Objek galeri tidak ditemukan.");
+
+    if (galleryData.cards == null)
+        galleryData.cards = new List<PlayerGalleryCardData>();
+
+    galleryData.cards.RemoveAll(card => card == null);
+        
+    }
+    catch (System.Exception ex)
+    {
+        Debug.LogWarning(
+            "[Gallery] Gagal membaca response: " + ex.Message
+        );
+
+        galleryData = null;
+        invalidResponse = true;
+    }
 
                 if (loadingObj != null)
                 {
@@ -68,8 +121,20 @@ public class GalleryScreen : BaseScreen
                     loadingObj = null;
                 }
 
-                bool isEmpty = galleryData == null || galleryData.total <= 0 ||
-                               galleryData.cards == null || galleryData.cards.Count == 0;
+                if (invalidResponse)
+                {
+                    emptyStateObj = EmptyState.Show(
+                        screenObj.transform,
+                        "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
+                        "Data galeri bermasalah",
+                        "Silakan muat ulang koleksi",
+                        () => RetryFetchGallery()
+                    );
+                    return;
+                }
+
+                bool isEmpty = galleryData.total <= 0 ||
+                            galleryData.cards.Count == 0;
 
                 if (isEmpty)
                 {
@@ -158,7 +223,11 @@ public class GalleryScreen : BaseScreen
         if (galleryData != null && galleryData.cards != null)
         {
             cards = galleryData.cards;
-            foreach (var c in cards) ownedIDs.Add(c.gallery_card_id);
+            foreach (var c in cards)
+        {
+            if (c != null)
+                ownedIDs.Add(c.gallery_card_id);
+        }
         }
 
         int cols = 2;

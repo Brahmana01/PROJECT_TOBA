@@ -1,10 +1,13 @@
+
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ScreenManager : MonoBehaviour
 {
     public static ScreenManager Instance;
 
     private BaseScreen currentScreen;
+
     public Transform canvasTransform;
 
     // ============================================================
@@ -13,8 +16,8 @@ public class ScreenManager : MonoBehaviour
 
     private string _currentScreenName = "";
 
-    private System.Collections.Generic.Stack<System.Action> _history =
-        new System.Collections.Generic.Stack<System.Action>();
+    private readonly Stack<System.Action> _history =
+        new Stack<System.Action>();
 
     // ============================================================
     // AWAKE
@@ -22,15 +25,14 @@ public class ScreenManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     // ============================================================
@@ -39,32 +41,77 @@ public class ScreenManager : MonoBehaviour
 
     public void ChangeScreen(BaseScreen newScreen)
     {
-        if (currentScreen != null)
+        // Pastikan screen baru tersedia.
+        if (newScreen == null)
         {
-            currentScreen.Hide();
+            Debug.LogWarning(
+                "[ScreenManager] Screen baru null. Perpindahan dibatalkan."
+            );
+            return;
         }
 
+        // Pastikan screen memiliki parent dan GameObject valid.
+        if (!newScreen.IsReady)
+        {
+            Debug.LogWarning(
+                "[ScreenManager] Screen tidak valid: " +
+                newScreen.GetType().Name
+            );
+
+            newScreen.Hide();
+            return;
+        }
+
+        // Hindari membuka instance screen yang sama dua kali.
+        if (currentScreen == newScreen)
+            return;
+
+        BaseScreen previousScreen = currentScreen;
+
+        // Tetapkan screen baru sebelum Show().
+        // Ini penting untuk screen yang melakukan perpindahan
+        // lanjutan dari dalam fungsi Show().
         currentScreen = newScreen;
 
-        _currentScreenName =
-            newScreen.GetType()
-                .Name
-                .Replace("Screen", "");
+        _currentScreenName = newScreen.GetType()
+            .Name
+            .Replace("Screen", "");
 
-        currentScreen.Show();
+        // Tutup screen sebelumnya.
+        if (previousScreen != null &&
+            previousScreen != newScreen)
+        {
+            previousScreen.Hide();
+        }
 
-        Debug.Log(
-            "[ScreenManager] Switched to: " +
-            newScreen.GetType().Name
-        );
+        // Tampilkan screen baru.
+        newScreen.Show();
+
+        // Hindari log yang salah pada perpindahan bertingkat.
+        if (currentScreen == newScreen)
+        {
+            Debug.Log(
+                "[ScreenManager] Switched to: " +
+                newScreen.GetType().Name
+            );
+        }
     }
 
     // ============================================================
-    // GET CURRENT SCREEN
+    // CURRENT SCREEN VALIDATION
     // ============================================================
 
-    public string GetCurrentScreenName() =>
-        _currentScreenName;
+    public bool IsCurrentScreen(BaseScreen screen)
+    {
+        return screen != null &&
+               currentScreen == screen &&
+               screen.IsReady;
+    }
+
+    public string GetCurrentScreenName()
+    {
+        return _currentScreenName;
+    }
 
     // ============================================================
     // GO BACK
@@ -74,12 +121,41 @@ public class ScreenManager : MonoBehaviour
     {
         if (_history.Count > 0)
         {
-            _history.Pop()?.Invoke();
+            System.Action action = _history.Pop();
+            action?.Invoke();
+            return;
         }
-        else
+
+        if (canvasTransform == null)
         {
-            // Kembali ke MainMenu sebagai default
-            ChangeScreen(new MainMenuScreen(canvasTransform));
+            Debug.LogWarning(
+                "[ScreenManager] Canvas belum tersedia."
+            );
+            return;
         }
+
+        ChangeScreen(
+            new MainMenuScreen(canvasTransform)
+        );
+    }
+
+    // ============================================================
+    // CLEANUP
+    // ============================================================
+
+    void OnDestroy()
+    {
+        if (Instance != this)
+            return;
+
+        if (currentScreen != null)
+        {
+            currentScreen.Hide();
+            currentScreen = null;
+        }
+
+        _currentScreenName = "";
+
+        Instance = null;
     }
 }
