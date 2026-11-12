@@ -39,7 +39,7 @@ public class ChallengeMatchingScreen : BaseScreen
             : challenge.title.ToUpperInvariant();
 
         HeaderBar.Create(screenObj.transform, challengeTitle, () => {
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container));
         });
 
         MatchingData data = null;
@@ -165,7 +165,7 @@ public class ChallengeMatchingScreen : BaseScreen
             selectedBatak = null;
             currentIndex++;
             if (currentIndex >= pairs.Count)
-                ScreenManager.Instance.StartCoroutine(FinishAfterDelay());
+                ScreenManager.Instance?.StartCoroutine(FinishAfterDelay());
         }
     }
 
@@ -177,19 +177,13 @@ public class ChallengeMatchingScreen : BaseScreen
 
     void SubmitResult()
     {
-        int playerID = PlayerPrefs.GetInt("PlayerID");
-        var req = new SubmitChallengeRequest {
-            player_id = playerID, challenge_id = challenge.id, score = correctCount
-        };
-        APIManager.Instance.PostRequest("/challenge/submit",
-            JsonUtility.ToJson(req),
-            (r) => {
-                SoundManager.Instance?.PlaySFX("sfx_win");
-                ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
-            },
-            (e) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+        TOBAChallengeSubmission.Submit(
+            screenObj,
+            container,
+            challenge,
+            correctCount
+        );
     }
-
     void Shuffle(List<MatchPair> list)
     {
         for (int i = list.Count - 1; i > 0; i--)

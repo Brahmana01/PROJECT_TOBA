@@ -28,15 +28,75 @@ public class ChallengeCategorizeScreen : BaseScreen
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0,0.04f,0,0.5f), Vector2.zero, Vector2.one);
         HeaderBar.Create(screenObj.transform, "KELOMPOKKAN BUDAYA", () =>
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container)));
 
-        CategorizeData data = JsonUtility.FromJson<CategorizeData>(challenge.data_json);
-        if (data?.categories == null)
+        CategorizeData data = null;
+
+        try
         {
-            EmptyState.Show(screenObj.transform, "📂", "Data kosong", "Hubungi admin");
+            if (challenge == null ||
+                string.IsNullOrWhiteSpace(challenge.data_json))
+            {
+                throw new System.FormatException("Data challenge kosong.");
+            }
+
+            data = JsonUtility.FromJson<CategorizeData>(challenge.data_json);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[Categorize] JSON tidak valid: " + ex.Message);
+        }
+        if (data == null || data.categories == null)
+        {
+            EmptyState.Show(
+                screenObj.transform,
+                "📂",
+                "Data kategori tidak tersedia",
+                "Hubungi admin"
+            );
             return;
         }
+
+        data.categories.RemoveAll(category =>
+            category == null ||
+            string.IsNullOrWhiteSpace(category.name) ||
+            category.items == null
+        );
+
+        foreach (CategorizeCategory category in data.categories)
+        {
+            category.items.RemoveAll(
+                item => string.IsNullOrWhiteSpace(item)
+            );
+        }
+
+        data.categories.RemoveAll(
+            category => category.items.Count == 0
+        );
+
         categories = data.categories;
+
+        if (categories.Count == 0)
+        {
+            EmptyState.Show(
+                screenObj.transform,
+                "📂",
+                "Kategori masih kosong",
+                "Hubungi admin"
+            );
+            return;
+        }
+
+        correctMap.Clear();
+
+        foreach (CategorizeCategory category in categories)
+        {
+            foreach (string item in category.items)
+            {
+                if (!correctMap.ContainsKey(item))
+                    correctMap[item] = category.name;
+            }
+        }
 
         // Build correct map
         foreach (var cat in categories)
@@ -100,8 +160,12 @@ public class ChallengeCategorizeScreen : BaseScreen
             b.onClick.AddListener(() => {
                 SoundManager.Instance?.PlaySFX("sfx_click");
                 if (selectedCard != null)
-                    selectedCard.GetComponent<Image>().color =
-                        new Color(0.88f, 0.78f, 0.58f, 1f);
+                {
+                    Image previousImage = selectedCard.GetComponent<Image>();
+
+                    if (previousImage != null)
+                        previousImage.color = new Color(0.88f, 0.78f, 0.58f, 1f);
+                }
                 selectedItem = capturedItem;
                 selectedCard = card;
                 img.color = TOBATheme.BatakGold;
@@ -152,13 +216,24 @@ public class ChallengeCategorizeScreen : BaseScreen
                 {
                     bool right = correctMap.ContainsKey(selectedItem)
                               && correctMap[selectedItem] == capturedCat;
-                    selectedCard.GetComponent<Image>().color =
-                        right ? TOBATheme.OptionCorrect : TOBATheme.OptionWrong;
-                    selectedCard.GetComponent<Button>().interactable = false;
+                    Image selectedImage = selectedCard.GetComponent<Image>();
+                    Button selectedButton = selectedCard.GetComponent<Button>();
+
+                    if (selectedImage != null)
+                    {
+                        selectedImage.color =
+                            right ? TOBATheme.OptionCorrect : TOBATheme.OptionWrong;
+                    }
+
+                    if (selectedButton != null)
+                        selectedButton.interactable = false;
                 }
                 selectedItem = null; selectedCard = null;
-                if (playerMap.Count >= correctMap.Count)
-                    ScreenManager.Instance.StartCoroutine(FinishDelay());
+                if (playerMap.Count >= correctMap.Count &&
+                    ScreenManager.Instance != null)
+                {
+                    ScreenManager.Instance?.StartCoroutine(FinishDelay());
+                }
             });
         }
     }
@@ -166,16 +241,27 @@ public class ChallengeCategorizeScreen : BaseScreen
     IEnumerator FinishDelay()
     {
         yield return new WaitForSecondsRealtime(1.2f);
-        if (screenObj == null) yield break;
+
+        if (screenObj == null)
+            yield break;
+
         int score = 0;
+
         foreach (var kv in playerMap)
-            if (correctMap.ContainsKey(kv.Key) && correctMap[kv.Key] == kv.Value)
+        {
+            if (correctMap.ContainsKey(kv.Key) &&
+                correctMap[kv.Key] == kv.Value)
+            {
                 score++;
-        APIManager.Instance.PostRequest("/challenge/submit",
-            JsonUtility.ToJson(new SubmitChallengeRequest {
-                player_id = PlayerPrefs.GetInt("PlayerID"),
-                challenge_id = challenge.id, score = score }),
-            (r) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)),
-            (e) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            }
+        }
+
+        TOBAChallengeSubmission.Submit(
+            screenObj,
+            container,
+            challenge,
+            score
+        );
     }
+
 }

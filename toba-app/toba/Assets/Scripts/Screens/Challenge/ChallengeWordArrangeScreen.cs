@@ -41,10 +41,32 @@ public class ChallengeWordArrangeScreen : BaseScreen
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0, 0.04f, 0, 0.5f), Vector2.zero, Vector2.one);
         HeaderBar.Create(screenObj.transform, "SUSUN KATA BATAK", () =>
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container)));
 
-        WordArrangeData data = JsonUtility.FromJson<WordArrangeData>(challenge.data_json);
+        WordArrangeData data = null;
+
+        try
+        {
+            if (challenge == null ||
+                string.IsNullOrWhiteSpace(challenge.data_json))
+            {
+                throw new System.FormatException("Data challenge kosong.");
+            }
+
+            data = JsonUtility.FromJson<WordArrangeData>(challenge.data_json);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[WordArrange] JSON tidak valid: " + ex.Message);
+        }
+
         words = data?.words ?? new List<WordArrangeItem>();
+
+        words.RemoveAll(word =>
+            word == null ||
+            string.IsNullOrWhiteSpace(word.scrambled) ||
+            string.IsNullOrWhiteSpace(word.answer)
+        );
         if (words.Count == 0)
         {
             EmptyState.Show(screenObj.transform, "🔤", "Data kosong", "Hubungi admin");
@@ -104,10 +126,21 @@ public class ChallengeWordArrangeScreen : BaseScreen
 
     void ShowWord(int index)
     {
-        if (screenObj == null || index >= words.Count) return;
+        if (screenObj == null ||
+            words == null ||
+            index < 0 ||
+            index >= words.Count)
+            return;
+
+        WordArrangeItem w = words[index];
+
+        if (w == null ||
+            string.IsNullOrWhiteSpace(w.answer) ||
+            string.IsNullOrWhiteSpace(w.scrambled))
+            return;
+
         currentIndex = index;
         currentAnswer = "";
-        var w = words[index];
 
         if (progressTxt) progressTxt.text = (index+1) + "/" + words.Count;
         if (hintTxt) hintTxt.text = "<color=#D6A84B><sprite name=\"fact\" tint=1></color> " + w.hint;
@@ -170,7 +203,12 @@ public class ChallengeWordArrangeScreen : BaseScreen
         if (answerDisplayTxt == null) return;
         if (currentAnswer.Length == 0)
         {
-            int len = words.Count > 0 ? words[currentIndex].answer.Length : 4;
+            int len = words != null &&
+                    currentIndex >= 0 &&
+                    currentIndex < words.Count &&
+                    words[currentIndex] != null
+                ? words[currentIndex].answer.Length
+                : 4;
             answerDisplayTxt.text = string.Join(" ", new string('_', len).ToCharArray());
             return;
         }
@@ -186,10 +224,16 @@ public class ChallengeWordArrangeScreen : BaseScreen
             if (lb == null) continue;
             TextMeshProUGUI t = lb.GetComponentInChildren<TextMeshProUGUI>();
             Button b = lb.GetComponent<Button>();
-            if (t != null && t.text == letter && !b.interactable)
+            Image letterImage = lb.GetComponent<Image>();
+
+            if (t != null &&
+                b != null &&
+                letterImage != null &&
+                t.text == letter &&
+                !b.interactable)
             {
                 b.interactable = true;
-                lb.GetComponent<Image>().color = Color.white;
+                letterImage.color = Color.white;
                 break;
             }
         }
@@ -208,7 +252,8 @@ public class ChallengeWordArrangeScreen : BaseScreen
 
         if (right) correctCount++;
 
-        ScreenManager.Instance.StartCoroutine(NextWordDelay());
+        if (ScreenManager.Instance != null)
+            ScreenManager.Instance?.StartCoroutine(NextWordDelay());
     }
 
     IEnumerator NextWordDelay()
@@ -223,11 +268,11 @@ public class ChallengeWordArrangeScreen : BaseScreen
 
     void SubmitResult()
     {
-        APIManager.Instance.PostRequest("/challenge/submit",
-            JsonUtility.ToJson(new SubmitChallengeRequest {
-                player_id = PlayerPrefs.GetInt("PlayerID"),
-                challenge_id = challenge.id, score = correctCount }),
-            (r) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)),
-            (e) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+        TOBAChallengeSubmission.Submit(
+            screenObj,
+            container,
+            challenge,
+            correctCount
+        );
     }
 }

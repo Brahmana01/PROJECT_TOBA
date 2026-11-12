@@ -31,6 +31,7 @@ public class QuizScreen : BaseScreen
     private int lastWarnSecond = -1;
     private Coroutine timerCo;
     private Coroutine feedbackCo;
+    private bool isScreenActive = false;
 
     // Sprite dibuat lewat kode
     private static Sprite roundedSprite;
@@ -47,6 +48,12 @@ public class QuizScreen : BaseScreen
     {
         if (screenObj == null)
             return;
+
+        isScreenActive = true;
+        isPaused = false;
+        isAnswered = false;
+        correctCount = 0;
+        currentIndex = 0;
 
         if (locationData == null || locationData.id <= 0)
         {
@@ -619,7 +626,12 @@ public class QuizScreen : BaseScreen
             new Vector2(356f, -797f)
         );
 
-        characterGO.GetComponent<Image>().preserveAspect = true;
+        Image characterImage = characterGO != null
+            ? characterGO.GetComponent<Image>()
+            : null;
+
+        if (characterImage != null)
+            characterImage.preserveAspect = true;
     }
 
     private void SetCharacterExpression(bool correct)
@@ -643,8 +655,10 @@ public class QuizScreen : BaseScreen
                 charID == 1 ? "char_ucok" : "char_butet"
             );
 
-        if (sp != null)
-            characterGO.GetComponent<Image>().sprite = sp;
+        Image characterImage = characterGO.GetComponent<Image>();
+
+        if (sp != null && characterImage != null)
+            characterImage.sprite = sp;
     }
 
     // ───────────────── FETCH QUIZ ─────────────────
@@ -652,13 +666,14 @@ public class QuizScreen : BaseScreen
  
     private void FetchQuiz()
     {
-        if (screenObj == null)
+        if (!isScreenActive || screenObj == null)
             return;
 
         if (locationData == null || locationData.id <= 0)
         {
             if (questionTxt != null)
                 questionTxt.text = "Data lokasi tidak tersedia.";
+
             return;
         }
 
@@ -666,6 +681,12 @@ public class QuizScreen : BaseScreen
         {
             if (questionTxt != null)
                 questionTxt.text = "Layanan belum tersedia. Silakan coba lagi.";
+
+            NetworkManager.Instance?.ShowToast(
+                "Layanan belum tersedia.",
+                true
+            );
+
             return;
         }
 
@@ -680,26 +701,37 @@ public class QuizScreen : BaseScreen
 
             response =>
             {
-                if (screenObj == null)
+                if (!isScreenActive || screenObj == null)
+                {
+                    LoadingOverlay.Hide();
                     return;
+                }
 
                 LoadingOverlay.Hide();
 
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
-                        throw new System.FormatException("Response kuis kosong.");
+                    {
+                        throw new System.FormatException(
+                            "Response kuis kosong."
+                        );
+                    }
 
                     QuizResponse res =
                         JsonUtility.FromJson<QuizResponse>(response);
 
                     if (res == null || res.questions == null)
-                        throw new System.FormatException("Struktur response kuis tidak valid.");
+                    {
+                        throw new System.FormatException(
+                            "Struktur response kuis tidak valid."
+                        );
+                    }
 
-                    res.questions.RemoveAll(q =>
-                        q == null ||
-                        string.IsNullOrWhiteSpace(q.question) ||
-                        q.options == null
+                    res.questions.RemoveAll(question =>
+                        question == null ||
+                        string.IsNullOrWhiteSpace(question.question) ||
+                        question.options == null
                     );
 
                     foreach (QuizQuestionData question in res.questions)
@@ -710,31 +742,69 @@ public class QuizScreen : BaseScreen
                         );
                     }
 
-                    res.questions.RemoveAll(q =>
-                        q.options.Count == 0 ||
-                        !q.options.Exists(option => option.is_correct)
+                    res.questions.RemoveAll(question =>
+                        question.options.Count < 2 ||
+                        !question.options.Exists(option => option.is_correct)
                     );
 
                     if (res.questions.Count == 0)
-                        throw new System.FormatException("Tidak ada soal valid.");
+                    {
+                        throw new System.FormatException(
+                            "Tidak ada soal valid."
+                        );
+                    }
 
                     questions = res.questions;
                     totalQuestions = questions.Count;
+                    currentIndex = 0;
+                    correctCount = 0;
 
-                    CacheManager.CacheLocationQuiz(locationID, response);
+                    // Cache hanya menyimpan response yang sudah tervalidasi.
+                    try
+                    {
+                        CacheManager.CacheLocationQuiz(locationID, response);
+                    }
+                    catch (System.Exception cacheException)
+                    {
+                        Debug.LogWarning(
+                            "[Quiz] Gagal menyimpan cache: " +
+                            cacheException.Message
+                        );
+                    }
 
                     ShowQuestion(0);
                 }
                 catch (System.Exception ex)
                 {
-                    CacheManager.ClearLocationQuizCache(locationID);
-
                     Debug.LogWarning(
                         "[Quiz] Data soal tidak valid: " + ex.Message
                     );
 
+                    // Tandai cache soal lokasi ini sebagai kosong agar
+                    // response lama yang rusak tidak dipakai kembali.
+                    try
+                    {
+                        CacheManager.CacheLocationQuiz(
+                            locationID,
+                            string.Empty
+                        );
+                    }
+                    catch (System.Exception cacheException)
+                    {
+                        Debug.LogWarning(
+                            "[Quiz] Gagal memperbarui cache: " +
+                            cacheException.Message
+                        );
+                    }
+
+                    questions.Clear();
+                    totalQuestions = 0;
+
                     if (questionTxt != null)
-                        questionTxt.text = "Soal belum tersedia atau data tidak valid.";
+                    {
+                        questionTxt.text =
+                            "Soal belum tersedia atau data tidak valid.";
+                    }
 
                     NetworkManager.Instance?.ShowToast(
                         "Gagal membaca soal. Silakan muat ulang.",
@@ -745,15 +815,26 @@ public class QuizScreen : BaseScreen
 
             err =>
             {
-                if (screenObj == null)
+                if (!isScreenActive || screenObj == null)
+                {
+                    LoadingOverlay.Hide();
                     return;
+                }
 
                 LoadingOverlay.Hide();
 
                 if (questionTxt != null)
-                    questionTxt.text = "Gagal memuat soal.\n" + err;
+                {
+                    questionTxt.text =
+                        "Gagal memuat soal.\\n" + err;
+                }
 
-                NetworkManager.Instance?.ShowToast(err, true);
+                NetworkManager.Instance?.ShowToast(
+                    string.IsNullOrWhiteSpace(err)
+                        ? "Gagal memuat soal."
+                        : err,
+                    true
+                );
             }
         );
     }
@@ -763,15 +844,32 @@ public class QuizScreen : BaseScreen
 
     private void ShowQuestion(int index)
     {
-        if (screenObj == null ||
+        if (!isScreenActive ||
+            screenObj == null ||
             questions == null ||
+            optionsContainer == null ||
             index < 0 ||
             index >= questions.Count)
+        {
             return;
+        }
 
         QuizQuestionData q = questions[index];
 
-        if (q == null || q.options == null || q.options.Count == 0)
+        if (q == null || q.options == null)
+        {
+            if (questionTxt != null)
+                questionTxt.text = "Pilihan jawaban tidak tersedia.";
+
+            return;
+        }
+
+        q.options.RemoveAll(option =>
+            option == null ||
+            string.IsNullOrWhiteSpace(option.option_text)
+        );
+
+        if (q.options.Count < 2)
         {
             if (questionTxt != null)
                 questionTxt.text = "Pilihan jawaban tidak tersedia.";
@@ -782,7 +880,7 @@ public class QuizScreen : BaseScreen
         isAnswered = false;
         currentIndex = index;
 
-        if (progressTxt)
+        if (progressTxt != null)
         {
             progressTxt.text =
                 "SOAL " + (index + 1) +
@@ -791,93 +889,117 @@ public class QuizScreen : BaseScreen
 
         SetProgressFill(index + 1, totalQuestions);
 
-        if (questionTxt)
+        if (questionTxt != null)
         {
             questionTxt.text = q.question;
 
-            ScreenManager.Instance.StartCoroutine(
-                UIBuilder.AnimateScaleIn(
-                    questionTxt.transform,
-                    0.2f
-                )
-            );
-        }
-
-        // Bersihkan opsi lama
-        if (optionsContainer)
-        {
-            foreach (Transform c in optionsContainer.transform)
+            if (ScreenManager.Instance != null)
             {
-                UnityEngine.Object.Destroy(c.gameObject);
+                ScreenManager.Instance.StartCoroutine(
+                    UIBuilder.AnimateScaleIn(
+                        questionTxt.transform,
+                        0.2f
+                    )
+                );
             }
         }
 
-        // Karakter kembali ke ekspresi berpikir
+        // Bersihkan opsi lama.
+        foreach (Transform child in optionsContainer.transform)
+        {
+            if (child != null)
+                UnityEngine.Object.Destroy(child.gameObject);
+        }
+
+        // Karakter kembali ke ekspresi berpikir.
         int charID = PlayerPrefs.GetInt(
             "SelectedCharacterID",
             1
         );
 
-        string b = charID == 1 ? "ucok" : "butet";
+        string characterName = charID == 1 ? "ucok" : "butet";
 
-        Sprite thinkSprite =
-            TOBATheme.LoadSprite(
-                "gambar/" + b + "_berpikir"
-            );
+        Sprite thinkSprite = TOBATheme.LoadSprite(
+            "gambar/" + characterName + "_berpikir"
+        );
 
         if (characterGO != null && thinkSprite != null)
         {
-            characterGO.GetComponent<Image>().sprite =
-                thinkSprite;
-        }
+            Image characterImage = characterGO.GetComponent<Image>();
 
-        if (q.options == null || q.options.Count == 0)
-        {
-            if (questionTxt)
-                questionTxt.text = "Pilihan jawaban belum tersedia.";
-
-            return;
+            if (characterImage != null)
+                characterImage.sprite = thinkSprite;
         }
 
         string[] labels = { "A", "B", "C", "D" };
-
         int count = Mathf.Min(q.options.Count, 4);
 
         for (int i = 0; i < count; i++)
         {
-            var opt = q.options[i];
+            QuizOptionData option = q.options[i];
 
-            if (opt == null)
+            if (option == null)
                 continue;
 
-            int ci = i;
+            int selectedIndex = i;
 
             CreateOptionButton(
-                opt,
+                option,
                 labels[i],
                 i,
                 count,
                 () =>
                 {
-                    if (!isAnswered)
-                        OnAnswerSelected(opt, ci, q);
+                    if (!isAnswered && isScreenActive)
+                    {
+                        OnAnswerSelected(
+                            option,
+                            selectedIndex,
+                            q
+                        );
+                    }
                 }
             );
         }
 
-        // Timer
+        // Mulai ulang timer untuk soal baru.
+        StopTimerCoroutine();
+
         timeRemaining = timeLimit;
         lastWarnSecond = -1;
 
-        if (timerCo != null)
-            ScreenManager.Instance.StopCoroutine(timerCo);
+        if (ScreenManager.Instance != null)
+        {
+            timerCo = ScreenManager.Instance.StartCoroutine(RunTimer());
+        }
+        else
+        {
+            timerCo = null;
 
-        timerCo =
-            if (ScreenManager.Instance != null)
-                timerCo = ScreenManager.Instance.StartCoroutine(RunTimer());
+            Debug.LogWarning(
+                "[Quiz] ScreenManager tidak tersedia. Timer tidak dapat dijalankan."
+            );
+        }
     }
 
+
     // ───────────────── TOMBOL JAWABAN ─────────────────
+
+    private void StopTimerCoroutine()
+    {
+        if (timerCo != null && ScreenManager.Instance != null)
+            ScreenManager.Instance.StopCoroutine(timerCo);
+
+        timerCo = null;
+    }
+
+    private void StopFeedbackCoroutine()
+    {
+        if (feedbackCo != null && ScreenManager.Instance != null)
+            ScreenManager.Instance.StopCoroutine(feedbackCo);
+
+        feedbackCo = null;
+    }
 
     private void CreateOptionButton(
         QuizOptionData opt,
@@ -886,6 +1008,14 @@ public class QuizScreen : BaseScreen
         int count,
         System.Action onClick)
     {
+        if (!isScreenActive ||
+            screenObj == null ||
+            optionsContainer == null ||
+            opt == null)
+        {
+            return;
+        }
+
         // Ukuran dan jarak tombol disesuaikan
         // agar empat pilihan dapat terlihat sekaligus.
         const float pitch = 0.23f;
@@ -1003,16 +1133,21 @@ public class QuizScreen : BaseScreen
         txtObj.name = "OptionText";
 
         TextMeshProUGUI optTxt =
-            txtObj.GetComponent<TextMeshProUGUI>();
+            txtObj != null
+                ? txtObj.GetComponent<TextMeshProUGUI>()
+                : null;
 
-        optTxt.fontStyle = FontStyles.Bold;
-        optTxt.textWrappingMode = TextWrappingModes.Normal;
-        optTxt.overflowMode = TextOverflowModes.Ellipsis;
-        optTxt.enableAutoSizing = true;
-        optTxt.fontSizeMin = 26;
-        optTxt.fontSizeMax = 38;
-        optTxt.margin = new Vector4(8, 5, 8, 5);
-        optTxt.raycastTarget = false;
+        if (optTxt != null)
+        {
+            optTxt.fontStyle = FontStyles.Bold;
+            optTxt.textWrappingMode = TextWrappingModes.Normal;
+            optTxt.overflowMode = TextOverflowModes.Ellipsis;
+            optTxt.enableAutoSizing = true;
+            optTxt.fontSizeMin = 26;
+            optTxt.fontSizeMax = 38;
+            optTxt.margin = new Vector4(8, 5, 8, 5);
+            optTxt.raycastTarget = false;
+        }
 
         // Button
         Button b2 = optGO.AddComponent<Button>();
@@ -1039,70 +1174,87 @@ public class QuizScreen : BaseScreen
             onClick?.Invoke();
         });
 
-        ScreenManager.Instance.StartCoroutine(
-            SlideIn(optGO, index * 0.06f)
-        );
+        if (ScreenManager.Instance != null)
+        {
+            ScreenManager.Instance.StartCoroutine(
+                SlideIn(optGO, index * 0.06f)
+            );
+        }
     }
 
     private IEnumerator SlideIn(
         GameObject go,
         float delay)
     {
-        if (go == null)
+        if (!isScreenActive || go == null)
             yield break;
 
-        RectTransform rt =
+        RectTransform rectTransform =
             go.GetComponent<RectTransform>();
 
-        CanvasGroup cg =
-            go.AddComponent<CanvasGroup>();
+        if (rectTransform == null)
+            yield break;
 
-        cg.alpha = 0f;
+        CanvasGroup canvasGroup =
+            go.GetComponent<CanvasGroup>();
 
-        float t = 0f;
+        if (canvasGroup == null)
+            canvasGroup = go.AddComponent<CanvasGroup>();
 
-        while (t < delay)
+        if (canvasGroup == null)
+            yield break;
+
+        canvasGroup.alpha = 0f;
+
+        float elapsed = 0f;
+
+        while (elapsed < delay)
         {
-            if (go == null)
+            if (!isScreenActive || go == null || canvasGroup == null)
                 yield break;
 
-            t += Time.unscaledDeltaTime;
+            elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        t = 0f;
+        elapsed = 0f;
+        const float duration = 0.25f;
 
-        const float dur = 0.25f;
-
-        while (t < dur)
+        while (elapsed < duration)
         {
-            if (go == null)
+            if (!isScreenActive ||
+                go == null ||
+                rectTransform == null ||
+                canvasGroup == null)
+            {
                 yield break;
+            }
 
-            t += Time.unscaledDeltaTime;
+            elapsed += Time.unscaledDeltaTime;
 
-            float p = Mathf.SmoothStep(
+            float progress = Mathf.SmoothStep(
                 0f,
                 1f,
-                t / dur
+                elapsed / duration
             );
 
-            cg.alpha = p;
+            canvasGroup.alpha = progress;
 
-            rt.anchoredPosition = new Vector2(
+            rectTransform.anchoredPosition = new Vector2(
                 0f,
-                Mathf.Lerp(-55f, 0f, p)
+                Mathf.Lerp(-55f, 0f, progress)
             );
 
             yield return null;
         }
 
-        if (rt != null)
-            rt.anchoredPosition = Vector2.zero;
+        if (rectTransform != null)
+            rectTransform.anchoredPosition = Vector2.zero;
 
-        if (cg != null)
-            UnityEngine.Object.Destroy(cg);
+        if (canvasGroup != null)
+            UnityEngine.Object.Destroy(canvasGroup);
     }
+
 
     // ───────────────── JAWABAN DIPILIH ─────────────────
 
@@ -1111,15 +1263,17 @@ public class QuizScreen : BaseScreen
         int selIdx,
         QuizQuestionData question)
     {
-        if (isAnswered)
+        if (!isScreenActive ||
+            screenObj == null ||
+            isAnswered ||
+            selected == null ||
+            question == null)
+        {
             return;
+        }
 
         isAnswered = true;
-
-        if (timerCo != null)
-            ScreenManager.Instance.StopCoroutine(timerCo);
-
-        timerCo = null;
+        StopTimerCoroutine();
 
         bool correct = selected.is_correct;
 
@@ -1135,16 +1289,23 @@ public class QuizScreen : BaseScreen
         );
 
         SetCharacterExpression(correct);
-
         HighlightOptions(question, selIdx);
 
-        feedbackCo =
-            ScreenManager.Instance.StartCoroutine(
+        if (ScreenManager.Instance != null)
+        {
+            feedbackCo = ScreenManager.Instance.StartCoroutine(
                 ShowFeedbackThenNext(
                     correct,
-                    question.explanation
+                    question.explanation ?? string.Empty
                 )
             );
+        }
+        else
+        {
+            Debug.LogWarning(
+                "[Quiz] ScreenManager tidak tersedia untuk menampilkan feedback."
+            );
+        }
     }
 
     private void HighlightOptions(
@@ -1160,8 +1321,11 @@ public class QuizScreen : BaseScreen
              i < optionsContainer.transform.childCount;
              i++)
         {
-            if (i >= question.options.Count)
+            if (i >= question.options.Count ||
+                question.options[i] == null)
+            {
                 continue;
+            }
 
             Transform child =
                 optionsContainer.transform.GetChild(i);
@@ -1223,7 +1387,7 @@ public class QuizScreen : BaseScreen
         bool correct,
         string explanation)
     {
-        if (screenObj == null)
+        if (!isScreenActive || screenObj == null)
             yield break;
 
         feedbackPanel = CreateAnchoredPanel(
@@ -1233,23 +1397,18 @@ public class QuizScreen : BaseScreen
             correct ? TOBATheme.Success : TOBATheme.Error
         );
 
-        feedbackPanel.transform.localScale =
-            Vector3.zero;
+        if (feedbackPanel == null)
+            yield break;
 
-        Outline outline =
-            feedbackPanel.AddComponent<Outline>();
+        feedbackPanel.transform.localScale = Vector3.zero;
 
+        Outline outline = feedbackPanel.AddComponent<Outline>();
         outline.effectColor = TOBATheme.BatakGold;
         outline.effectDistance = new Vector2(3f, 3f);
 
-        Shadow shadow =
-            feedbackPanel.AddComponent<Shadow>();
-
-        shadow.effectColor =
-            new Color(0f, 0f, 0f, 0.4f);
-
-        shadow.effectDistance =
-            new Vector2(0f, -5f);
+        Shadow shadow = feedbackPanel.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.4f);
+        shadow.effectDistance = new Vector2(0f, -5f);
 
         MakeText(
             feedbackPanel.transform,
@@ -1262,13 +1421,11 @@ public class QuizScreen : BaseScreen
             FontStyles.Bold
         );
 
-        TextMeshProUGUI expTmp = MakeText(
+        TextMeshProUGUI explanationText = MakeText(
             feedbackPanel.transform,
-
-            string.IsNullOrEmpty(explanation)
+            string.IsNullOrWhiteSpace(explanation)
                 ? "Lanjut ke soal berikutnya."
                 : explanation,
-
             30,
             Color.white,
             TextAlignmentOptions.Center,
@@ -1277,29 +1434,29 @@ public class QuizScreen : BaseScreen
             FontStyles.Normal
         );
 
-        expTmp.textWrappingMode =
-            TextWrappingModes.Normal;
-
-        expTmp.overflowMode =
-            TextOverflowModes.Ellipsis;
-
-        expTmp.enableAutoSizing = true;
-        expTmp.fontSizeMin = 20;
-        expTmp.fontSizeMax = 30;
-
-        expTmp.margin =
-            new Vector4(10, 5, 10, 5);
+        if (explanationText != null)
+        {
+            explanationText.textWrappingMode = TextWrappingModes.Normal;
+            explanationText.overflowMode = TextOverflowModes.Ellipsis;
+            explanationText.enableAutoSizing = true;
+            explanationText.fontSizeMin = 20;
+            explanationText.fontSizeMax = 30;
+            explanationText.margin = new Vector4(10, 5, 10, 5);
+        }
 
         yield return UIBuilder.AnimateScaleIn(
             feedbackPanel.transform,
             0.2f
         );
 
+        if (!isScreenActive || screenObj == null || feedbackPanel == null)
+            yield break;
+
         float waited = 0f;
 
         while (waited < 2.3f)
         {
-            if (screenObj == null)
+            if (!isScreenActive || screenObj == null)
                 yield break;
 
             if (!isPaused)
@@ -1308,53 +1465,60 @@ public class QuizScreen : BaseScreen
             yield return null;
         }
 
-        if (screenObj == null)
+        if (!isScreenActive || screenObj == null)
             yield break;
 
-        if (feedbackPanel)
+        if (feedbackPanel != null)
             UnityEngine.Object.Destroy(feedbackPanel);
 
         feedbackPanel = null;
 
-        int next = currentIndex + 1;
+        int nextIndex = currentIndex + 1;
 
-        if (next < questions.Count)
-            ShowQuestion(next);
+        if (questions != null && nextIndex < questions.Count)
+        {
+            ShowQuestion(nextIndex);
+        }
         else
+        {
             GoToResult();
+        }
     }
+
 
     // ───────────────── TIMER ─────────────────
 
     private IEnumerator RunTimer()
     {
-        while (timeRemaining > 0 && !isAnswered)
+        while (timeRemaining > 0f &&
+               !isAnswered &&
+               isScreenActive &&
+               screenObj != null)
         {
-            if (timerTxt)
+            if (timerTxt != null)
             {
-                int sec =
-                    Mathf.CeilToInt(timeRemaining);
+                int seconds = Mathf.CeilToInt(timeRemaining);
 
-                timerTxt.text = sec.ToString();
+                timerTxt.text = seconds.ToString();
 
-                bool warn = timeRemaining <= 5f;
+                bool warning = timeRemaining <= 5f;
 
-                timerTxt.color = warn
+                timerTxt.color = warning
                     ? TOBATheme.Error
                     : TOBATheme.BatakGold;
 
-                if (timerBg)
+                if (timerBg != null)
                 {
-                    timerBg.color = warn
+                    timerBg.color = warning
                         ? new Color(0.5f, 0.05f, 0.05f, 0.6f)
                         : new Color(0f, 0f, 0f, 0.35f);
                 }
 
-                if (warn &&
+                if (warning &&
                     !isPaused &&
-                    sec != lastWarnSecond)
+                    seconds != lastWarnSecond)
                 {
-                    lastWarnSecond = sec;
+                    lastWarnSecond = seconds;
 
                     SoundManager.Instance?.PlaySFX(
                         "sfx_timer_warning"
@@ -1363,36 +1527,59 @@ public class QuizScreen : BaseScreen
             }
 
             if (!isPaused)
-                timeRemaining -= Time.deltaTime;
+                timeRemaining -= Time.unscaledDeltaTime;
 
             yield return null;
         }
 
         timerCo = null;
 
-        if (!isAnswered && screenObj != null)
+        if (!isScreenActive ||
+            screenObj == null ||
+            isAnswered)
         {
-            isAnswered = true;
+            yield break;
+        }
 
-            HapticManager.Instance?.Vibrate(
-                HapticType.Error
+        if (questions == null ||
+            currentIndex < 0 ||
+            currentIndex >= questions.Count ||
+            questions[currentIndex] == null)
+        {
+            Debug.LogWarning(
+                "[Quiz] Soal aktif tidak tersedia saat timer habis."
             );
 
-            var q = questions[currentIndex];
+            GoToResult();
+            yield break;
+        }
 
-            HighlightOptions(q, -1);
+        isAnswered = true;
 
-            SetCharacterExpression(false);
+        HapticManager.Instance?.Vibrate(HapticType.Error);
+        SetCharacterExpression(false);
 
-            feedbackCo =
-                ScreenManager.Instance.StartCoroutine(
-                    ShowFeedbackThenNext(
-                        false,
-                        "Waktu habis! " + q.explanation
-                    )
-                );
+        QuizQuestionData question = questions[currentIndex];
+
+        HighlightOptions(question, -1);
+
+        if (ScreenManager.Instance != null)
+        {
+            feedbackCo = ScreenManager.Instance.StartCoroutine(
+                ShowFeedbackThenNext(
+                    false,
+                    "Waktu habis! " + (question.explanation ?? string.Empty)
+                )
+            );
+        }
+        else
+        {
+            Debug.LogWarning(
+                "[Quiz] ScreenManager tidak tersedia setelah waktu habis."
+            );
         }
     }
+
 
     // ───────────────── KONFIRMASI KELUAR ─────────────────
 
@@ -1621,6 +1808,14 @@ public class QuizScreen : BaseScreen
     {
         isPaused = false;
 
+        if (ScreenManager.Instance == null || container == null)
+        {
+            Debug.LogWarning(
+                "[Quiz] Tidak dapat kembali karena ScreenManager/container tidak tersedia."
+            );
+            return;
+        }
+
         ScreenManager.Instance.ChangeScreen(
             new LocationDetailScreen(
                 container,
@@ -1633,8 +1828,16 @@ public class QuizScreen : BaseScreen
 
     private void GoToResult()
     {
-        if (screenObj == null)
+        if (!isScreenActive ||
+            screenObj == null ||
+            ScreenManager.Instance == null ||
+            container == null)
+        {
+            Debug.LogWarning(
+                "[Quiz] Tidak dapat membuka hasil kuis karena komponen navigasi tidak tersedia."
+            );
             return;
+        }
 
         ScreenManager.Instance.ChangeScreen(
             new QuizResultScreen(
@@ -1650,17 +1853,23 @@ public class QuizScreen : BaseScreen
 
     public override void Hide()
     {
-        if (ScreenManager.Instance != null)
-        {
-            if (timerCo != null)
-                ScreenManager.Instance.StopCoroutine(timerCo);
+        isScreenActive = false;
+        isPaused = true;
 
-            if (feedbackCo != null)
-                ScreenManager.Instance.StopCoroutine(feedbackCo);
+        StopTimerCoroutine();
+        StopFeedbackCoroutine();
+
+        if (feedbackPanel != null)
+        {
+            UnityEngine.Object.Destroy(feedbackPanel);
+            feedbackPanel = null;
         }
 
-        timerCo = null;
-        feedbackCo = null;
+        if (exitDialog != null)
+        {
+            UnityEngine.Object.Destroy(exitDialog);
+            exitDialog = null;
+        }
 
         base.Hide();
     }

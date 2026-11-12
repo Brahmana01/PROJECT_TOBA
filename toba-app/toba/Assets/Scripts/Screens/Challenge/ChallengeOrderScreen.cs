@@ -30,10 +30,41 @@ public class ChallengeOrderScreen : BaseScreen
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0,0.04f,0,0.5f), Vector2.zero, Vector2.one);
         HeaderBar.Create(screenObj.transform, "SUSUN URUTAN", () =>
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container)));
 
-        OrderData data = JsonUtility.FromJson<OrderData>(challenge.data_json);
-        if (data == null || data.correct_order == null || data.correct_order.Count == 0)
+        OrderData data = null;
+
+        try
+        {
+            if (challenge == null ||
+                string.IsNullOrWhiteSpace(challenge.data_json))
+            {
+                throw new System.FormatException("Data challenge kosong.");
+            }
+
+            data = JsonUtility.FromJson<OrderData>(challenge.data_json);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[ChallengeOrder] JSON tidak valid: " + ex.Message);
+        }
+        if (data == null || data.correct_order == null)
+
+        data.correct_order.RemoveAll(
+            item => string.IsNullOrWhiteSpace(item)
+        );
+
+        if (data.correct_order.Count < 2)
+        {
+            EmptyState.Show(
+                screenObj.transform,
+                "📋",
+                "Data urutan tidak lengkap",
+                "Hubungi admin"
+            );
+
+            return;
+        }
         {
             EmptyState.Show(screenObj.transform, "📋", "Data kosong", "Hubungi admin");
             return;
@@ -126,6 +157,12 @@ public class ChallengeOrderScreen : BaseScreen
 
     void OnItemClick(int idx, Image img)
     {
+        if (screenObj == null ||
+            img == null ||
+            currentOrder == null ||
+            idx < 0 ||
+            idx >= currentOrder.Count)
+            return;
         SoundManager.Instance?.PlaySFX("sfx_click");
         if (selectedIdx == -1)
         {
@@ -149,6 +186,12 @@ public class ChallengeOrderScreen : BaseScreen
 
     void CheckOrder()
     {
+        if (screenObj == null ||
+            currentOrder == null ||
+            correctOrder == null ||
+            currentOrder.Count != correctOrder.Count ||
+            currentOrder.Count == 0)
+            return;
         bool correct = true;
         for (int i = 0; i < correctOrder.Count; i++)
             if (currentOrder[i] != correctOrder[i]) { correct = false; break; }
@@ -160,19 +203,22 @@ public class ChallengeOrderScreen : BaseScreen
             correct ? "✅ Urutan benar! Hebat!" : "❌ Belum tepat, coba lagi!",
             !correct);
 
-        if (correct)
-            ScreenManager.Instance.StartCoroutine(FinishDelay());
+        if (correct && ScreenManager.Instance != null)
+            ScreenManager.Instance?.StartCoroutine(FinishDelay());
     }
 
     IEnumerator FinishDelay()
     {
         yield return new WaitForSecondsRealtime(1.5f);
-        if (screenObj == null) yield break;
-        APIManager.Instance.PostRequest("/challenge/submit",
-            JsonUtility.ToJson(new SubmitChallengeRequest {
-                player_id = PlayerPrefs.GetInt("PlayerID"),
-                challenge_id = challenge.id, score = 1 }),
-            (r) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)),
-            (e) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+
+        if (screenObj == null)
+            yield break;
+
+        TOBAChallengeSubmission.Submit(
+            screenObj,
+            container,
+            challenge,
+            1
+        );
     }
 }

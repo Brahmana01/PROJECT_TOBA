@@ -33,20 +33,68 @@ public class ChallengeMemoryCardScreen : BaseScreen
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0,0.04f,0,0.5f), Vector2.zero, Vector2.one);
         HeaderBar.Create(screenObj.transform, "MEMORY CARD BUDAYA", () =>
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container)));
 
-        MemoryCardData data = JsonUtility.FromJson<MemoryCardData>(challenge.data_json);
-        if (data?.cards == null || data.cards.Count == 0)
+        MemoryCardData data = null;
+
+        try
         {
-            EmptyState.Show(screenObj.transform, "🃏", "Data kosong", "Hubungi admin");
+            if (challenge == null ||
+                string.IsNullOrWhiteSpace(challenge.data_json))
+            {
+                throw new System.FormatException("Data challenge kosong.");
+            }
+
+            data = JsonUtility.FromJson<MemoryCardData>(challenge.data_json);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[MemoryCard] JSON tidak valid: " + ex.Message);
+        }
+
+        if (data == null || data.cards == null)
+        {
+            EmptyState.Show(
+                screenObj.transform,
+                "🃏",
+                "Data tidak tersedia",
+                "Hubungi admin"
+            );
+            return;
+        }
+
+        data.cards.RemoveAll(card =>
+            card == null ||
+            string.IsNullOrWhiteSpace(card.id) ||
+            string.IsNullOrWhiteSpace(card.label)
+        );
+
+        if (data.cards.Count == 0)
+        {
+            EmptyState.Show(
+                screenObj.transform,
+                "🃏",
+                "Data kartu kosong",
+                "Hubungi admin"
+            );
             return;
         }
 
         // Buat pasangan kartu (nama + emoji/gambar)
         foreach (var c in data.cards)
         {
-            cardValues.Add(c.label); cardEmojis.Add(c.label);   // kartu teks
-            cardValues.Add(c.id);   cardEmojis.Add(c.emoji);    // kartu emoji/id
+            if (c == null)
+                continue;
+
+            cardValues.Add(c.label);
+            cardEmojis.Add(c.label);
+
+            cardValues.Add(c.id);
+            cardEmojis.Add(
+                string.IsNullOrWhiteSpace(c.emoji)
+                    ? c.label
+                    : c.emoji
+            );
         }
         totalPairs = data.cards.Count;
 
@@ -141,18 +189,34 @@ public class ChallengeMemoryCardScreen : BaseScreen
 
     void OnCardClick(int idx)
     {
-        if (isChecking || revealed[idx] || matched[idx]) return;
+        if (screenObj == null ||
+            isChecking ||
+            idx < 0 ||
+            idx >= revealed.Count ||
+            idx >= matched.Count ||
+            idx >= cards.Count)
+            return;
+
+        if (revealed[idx] || matched[idx])
+            return;
         SoundManager.Instance?.PlaySFX("sfx_pop");
         RevealCard(idx);
 
         if (firstIdx == -1) { firstIdx = idx; return; }
         secondIdx = idx;
         isChecking = true;
-        ScreenManager.Instance.StartCoroutine(CheckMatch());
+        ScreenManager.Instance?.StartCoroutine(CheckMatch());
     }
 
     void RevealCard(int idx)
     {
+        if (screenObj == null ||
+            idx < 0 ||
+            idx >= revealed.Count ||
+            idx >= cards.Count ||
+            cards[idx] == null)
+            return;
+
         revealed[idx] = true;
         Transform card = cards[idx].transform;
         card.Find("QuestionMark")?.gameObject.SetActive(false);
@@ -201,11 +265,11 @@ public class ChallengeMemoryCardScreen : BaseScreen
 
     void SubmitResult()
     {
-        APIManager.Instance.PostRequest("/challenge/submit",
-            JsonUtility.ToJson(new SubmitChallengeRequest {
-                player_id = PlayerPrefs.GetInt("PlayerID"),
-                challenge_id = challenge.id, score = matchedPairs }),
-            (r) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)),
-            (e) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+        TOBAChallengeSubmission.Submit(
+            screenObj,
+            container,
+            challenge,
+            matchedPairs
+        );
     }
 }

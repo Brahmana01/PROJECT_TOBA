@@ -32,7 +32,9 @@ public class ChallengeComingSoonScreen : BaseScreen
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0,0.04f,0,0.6f), Vector2.zero, Vector2.one);
         HeaderBar.Create(screenObj.transform, "TANTANGAN MINGGUAN", () =>
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            ScreenManager.Instance?.ChangeScreen(
+                new MainMenuScreen(container)
+            ));
 
         (string emoji, string name, string desc) info = INFO.ContainsKey(gameType)
             ? INFO[gameType]
@@ -41,9 +43,24 @@ public class ChallengeComingSoonScreen : BaseScreen
         Sprite wp = TOBATheme.LoadSprite("panel_wood");
         GameObject panel = UIBuilder.CreateSpritePanel(screenObj.transform,
             "Panel", wp, new Vector2(900, 600), Vector2.zero);
-        if (wp != null) panel.GetComponent<Image>().color =
-            new Color(0.22f, 0.1f, 0.03f, 0.97f);
-        panel.GetComponent<Outline>().effectColor = TOBATheme.BatakGold;
+        if (wp != null)
+        {
+            Image panelImage = panel.GetComponent<Image>();
+
+            if (panelImage != null)
+            {
+                panelImage.color =
+                    new Color(0.22f, 0.1f, 0.03f, 0.97f);
+            }
+        }
+
+        Outline panelOutline = panel.GetComponent<Outline>();
+
+        if (panelOutline == null)
+            panelOutline = panel.AddComponent<Outline>();
+
+        panelOutline.effectColor = TOBATheme.BatakGold;
+        panelOutline.effectDistance = new Vector2(4f, 4f);
 
         UIBuilder.CreateTextSized(panel.transform,
             info.emoji, 120, Color.white, TextAlignmentOptions.Center,
@@ -75,7 +92,7 @@ public class ChallengeComingSoonScreen : BaseScreen
         UIBuilder.CreateButton(screenObj.transform,
             "BtnBack", "KEMBALI KE MENU",
             new Vector2(700, 120), TOBATheme.BtnSecondary, () =>
-                ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)))
+                ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container)))
             .GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -600f);
     }
 }

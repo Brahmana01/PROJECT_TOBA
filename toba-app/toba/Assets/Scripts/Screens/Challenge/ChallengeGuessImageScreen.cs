@@ -41,10 +41,51 @@ public class ChallengeGuessImageScreen : BaseScreen
             new Color(0, 0.04f, 0, 0.5f), Vector2.zero, Vector2.one);
 
         HeaderBar.Create(screenObj.transform, "TEBAK GAMBAR BUDAYA", () =>
-            ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container)));
 
-        GuessImageData data = JsonUtility.FromJson<GuessImageData>(challenge.data_json);
+        GuessImageData data = null;
+
+        try
+        {
+            if (challenge == null ||
+                string.IsNullOrWhiteSpace(challenge.data_json))
+            {
+                throw new System.FormatException("Data challenge kosong.");
+            }
+
+            data = JsonUtility.FromJson<GuessImageData>(challenge.data_json);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[GuessImage] JSON tidak valid: " + ex.Message);
+        }
+
         questions = data?.questions ?? new List<GuessImageQuestion>();
+
+        questions.RemoveAll(q =>
+            q == null ||
+            string.IsNullOrWhiteSpace(q.image) ||
+            string.IsNullOrWhiteSpace(q.answer) ||
+            q.options == null
+        );
+
+        foreach (GuessImageQuestion q in questions)
+        {
+            q.options.RemoveAll(option =>
+                string.IsNullOrWhiteSpace(option)
+            );
+        }
+
+        questions.RemoveAll(q =>
+            q.options.Count == 0 ||
+            !q.options.Exists(option =>
+                string.Equals(
+                    option.Trim(),
+                    q.answer.Trim(),
+                    System.StringComparison.OrdinalIgnoreCase
+                )
+            )
+        );
 
         if (questions.Count == 0)
         {
@@ -89,9 +130,22 @@ public class ChallengeGuessImageScreen : BaseScreen
 
     void ShowQuestion(int index)
     {
-        if (screenObj == null || index >= questions.Count) return;
+        if (screenObj == null ||
+            questions == null ||
+            optionsContainer == null ||
+            index < 0 ||
+            index >= questions.Count)
+            return;
+
+        GuessImageQuestion q = questions[index];
+
+        if (q == null ||
+            string.IsNullOrWhiteSpace(q.image) ||
+            string.IsNullOrWhiteSpace(q.answer) ||
+            q.options == null)
+            return;
+
         currentIndex = index;
-        var q = questions[index];
 
         if (progressTxt) progressTxt.text = (index + 1) + "/" + questions.Count;
 
@@ -165,9 +219,17 @@ public class ChallengeGuessImageScreen : BaseScreen
             HapticManager.Instance?.Vibrate(right ? HapticType.Success : HapticType.Error);
             if (right) correctCount++;
             // Disable semua tombol
-            foreach (Transform c in optionsContainer.transform)
-                c.GetComponent<Button>().interactable = false;
-            ScreenManager.Instance.StartCoroutine(NextOrFinish());
+            if (optionsContainer != null)
+            {
+                foreach (Transform c in optionsContainer.transform)
+                {
+                    Button optionButton = c.GetComponent<Button>();
+
+                    if (optionButton != null)
+                        optionButton.interactable = false;
+                }
+            }
+            ScreenManager.Instance?.StartCoroutine(NextOrFinish());
         });
     }
 
@@ -182,11 +244,11 @@ public class ChallengeGuessImageScreen : BaseScreen
 
     void SubmitResult()
     {
-        APIManager.Instance.PostRequest("/challenge/submit",
-            JsonUtility.ToJson(new SubmitChallengeRequest {
-                player_id = PlayerPrefs.GetInt("PlayerID"),
-                challenge_id = challenge.id, score = correctCount }),
-            (r) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)),
-            (e) => ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container)));
+        TOBAChallengeSubmission.Submit(
+            screenObj,
+            container,
+            challenge,
+            correctCount
+        );
     }
 }
