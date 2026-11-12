@@ -17,6 +17,19 @@ public class MainApp : MonoBehaviour
 
     void Start()
     {
+        if (canvas == null ||
+            safeAreaRoot == null ||
+            ScreenManager.Instance == null ||
+            APIManager.Instance == null ||
+            NetworkManager.Instance == null)
+        {
+            Debug.LogError(
+                "[MainApp] Inisialisasi komponen utama gagal. " +
+                "Periksa TOBA_CORE dan MainCanvas."
+            );
+
+            return;
+        }
 
         // Cek antrian offline saat online kembali
         StartCoroutine(ProcessOfflineQueue());
@@ -28,8 +41,12 @@ public class MainApp : MonoBehaviour
             string pendingData     = PlayerPrefs.GetString("OfflineSubmitQueue", "");
             string pendingEndpoint = PlayerPrefs.GetString("OfflineSubmitEndpoint", "");
 
-            if (!string.IsNullOrEmpty(pendingData) && NetworkManager.Instance.IsOnline)
-            {
+                if (!string.IsNullOrEmpty(pendingData) &&
+                    !string.IsNullOrEmpty(pendingEndpoint) &&
+                    NetworkManager.Instance != null &&
+                    NetworkManager.Instance.IsOnline &&
+                    APIManager.Instance != null)
+                            {
                 APIManager.Instance.PostRequest(pendingEndpoint, pendingData,
                     (r) => {
                         PlayerPrefs.DeleteKey("OfflineSubmitQueue");
@@ -42,11 +59,23 @@ public class MainApp : MonoBehaviour
         }
 
         ScreenManager.Instance.canvasTransform = safeAreaRoot;
-        SoundManager.Instance.PlayBGM("bgm_main");
+        SoundManager.Instance?.PlayBGM("bgm_main");
 
-        NetworkManager.Instance.Init(
-            canvas.transform,
-            APIManager.Instance.GetBaseUrl());
+        if (NetworkManager.Instance != null &&
+            APIManager.Instance != null &&
+            canvas != null)
+        {
+            NetworkManager.Instance.Init(
+                canvas.transform,
+                APIManager.Instance.GetBaseUrl()
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                "[MainApp] Manager atau Canvas utama tidak tersedia."
+            );
+        }
 
         FirebaseManager.Instance?.Initialize();
 

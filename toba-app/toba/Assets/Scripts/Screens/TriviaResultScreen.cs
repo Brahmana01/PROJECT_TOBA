@@ -647,13 +647,16 @@ public class TriviaResultScreen : BaseScreen
 
         isSubmitted = true;
 
-        if (APIManager.Instance == null || categoryData == null)
+        int playerID = PlayerPrefs.GetInt("PlayerID");
+
+        if (APIManager.Instance == null ||
+            categoryData == null ||
+            categoryData.id <= 0 ||
+            playerID <= 0)
         {
             ShowOfflineResult();
             return;
         }
-
-        int playerID = PlayerPrefs.GetInt("PlayerID");
 
         SubmitTriviaRequest request = new SubmitTriviaRequest
         {
@@ -673,26 +676,39 @@ public class TriviaResultScreen : BaseScreen
                 if (screenObj == null)
                     return;
 
-                SubmitTriviaResponse result =
-                    JsonUtility.FromJson<SubmitTriviaResponse>(response);
+                SubmitTriviaResponse result = null;
 
-                if (result != null)
+                try
                 {
-                    if (xpTxt != null)
-                        xpTxt.text = "XP DIPEROLEH : +" + result.xp;
+                    if (string.IsNullOrWhiteSpace(response))
+                        throw new System.FormatException("Response hasil Trivia kosong.");
 
-                    if (levelTxt != null)
-                        levelTxt.text = "LEVEL : " + result.level;
+                    result = JsonUtility.FromJson<SubmitTriviaResponse>(response);
 
-                    PlayerPrefs.SetInt("PlayerLevel", result.level);
+                    if (result == null || result.level <= 0)
+                        throw new System.FormatException("Data hasil Trivia tidak valid.");
                 }
-                else
+                catch (System.Exception ex)
                 {
-                    if (xpTxt != null)
-                        xpTxt.text = "XP DIPEROLEH : (data tidak terbaca)";
+                    Debug.LogWarning(
+                        "[TriviaResult] Gagal membaca hasil: " + ex.Message
+                    );
+
+                    ShowOfflineResult();
+                    return;
                 }
+
+                if (xpTxt != null)
+                    xpTxt.text = "XP DIPEROLEH : +" + Mathf.Max(0, result.xp);
+
+                if (levelTxt != null)
+                    levelTxt.text = "LEVEL : " + result.level;
+
+                PlayerPrefs.SetInt("PlayerLevel", result.level);
+                PlayerPrefs.Save();
 
                 DestroyLoadingText();
+
             },
             (error) =>
             {

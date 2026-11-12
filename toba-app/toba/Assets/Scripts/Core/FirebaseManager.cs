@@ -6,6 +6,7 @@ using System.Collections;
 #if FIREBASE_ENABLED
 using Firebase;
 using Firebase.Messaging;
+using Firebase.Extensions;
 using System;
 using System.Threading.Tasks;
 #endif
@@ -52,14 +53,14 @@ public class FirebaseManager : MonoBehaviour
 
         if (task.IsCanceled)
         {
-            Debug.LogError("[Firebase] CheckAndFixDependenciesAsync dibatalkan.");
+            Debug.LogWarning("[Firebase] CheckAndFixDependenciesAsync dibatalkan.");
             IsReady = false;
             yield break;
         }
 
         if (task.IsFaulted)
         {
-            Debug.LogError(
+            Debug.LogWarning(
                 "[Firebase] CheckAndFixDependenciesAsync gagal: " +
                 task.Exception
             );
@@ -95,7 +96,7 @@ public class FirebaseManager : MonoBehaviour
 
             // Subscribe ke topic umum
             FirebaseMessaging.SubscribeAsync("all_players")
-                .ContinueWith(t =>
+                .ContinueWithOnMainThread(t =>
                 {
                     if (t.IsCanceled)
                     {
@@ -119,7 +120,7 @@ public class FirebaseManager : MonoBehaviour
                 });
 
             FirebaseMessaging.SubscribeAsync("toba_updates")
-                .ContinueWith(t =>
+                .ContinueWithOnMainThread(t =>
                 {
                     if (t.IsCanceled)
                     {
@@ -152,14 +153,14 @@ public class FirebaseManager : MonoBehaviour
             // Request token
             Debug.Log("[Firebase] Meminta FCM token...");
 
-            FirebaseMessaging.GetTokenAsync().ContinueWith(
+            FirebaseMessaging.GetTokenAsync().ContinueWithOnMainThread(
                 t =>
                 {
                     Debug.Log("[Firebase] GetTokenAsync selesai.");
 
                     if (t.IsCanceled)
                     {
-                        Debug.LogError(
+                        Debug.LogWarning(
                             "[Firebase] GetTokenAsync DIBATALKAN."
                         );
 
@@ -168,18 +169,18 @@ public class FirebaseManager : MonoBehaviour
 
                     if (t.IsFaulted)
                     {
-                        Debug.LogError(
+                        Debug.LogWarning(
                             "[Firebase] GetTokenAsync GAGAL."
                         );
 
                         if (t.Exception != null)
                         {
-                            Debug.LogError(
+                            Debug.LogWarning(
                                 "[Firebase] Detail error: " +
                                 t.Exception
                             );
 
-                            Debug.LogError(
+                            Debug.LogWarning(
                                 "[Firebase] InnerException: " +
                                 t.Exception.GetBaseException()
                             );
@@ -190,7 +191,7 @@ public class FirebaseManager : MonoBehaviour
 
                     if (string.IsNullOrEmpty(t.Result))
                     {
-                        Debug.LogError(
+                        Debug.LogWarning(
                             "[Firebase] GetTokenAsync berhasil tetapi token kosong."
                         );
 
@@ -206,18 +207,7 @@ public class FirebaseManager : MonoBehaviour
 
                     PlayerPrefs.Save();
 
-                    Debug.Log(
-                        "[Firebase] Token berhasil didapat: " +
-                        FCMToken
-                    );
-
-                    // ==================================================
-                    // LOG KHUSUS UNTUK MENCARI FCM TOKEN DI LOGCAT
-                    // ==================================================
-                    Debug.Log(
-                        "[FCM-TOKEN-TOBA] " +
-                        FCMToken
-                    );
+                    Debug.Log("[Firebase] Token FCM berhasil didapat.");
 
                     // Kirim token ke backend
                     int pid =
@@ -253,7 +243,7 @@ public class FirebaseManager : MonoBehaviour
         {
             IsReady = false;
 
-            Debug.LogError(
+            Debug.LogWarning(
                 "[Firebase] Dependency tidak tersedia: " +
                 task.Result
             );
@@ -358,7 +348,7 @@ public class FirebaseManager : MonoBehaviour
 
         if (e == null)
         {
-            Debug.LogError(
+            Debug.LogWarning(
                 "[Firebase] TokenReceivedEventArgs null."
             );
 
@@ -369,7 +359,7 @@ public class FirebaseManager : MonoBehaviour
 
         if (string.IsNullOrEmpty(FCMToken))
         {
-            Debug.LogError(
+            Debug.LogWarning(
                 "[Firebase] TokenReceived event memberikan token kosong."
             );
 
@@ -383,18 +373,7 @@ public class FirebaseManager : MonoBehaviour
 
         PlayerPrefs.Save();
 
-        Debug.Log(
-            "[Firebase] TokenReceived: " +
-            FCMToken
-        );
-
-        // ==================================================
-        // LOG KHUSUS UNTUK MENCARI FCM TOKEN DI LOGCAT
-        // ==================================================
-        Debug.Log(
-            "[FCM-TOKEN-TOBA] " +
-            FCMToken
-        );
+        Debug.Log("[Firebase] Event FCM TokenReceived berhasil.");
 
         int pid =
             PlayerPrefs.GetInt(
@@ -423,6 +402,9 @@ public class FirebaseManager : MonoBehaviour
         object sender,
         MessageReceivedEventArgs e)
     {
+        if (e == null || e.Message == null)
+            return;
+
         string title =
             e.Message.Notification?.Title
             ?? "Notifikasi TOBA";

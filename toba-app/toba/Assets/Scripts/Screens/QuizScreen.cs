@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -46,6 +45,19 @@ public class QuizScreen : BaseScreen
 
     public override void Show()
     {
+        if (screenObj == null)
+            return;
+
+        if (locationData == null || locationData.id <= 0)
+        {
+            Debug.LogWarning("[Quiz] Data lokasi tidak valid.");
+
+            if (ScreenManager.Instance != null && container != null)
+                ScreenManager.Instance.ChangeScreen(new MapScreen(container));
+
+            return;
+        }
+
         SetBackground(TOBATheme.BGDark);
 
         Sprite bg = TOBATheme.LoadSprite("bg_toba");
@@ -637,87 +649,138 @@ public class QuizScreen : BaseScreen
 
     // ───────────────── FETCH QUIZ ─────────────────
 
+ 
     private void FetchQuiz()
     {
-        LoadingOverlay.Show(
-            screenObj.transform,
-            "Memuat soal..."
-        );
+        if (screenObj == null)
+            return;
 
-        string cached =
-            CacheManager.GetCachedLocationQuiz(locationData.id);
+        if (locationData == null || locationData.id <= 0)
+        {
+            if (questionTxt != null)
+                questionTxt.text = "Data lokasi tidak tersedia.";
+            return;
+        }
+
+        if (APIManager.Instance == null)
+        {
+            if (questionTxt != null)
+                questionTxt.text = "Layanan belum tersedia. Silakan coba lagi.";
+            return;
+        }
+
+        LoadingOverlay.Show(screenObj.transform, "Memuat soal...");
+
+        int locationID = locationData.id;
+        string cached = CacheManager.GetCachedLocationQuiz(locationID);
 
         APIManager.Instance.GetRequestWithCache(
-            "/locations/" + locationData.id + "/quiz",
+            "/locations/" + locationID + "/quiz",
             cached,
 
-            (response) =>
+            response =>
             {
-                LoadingOverlay.Hide();
-
                 if (screenObj == null)
                     return;
 
-                CacheManager.CacheLocationQuiz(
-                    locationData.id,
-                    response
-                );
+                LoadingOverlay.Hide();
 
-                QuizResponse res =
-                    JsonUtility.FromJson<QuizResponse>(response);
-
-                if (res?.questions != null &&
-                    res.questions.Count > 0)
+                try
                 {
+                    if (string.IsNullOrWhiteSpace(response))
+                        throw new System.FormatException("Response kuis kosong.");
+
+                    QuizResponse res =
+                        JsonUtility.FromJson<QuizResponse>(response);
+
+                    if (res == null || res.questions == null)
+                        throw new System.FormatException("Struktur response kuis tidak valid.");
+
+                    res.questions.RemoveAll(q =>
+                        q == null ||
+                        string.IsNullOrWhiteSpace(q.question) ||
+                        q.options == null
+                    );
+
+                    foreach (QuizQuestionData question in res.questions)
+                    {
+                        question.options.RemoveAll(option =>
+                            option == null ||
+                            string.IsNullOrWhiteSpace(option.option_text)
+                        );
+                    }
+
+                    res.questions.RemoveAll(q =>
+                        q.options.Count == 0 ||
+                        !q.options.Exists(option => option.is_correct)
+                    );
+
+                    if (res.questions.Count == 0)
+                        throw new System.FormatException("Tidak ada soal valid.");
+
                     questions = res.questions;
                     totalQuestions = questions.Count;
 
+                    CacheManager.CacheLocationQuiz(locationID, response);
+
                     ShowQuestion(0);
                 }
-                else
+                catch (System.Exception ex)
                 {
-                    if (questionTxt)
-                        questionTxt.text =
-                            "Soal belum tersedia untuk lokasi ini.";
+                    CacheManager.ClearLocationQuizCache(locationID);
+
+                    Debug.LogWarning(
+                        "[Quiz] Data soal tidak valid: " + ex.Message
+                    );
+
+                    if (questionTxt != null)
+                        questionTxt.text = "Soal belum tersedia atau data tidak valid.";
 
                     NetworkManager.Instance?.ShowToast(
-                        "Soal belum tersedia",
+                        "Gagal membaca soal. Silakan muat ulang.",
                         true
                     );
                 }
             },
 
-            (err) =>
+            err =>
             {
-                LoadingOverlay.Hide();
-
                 if (screenObj == null)
                     return;
 
-                if (questionTxt)
-                    questionTxt.text =
-                        "Gagal memuat soal.\n" + err;
+                LoadingOverlay.Hide();
 
-                NetworkManager.Instance?.ShowToast(
-                    err,
-                    true
-                );
+                if (questionTxt != null)
+                    questionTxt.text = "Gagal memuat soal.\n" + err;
+
+                NetworkManager.Instance?.ShowToast(err, true);
             }
         );
     }
+
 
     // ───────────────── TAMPILKAN SOAL ─────────────────
 
     private void ShowQuestion(int index)
     {
         if (screenObj == null ||
+            questions == null ||
+            index < 0 ||
             index >= questions.Count)
             return;
 
+        QuizQuestionData q = questions[index];
+
+        if (q == null || q.options == null || q.options.Count == 0)
+        {
+            if (questionTxt != null)
+                questionTxt.text = "Pilihan jawaban tidak tersedia.";
+
+            return;
+        }
+
         isAnswered = false;
         currentIndex = index;
-
-        var q = questions[index];
 
         if (progressTxt)
         {
@@ -810,7 +873,8 @@ public class QuizScreen : BaseScreen
             ScreenManager.Instance.StopCoroutine(timerCo);
 
         timerCo =
-            ScreenManager.Instance.StartCoroutine(RunTimer());
+            if (ScreenManager.Instance != null)
+                timerCo = ScreenManager.Instance.StartCoroutine(RunTimer());
     }
 
     // ───────────────── TOMBOL JAWABAN ─────────────────

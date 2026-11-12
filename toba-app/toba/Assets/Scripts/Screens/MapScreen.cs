@@ -157,72 +157,199 @@ public class MapScreen : BaseScreen
     // TETAP MENGIKUTI KODE LAMA
     // ============================================================
 
+    
     private void FetchData()
     {
+        if (screenObj == null)
+            return;
+
         int playerID = PlayerPrefs.GetInt("PlayerID");
 
-        if (screenObj != null)
+        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
+        if (oldEmptyState != null)
+            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
+
+        RemoveMapLoading();
+
+        if (APIManager.Instance == null)
         {
-            Transform emptyState = screenObj.transform.Find("EmptyState");
-            if (emptyState != null) UnityEngine.Object.Destroy(emptyState.gameObject);
+            ShowMapLoadError(
+                "Layanan tidak tersedia",
+                "Silakan coba kembali."
+            );
+            return;
         }
 
         APIManager.Instance.GetRequest(
             "/locations",
-            (locationResponse) => {
-                if (screenObj == null) return;
 
-                LocationListResponse locations = JsonUtility.FromJson<LocationListResponse>(
-                    "{\"locations\":" + locationResponse + "}"
-                );
+            locationResponse =>
+            {
+                if (screenObj == null)
+                    return;
 
-                locationList = locations?.locations ?? new List<LocationData>();
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(locationResponse))
+                        throw new System.FormatException("Response lokasi kosong.");
+
+                    string json = locationResponse.Trim();
+
+                    if (json.StartsWith("["))
+                        json = "{\"locations\":" + json + "}";
+
+                    LocationListResponse locations =
+                        JsonUtility.FromJson<LocationListResponse>(json);
+
+                    if (locations == null)
+                        throw new System.FormatException("Data lokasi tidak valid.");
+
+                    locationList = locations.locations ??
+                        new List<LocationData>();
+
+                    locationList.RemoveAll(location =>
+                        location == null || location.id <= 0
+                    );
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning(
+                        "[Map] Gagal membaca data lokasi: " + ex.Message
+                    );
+
+                    ShowMapLoadError(
+                        "Data lokasi bermasalah",
+                        "Silakan muat ulang peta."
+                    );
+                    return;
+                }
 
                 if (locationList.Count == 0)
                 {
+                    RemoveMapLoading();
+
                     EmptyState.Show(
                         screenObj.transform,
-                        "	◆",
+                        "◆",
                         "Belum ada lokasi tersedia",
                         "Hubungi admin untuk menambahkan lokasi"
                     );
                     return;
                 }
 
+                progressList = new List<PlayerProgressData>();
+
+                if (playerID <= 0 || APIManager.Instance == null)
+                {
+                    BuildMap();
+                    return;
+                }
+
                 APIManager.Instance.GetRequest(
                     "/player/" + playerID + "/progress",
-                    (progressResponse) => {
-                        if (screenObj == null) return;
 
-                        PlayerProgressResponse progress = JsonUtility.FromJson<PlayerProgressResponse>(
-                            "{\"progress\":" + progressResponse + "}"
-                        );
+                    progressResponse =>
+                    {
+                        if (screenObj == null)
+                            return;
 
-                        if (progress?.progress != null)
-                            progressList = progress.progress;
+                        try
+                        {
+                            if (!string.IsNullOrWhiteSpace(progressResponse))
+                            {
+                                string json = progressResponse.Trim();
+
+                                if (json.StartsWith("["))
+                                    json = "{\"progress\":" + json + "}";
+
+                                PlayerProgressResponse progress =
+                                    JsonUtility.FromJson<PlayerProgressResponse>(json);
+
+                                if (progress == null)
+                                    throw new System.FormatException(
+                                        "Data progress tidak valid."
+                                    );
+
+                                progressList = progress.progress ??
+                                    new List<PlayerProgressData>();
+
+                                progressList.RemoveAll(item => item == null);
+                            }
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Debug.LogWarning(
+                                "[Map] Gagal membaca progress: " + ex.Message
+                            );
+
+                            progressList.Clear();
+                        }
 
                         BuildMap();
                     },
-                    (_) => BuildMap()
+
+                    err =>
+                    {
+                        if (screenObj == null)
+                            return;
+
+                        progressList.Clear();
+                        BuildMap();
+                    }
                 );
             },
-            (err) => {
-                if (screenObj == null) return;
 
-                Transform loading = screenObj.transform.Find("Loading");
-                if (loading != null) UnityEngine.Object.Destroy(loading.gameObject);
+            err =>
+            {
+                if (screenObj == null)
+                    return;
 
-                Debug.LogWarning("[Map] Gagal mengambil locations.");
-
-                EmptyState.Show(
-                    screenObj.transform,
-                    "	◆",
+                ShowMapLoadError(
                     "Gagal memuat peta",
-                    "Periksa koneksi internet",
-                    () => FetchData()
+                    "Periksa koneksi internet."
                 );
             }
         );
+    }
+
+    private void RemoveMapLoading()
+    {
+        if (screenObj == null)
+            return;
+
+        Transform loading = screenObj.transform.Find("Loading");
+
+        if (loading != null)
+            UnityEngine.Object.Destroy(loading.gameObject);
+    }
+
+    private void ShowMapLoadError(string title, string message)
+    {
+        if (screenObj == null)
+            return;
+
+        RemoveMapLoading();
+
+        Transform oldEmptyState = screenObj.transform.Find("EmptyState");
+
+        if (oldEmptyState != null)
+            UnityEngine.Object.Destroy(oldEmptyState.gameObject);
+
+        EmptyState.Show(
+            screenObj.transform,
+            "◆",
+            title,
+            message,
+            () => FetchData()
+        );
+    }
+
+    private void StartMapCoroutine(IEnumerator routine)
+    {
+        if (routine == null || ScreenManager.Instance == null)
+            return;
+
+        StartMapCoroutine(routine);
     }
 
     // ============================================================
@@ -685,7 +812,7 @@ public class MapScreen : BaseScreen
                 false;
         }
 
-        ScreenManager.Instance.StartCoroutine(
+        StartMapCoroutine(
             HeaderShineLoop(
                 shineObject.transform
             )
@@ -772,7 +899,7 @@ public class MapScreen : BaseScreen
         button.onClick.AddListener(
             () =>
             {
-                ScreenManager.Instance.StartCoroutine(
+                StartMapCoroutine(
                     BackButtonPress(
                         buttonObject.transform
                     )
@@ -780,7 +907,7 @@ public class MapScreen : BaseScreen
             }
         );
 
-        ScreenManager.Instance.StartCoroutine(
+        StartMapCoroutine(
             BackButtonFloat(
                 buttonObject.transform
             )
@@ -849,9 +976,10 @@ public class MapScreen : BaseScreen
         target.localScale =
             original;
 
-        SoundManager.Instance.PlaySFX(
-            "sfx_click"
-        );
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX("sfx_click");
+        }
 
         ScreenManager.Instance.ChangeScreen(
             new MainMenuScreen(
@@ -880,8 +1008,10 @@ public class MapScreen : BaseScreen
             i++
         )
         {
-            LocationData location =
-                locationList[i];
+            LocationData location = locationList[i];
+
+            if (location == null || location.id <= 0)
+                continue;
 
             Vector2 position =
                 GetPatternPosition(i);
@@ -962,6 +1092,8 @@ public class MapScreen : BaseScreen
         bool unlocked,
         bool completed)
     {
+        if (location == null || screenObj == null)
+            return;
         string asset =
             completed
                 ? "MapScreen/map_node_completed"
@@ -1037,15 +1169,19 @@ public class MapScreen : BaseScreen
             button.onClick.AddListener(
                 () =>
                 {
-                    SoundManager.Instance.PlaySFX(
-                        "sfx_click"
-                    );
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlaySFX("sfx_click");
+                    }
 
-                    ScreenManager.Instance.StartCoroutine(
+                    StartMapCoroutine(
                         NodeTouch(
                             node.transform
                         )
                     );
+
+                    if (ScreenManager.Instance == null)
+                        return; 
 
                     ScreenManager.Instance.ChangeScreen(
                         new LocationDetailScreen(
@@ -1058,7 +1194,7 @@ public class MapScreen : BaseScreen
 
             if (completed)
             {
-                ScreenManager.Instance.StartCoroutine(
+                StartMapCoroutine(
                     CompletedNodeLoop(
                         node.transform
                     )
@@ -1077,11 +1213,12 @@ public class MapScreen : BaseScreen
             button.onClick.AddListener(
                 () =>
                 {
-                    SoundManager.Instance.PlaySFX(
-                        "sfx_click"
-                    );
+                    if (SoundManager.Instance != null)
+                    {
+                        SoundManager.Instance.PlaySFX("sfx_click");
+                    }
 
-                    ScreenManager.Instance.StartCoroutine(
+                    StartMapCoroutine(
                         LockedTouch(
                             node.transform
                         )
@@ -1222,7 +1359,7 @@ public class MapScreen : BaseScreen
             index
         );
 
-        ScreenManager.Instance.StartCoroutine(
+        StartMapCoroutine(
             ActiveNodeLoop(
                 node,
                 index * 0.35f
@@ -1313,7 +1450,7 @@ public class MapScreen : BaseScreen
             )
         );
 
-        ScreenManager.Instance.StartCoroutine(
+        StartMapCoroutine(
             GlowLoop(
                 glow.transform,
                 glowImage
@@ -1421,7 +1558,7 @@ public class MapScreen : BaseScreen
                     )
                 );
 
-            ScreenManager.Instance.StartCoroutine(
+            StartMapCoroutine(
                 NodeSparkLoop(
                     sparkle.transform,
                     nodeRT.anchoredPosition,
@@ -1704,7 +1841,7 @@ public class MapScreen : BaseScreen
                     )
                 );
 
-            ScreenManager.Instance.StartCoroutine(
+            StartMapCoroutine(
                 FireflyLoop(
                     firefly.transform,
                     firefly.GetComponent<Image>(),
@@ -1829,7 +1966,7 @@ public class MapScreen : BaseScreen
                         )
                     );
 
-                ScreenManager.Instance.StartCoroutine(
+                StartMapCoroutine(
                     WaterShimmerLoop(
                         shimmer.transform,
                         i
@@ -1944,7 +2081,7 @@ public class MapScreen : BaseScreen
                     )
                 );
 
-            ScreenManager.Instance.StartCoroutine(
+            StartMapCoroutine(
                 WaterfallSprayLoop(
                     spray.transform,
                     segment
@@ -2045,7 +2182,7 @@ public class MapScreen : BaseScreen
                         )
                     );
 
-                ScreenManager.Instance.StartCoroutine(
+                StartMapCoroutine(
                     LeafSwayLoop(
                         leaves.transform,
                         i
@@ -2132,7 +2269,7 @@ public class MapScreen : BaseScreen
                     )
                 );
 
-            ScreenManager.Instance.StartCoroutine(
+            StartMapCoroutine(
                 SmokeLoop(
                     smoke.transform,
                     segment
@@ -2289,7 +2426,7 @@ public class MapScreen : BaseScreen
          */
         curtain.transform.SetAsLastSibling();
 
-        ScreenManager.Instance.StartCoroutine(
+        StartMapCoroutine(
             CloudCurtainLoop(
                 curtain.transform,
                 image

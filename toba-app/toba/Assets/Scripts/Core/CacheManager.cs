@@ -5,7 +5,7 @@ public static class CacheManager
 {
     private const float CACHE_HOURS = 24f;
 
-    // ── LOCATIONS ─────────────────────────────────────────
+        // ── LOCATIONS ─────────────────────────────────────────
     public static void CacheLocations(string json)
         => Save("cache_locations", json);
 
@@ -18,6 +18,19 @@ public static class CacheManager
 
     public static string GetCachedLocationQuiz(int locId)
         => Load("cache_loc_" + locId);
+
+    public static void ClearLocationQuizCache(int locId)
+    {
+        if (locId <= 0)
+            return;
+
+        string key = "cache_loc_" + locId;
+
+        PlayerPrefs.DeleteKey(key);
+        PlayerPrefs.DeleteKey(key + "_t");
+
+        PlayerPrefs.Save();
+    }
 
     // ── TRIVIA CATEGORIES ─────────────────────────────────
     public static void CacheTriviaCategories(string json)

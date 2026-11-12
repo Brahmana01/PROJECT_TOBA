@@ -1020,13 +1020,22 @@ public class QuizResultScreen : BaseScreen
 
         isSubmitted = true;
 
-        if (locationData == null)
+        int playerID = PlayerPrefs.GetInt("PlayerID");
+
+        if (playerID <= 0)
+            return;
+
+        if (locationData == null ||
+            locationData.id <= 0 ||
+            playerID <= 0)
         {
+            Debug.LogWarning(
+                "[QuizResult] Data pemain atau lokasi tidak valid."
+            );
+
             HandleOfflineResult();
             return;
         }
-
-        int playerID = PlayerPrefs.GetInt("PlayerID");
 
         SubmitQuizRequest req = new SubmitQuizRequest
         {
@@ -1084,6 +1093,7 @@ public class QuizResultScreen : BaseScreen
     // HANDLE API RESPONSE
     // =========================================================
 
+
     private void HandleSubmitResponse(string response)
     {
         if (screenObj == null)
@@ -1093,19 +1103,26 @@ public class QuizResultScreen : BaseScreen
 
         try
         {
-            res = JsonUtility.FromJson<SubmitQuizResponse>(
-                response
-            );
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(
-                "[QuizResult] Gagal membaca response: " + e.Message
-            );
-        }
+            if (string.IsNullOrWhiteSpace(response))
+                throw new FormatException("Response hasil kuis kosong.");
 
-        if (res == null)
+            res = JsonUtility.FromJson<SubmitQuizResponse>(response);
+
+            if (res == null ||
+                locationData == null ||
+                res.location_id != locationData.id)
+            {
+                throw new FormatException(
+                    "Struktur response hasil kuis tidak sesuai."
+                );
+            }
+        }
+        catch (Exception ex)
         {
+            Debug.LogWarning(
+                "[QuizResult] Response tidak valid: " + ex.Message
+            );
+
             HandleOfflineResult();
             return;
         }
@@ -1124,33 +1141,23 @@ public class QuizResultScreen : BaseScreen
         }
 
         if (xpTxt != null)
-            xpTxt.text = "+" + res.reward_xp;
+            xpTxt.text = "+" + Mathf.Max(0, res.reward_xp);
 
         if (starsTxt != null)
-            starsTxt.text = "+" + res.reward_stars;
+            starsTxt.text = "+" + Mathf.Max(0, res.reward_stars);
 
         RemoveLoading();
 
-        // LEVEL UP
-        int previousLevel = PlayerPrefs.GetInt(
-            "PlayerLevel",
-            1
-        );
+        int previousLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
 
         if (res.level > previousLevel)
         {
-            PlayerPrefs.SetInt(
-                "PlayerLevel",
-                res.level
-            );
-
+            PlayerPrefs.SetInt("PlayerLevel", res.level);
             PlayerPrefs.Save();
 
             SoundManager.Instance?.PlaySFX("sfx_levelup");
 
-            HapticManager.Instance?.Vibrate(
-                HapticType.Success
-            );
+            HapticManager.Instance?.Vibrate(HapticType.Success);
 
             LevelUpPopup.Show(
                 screenObj.transform,
@@ -1159,9 +1166,9 @@ public class QuizResultScreen : BaseScreen
             );
         }
 
-        // CHECK ACHIEVEMENTS
         CheckAchievements();
     }
+
 
     // =========================================================
     // CHECK ACHIEVEMENTS
@@ -1173,6 +1180,9 @@ public class QuizResultScreen : BaseScreen
             return;
 
         int playerID = PlayerPrefs.GetInt("PlayerID");
+
+        if (playerID <= 0)
+            return;
 
         APIManager.Instance.GetRequest(
             "/check-achievements/" + playerID,
@@ -1192,11 +1202,16 @@ public class QuizResultScreen : BaseScreen
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(
-                        "[QuizResult] Achievement response error: " +
+                    Debug.LogWarning(
+                        "[QuizResult] Achievement response tidak valid: " +
                         e.Message
                     );
+
+                    return;
                 }
+
+                if (ach != null && ach.newly_unlocked != null)
+                    ach.newly_unlocked.RemoveAll(item => item == null);
 
                 if (
                     ach != null &&

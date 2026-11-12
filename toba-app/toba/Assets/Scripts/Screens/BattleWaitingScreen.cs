@@ -24,6 +24,23 @@ public class BattleWaitingScreen : BaseScreen
 
     public override void Show()
     {
+        if (screenObj == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(roomCode) ||
+            roomID <= 0 ||
+            APIManager.Instance == null ||
+            ScreenManager.Instance == null)
+        {
+            Debug.LogWarning("[BattleWaiting] Data room atau manager tidak valid.");
+
+            ScreenManager.Instance?.ChangeScreen(
+                new BattleMenuScreen(container)
+            );
+
+            return;
+        }
+
         SetBackground(TOBATheme.ForestGreen);
 
         HeaderBar.Create(screenObj.transform, "MENUNGGU LAWAN", null);
@@ -77,7 +94,7 @@ public class BattleWaitingScreen : BaseScreen
         GameObject btnCancel = UIBuilder.CreateButton(screenObj.transform,
             "BtnCancel", "❌ BATALKAN",
             new Vector2(600, 120), TOBATheme.Error, () => {
-                SoundManager.Instance.PlaySFX("sfx_click");
+                SoundManager.Instance?.PlaySFX("sfx_click");
                 Cleanup();
                 ScreenManager.Instance.ChangeScreen(new BattleMenuScreen(container));
             });
@@ -94,32 +111,71 @@ public class BattleWaitingScreen : BaseScreen
 
     void ConnectWebSocket()
     {
-        int playerID     = PlayerPrefs.GetInt("PlayerID");
+        if (screenObj == null || APIManager.Instance == null)
+            return;
+
+        int playerID = PlayerPrefs.GetInt("PlayerID");
         string playerName = PlayerPrefs.GetString("SavedUsername", "Player");
 
+        if (playerID <= 0)
+        {
+            if (statusTxt != null)
+                statusTxt.text = "Data pemain tidak valid.";
+
+            return;
+        }
+
         APIManager.Instance.ConnectBattleWS(
-            roomCode, playerID, playerName, isHost,
-            onMessage: (msg) => OnWSMessage(msg),
-            onConnected: () => {
-                if (statusTxt != null)
+            roomCode,
+            playerID,
+            playerName,
+            isHost,
+
+            onMessage: msg =>
+            {
+                if (screenObj != null)
+                    OnWSMessage(msg);
+            },
+
+            onConnected: () =>
+            {
+                if (screenObj != null && statusTxt != null)
                     statusTxt.text = "✅ Terhubung! Menunggu lawan...";
             },
-            onDisconnected: () => {
-                if (!battleStarted && screenObj != null)
+
+            onDisconnected: () =>
+            {
+                if (!battleStarted &&
+                    screenObj != null &&
+                    statusTxt != null)
                 {
-                    if (statusTxt != null)
-                        statusTxt.text = "⚠ Koneksi terputus. Mencoba ulang...";
+                    statusTxt.text = "⚠ Koneksi terputus. Mencoba ulang...";
                 }
             }
         );
     }
-
     void OnWSMessage(string rawMsg)
     {
-        if (screenObj == null) return;
+        if (screenObj == null || string.IsNullOrWhiteSpace(rawMsg))
+            return;
 
-        WSMessageData msg = JsonUtility.FromJson<WSMessageData>(rawMsg);
-        if (msg == null) return;
+        WSMessageData msg = null;
+
+        try
+        {
+            msg = JsonUtility.FromJson<WSMessageData>(rawMsg);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning(
+                "[BattleWaiting] WebSocket message tidak valid: " + ex.Message
+            );
+
+            return;
+        }
+
+        if (msg == null || string.IsNullOrWhiteSpace(msg.type))
+            return;
 
         switch (msg.type)
         {
@@ -127,9 +183,10 @@ public class BattleWaitingScreen : BaseScreen
                 if (!battleStarted)
                 {
                     battleStarted = true;
+
                     if (statusTxt != null)
                         statusTxt.text = "🎮 Lawan ditemukan! Memuat soal...";
-                    // Ambil soal via REST lalu mulai battle
+
                     FetchQuestionsAndStart();
                 }
                 break;
@@ -143,27 +200,82 @@ public class BattleWaitingScreen : BaseScreen
 
     void FetchQuestionsAndStart()
     {
-        APIManager.Instance.GetRequest("/battle/status/" + roomCode, (response) => {
-            if (screenObj == null) return;
+        if (screenObj == null || APIManager.Instance == null)
+            return;
 
-            BattleRoomStatusResponse res =
-                JsonUtility.FromJson<BattleRoomStatusResponse>(response);
+        APIManager.Instance.GetRequest(
+            "/battle/status/" + roomCode,
 
-            if (res != null && res.questions != null && res.questions.Count > 0)
+            response =>
             {
-                Cleanup();
-                ScreenManager.Instance.ChangeScreen(
-                    new BattleQuizScreen(container, res, isHost));
-            }
-            else
+                if (screenObj == null)
+                    return;
+
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(response))
+                        throw new System.FormatException("Response room kosong.");
+
+                    BattleRoomStatusResponse res =
+                        JsonUtility.FromJson<BattleRoomStatusResponse>(response);
+
+                    if (res == null || res.questions == null)
+                        throw new System.FormatException("Data soal room tidak valid.");
+
+                    res.questions.RemoveAll(q =>
+                        q == null ||
+                        string.IsNullOrWhiteSpace(q.question) ||
+                        q.options == null
+                    );
+
+                    foreach (QuizQuestionData q in res.questions)
+                    {
+                        q.options.RemoveAll(option =>
+                            option == null ||
+                            string.IsNullOrWhiteSpace(option.option_text)
+                        );
+                    }
+
+                    res.questions.RemoveAll(q =>
+                        q.options.Count == 0 ||
+                        !q.options.Exists(option => option.is_correct)
+                    );
+
+                    if (res.questions.Count == 0)
+                        throw new System.FormatException("Soal Battle kosong.");
+
+                    // Hentikan countdown, tetapi pertahankan WebSocket
+                    // selama pertandingan berlangsung.
+                    StopCountdown();
+
+                    ScreenManager.Instance?.ChangeScreen(
+                        new BattleQuizScreen(container, res, isHost)
+                    );
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning(
+                        "[BattleWaiting] Gagal membaca soal: " + ex.Message
+                    );
+
+                    battleStarted = false;
+
+                    if (statusTxt != null)
+                        statusTxt.text = "Soal belum tersedia. Silakan coba lagi.";
+                }
+            },
+
+            err =>
             {
+                if (screenObj == null)
+                    return;
+
+                Debug.LogWarning("[BattleWaiting] Gagal mengambil soal: " + err);
+
                 if (statusTxt != null)
-                    statusTxt.text = "Gagal memuat soal. Coba lagi.";
+                    statusTxt.text = "Koneksi gagal: " + err;
             }
-        }, (err) => {
-            if (statusTxt != null)
-                statusTxt.text = "Koneksi gagal: " + err;
-        });
+        );
     }
 
     IEnumerator AnimateWaiting()
@@ -198,16 +310,31 @@ public class BattleWaitingScreen : BaseScreen
         }
     }
 
+    void StopCountdown()
+    {
+        if (countdownCoroutine != null &&
+            ScreenManager.Instance != null)
+        {
+            ScreenManager.Instance.StopCoroutine(countdownCoroutine);
+        }
+
+        countdownCoroutine = null;
+    }
+
     void Cleanup()
     {
-        if (countdownCoroutine != null)
-            ScreenManager.Instance.StopCoroutine(countdownCoroutine);
-        APIManager.Instance.DisconnectBattleWS();
+        StopCountdown();
+
+        if (APIManager.Instance != null)
+            APIManager.Instance.DisconnectBattleWS();
     }
 
     public override void Hide()
     {
+        battleStarted = true;
+
         Cleanup();
+
         base.Hide();
     }
 }

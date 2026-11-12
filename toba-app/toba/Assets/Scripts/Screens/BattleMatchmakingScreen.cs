@@ -164,46 +164,111 @@ public class BattleMatchmakingScreen : BaseScreen
 
     void DoMatchmake()
     {
-        if (!isSearching || screenObj == null) return;
+        if (!isSearching || screenObj == null)
+            return;
 
-        var req = new MatchmakeRequest {
-            player_id   = playerID,
-            level       = playerLevel,
+        if (playerID <= 0)
+        {
+            isSearching = false;
+
+            if (statusTxt != null)
+                statusTxt.text = "Data pemain tidak valid.";
+
+            return;
+        }
+
+        if (APIManager.Instance == null)
+        {
+            isSearching = false;
+
+            if (statusTxt != null)
+                statusTxt.text = "Layanan Battle belum tersedia.";
+
+            return;
+        }
+
+        MatchmakeRequest req = new MatchmakeRequest
+        {
+            player_id = playerID,
+            level = playerLevel,
             player_name = playerName
         };
 
-        APIManager.Instance.PostRequest("/battle/matchmake",
+        APIManager.Instance.PostRequest(
+            "/battle/matchmake",
             JsonUtility.ToJson(req),
-            (response) => {
-                if (!isSearching || screenObj == null) return;
 
-                MatchmakeResponse res =
-                    JsonUtility.FromJson<MatchmakeResponse>(response);
+            response =>
+            {
+                if (!isSearching || screenObj == null)
+                    return;
+
+                MatchmakeResponse res = null;
+
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(response))
+                        throw new System.FormatException(
+                            "Response matchmaking kosong."
+                        );
+
+                    res = JsonUtility.FromJson<MatchmakeResponse>(response);
+
+                    if (res == null || string.IsNullOrWhiteSpace(res.status))
+                        throw new System.FormatException(
+                            "Response matchmaking tidak valid."
+                        );
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning(
+                        "[BattleMatchmaking] Response tidak valid: " +
+                        ex.Message
+                    );
+
+                    if (statusTxt != null)
+                        statusTxt.text = "Gagal membaca data lawan. Mencoba ulang...";
+
+                    if (ScreenManager.Instance != null)
+                        pollCo = ScreenManager.Instance.StartCoroutine(PollDelay());
+
+                    return;
+                }
 
                 if (res.status == "MATCHED")
                 {
                     OnMatched(res);
+                    return;
                 }
-                else
-                {
-                    if (statusTxt)
-                    {
-                        string botInfo = res.bot_in > 0
-                            ? $"\n<size=24><color=#aaaaaa>vs Bot dalam {res.bot_in} detik</color></size>"
-                            : "";
-                        statusTxt.text = res.message + botInfo;
-                    }
-                    if (screenObj != null)
-                        pollCo = ScreenManager.Instance.StartCoroutine(PollDelay());
-                }
-            },
-            (err) => {
-                if (statusTxt) statusTxt.text = "Koneksi error. Mencoba ulang...";
-                if (screenObj != null)
-                    pollCo = ScreenManager.Instance.StartCoroutine(PollDelay());
-            });
-    }
 
+                if (statusTxt != null)
+                {
+                    string botInfo = res.bot_in > 0
+                        ? "\n<size=24><color=#aaaaaa>vs Bot dalam " +
+                        res.bot_in + " detik</color></size>"
+                        : "";
+
+                    statusTxt.text =
+                        (res.message ?? "Mencari lawan...") + botInfo;
+                }
+
+                if (ScreenManager.Instance != null)
+                    pollCo = ScreenManager.Instance.StartCoroutine(PollDelay());
+            },
+
+            err =>
+            {
+                if (!isSearching || screenObj == null)
+                    return;
+
+                if (statusTxt != null)
+                    statusTxt.text = "Koneksi error. Mencoba ulang...";
+
+                if (ScreenManager.Instance != null)
+                    pollCo = ScreenManager.Instance.StartCoroutine(PollDelay());
+            }
+        );
+    }
     IEnumerator PollDelay()
     {
         yield return new WaitForSecondsRealtime(2.5f);
@@ -230,31 +295,55 @@ public class BattleMatchmakingScreen : BaseScreen
 
     void OnMatched(MatchmakeResponse res)
     {
+        if (res == null || string.IsNullOrWhiteSpace(res.room_code))
+        {
+            Debug.LogWarning("[BattleMatchmaking] Data room tidak valid.");
+
+            if (statusTxt != null)
+                statusTxt.text = "Data pertandingan tidak tersedia.";
+
+            isSearching = false;
+            return;
+        }
+
         isSearching = false;
-        if (pollCo != null) ScreenManager.Instance.StopCoroutine(pollCo);
+
+        if (pollCo != null && ScreenManager.Instance != null)
+            ScreenManager.Instance.StopCoroutine(pollCo);
+
+        pollCo = null;
 
         if (res.is_bot)
         {
             SoundManager.Instance?.PlaySFX("sfx_unlock");
             HapticManager.Instance?.Vibrate(HapticType.Medium);
-            if (statusTxt) statusTxt.text =
-                $"🤖 Tidak ada lawan\nBermain vs {res.opponent_name}!";
+
+            if (statusTxt != null)
+                statusTxt.text =
+                    "🤖 Tidak ada lawan\nBermain vs " +
+                    (res.opponent_name ?? "Bot Toba") + "!";
         }
         else
         {
             SoundManager.Instance?.PlaySFX("sfx_win");
             HapticManager.Instance?.Vibrate(HapticType.Success);
-            if (statusTxt) statusTxt.text =
-                $"✅ Lawan ditemukan!\n{res.opponent_name}";
+
+            if (statusTxt != null)
+                statusTxt.text =
+                    "✅ Lawan ditemukan!\n" +
+                    (res.opponent_name ?? "Pemain");
         }
 
-        // Simpan info bot ke PlayerPrefs
         PlayerPrefs.SetInt("BattleIsBot", res.is_bot ? 1 : 0);
-        PlayerPrefs.SetString("BattleBotName", res.opponent_name ?? "Bot Toba");
-        PlayerPrefs.SetInt("BattleBotLevel", res.bot_level);
+        PlayerPrefs.SetString(
+            "BattleBotName",
+            res.opponent_name ?? "Bot Toba"
+        );
+        PlayerPrefs.SetInt("BattleBotLevel", Mathf.Max(1, res.bot_level));
         PlayerPrefs.Save();
 
-        ScreenManager.Instance.StartCoroutine(GoToBattle(res));
+        if (ScreenManager.Instance != null)
+            ScreenManager.Instance.StartCoroutine(GoToBattle(res));
     }
 
     IEnumerator GoToBattle(MatchmakeResponse res)

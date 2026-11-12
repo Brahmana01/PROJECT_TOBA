@@ -7,6 +7,18 @@ public class LocationDetailScreen : BaseScreen
     private LocationData locationData;
     private TextMeshProUGUI factTxt;
 
+    private string LocationName =>
+        locationData == null ||
+        string.IsNullOrWhiteSpace(locationData.name)
+            ? "Lokasi Budaya"
+            : locationData.name.Trim();
+
+    private string LocationDescription =>
+        locationData == null ||
+        string.IsNullOrWhiteSpace(locationData.description)
+            ? "Informasi lokasi belum tersedia."
+            : locationData.description.Trim();
+
     private static Sprite roundedSprite;
     private static Sprite circleSprite;
     private static Sprite starSprite;
@@ -33,7 +45,31 @@ public class LocationDetailScreen : BaseScreen
 
     public override void Show()
     {
+        if (screenObj == null)
+            return;
+
+        if (locationData == null || locationData.id <= 0)
+        {
+            Debug.LogWarning(
+                "[LocationDetail] Data lokasi tidak tersedia."
+            );
+
+            if (ScreenManager.Instance != null && container != null)
+            {
+                ScreenManager.Instance.ChangeScreen(
+                    new MapScreen(container)
+                );
+            }
+            else
+            {
+                Hide();
+            }
+
+            return;
+        }
+
         SetBackground(TOBATheme.BGDark);
+
         UIBuilder.CreateBackground(screenObj.transform, TOBATheme.LoadSprite("bg_toba"));
         UIBuilder.CreatePanel(screenObj.transform, "Overlay",
             new Color(0f, 0.04f, 0f, 0.35f), Vector2.zero, Vector2.one);
@@ -320,7 +356,7 @@ public class LocationDetailScreen : BaseScreen
 
         // Papan khusus lokasi: Resources/gambar/papan_<nama_lokasi>.png
         // contoh "IT Del" -> papan_it_del. Kalau tidak ada -> papan polos + judul dari kode.
-        Sprite board = Resources.Load<Sprite>("gambar/papan_" + Slug(locationData.name));
+        Sprite board = Resources.Load<Sprite>("gambar/papan_" + Slug(LocationName));
         bool baked = board != null;
         if (!baked) board = Resources.Load<Sprite>("gambar/papan_polos");
 
@@ -335,7 +371,7 @@ public class LocationDetailScreen : BaseScreen
         if (!baked)
         {
             TextMeshProUGUI title = UIBuilder.CreateTextSized(header.transform,
-                locationData.name.ToUpper(), 44, TOBATheme.BatakGold,
+                LocationName.ToUpperInvariant(), 44, TOBATheme.BatakGold,
                 TextAlignmentOptions.Center, new Vector2(480f, 90f), new Vector2(0f, -9f))
                 .GetComponent<TextMeshProUGUI>();
             title.fontStyle = FontStyles.Bold;
@@ -398,7 +434,12 @@ public class LocationDetailScreen : BaseScreen
         btn.onClick.AddListener(() =>
         {
             if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX("sfx_click");
-            ScreenManager.Instance.ChangeScreen(new MapScreen(container));
+            if (ScreenManager.Instance != null && container != null)
+            {
+                ScreenManager.Instance.ChangeScreen(
+                    new MapScreen(container)
+                );
+            }
         });
     }
 
@@ -442,7 +483,7 @@ public class LocationDetailScreen : BaseScreen
         else
         {
             picImg.color = new Color(0.12f, 0.30f, 0.26f, 1f);
-            MakeText(pic.transform, locationData.name, 42,
+            MakeText(pic.transform, LocationName, 42,
                 new Color(1f, 1f, 1f, 0.55f), TextAlignmentOptions.Center,
                 Vector2.zero, Vector2.one, new Vector4(30, 0, 30, 0), FontStyles.Bold);
         }
@@ -498,7 +539,7 @@ public class LocationDetailScreen : BaseScreen
         MakeImage(face, "Divider", new Vector2(0.02f, 0.755f), new Vector2(0.98f, 0.765f),
             Vector2.zero, Vector2.zero, TOBATheme.BatakGold);
 
-        TextMeshProUGUI body = MakeText(face, locationData.description, 30,
+        TextMeshProUGUI body = MakeText(face, LocationDescription, 30,
             TOBATheme.TextDark, TextAlignmentOptions.TopLeft,
             Vector2.zero, new Vector2(1f, 0.74f),
             new Vector4(10, 4, 10, 6), FontStyles.Normal);
@@ -593,27 +634,84 @@ public class LocationDetailScreen : BaseScreen
         btn.onClick.AddListener(() =>
         {
             if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX("sfx_click");
-            ScreenManager.Instance.ChangeScreen(new QuizScreen(container, locationData));
+            if (ScreenManager.Instance == null ||
+                locationData == null ||
+                locationData.id <= 0)
+            {
+                return;
+            }
+
+            ScreenManager.Instance.ChangeScreen(
+                new QuizScreen(container, locationData)
+            );
         });
     }
 
     // ───────────── DATA ─────────────
+
     private void FetchRandomFact()
     {
-        APIManager.Instance.GetRequest("/locations/" + locationData.id + "/fact",
+        const string fallbackFact =
+            "Lokasi ini menyimpan kekayaan budaya Batak Toba yang luar biasa.";
+
+        if (factTxt == null)
+            return;
+
+        if (locationData == null || locationData.id <= 0)
+        {
+            factTxt.text = fallbackFact;
+            return;
+        }
+
+        if (APIManager.Instance == null)
+        {
+            factTxt.text = fallbackFact;
+            return;
+        }
+
+        APIManager.Instance.GetRequest(
+            "/locations/" + locationData.id + "/fact",
+
             response =>
             {
-                if (factTxt == null) return;
+                if (screenObj == null || factTxt == null)
+                    return;
 
-                LocationFactResponse res = JsonUtility.FromJson<LocationFactResponse>(response);
-                factTxt.text = (res != null && res.fact != null)
-                    ? res.fact.fact
-                    : "Lokasi ini menyimpan kekayaan budaya Batak Toba yang luar biasa.";
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(response))
+                        throw new System.FormatException(
+                            "Response fakta kosong."
+                        );
+
+                    LocationFactResponse res =
+                        JsonUtility.FromJson<LocationFactResponse>(response);
+
+                    string fact = res != null && res.fact != null
+                        ? res.fact.fact
+                        : null;
+
+                    factTxt.text = string.IsNullOrWhiteSpace(fact)
+                        ? fallbackFact
+                        : fact.Trim();
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning(
+                        "[LocationDetail] Gagal membaca fakta: " + ex.Message
+                    );
+
+                    if (factTxt != null)
+                        factTxt.text = fallbackFact;
+                }
             },
+
             err =>
             {
-                if (factTxt != null)
+                if (screenObj != null && factTxt != null)
                     factTxt.text = "Tidak dapat memuat fakta saat ini.";
-            });
+            }
+        );
     }
+
 }
