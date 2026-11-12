@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -7,9 +6,17 @@ using System.Collections;
 public static class FloatingChallengeButton
 {
     private static GameObject _btn;
+    private static Transform _buttonCanvas;
     private static ChallengeData _cachedChallenge;
 
-    private static readonly string[] TEXTS = {
+    private static Coroutine _pulseCoroutine;
+    private static Coroutine _fadeCoroutine;
+
+    private static int _requestVersion;
+    private static bool _isOpening;
+
+    private static readonly string[] TEXTS =
+    {
         "Tantangan baru! <color=#D6A84B><sprite name=\"trivia\" tint=1></color>",
         "Ayo main! ✨",
         "Ada hadiah nih! 🎁",
@@ -17,9 +24,25 @@ public static class FloatingChallengeButton
         "Uji kemampuanmu! 💪"
     };
 
+    // ============================================================
+    // CHECK ACTIVE CHALLENGE
+    // ============================================================
+
     public static void CheckAndShow(Transform canvas)
     {
+        // Setiap pemanggilan baru membatalkan callback request sebelumnya.
+        int requestId = ++_requestVersion;
+
         if (canvas == null)
+        {
+            Hide();
+            return;
+        }
+
+        ScreenManager manager = ScreenManager.Instance;
+
+        if (manager == null ||
+            manager.GetCurrentScreenName() != "MainMenu")
         {
             Hide();
             return;
@@ -33,18 +56,25 @@ public static class FloatingChallengeButton
             return;
         }
 
-        if (APIManager.Instance == null)
+        APIManager api = APIManager.Instance;
+
+        if (api == null)
         {
             Hide();
             return;
         }
 
-        APIManager.Instance.GetRequest(
+        api.GetRequest(
             "/challenge/active?player_id=" + playerID,
 
-            (response) =>
+            response =>
             {
-                if (canvas == null)
+                // Abaikan response dari request lama.
+                if (requestId != _requestVersion)
+                    return;
+
+                // Jangan membuat tombol pada screen yang sudah ditutup.
+                if (!IsMainMenuActive(canvas))
                 {
                     Hide();
                     return;
@@ -56,13 +86,16 @@ public static class FloatingChallengeButton
                 {
                     if (!string.IsNullOrWhiteSpace(response))
                     {
-                        res = JsonUtility.FromJson<ActiveChallengeResponse>(response);
+                        res = JsonUtility.FromJson<ActiveChallengeResponse>(
+                            response
+                        );
                     }
                 }
                 catch (System.Exception ex)
                 {
                     Debug.LogWarning(
-                        "[FloatingChallenge] JSON tidak valid: " + ex.Message
+                        "[FloatingChallenge] JSON tidak valid: " +
+                        ex.Message
                     );
 
                     Hide();
@@ -84,24 +117,65 @@ public static class FloatingChallengeButton
                 Show(canvas);
             },
 
-            (err) =>
+            error =>
             {
-                // Kegagalan jaringan tidak menghentikan aplikasi.
+                // Abaikan error dari request lama.
+                if (requestId != _requestVersion)
+                    return;
+
+                // Jangan mengubah tombol pada screen yang sudah berganti.
+                if (!IsMainMenuActive(canvas))
+                {
+                    Hide();
+                    return;
+                }
+
+                // Jika request gagal, hilangkan tombol lama agar tidak
+                // membuka challenge dari data yang sudah kedaluwarsa.
+                RemoveButton();
+                _cachedChallenge = null;
             }
         );
     }
 
-    static void Show(Transform canvas)
+    // ============================================================
+    // CURRENT SCREEN VALIDATION
+    // ============================================================
+
+    private static bool IsMainMenuActive(Transform canvas)
     {
-        if (canvas == null || _cachedChallenge == null)
+        if (canvas == null || ScreenManager.Instance == null)
+            return false;
+
+        return ScreenManager.Instance.GetCurrentScreenName() == "MainMenu";
+    }
+
+    // ============================================================
+    // SHOW BUTTON
+    // ============================================================
+
+    private static void Show(Transform canvas)
+    {
+        if (canvas == null ||
+            _cachedChallenge == null ||
+            !IsMainMenuActive(canvas))
+        {
+            return;
+        }
+
+        // Jika tombol sudah ada pada canvas yang sama, cukup pertahankan.
+        if (_btn != null && _buttonCanvas == canvas)
             return;
 
+        // Bersihkan tombol lama jika berasal dari screen/canvas berbeda.
         if (_btn != null)
-            return;
+            RemoveButton();
 
         bool onLeft = Random.value > 0.5f;
 
         _btn = new GameObject("FloatingChallengeBtn");
+        _buttonCanvas = canvas;
+
         _btn.transform.SetParent(canvas, false);
         _btn.transform.SetAsLastSibling();
 
@@ -112,13 +186,21 @@ public static class FloatingChallengeButton
 
         rt.pivot = new Vector2(onLeft ? 0f : 1f, 0.5f);
         rt.sizeDelta = new Vector2(230, 100);
-        rt.anchoredPosition = new Vector2(onLeft ? 15f : -15f, 0f);
+        rt.anchoredPosition = new Vector2(
+            onLeft ? 15f : -15f,
+            0f
+        );
 
+        // Pertahankan sprite dan warna desain sebelumnya.
         Sprite wp = TOBATheme.LoadSprite("btn_gold");
 
         Image img = _btn.AddComponent<Image>();
         img.sprite = wp ?? UIBuilder.GetDefaultSprite();
-        img.type = wp != null ? Image.Type.Sliced : Image.Type.Simple;
+
+        img.type = wp != null
+            ? Image.Type.Sliced
+            : Image.Type.Simple;
+
         img.color = wp != null
             ? Color.white
             : new Color(0.85f, 0.2f, 0.2f, 0.95f);
@@ -157,24 +239,44 @@ public static class FloatingChallengeButton
 
         btn.onClick.AddListener(() =>
         {
+            if (_isOpening)
+                return;
+
             SoundManager.Instance?.PlaySFX("sfx_click");
             HapticManager.Instance?.Vibrate(HapticType.Light);
 
             OpenChallenge(canvas);
         });
 
-        if (ScreenManager.Instance != null)
+        ScreenManager manager = ScreenManager.Instance;
+
+        if (manager != null)
         {
-            ScreenManager.Instance.StartCoroutine(PulseAnim(_btn.transform));
-            ScreenManager.Instance.StartCoroutine(FadeIn(_btn));
+            _pulseCoroutine = manager.StartCoroutine(
+                PulseAnim(_btn.transform)
+            );
+
+            _fadeCoroutine = manager.StartCoroutine(
+                FadeIn(_btn)
+            );
         }
     }
 
-    static void OpenChallenge(Transform canvas)
+    // ============================================================
+    // OPEN CHALLENGE
+    // ============================================================
+
+    private static void OpenChallenge(Transform canvas)
     {
+        if (_isOpening)
+            return;
+
+        ScreenManager manager = ScreenManager.Instance;
+
         if (_cachedChallenge == null ||
             canvas == null ||
-            ScreenManager.Instance == null)
+            manager == null ||
+            !IsMainMenuActive(canvas))
         {
             Hide();
             return;
@@ -182,30 +284,89 @@ public static class FloatingChallengeButton
 
         ChallengeData selectedChallenge = _cachedChallenge;
 
-        ScreenManager.Instance.ChangeScreen(
-            new ChallengeRouterScreen(canvas, selectedChallenge)
+        // Screen challenge harus menjadi child dari SafeArea/root canvas,
+        // bukan child dari MainMenu screen yang akan dihancurkan.
+        Transform parent = manager.canvasTransform;
+
+        if (parent == null || parent == canvas)
+            parent = canvas.parent;
+
+        if (parent == null || parent == canvas)
+        {
+            Debug.LogWarning(
+                "[FloatingChallenge] Parent screen tujuan tidak tersedia."
+            );
+
+            Hide();
+            return;
+        }
+
+        _isOpening = true;
+
+        // Hapus tombol dan batalkan callback request yang masih tertunda.
+        Hide();
+
+        // Hide mereset flag; aktifkan kembali selama navigasi berlangsung.
+        _isOpening = true;
+
+        manager.ChangeScreen(
+            new ChallengeRouterScreen(parent, selectedChallenge)
         );
 
-        Hide();
+        _isOpening = false;
     }
+
+    // ============================================================
+    // HIDE / CLEANUP
+    // ============================================================
 
     public static void Hide()
     {
-        if (_btn != null)
-        {
-            Object.Destroy(_btn);
-            _btn = null;
-        }
+        // Membatalkan semua callback request yang belum selesai.
+        _requestVersion++;
+
+        RemoveButton();
 
         _cachedChallenge = null;
+        _isOpening = false;
     }
 
-    static IEnumerator FadeIn(GameObject go)
+    private static void RemoveButton()
+    {
+        ScreenManager manager = ScreenManager.Instance;
+
+        if (manager != null)
+        {
+            if (_pulseCoroutine != null)
+                manager.StopCoroutine(_pulseCoroutine);
+
+            if (_fadeCoroutine != null)
+                manager.StopCoroutine(_fadeCoroutine);
+        }
+
+        _pulseCoroutine = null;
+        _fadeCoroutine = null;
+
+        if (_btn != null)
+            Object.Destroy(_btn);
+
+        _btn = null;
+        _buttonCanvas = null;
+    }
+
+    // ============================================================
+    // FADE ANIMATION
+    // ============================================================
+
+    private static IEnumerator FadeIn(GameObject go)
     {
         if (go == null)
             yield break;
 
-        CanvasGroup cg = go.AddComponent<CanvasGroup>();
+        CanvasGroup cg = go.GetComponent<CanvasGroup>();
+
+        if (cg == null)
+            cg = go.AddComponent<CanvasGroup>();
 
         if (cg == null)
             yield break;
@@ -214,24 +375,41 @@ public static class FloatingChallengeButton
 
         float t = 0f;
 
-        while (t < 0.4f && go != null && cg != null)
+        while (t < 0.4f &&
+               go != null &&
+               cg != null &&
+               _btn == go)
         {
             t += Time.deltaTime;
-            cg.alpha = t / 0.4f;
+            cg.alpha = Mathf.Clamp01(t / 0.4f);
 
             yield return null;
         }
+
+        if (go != null && cg != null && _btn == go)
+            cg.alpha = 1f;
+
+        _fadeCoroutine = null;
     }
 
-    static IEnumerator PulseAnim(Transform t)
-    {
-        while (t != null)
-        {
-            float s = 1f + Mathf.Sin(Time.time * 2.5f) * 0.06f;
+    // ============================================================
+    // PULSE ANIMATION
+    // ============================================================
 
-            t.localScale = Vector3.one * s;
+    private static IEnumerator PulseAnim(Transform target)
+    {
+        while (target != null &&
+               _btn != null &&
+               target.gameObject == _btn)
+        {
+            float scale =
+                1f + Mathf.Sin(Time.time * 2.5f) * 0.06f;
+
+            target.localScale = Vector3.one * scale;
 
             yield return null;
         }
+
+        _pulseCoroutine = null;
     }
 }

@@ -1415,29 +1415,32 @@ public class RegisterPinScreen : BaseScreen
         }
     }
 
-IEnumerator AnimateButtonPress(Transform target)
-{
-    if (target == null || screenObj == null)
-        yield break;
 
-    Vector3 original = target.localScale;
+    IEnumerator AnimateButtonPress(Transform target)
+    {
+        if (target == null || screenObj == null)
+            yield break;
 
-    target.localScale = original * .91f;
+        Vector3 original = target.localScale;
 
-    yield return new WaitForSeconds(.09f);
+        target.localScale = original * 0.91f;
 
-    if (target == null || screenObj == null)
-        yield break;
+        yield return new WaitForSeconds(0.09f);
 
-    target.localScale = original * 1.04f;
+        // Pastikan objek masih tersedia setelah menunggu.
+        if (target == null || screenObj == null)
+            yield break;
 
-    yield return new WaitForSeconds(.07f);
+        target.localScale = original * 1.04f;
 
-    if (target == null || screenObj == null)
-        yield break;
+        yield return new WaitForSeconds(0.07f);
 
-    target.localScale = original;
-}
+        if (target == null || screenObj == null)
+            yield break;
+
+        target.localScale = original;
+    }
+
 
     // ============================================================
     // STEP INDICATOR
