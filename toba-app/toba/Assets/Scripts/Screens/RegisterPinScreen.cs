@@ -1677,6 +1677,8 @@ public class RegisterPinScreen : BaseScreen
                 device_id = deviceID
             };
 
+        Debug.Log("[REGISTER] OnDaftarPressed terpanggil. Mengirim POST /register.");
+
         APIManager.Instance.PostRequest(
             "/register",
             JsonUtility.ToJson(req),
@@ -1739,8 +1741,12 @@ public class RegisterPinScreen : BaseScreen
             },
             (err) =>
             {
+                Debug.LogError("[REGISTER] Gagal POST /register: " + err);
+
                 ShowStatus(
-                    "Koneksi gagal. Cek internet."
+                    string.IsNullOrWhiteSpace(err)
+                        ? "Registrasi gagal. Detail error kosong."
+                        : err
                 );
             }
         );

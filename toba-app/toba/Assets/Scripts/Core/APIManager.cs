@@ -126,6 +126,7 @@ public class APIManager : MonoBehaviour
             : WS_URL.TrimEnd('/');
     }
 
+
     private bool TryBuildApiUrl(
         string endpoint,
         out string url,
@@ -141,14 +142,19 @@ public class APIManager : MonoBehaviour
         }
 
         string value = endpoint.Trim();
-        Uri absoluteUri;
 
-        if (Uri.TryCreate(value, UriKind.Absolute, out absoluteUri))
+        // 1. Jika endpoint sudah berupa URL HTTP/HTTPS.
+        bool isHttpUrl =
+            value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
+
+        if (isHttpUrl)
         {
-            if (absoluteUri.Scheme != Uri.UriSchemeHttp &&
-                absoluteUri.Scheme != Uri.UriSchemeHttps)
+            Uri absoluteUri;
+
+            if (!Uri.TryCreate(value, UriKind.Absolute, out absoluteUri))
             {
-                error = "Protokol alamat server tidak didukung.";
+                error = "Alamat server tidak valid.";
                 return false;
             }
 
@@ -156,32 +162,48 @@ public class APIManager : MonoBehaviour
             return true;
         }
 
+        // 2. Tolak protokol selain HTTP/HTTPS.
+        if (value.Contains("://"))
+        {
+            error = "Protokol alamat server tidak didukung.";
+            return false;
+        }
+
+        // 3. Periksa BASE_URL.
         if (string.IsNullOrWhiteSpace(BASE_URL))
         {
             error = "Alamat server belum dikonfigurasi.";
             return false;
         }
 
-        url = BASE_URL.TrimEnd('/') + "/" + value.TrimStart('/');
+        string baseUrl = BASE_URL.Trim().TrimEnd('/');
+
+        Uri baseUri;
+
+        if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out baseUri) ||
+            (baseUri.Scheme != Uri.UriSchemeHttp &&
+            baseUri.Scheme != Uri.UriSchemeHttps))
+        {
+            error = "Konfigurasi alamat server tidak valid.";
+            return false;
+        }
+
+        // 4. Gabungkan BASE_URL dengan endpoint relatif.
+        string finalUrl =
+            baseUrl + "/" + value.TrimStart('/');
 
         Uri finalUri;
-        if (!Uri.TryCreate(url, UriKind.Absolute, out finalUri))
+
+        if (!Uri.TryCreate(finalUrl, UriKind.Absolute, out finalUri))
         {
-            url = null;
             error = "Alamat permintaan tidak dapat dibaca.";
             return false;
         }
 
-        if (finalUri.Scheme != Uri.UriSchemeHttp &&
-            finalUri.Scheme != Uri.UriSchemeHttps)
-        {
-            url = null;
-            error = "Protokol alamat server tidak didukung.";
-            return false;
-        }
-
+        url = finalUri.ToString();
         return true;
     }
+
 
     private bool CanStartRequest(Action<string> onError)
     {

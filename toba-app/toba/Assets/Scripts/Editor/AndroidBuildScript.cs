@@ -12,7 +12,7 @@ public class AndroidBuildScript
     private const string APP_NAME        = "TOBA";
     private const string BUNDLE_ID       = "com.toba.budayabatak";
     private const string VERSION         = "1.0.0";
-    private const int    VERSION_CODE    = 1;
+    private const int    VERSION_CODE    = 14;
     private const string OUTPUT_FOLDER   = "Builds/Android";
     private const string OUTPUT_FILENAME = "TOBA_v1.0.0.apk";
 

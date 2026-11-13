@@ -122,6 +122,18 @@ public class MainApp : MonoBehaviour
         if (ScreenManager.Instance == null || safeAreaRoot == null)
             return;
 
+        
+        // RESET SESI LAMA SEKALI SAJA
+        if (PlayerPrefs.GetInt("TOBA_InitialSessionReset_v1", 0) == 0)
+        {
+            PlayerPrefs.DeleteKey("UserToken");
+            PlayerPrefs.DeleteKey("SavedUsername");
+            PlayerPrefs.DeleteKey("PlayerID");
+
+            PlayerPrefs.SetInt("TOBA_InitialSessionReset_v1", 1);
+            PlayerPrefs.Save();
+        }
+
         bool hasSession =
             PlayerPrefs.HasKey("UserToken") &&
             PlayerPrefs.HasKey("SavedUsername");
