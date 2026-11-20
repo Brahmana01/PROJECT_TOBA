@@ -11,9 +11,20 @@ export interface Player {
 }
 
 export interface Location {
-  id: number; name: string; description: string; image: string;
-  reward_xp: number; reward_stars: number; question_count: number;
-  minimum_correct: number; level_order: number; is_active: boolean; created_at: string;
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  reward_xp: number;
+  reward_stars: number;
+  question_count: number;
+  minimum_correct: number;
+  active_question_count: number;
+  total_question_count: number;
+  session_question_count: number;
+  level_order: number;
+  is_active: boolean;
+  created_at: string;
 }
 
 export interface LocationFact {
@@ -30,8 +41,15 @@ export interface LocationQuestion {
 }
 
 export interface TriviaCategory {
-  id: number; name: string; description: string;
-  question_count: number; display_order: number; is_active: boolean;
+  id: number;
+  name: string;
+  description: string;
+  question_count: number;
+  active_question_count: number;
+  total_question_count: number;
+  session_question_count: number;
+  display_order: number;
+  is_active: boolean;
 }
 
 export interface TriviaQuestion {

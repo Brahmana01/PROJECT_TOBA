@@ -1,7 +1,10 @@
 package battle
 
 import (
-	"toba-backend/services/battle"
+	"strings"
+
+	"toba-backend/middleware"
+	battleService "toba-backend/services/battle"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,16 +15,20 @@ func CreateRoom(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
 		})
 	}
 
-	result, err := battle.CreateBattleRoom(input.PlayerID)
-
+	playerID, err := middleware.RequirePlayerID(c, input.PlayerID)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": err.Error(),
+		return err
+	}
+
+	result, err := battleService.CreateBattleRoom(playerID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal membuat battle room",
 		})
 	}
 
@@ -35,14 +42,26 @@ func JoinRoom(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
 		})
 	}
 
-	result, message, status := battle.JoinBattleRoom(
-		input.PlayerID,
-		input.RoomCode,
+	playerID, err := middleware.RequirePlayerID(c, input.PlayerID)
+	if err != nil {
+		return err
+	}
+
+	roomCode := strings.ToUpper(strings.TrimSpace(input.RoomCode))
+	if roomCode == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Kode room wajib diisi",
+		})
+	}
+
+	result, message, status := battleService.JoinBattleRoom(
+		playerID,
+		roomCode,
 	)
 
 	if result == nil {
@@ -51,12 +70,27 @@ func JoinRoom(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(result)
+	return c.Status(status).JSON(result)
 }
 
 func GetRoomStatus(c *fiber.Ctx) error {
-	result, message, status := battle.GetBattleRoomStatus(
-		c.Params("code"),
+	playerID, ok := middleware.AuthenticatedPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
+		})
+	}
+
+	roomCode := strings.TrimSpace(c.Params("code"))
+	if roomCode == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Kode room tidak valid",
+		})
+	}
+
+	result, message, status := battleService.GetBattleRoomStatus(
+		roomCode,
+		playerID,
 	)
 
 	if result == nil {
@@ -65,15 +99,38 @@ func GetRoomStatus(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(result)
+	return c.Status(status).JSON(result)
 }
 
+// Fungsi ini belum didaftarkan pada route aktif.
+// Tetap gunakan pemeriksaan kepemilikan jika nantinya digunakan.
 func GetRoomQuestions(c *fiber.Ctx) error {
-	questions := battle.GetRoomBattleQuestions(
-		c.Params("code"),
+	playerID, ok := middleware.AuthenticatedPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
+		})
+	}
+
+	roomCode := strings.TrimSpace(c.Query("room_code"))
+	if roomCode == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "room_code diperlukan",
+		})
+	}
+
+	result, message, status := battleService.GetBattleRoomStatus(
+		roomCode,
+		playerID,
 	)
 
+	if result == nil {
+		return c.Status(status).JSON(fiber.Map{
+			"message": message,
+		})
+	}
+
 	return c.JSON(fiber.Map{
-		"questions": questions,
+		"questions": result.Questions,
 	})
 }

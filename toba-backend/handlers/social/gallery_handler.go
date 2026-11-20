@@ -1,23 +1,25 @@
 package social
 
 import (
-	"strconv"
-
+	"toba-backend/middleware"
 	"toba-backend/models"
-	"toba-backend/services/player"
+	playerService "toba-backend/services/player"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetPlayerGallery(c *fiber.Ctx) error {
-	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
-	if err != nil || id == 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Player ID tidak valid",
-		})
+	playerID, err := middleware.RequirePathPlayerID(
+		c,
+		c.Params("id"),
+	)
+
+	if err != nil {
+		return err
 	}
 
-	result, err := player.GetPlayerGallery(uint(id))
+	result, err := playerService.GetPlayerGallery(playerID)
+
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal mengambil gallery",

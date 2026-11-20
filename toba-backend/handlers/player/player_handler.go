@@ -1,30 +1,33 @@
 package player
 
 import (
-	"strconv"
+	"strings"
 
-	"toba-backend/services/player"
+	"toba-backend/middleware"
+	playerService "toba-backend/services/player"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // ============================================================
 // PROFILE
+// GET /api/profile/:id
 // ============================================================
 
 func GetProfile(c *fiber.Ctx) error {
-	playerID := c.Params("id")
+	playerID, err := middleware.RequirePathPlayerID(
+		c,
+		c.Params("id"),
+	)
 
-	id, err := strconv.ParseUint(playerID, 10, 64)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Player ID tidak valid",
-		})
+		return err
 	}
 
-	result, err := player.GetProfile(uint(id))
+	result, err := playerService.GetProfile(playerID)
+
 	if err != nil {
-		return c.Status(404).JSON(fiber.Map{
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Player tidak ditemukan",
 		})
 	}
@@ -34,6 +37,7 @@ func GetProfile(c *fiber.Ctx) error {
 
 // ============================================================
 // FCM TOKEN
+// POST /api/player/fcm-token
 // ============================================================
 
 func UpdateFCMToken(c *fiber.Ctx) error {
@@ -45,31 +49,49 @@ func UpdateFCMToken(c *fiber.Ctx) error {
 	var input Input
 
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Invalid",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Input tidak valid",
 		})
 	}
 
-	err := player.UpdateFCMToken(input.PlayerID, input.FCMToken)
+	playerID, err := middleware.RequirePlayerID(
+		c,
+		input.PlayerID,
+	)
+
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return err
+	}
+
+	token := strings.TrimSpace(input.FCMToken)
+
+	if token == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "FCM token tidak boleh kosong",
+		})
+	}
+
+	if err := playerService.UpdateFCMToken(playerID, token); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal memperbarui FCM token",
 		})
 	}
 
 	return c.JSON(fiber.Map{
-		"message": "FCM token updated",
+		"message": "FCM token berhasil diperbarui",
 	})
 }
 
 // ============================================================
 // LEADERBOARD
+// GET /api/leaderboard
 // ============================================================
 
 func GetLeaderboard(c *fiber.Ctx) error {
-	result, err := player.GetLeaderboard()
+	result, err := playerService.GetLeaderboard()
+
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal mengambil leaderboard",
 		})
 	}

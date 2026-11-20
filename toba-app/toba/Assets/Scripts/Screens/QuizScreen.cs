@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class QuizScreen : BaseScreen
 {
     private LocationData locationData;
+    private string sessionID;
     private List<QuizQuestionData> questions = new List<QuizQuestionData>();
     private int currentIndex = 0;
     private int correctCount = 0;
@@ -673,7 +674,6 @@ public class QuizScreen : BaseScreen
         {
             if (questionTxt != null)
                 questionTxt.text = "Data lokasi tidak tersedia.";
-
             return;
         }
 
@@ -681,24 +681,14 @@ public class QuizScreen : BaseScreen
         {
             if (questionTxt != null)
                 questionTxt.text = "Layanan belum tersedia. Silakan coba lagi.";
-
-            NetworkManager.Instance?.ShowToast(
-                "Layanan belum tersedia.",
-                true
-            );
-
+            NetworkManager.Instance?.ShowToast("Layanan belum tersedia.", true);
             return;
         }
 
         LoadingOverlay.Show(screenObj.transform, "Memuat soal...");
 
-        int locationID = locationData.id;
-        string cached = CacheManager.GetCachedLocationQuiz(locationID);
-
-        APIManager.Instance.GetRequestWithCache(
-            "/locations/" + locationID + "/quiz",
-            cached,
-
+        APIManager.Instance.GetRequest(
+            "/locations/" + locationData.id + "/quiz",
             response =>
             {
                 if (!isScreenActive || screenObj == null)
@@ -708,111 +698,66 @@ public class QuizScreen : BaseScreen
                 }
 
                 LoadingOverlay.Hide();
-
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
-                    {
-                        throw new System.FormatException(
-                            "Response kuis kosong."
-                        );
-                    }
+                        throw new System.FormatException("Response kuis kosong.");
 
-                    QuizResponse res =
-                        JsonUtility.FromJson<QuizResponse>(response);
+                    QuizResponse res = JsonUtility.FromJson<QuizResponse>(response);
+                    if (res == null || string.IsNullOrWhiteSpace(res.session_id) || res.questions == null)
+                        throw new System.FormatException("Session atau struktur response kuis tidak valid.");
 
-                    if (res == null || res.questions == null)
-                    {
-                        throw new System.FormatException(
-                            "Struktur response kuis tidak valid."
-                        );
-                    }
-
-                    res.questions.RemoveAll(question =>
-                        question == null ||
-                        string.IsNullOrWhiteSpace(question.question) ||
-                        question.options == null
-                    );
+                    res.questions.RemoveAll(q =>
+                        q == null || string.IsNullOrWhiteSpace(q.question) ||
+                        q.options == null || q.options.Count != 4);
 
                     foreach (QuizQuestionData question in res.questions)
                     {
                         question.options.RemoveAll(option =>
-                            option == null ||
-                            string.IsNullOrWhiteSpace(option.option_text)
-                        );
+                            option == null || string.IsNullOrWhiteSpace(option.option_text));
                     }
 
-                    res.questions.RemoveAll(question =>
-                        question.options.Count < 2 ||
-                        !question.options.Exists(option => option.is_correct)
-                    );
+                    res.questions.RemoveAll(q => q.options == null || q.options.Count != 4);
+                    if (res.questions.Count != 10)
+                        throw new System.FormatException("Server harus memberikan tepat 10 soal valid.");
 
-                    if (res.questions.Count == 0)
-                    {
-                        throw new System.FormatException(
-                            "Tidak ada soal valid."
-                        );
-                    }
-
+                    sessionID = res.session_id;
                     questions = res.questions;
                     totalQuestions = questions.Count;
-                    currentIndex = 0;
                     correctCount = 0;
 
-                    // Cache hanya menyimpan response yang sudah tervalidasi.
-                    try
+                    int answeredCount = res.answered_questions != null
+                        ? res.answered_questions.Count
+                        : 0;
+                    if (answeredCount > totalQuestions)
+                        throw new System.FormatException("Jumlah jawaban session melebihi jumlah soal.");
+
+                    for (int i = 0; i < answeredCount; i++)
                     {
-                        CacheManager.CacheLocationQuiz(locationID, response);
-                    }
-                    catch (System.Exception cacheException)
-                    {
-                        Debug.LogWarning(
-                            "[Quiz] Gagal menyimpan cache: " +
-                            cacheException.Message
-                        );
+                        QuizAnswerResponse savedAnswer = res.answered_questions[i];
+                        if (savedAnswer == null || savedAnswer.question_id != questions[i].id)
+                            throw new System.FormatException("Urutan jawaban session tidak sesuai snapshot soal.");
+                        if (savedAnswer.is_correct)
+                            correctCount++;
                     }
 
-                    ShowQuestion(0);
+                    currentIndex = answeredCount;
+                    if (currentIndex >= totalQuestions)
+                        GoToResult();
+                    else
+                        ShowQuestion(currentIndex);
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning(
-                        "[Quiz] Data soal tidak valid: " + ex.Message
-                    );
-
-                    // Tandai cache soal lokasi ini sebagai kosong agar
-                    // response lama yang rusak tidak dipakai kembali.
-                    try
-                    {
-                        CacheManager.CacheLocationQuiz(
-                            locationID,
-                            string.Empty
-                        );
-                    }
-                    catch (System.Exception cacheException)
-                    {
-                        Debug.LogWarning(
-                            "[Quiz] Gagal memperbarui cache: " +
-                            cacheException.Message
-                        );
-                    }
-
+                    Debug.LogWarning("[Quiz] Data soal tidak valid: " + ex.Message);
                     questions.Clear();
                     totalQuestions = 0;
-
+                    sessionID = null;
                     if (questionTxt != null)
-                    {
-                        questionTxt.text =
-                            "Soal belum tersedia atau data tidak valid.";
-                    }
-
-                    NetworkManager.Instance?.ShowToast(
-                        "Gagal membaca soal. Silakan muat ulang.",
-                        true
-                    );
+                        questionTxt.text = "Soal belum tersedia atau data tidak valid.";
+                    NetworkManager.Instance?.ShowToast("Gagal membaca soal. Silakan muat ulang.", true);
                 }
             },
-
             err =>
             {
                 if (!isScreenActive || screenObj == null)
@@ -820,21 +765,10 @@ public class QuizScreen : BaseScreen
                     LoadingOverlay.Hide();
                     return;
                 }
-
                 LoadingOverlay.Hide();
-
                 if (questionTxt != null)
-                {
-                    questionTxt.text =
-                        "Gagal memuat soal.\\n" + err;
-                }
-
-                NetworkManager.Instance?.ShowToast(
-                    string.IsNullOrWhiteSpace(err)
-                        ? "Gagal memuat soal."
-                        : err,
-                    true
-                );
+                    questionTxt.text = "Gagal memuat soal.\n" + err;
+                NetworkManager.Instance?.ShowToast("Gagal memuat soal. Periksa koneksi.", true);
             }
         );
     }
@@ -1263,121 +1197,129 @@ public class QuizScreen : BaseScreen
         int selIdx,
         QuizQuestionData question)
     {
-        if (!isScreenActive ||
-            screenObj == null ||
-            isAnswered ||
-            selected == null ||
-            question == null)
+        if (!isScreenActive || screenObj == null || isAnswered || selected == null || question == null)
+            return;
+
+        SubmitAnswerToServer(question, selected.id, selIdx);
+    }
+
+    private void SubmitAnswerToServer(
+        QuizQuestionData question,
+        int selectedOptionID,
+        int selectedIndex)
+    {
+        if (!isScreenActive || screenObj == null || question == null || isAnswered)
+            return;
+
+        if (string.IsNullOrWhiteSpace(sessionID) || APIManager.Instance == null)
         {
+            NetworkManager.Instance?.ShowToast("Session kuis tidak tersedia. Muat ulang kuis.", true);
             return;
         }
 
         isAnswered = true;
         StopTimerCoroutine();
 
-        bool correct = selected.is_correct;
-
-        if (correct)
-            correctCount++;
-
-        HapticManager.Instance?.Vibrate(
-            correct ? HapticType.Success : HapticType.Error
-        );
-
-        SoundManager.Instance?.PlaySFX(
-            correct ? "sfx_correct" : "sfx_wrong"
-        );
-
-        SetCharacterExpression(correct);
-        HighlightOptions(question, selIdx);
-
-        if (ScreenManager.Instance != null)
+        QuizAnswerRequest request = new QuizAnswerRequest
         {
-            feedbackCo = ScreenManager.Instance.StartCoroutine(
-                ShowFeedbackThenNext(
-                    correct,
-                    question.explanation ?? string.Empty
-                )
-            );
-        }
-        else
-        {
-            Debug.LogWarning(
-                "[Quiz] ScreenManager tidak tersedia untuk menampilkan feedback."
-            );
-        }
+            session_id = sessionID,
+            location_id = locationData.id,
+            question_id = question.id,
+            selected_option_id = selectedOptionID
+        };
+
+        APIManager.Instance.PostRequest(
+            "/locations/answer",
+            JsonUtility.ToJson(request),
+            response =>
+            {
+                if (!isScreenActive || screenObj == null)
+                    return;
+
+                try
+                {
+                    QuizAnswerResponse answer = JsonUtility.FromJson<QuizAnswerResponse>(response);
+                    if (answer == null || answer.question_id != question.id || answer.correct_option_id <= 0)
+                        throw new System.FormatException("Response validasi jawaban tidak sesuai.");
+
+                    if (answer.is_correct)
+                        correctCount++;
+
+                    HapticManager.Instance?.Vibrate(answer.is_correct ? HapticType.Success : HapticType.Error);
+                    SoundManager.Instance?.PlaySFX(answer.is_correct ? "sfx_correct" : "sfx_wrong");
+                    SetCharacterExpression(answer.is_correct);
+                    HighlightOptions(question, selectedIndex, answer.correct_option_id);
+
+                    if (ScreenManager.Instance != null)
+                    {
+                        feedbackCo = ScreenManager.Instance.StartCoroutine(
+                            ShowFeedbackThenNext(answer.is_correct, answer.explanation ?? string.Empty));
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("[Quiz] Gagal membaca validasi jawaban: " + ex.Message);
+                    isAnswered = false;
+                    timeRemaining = 5f;
+                    if (ScreenManager.Instance != null)
+                        timerCo = ScreenManager.Instance.StartCoroutine(RunTimer());
+                    NetworkManager.Instance?.ShowToast("Jawaban belum dapat diverifikasi. Coba pilih lagi.", true);
+                }
+            },
+            error =>
+            {
+                if (!isScreenActive || screenObj == null)
+                    return;
+                isAnswered = false;
+                timeRemaining = 5f;
+                if (ScreenManager.Instance != null)
+                    timerCo = ScreenManager.Instance.StartCoroutine(RunTimer());
+                NetworkManager.Instance?.ShowToast("Jawaban belum tersimpan. Periksa koneksi lalu pilih lagi.", true);
+                Debug.LogWarning("[Quiz] Submit jawaban gagal: " + error);
+            }
+        );
     }
+
 
     private void HighlightOptions(
         QuizQuestionData question,
-        int selIdx)
+        int selectedIndex,
+        int correctOptionID)
     {
-        if (optionsContainer == null ||
-            question == null ||
-            question.options == null)
+        if (optionsContainer == null || question == null || question.options == null)
             return;
 
-        for (int i = 0;
-             i < optionsContainer.transform.childCount;
-             i++)
+        for (int i = 0; i < optionsContainer.transform.childCount; i++)
         {
-            if (i >= question.options.Count ||
-                question.options[i] == null)
-            {
+            if (i >= question.options.Count || question.options[i] == null)
                 continue;
-            }
 
-            Transform child =
-                optionsContainer.transform.GetChild(i);
-
+            Transform child = optionsContainer.transform.GetChild(i);
             Transform faceTr = child.Find("Face");
-
-            Image face =
-                faceTr != null
-                    ? faceTr.GetComponent<Image>()
-                    : null;
-
-            Transform textTr =
-                faceTr != null
-                    ? faceTr.Find("OptionText")
-                    : null;
-
-            TextMeshProUGUI txt =
-                textTr != null
-                    ? textTr.GetComponent<TextMeshProUGUI>()
-                    : null;
+            Image face = faceTr != null ? faceTr.GetComponent<Image>() : null;
+            Transform textTr = faceTr != null ? faceTr.Find("OptionText") : null;
+            TextMeshProUGUI txt = textTr != null ? textTr.GetComponent<TextMeshProUGUI>() : null;
 
             if (face != null)
             {
-                if (question.options[i].is_correct)
+                if (question.options[i].id == correctOptionID)
                 {
                     face.color = TOBATheme.OptionCorrect;
-
-                    if (txt != null)
-                        txt.color = Color.white;
+                    if (txt != null) txt.color = Color.white;
                 }
-                else if (i == selIdx)
+                else if (i == selectedIndex)
                 {
                     face.color = TOBATheme.OptionWrong;
-
-                    if (txt != null)
-                        txt.color = Color.white;
+                    if (txt != null) txt.color = Color.white;
                 }
                 else
                 {
-                    face.color = new Color(
-                        TOBATheme.CardBG.r,
-                        TOBATheme.CardBG.g,
-                        TOBATheme.CardBG.b,
-                        0.6f
-                    );
+                    face.color = new Color(TOBATheme.CardBG.r, TOBATheme.CardBG.g, TOBATheme.CardBG.b, 0.6f);
                 }
             }
 
             Button btn = child.GetComponent<Button>();
-
-            if (btn != null)
-                btn.interactable = false;
+            if (btn != null) btn.interactable = false;
         }
     }
 
@@ -1554,30 +1496,8 @@ public class QuizScreen : BaseScreen
             yield break;
         }
 
-        isAnswered = true;
-
-        HapticManager.Instance?.Vibrate(HapticType.Error);
-        SetCharacterExpression(false);
-
         QuizQuestionData question = questions[currentIndex];
-
-        HighlightOptions(question, -1);
-
-        if (ScreenManager.Instance != null)
-        {
-            feedbackCo = ScreenManager.Instance.StartCoroutine(
-                ShowFeedbackThenNext(
-                    false,
-                    "Waktu habis! " + (question.explanation ?? string.Empty)
-                )
-            );
-        }
-        else
-        {
-            Debug.LogWarning(
-                "[Quiz] ScreenManager tidak tersedia setelah waktu habis."
-            );
-        }
+        SubmitAnswerToServer(question, 0, -1);
     }
 
 
@@ -1844,7 +1764,8 @@ public class QuizScreen : BaseScreen
                 container,
                 locationData,
                 correctCount,
-                totalQuestions
+                totalQuestions,
+                sessionID
             )
         );
     }

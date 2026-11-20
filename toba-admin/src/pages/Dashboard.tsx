@@ -109,14 +109,6 @@ const FeedItem = ({ icon, title, desc, time }: any) => (
   </div>
 );
 
-// ── ACTION BUTTON ─────────────────────────────────────────
-const ActionButton = ({ label, icon, onClick }: any) => (
-  <div className="action-btn-luxury" onClick={onClick}>
-    <div className="btn-icon">{icon}</div>
-    <span>{label}</span>
-  </div>
-);
-
 // ── MAIN DASHBOARD ────────────────────────────────────────
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();

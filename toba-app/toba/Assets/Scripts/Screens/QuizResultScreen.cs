@@ -1,4 +1,4 @@
-
+﻿
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -8,6 +8,7 @@ using System.Collections;
 public class QuizResultScreen : BaseScreen
 {
     private LocationData locationData;
+    private string sessionID;
     private int correctCount;
     private int totalQuestions;
     private bool isSubmitted = false;
@@ -30,12 +31,14 @@ public class QuizResultScreen : BaseScreen
         Transform parent,
         LocationData loc,
         int correct,
-        int total
+        int total,
+        string quizSessionID
     ) : base(parent, "QuizResult")
     {
         locationData = loc;
         correctCount = correct;
         totalQuestions = total;
+        sessionID = quizSessionID;
     }
 
     // =========================================================
@@ -1027,7 +1030,8 @@ public class QuizResultScreen : BaseScreen
 
         if (locationData == null ||
             locationData.id <= 0 ||
-            playerID <= 0)
+            playerID <= 0 ||
+            string.IsNullOrWhiteSpace(sessionID))
         {
             Debug.LogWarning(
                 "[QuizResult] Data pemain atau lokasi tidak valid."
@@ -1039,9 +1043,8 @@ public class QuizResultScreen : BaseScreen
 
         SubmitQuizRequest req = new SubmitQuizRequest
         {
-            player_id = playerID,
-            location_id = locationData.id,
-            correct_count = correctCount
+            session_id = sessionID,
+            location_id = locationData.id
         };
 
         string payload = JsonUtility.ToJson(req);

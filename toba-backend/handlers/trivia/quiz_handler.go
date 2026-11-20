@@ -1,54 +1,105 @@
 package trivia
 
 import (
+	"log"
+
+	playerprogression "toba-backend/services/player"
 	"toba-backend/services/trivia"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetTriviaQuiz(c *fiber.Ctx) error {
-	category, questions, message, status := trivia.GetTriviaQuiz(c.Params("id"))
+func currentPlayerID(c *fiber.Ctx) (uint, bool) {
+	playerID, ok := c.Locals("player_id").(uint)
+	return playerID, ok && playerID > 0
+}
 
-	if category == nil {
-		return c.Status(status).JSON(fiber.Map{
-			"message": message,
+func GetTriviaQuiz(c *fiber.Ctx) error {
+	playerID, ok := currentPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
 		})
 	}
 
+	category, questions, message, status :=
+		trivia.GetTriviaQuiz(playerID, c.Params("id"))
+	if category == nil {
+		return c.Status(status).JSON(fiber.Map{"message": message})
+	}
+
 	return c.JSON(fiber.Map{
-		"category":  category,
-		"questions": questions,
+		"session_id":         category.SessionID,
+		"category":           category,
+		"questions":          questions,
+		"answered_questions": category.AnsweredQuestions,
 	})
 }
 
-func SubmitTrivia(c *fiber.Ctx) error {
-	type SubmitInput struct {
-		PlayerID   uint `json:"player_id"`
-		CategoryID uint `json:"category_id"`
-		Correct    int  `json:"correct_count"`
-		Wrong      int  `json:"wrong_count"`
+func SubmitTriviaAnswer(c *fiber.Ctx) error {
+	playerID, ok := currentPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
+		})
 	}
 
-	input := new(SubmitInput)
+	var input struct {
+		SessionID        string `json:"session_id"`
+		CategoryID       uint   `json:"category_id"`
+		QuestionID       uint   `json:"question_id"`
+		SelectedOptionID uint   `json:"selected_option_id"`
+	}
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Input jawaban tidak valid",
+		})
+	}
 
-	if err := c.BodyParser(input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Input tidak valid",
+	result, message, status := trivia.SubmitTriviaAnswer(
+		playerID,
+		input.CategoryID,
+		input.SessionID,
+		input.QuestionID,
+		input.SelectedOptionID,
+	)
+	if result == nil {
+		return c.Status(status).JSON(fiber.Map{"message": message})
+	}
+	return c.Status(status).JSON(result)
+}
+
+func SubmitTrivia(c *fiber.Ctx) error {
+	playerID, ok := currentPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
+		})
+	}
+
+	var input struct {
+		CategoryID uint   `json:"category_id"`
+		SessionID  string `json:"session_id"`
+	}
+	if err := c.BodyParser(&input); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Input submit tidak valid",
 		})
 	}
 
 	result, message, status := trivia.SubmitTrivia(
-		input.PlayerID,
+		playerID,
 		input.CategoryID,
-		input.Correct,
-		input.Wrong,
+		input.SessionID,
 	)
-
 	if result == nil {
-		return c.Status(status).JSON(fiber.Map{
-			"message": message,
-		})
+		return c.Status(status).JSON(fiber.Map{"message": message})
 	}
-
-	return c.JSON(result)
+	newlyUnlocked, achievementErr := playerprogression.CheckAndUnlockAchievements(playerID)
+	if achievementErr != nil {
+		log.Printf("[Achievement] Gagal memeriksa setelah Trivia: %v", achievementErr)
+	} else {
+		result["newly_unlocked_achievements"] = newlyUnlocked
+	}
+	return c.Status(status).JSON(result)
 }

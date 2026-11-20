@@ -7,5 +7,7 @@ import (
 )
 
 func RegisterLocationRoutes(authGroup fiber.Router) {
+	authGroup.Get("/locations/:id/quiz", location.GetLocationQuiz)
+	authGroup.Post("/locations/answer", location.SubmitLocationAnswer)
 	authGroup.Post("/locations/submit", location.SubmitQuiz)
 }

@@ -47,6 +47,7 @@ type PlayerLocationProgress struct {
 	LocationID    uint       `json:"location_id"`
 	AttemptCount  int        `json:"attempt_count"`
 	Score         int        `json:"score"`
+	BestScore     int        `json:"best_score"`
 	CorrectAnswer int        `json:"correct_answer"`
 	WrongAnswer   int        `json:"wrong_answer"`
 	XPEarned      int        `json:"xp_earned"`

@@ -1,26 +1,39 @@
 package battle
 
 import (
-	"toba-backend/services/battle"
+	"toba-backend/middleware"
+	battleService "toba-backend/services/battle"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func FinishBattle(c *fiber.Ctx) error {
-	type Input struct {
+	var input struct {
 		RoomID   uint `json:"room_id"`
 		PlayerID uint `json:"player_id"`
 	}
 
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
 		})
 	}
 
-	result, message, status := battle.FinishBattle(input.RoomID)
+	if input.RoomID == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Room ID wajib diisi",
+		})
+	}
+
+	playerID, err := middleware.RequirePlayerID(c, input.PlayerID)
+	if err != nil {
+		return err
+	}
+
+	result, message, status := battleService.FinishBattle(
+		input.RoomID,
+		playerID,
+	)
 
 	if result == nil {
 		return c.Status(status).JSON(fiber.Map{
@@ -28,26 +41,35 @@ func FinishBattle(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(result)
+	return c.Status(status).JSON(result)
 }
 
 func DisconnectBattle(c *fiber.Ctx) error {
-	type Input struct {
+	var input struct {
 		RoomID   uint `json:"room_id"`
 		PlayerID uint `json:"player_id"`
 	}
 
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
 		})
 	}
 
-	winnerID, message, status := battle.DisconnectBattle(
+	if input.RoomID == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Room ID wajib diisi",
+		})
+	}
+
+	playerID, err := middleware.RequirePlayerID(c, input.PlayerID)
+	if err != nil {
+		return err
+	}
+
+	winnerID, message, status := battleService.DisconnectBattle(
 		input.RoomID,
-		input.PlayerID,
+		playerID,
 	)
 
 	if message != "" {

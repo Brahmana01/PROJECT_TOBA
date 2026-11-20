@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -12,6 +12,7 @@ using System.Collections;
 public class TriviaResultScreen : BaseScreen
 {
     private TriviaCategoryData categoryData;
+    private string sessionID;
     private int correctCount;
     private int totalQuestions;
 
@@ -28,12 +29,13 @@ public class TriviaResultScreen : BaseScreen
 
     private static Sprite starSprite;
 
-    public TriviaResultScreen(Transform parent, TriviaCategoryData cat, int correct, int total)
+    public TriviaResultScreen(Transform parent, TriviaCategoryData cat, int correct, int total, string quizSessionID)
         : base(parent, "TriviaResult")
     {
         categoryData = cat;
         correctCount = correct;
         totalQuestions = total;
+        sessionID = quizSessionID;
     }
 
     public override void Show()
@@ -652,7 +654,8 @@ public class TriviaResultScreen : BaseScreen
         if (APIManager.Instance == null ||
             categoryData == null ||
             categoryData.id <= 0 ||
-            playerID <= 0)
+            playerID <= 0 ||
+            string.IsNullOrWhiteSpace(sessionID))
         {
             ShowOfflineResult();
             return;
@@ -660,10 +663,8 @@ public class TriviaResultScreen : BaseScreen
 
         SubmitTriviaRequest request = new SubmitTriviaRequest
         {
-            player_id = playerID,
-            category_id = categoryData.id,
-            correct_count = correctCount,
-            wrong_count = totalQuestions - correctCount
+            session_id = sessionID,
+            category_id = categoryData.id
         };
 
         string jsonPayload = JsonUtility.ToJson(request);

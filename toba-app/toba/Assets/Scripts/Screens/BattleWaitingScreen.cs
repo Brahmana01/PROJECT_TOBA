@@ -13,6 +13,7 @@ public class BattleWaitingScreen : BaseScreen
     private TextMeshProUGUI countdownTxt;
     private Coroutine countdownCoroutine;
     private bool battleStarted = false;
+    private bool keepSocketForBattle = false;
 
     public BattleWaitingScreen(Transform parent, string code, int id, bool host)
         : base(parent, "BattleWaiting")
@@ -109,27 +110,25 @@ public class BattleWaitingScreen : BaseScreen
         countdownCoroutine = ScreenManager.Instance.StartCoroutine(CountdownTimer(300f));
     }
 
+
+
     void ConnectWebSocket()
     {
         if (screenObj == null || APIManager.Instance == null)
             return;
 
-        int playerID = PlayerPrefs.GetInt("PlayerID");
-        string playerName = PlayerPrefs.GetString("SavedUsername", "Player");
+        string token = PlayerPrefs.GetString("UserToken", "");
 
-        if (playerID <= 0)
+        if (string.IsNullOrWhiteSpace(token))
         {
             if (statusTxt != null)
-                statusTxt.text = "Data pemain tidak valid.";
+                statusTxt.text = "Sesi login tidak ditemukan.";
 
             return;
         }
 
         APIManager.Instance.ConnectBattleWS(
             roomCode,
-            playerID,
-            playerName,
-            isHost,
 
             onMessage: msg =>
             {
@@ -140,7 +139,7 @@ public class BattleWaitingScreen : BaseScreen
             onConnected: () =>
             {
                 if (screenObj != null && statusTxt != null)
-                    statusTxt.text = "✅ Terhubung! Menunggu lawan...";
+                    statusTxt.text = "Terhubung! Menunggu lawan...";
             },
 
             onDisconnected: () =>
@@ -149,11 +148,14 @@ public class BattleWaitingScreen : BaseScreen
                     screenObj != null &&
                     statusTxt != null)
                 {
-                    statusTxt.text = "⚠ Koneksi terputus. Mencoba ulang...";
+                    statusTxt.text =
+                        "Koneksi terputus. Menunggu pemulihan koneksi...";
                 }
             }
         );
     }
+
+
     void OnWSMessage(string rawMsg)
     {
         if (screenObj == null || string.IsNullOrWhiteSpace(rawMsg))
@@ -228,7 +230,7 @@ public class BattleWaitingScreen : BaseScreen
                         q.options == null
                     );
 
-                    foreach (QuizQuestionData q in res.questions)
+                    foreach (BattleQuestionData q in res.questions)
                     {
                         q.options.RemoveAll(option =>
                             option == null ||
@@ -237,16 +239,16 @@ public class BattleWaitingScreen : BaseScreen
                     }
 
                     res.questions.RemoveAll(q =>
-                        q.options.Count == 0 ||
-                        !q.options.Exists(option => option.is_correct)
+                        q.options.Count != 4
                     );
 
-                    if (res.questions.Count == 0)
-                        throw new System.FormatException("Soal Battle kosong.");
+                    if (res.questions.Count != 10)
+                        throw new System.FormatException("Battle harus menyediakan tepat 10 soal valid.");
 
-                    // Hentikan countdown, tetapi pertahankan WebSocket
-                    // selama pertandingan berlangsung.
+                    // Hentikan countdown dan serahkan kepemilikan socket
+                    // ke BattleQuizScreen; jangan memicu forfeit saat transisi.
                     StopCountdown();
+                    keepSocketForBattle = true;
 
                     ScreenManager.Instance?.ChangeScreen(
                         new BattleQuizScreen(container, res, isHost)
@@ -332,8 +334,10 @@ public class BattleWaitingScreen : BaseScreen
     public override void Hide()
     {
         battleStarted = true;
+        StopCountdown();
 
-        Cleanup();
+        if (!keepSocketForBattle && APIManager.Instance != null)
+            APIManager.Instance.DisconnectBattleWS();
 
         base.Hide();
     }

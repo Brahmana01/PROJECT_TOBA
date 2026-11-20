@@ -4,6 +4,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 using NativeWebSocket;
+using System.Collections.Generic;
+using System.Collections.Generic;
 
 public class APIManager : MonoBehaviour
 {
@@ -698,178 +700,84 @@ public class APIManager : MonoBehaviour
     // WEBSOCKET BATTLE
     // ============================================================
 
+
+
     public async void ConnectBattleWS(
         string roomCode,
-        int playerID,
-        string playerName,
-        bool isHost,
-        Action<string> onMessage,
-        Action onConnected,
-        Action onDisconnected)
+        System.Action<string> onMessage,
+        System.Action onConnected,
+        System.Action onDisconnected)
     {
-        int connectionId = ++wsConnectionVersion;
-
-        WebSocket previousSocket = battleSocket;
-        battleSocket = null;
-        wsConnected = false;
-
-        if (previousSocket != null)
+        if (battleSocket != null)
         {
-            try
-            {
-                await previousSocket.Close();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning("[WS] Koneksi sebelumnya gagal ditutup: " + ex.Message);
-            }
-        }
-
-        if (connectionId != wsConnectionVersion || this == null)
-            return;
-
-        if (string.IsNullOrWhiteSpace(WS_URL) ||
-            string.IsNullOrWhiteSpace(roomCode) ||
-            playerID <= 0)
-        {
-            Debug.LogWarning("[WS] Data koneksi battle tidak lengkap.");
-            InvokeDisconnected(onDisconnected);
-            return;
-        }
-
-        string safeRoomCode = Uri.EscapeDataString(roomCode.Trim());
-        string safePlayerName = Uri.EscapeDataString(
-            string.IsNullOrWhiteSpace(playerName) ? "Player" : playerName.Trim()
-        );
-        string hostValue = isHost ? "true" : "false";
-
-        string url = GetWsUrl() + "/battle/" + safeRoomCode + "/" +
-                     playerID + "/" + safePlayerName + "/" + hostValue;
-
-        WebSocket socket = null;
-        string creationError = null;
-
-        try
-        {
-            socket = new WebSocket(url);
-        }
-        catch (Exception ex)
-        {
-            creationError = ex.Message;
-        }
-
-        if (socket == null)
-        {
-            Debug.LogWarning("[WS] Socket tidak dapat dibuat: " + creationError);
-            InvokeDisconnected(onDisconnected);
-            return;
-        }
-
-        if (connectionId != wsConnectionVersion)
-        {
-            try
-            {
-                await socket.Close();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning("[WS] Socket lama gagal ditutup: " + ex.Message);
-            }
-
-            return;
-        }
-
-        battleSocket = socket;
-        bool disconnectNotified = false;
-
-        socket.OnOpen += () =>
-        {
-            if (!IsCurrentSocket(socket, connectionId))
-                return;
-
-            wsConnected = true;
-            Debug.Log("[WS] Battle berhasil terhubung.");
-            InvokeConnected(onConnected);
-        };
-
-        socket.OnMessage += bytes =>
-        {
-            if (!IsCurrentSocket(socket, connectionId) || bytes == null)
-                return;
-
-            string message = Encoding.UTF8.GetString(bytes);
-            InvokeMessage(onMessage, message);
-        };
-
-        socket.OnError += error =>
-        {
-            if (!IsCurrentSocket(socket, connectionId))
-                return;
-
             wsConnected = false;
-            Debug.LogWarning("[WS] Battle mengalami gangguan: " + error);
-        };
-
-        socket.OnClose += code =>
-        {
-            if (!IsCurrentSocket(socket, connectionId))
-                return;
-
-            wsConnected = false;
+            await battleSocket.Close();
             battleSocket = null;
+        }
 
-            Debug.Log("[WS] Battle terputus. Code: " + code);
+        string token = PlayerPrefs.GetString("UserToken", "");
 
-            if (!disconnectNotified)
-            {
-                disconnectNotified = true;
-                InvokeDisconnected(onDisconnected);
-            }
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            Debug.LogError("[WS] UserToken tidak ditemukan.");
+            onDisconnected?.Invoke();
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(roomCode))
+        {
+            Debug.LogError("[WS] RoomCode tidak valid.");
+            onDisconnected?.Invoke();
+            return;
+        }
+
+        string url =
+            $"{WS_URL}/battle/{UnityWebRequest.EscapeURL(roomCode)}";
+
+        var headers = new Dictionary<string, string>
+        {
+            { "Authorization", "Bearer " + token }
+        };
+
+        battleSocket = new WebSocket(url, headers);
+
+        battleSocket.OnOpen += () =>
+        {
+            wsConnected = true;
+            Debug.Log("[WS] Connected: " + url);
+            onConnected?.Invoke();
+        };
+
+        battleSocket.OnMessage += bytes =>
+        {
+            string msg = System.Text.Encoding.UTF8.GetString(bytes);
+            onMessage?.Invoke(msg);
+        };
+
+        battleSocket.OnError += err =>
+        {
+            Debug.LogWarning("[WS] Error: " + err);
+        };
+
+        battleSocket.OnClose += code =>
+        {
+            wsConnected = false;
+            Debug.Log("[WS] Closed. Code: " + code);
+            onDisconnected?.Invoke();
         };
 
         try
         {
-            await socket.Connect();
+            await battleSocket.Connect();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
-            bool isCurrentConnection = IsCurrentSocket(socket, connectionId);
-
-            if (isCurrentConnection)
-            {
-                wsConnected = false;
-                battleSocket = null;
-            }
-
-            // Jangan biarkan koneksi lama mengubah status screen baru.
-            if (connectionId == wsConnectionVersion)
-            {
-                Debug.LogWarning("[WS] Gagal menghubungkan battle: " + ex.Message);
-
-                if (!disconnectNotified)
-                {
-                    disconnectNotified = true;
-                    InvokeDisconnected(onDisconnected);
-                }
-            }
-
-            try
-            {
-                await socket.Close();
-            }
-            catch (Exception closeEx)
-            {
-                Debug.LogWarning("[WS] Cleanup socket gagal: " + closeEx.Message);
-            }
+            wsConnected = false;
+            Debug.LogError("[WS] Connection failed: " + ex.Message);
+            onDisconnected?.Invoke();
         }
     }
 
-    private bool IsCurrentSocket(WebSocket socket, int connectionId)
-    {
-        return socket != null &&
-               battleSocket == socket &&
-               wsConnectionVersion == connectionId;
-    }
 
     public async void SendBattleWSMessage(string json)
     {

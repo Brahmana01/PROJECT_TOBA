@@ -1,23 +1,22 @@
 package location
 
 import (
+	"errors"
 	"strconv"
 
 	"toba-backend/config"
 	"toba-backend/models"
+
+	"gorm.io/gorm"
 )
 
-func GetPlayerLocationProgress(
-	playerID string,
-) ([]models.PlayerLocationProgress, error) {
-
+func GetPlayerLocationProgress(playerID string) ([]models.PlayerLocationProgress, error) {
 	id, err := strconv.ParseUint(playerID, 10, 64)
 	if err != nil {
 		return nil, err
 	}
 
 	var progress []models.PlayerLocationProgress
-
 	if err := config.DB.
 		Where("player_id = ?", uint(id)).
 		Order("location_id ASC").
@@ -28,102 +27,45 @@ func GetPlayerLocationProgress(
 	return progress, nil
 }
 
-func SaveLocationProgress(
-	playerID uint,
-	locationID uint,
-	rewardXP int,
-	rewardStars int,
-) (bool, error) {
+// SaveLocationProgress is retained for compatibility with older callers.
+// New gameplay submission must use SubmitLocationQuiz so scoring and reward
+// are calculated atomically in one transaction.
+func SaveLocationProgress(playerID uint, locationID uint, rewardXP int, rewardStars int) (bool, error) {
+	return false, errors.New("SaveLocationProgress tidak digunakan; gunakan SubmitLocationQuiz")
+}
 
-	var progress models.PlayerLocationProgress
+// UnlockNextLocation is retained for compatibility with older callers.
+// The active gameplay flow unlocks the next location inside SubmitLocationQuiz.
+func UnlockNextLocation(playerID uint, currentLevelOrder int) error {
+	return errors.New("UnlockNextLocation tidak digunakan; unlock dilakukan di SubmitLocationQuiz")
+}
 
-	err := config.DB.
-		Where(
-			"player_id = ? AND location_id = ?",
-			playerID,
-			locationID,
-		).
-		First(&progress).Error
-
-	isNewPass := false
-
-	if err != nil {
-		progress = models.PlayerLocationProgress{
-			PlayerID:   playerID,
-			LocationID: locationID,
-		}
-
-		isNewPass = true
+func IsLocationUnlocked(db *gorm.DB, playerID uint, locationID uint) (bool, error) {
+	if db == nil {
+		return false, errors.New("database belum tersedia")
 	}
 
-	wasCompleted := progress.IsCompleted
-
-	progress.IsCompleted = true
-
-	if err := config.DB.Save(&progress).Error; err != nil {
+	var location models.Location
+	if err := db.First(&location, locationID).Error; err != nil {
 		return false, err
 	}
 
-	if !wasCompleted {
-		var currentPlayer models.Player
-
-		if err := config.DB.
-			First(&currentPlayer, playerID).
-			Error; err != nil {
-			return false, err
-		}
-
-		currentPlayer.XP += rewardXP
-		currentPlayer.Stars += rewardStars
-
-		if err := config.DB.Save(&currentPlayer).Error; err != nil {
-			return false, err
-		}
-
-		isNewPass = true
+	if location.LevelOrder == 1 {
+		return true, nil
 	}
 
-	return isNewPass, nil
-}
+	var progress models.PlayerLocationProgress
+	err := db.Where(
+		"player_id = ? AND location_id = ?",
+		playerID, locationID,
+	).First(&progress).Error
 
-func UnlockNextLocation(
-	playerID uint,
-	currentLevelOrder int,
-) error {
-
-	var nextLocation models.Location
-
-	if err := config.DB.
-		Where(
-			"level_order > ? AND is_active = ?",
-			currentLevelOrder,
-			true,
-		).
-		Order("level_order ASC").
-		First(&nextLocation).Error; err != nil {
-		return nil
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
 	}
 
-	var existing models.PlayerLocationProgress
-
-	err := config.DB.
-		Where(
-			"player_id = ? AND location_id = ?",
-			playerID,
-			nextLocation.ID,
-		).
-		First(&existing).Error
-
-	if err == nil {
-		return nil
-	}
-
-	progress := models.PlayerLocationProgress{
-		PlayerID:    playerID,
-		LocationID:  nextLocation.ID,
-		IsUnlocked:  true,
-		IsCompleted: false,
-	}
-
-	return config.DB.Create(&progress).Error
+	return progress.IsUnlocked, nil
 }

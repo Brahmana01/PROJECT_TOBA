@@ -1,27 +1,29 @@
 package battle
 
 import (
-	"fmt"
-
-	"toba-backend/services/battle"
+	"toba-backend/middleware"
+	battleService "toba-backend/services/battle"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func Matchmake(c *fiber.Ctx) error {
-	type Input struct {
+	var input struct {
 		PlayerID uint `json:"player_id"`
 	}
 
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
 		})
 	}
 
-	result, message, status := battle.MatchmakePlayer(input.PlayerID)
+	playerID, err := middleware.RequirePlayerID(c, input.PlayerID)
+	if err != nil {
+		return err
+	}
+
+	result, message, status := battleService.MatchmakePlayer(playerID)
 
 	if result == nil {
 		return c.Status(status).JSON(fiber.Map{
@@ -29,43 +31,33 @@ func Matchmake(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(result)
+	return c.Status(status).JSON(result)
 }
 
 func CheckMatchmake(c *fiber.Ctx) error {
-	var playerID uint
-
-	if _, err := fmt.Sscanf(
+	playerID, err := middleware.RequirePathPlayerID(
+		c,
 		c.Params("player_id"),
-		"%d",
-		&playerID,
-	); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Player ID tidak valid",
-		})
+	)
+
+	if err != nil {
+		return err
 	}
 
-	return c.JSON(
-		battle.CheckMatchmaking(playerID),
-	)
+	return c.JSON(battleService.CheckMatchmaking(playerID))
 }
 
 func CancelMatchmake(c *fiber.Ctx) error {
-	var playerID uint
-
-	if _, err := fmt.Sscanf(
+	playerID, err := middleware.RequirePathPlayerID(
+		c,
 		c.Params("player_id"),
-		"%d",
-		&playerID,
-	); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Player ID tidak valid",
-		})
+	)
+
+	if err != nil {
+		return err
 	}
 
-	battle.CancelMatchmaking(playerID)
+	result := battleService.CancelMatchmaking(playerID)
 
-	return c.JSON(fiber.Map{
-		"message": "Pencarian dibatalkan",
-	})
+	return c.JSON(result)
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 // ============================================================
@@ -152,16 +152,36 @@ public class QuizQuestionData
 [Serializable]
 public class QuizResponse
 {
+    public string session_id;
     public LocationData location;
     public List<QuizQuestionData> questions;
+    public List<QuizAnswerResponse> answered_questions;
+}
+
+[Serializable]
+public class QuizAnswerRequest
+{
+    public string session_id;
+    public int location_id;
+    public int question_id;
+    public int selected_option_id;
+}
+
+[Serializable]
+public class QuizAnswerResponse
+{
+    public int question_id;
+    public int selected_option_id;
+    public int correct_option_id;
+    public bool is_correct;
+    public string explanation;
 }
 
 [Serializable]
 public class SubmitQuizRequest
 {
-    public int player_id;
+    public string session_id;
     public int location_id;
-    public int correct_count;
 }
 
 [Serializable]
@@ -224,17 +244,26 @@ public class TriviaCategoryListResponse
 [Serializable]
 public class TriviaQuizResponse
 {
+    public string session_id;
     public TriviaCategoryData category;
     public List<QuizQuestionData> questions;
+    public List<QuizAnswerResponse> answered_questions;
+}
+
+[Serializable]
+public class TriviaAnswerRequest
+{
+    public string session_id;
+    public int category_id;
+    public int question_id;
+    public int selected_option_id;
 }
 
 [Serializable]
 public class SubmitTriviaRequest
 {
-    public int player_id;
+    public string session_id;
     public int category_id;
-    public int correct_count;
-    public int wrong_count;
 }
 
 [Serializable]
@@ -268,6 +297,21 @@ public class JoinRoomRequest
 }
 
 [Serializable]
+public class BattleOptionData
+{
+    public int id;
+    public string option_text;
+}
+
+[Serializable]
+public class BattleQuestionData
+{
+    public int id;
+    public string question;
+    public List<BattleOptionData> options;
+}
+
+[Serializable]
 public class BattleRoomStatusResponse
 {
     public int room_id;
@@ -278,7 +322,9 @@ public class BattleRoomStatusResponse
     public int winner_id;
     public string host_name;
     public string guest_name;
-    public List<QuizQuestionData> questions;
+    public int host_score;
+    public int guest_score;
+    public List<BattleQuestionData> questions;
 }
 
 [Serializable]
@@ -287,20 +333,42 @@ public class SubmitBattleAnswerRequest
     public int room_id;
     public int player_id;
     public int question_id;
+    // 0 berarti waktu habis dan dihitung sebagai jawaban salah.
     public int selected_option_id;
-    public long answer_time_ms; 
+    public long answer_time_ms;
 }
 
 [Serializable]
-public class FinishBattleRequest  { public int room_id; public int player_id; }
+public class BattleAnswerSubmitResponse
+{
+    public bool is_correct;
+    public int correct_option_id;
+    public string explanation;
+    public long host_score;
+    public long guest_score;
+    public long answered_count;
+    public int total_questions;
+}
+
+[Serializable]
+public class FinishBattleRequest { public int room_id; public int player_id; }
 
 [Serializable]
 public class FinishBattleResponse
 {
     public string status;
-    public int host_score;
-    public int guest_score;
+    public long host_score;
+    public long guest_score;
     public int winner_id;
+    public int reward_xp;
+    public int reward_stars;
+    public int previous_level;
+    public int level;
+    public bool leveled_up;
+    public int total_xp;
+    public int total_stars;
+    public int xp_for_next;
+    public int xp_progress;
 }
 
 [Serializable]

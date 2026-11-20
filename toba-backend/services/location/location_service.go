@@ -20,6 +20,11 @@ func GetAllLocations() ([]models.Location, error) {
 		return nil, err
 	}
 
+	for i := range locations {
+		locations[i].QuestionCount = models.LocationQuestionCount
+		locations[i].MinimumCorrect = models.LocationMinimumCorrect
+	}
+
 	return locations, nil
 }
 
@@ -36,6 +41,9 @@ func GetLocationDetail(locationID string) (*models.Location, error) {
 		First(&location).Error; err != nil {
 		return nil, err
 	}
+
+	location.QuestionCount = models.LocationQuestionCount
+	location.MinimumCorrect = models.LocationMinimumCorrect
 
 	return &location, nil
 }

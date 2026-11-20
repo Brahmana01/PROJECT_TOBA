@@ -34,38 +34,14 @@ func RegisterPublicRoutes(
 		})
 	})
 
-	api.Get(
-		"/locations",
-		location.GetAllLocations,
-	)
+	api.Get("/locations", location.GetAllLocations)
+	api.Get("/locations/:id/detail", location.GetLocationDetail)
+	api.Get("/locations/:id/fact", location.GetLocationFact)
 
-	api.Get(
-		"/locations/:id/detail",
-		location.GetLocationDetail,
-	)
+	// Quiz GET is protected and registered in RegisterLocationRoutes.
+	api.Get("/trivia/categories", trivia.GetTriviaCategories)
 
-	api.Get(
-		"/locations/:id/fact",
-		location.GetLocationFact,
-	)
+	// Trivia quiz GET is protected and registered in RegisterTriviaRoutes.
 
-	api.Get(
-		"/locations/:id/quiz",
-		location.GetLocationQuiz,
-	)
-
-	api.Get(
-		"/trivia/categories",
-		trivia.GetTriviaCategories,
-	)
-
-	api.Get(
-		"/trivia/:id/quiz",
-		trivia.GetTriviaQuiz,
-	)
-
-	api.Get(
-		"/leaderboard",
-		player.GetLeaderboard,
-	)
+	api.Get("/leaderboard", player.GetLeaderboard)
 }

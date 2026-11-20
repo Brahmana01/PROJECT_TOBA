@@ -16,5 +16,6 @@ func RegisterBattleRoutes(authGroup fiber.Router) {
 
 	authGroup.Post("/battle/matchmake", battle.Matchmake)
 	authGroup.Get("/battle/matchmake/check/:player_id", battle.CheckMatchmake)
+	authGroup.Post("/battle/matchmake/cancel/:player_id", battle.CancelMatchmake)
 	authGroup.Delete("/battle/matchmake/cancel/:player_id", battle.CancelMatchmake)
 }

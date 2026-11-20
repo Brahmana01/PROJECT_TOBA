@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class TriviaQuizScreen : BaseScreen
 {
     private TriviaCategoryData categoryData;
+    private string sessionID;
     private List<QuizQuestionData> questions = new List<QuizQuestionData>();
 
     private int currentIndex;
@@ -763,76 +764,72 @@ public class TriviaQuizScreen : BaseScreen
         }
 
         SetQuestionMessage("Memuat soal...");
-
         APIManager.Instance.GetRequest(
             "/trivia/" + categoryData.id + "/quiz",
-
             response =>
             {
                 if (screenObj == null)
                     return;
-
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
                         throw new System.FormatException("Response Trivia kosong.");
 
-                    TriviaQuizResponse res =
-                        JsonUtility.FromJson<TriviaQuizResponse>(response);
-
-                    if (res == null || res.questions == null)
-                        throw new System.FormatException("Struktur response Trivia tidak valid.");
+                    TriviaQuizResponse res = JsonUtility.FromJson<TriviaQuizResponse>(response);
+                    if (res == null || string.IsNullOrWhiteSpace(res.session_id) || res.questions == null)
+                        throw new System.FormatException("Session atau struktur response Trivia tidak valid.");
 
                     res.questions.RemoveAll(q =>
-                        q == null ||
-                        string.IsNullOrWhiteSpace(q.question) ||
-                        q.options == null
-                    );
-
+                        q == null || string.IsNullOrWhiteSpace(q.question) ||
+                        q.options == null || q.options.Count != 4);
                     foreach (QuizQuestionData question in res.questions)
                     {
                         question.options.RemoveAll(option =>
-                            option == null ||
-                            string.IsNullOrWhiteSpace(option.option_text)
-                        );
+                            option == null || string.IsNullOrWhiteSpace(option.option_text));
                     }
+                    res.questions.RemoveAll(q => q.options == null || q.options.Count != 4);
+                    if (res.questions.Count != 10)
+                        throw new System.FormatException("Server harus memberikan tepat 10 soal Trivia.");
 
-                    res.questions.RemoveAll(q =>
-                        q.options.Count == 0 ||
-                        !q.options.Exists(option => option.is_correct)
-                    );
-
-                    if (res.questions.Count == 0)
-                        throw new System.FormatException("Tidak ada soal Trivia valid.");
-
+                    sessionID = res.session_id;
                     questions = res.questions;
-                    currentIndex = 0;
                     correctCount = 0;
 
-                    ShowQuestion(0);
+                    int answeredCount = res.answered_questions != null
+                        ? res.answered_questions.Count
+                        : 0;
+                    if (answeredCount > questions.Count)
+                        throw new System.FormatException("Jumlah jawaban session Trivia melebihi jumlah soal.");
+
+                    for (int i = 0; i < answeredCount; i++)
+                    {
+                        QuizAnswerResponse savedAnswer = res.answered_questions[i];
+                        if (savedAnswer == null || savedAnswer.question_id != questions[i].id)
+                            throw new System.FormatException("Urutan jawaban session Trivia tidak sesuai.");
+                        if (savedAnswer.is_correct)
+                            correctCount++;
+                    }
+
+                    currentIndex = answeredCount;
+                    if (currentIndex >= questions.Count)
+                        GoToResult();
+                    else
+                        ShowQuestion(currentIndex);
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning(
-                        "[Trivia] Gagal membaca soal: " + ex.Message
-                    );
-
-                    SetQuestionMessage(
-                        "Soal belum tersedia atau data tidak valid."
-                    );
+                    Debug.LogWarning("[Trivia] Gagal membaca soal: " + ex.Message);
+                    sessionID = null;
+                    questions.Clear();
+                    SetQuestionMessage("Soal belum tersedia atau data tidak valid.");
                 }
             },
-
             err =>
             {
                 if (screenObj == null)
                     return;
-
                 Debug.LogWarning("[Trivia] Request soal gagal: " + err);
-
-                SetQuestionMessage(
-                    "Gagal memuat soal.\nPeriksa koneksi lalu coba lagi."
-                );
+                SetQuestionMessage("Gagal memuat soal.\nPeriksa koneksi lalu coba lagi.");
             }
         );
     }
@@ -1035,65 +1032,110 @@ public class TriviaQuizScreen : BaseScreen
         int selectedIndex,
         QuizQuestionData question)
     {
-        if (screenObj == null ||
-            isAnswered ||
-            selected == null ||
-            question == null)
+        if (screenObj == null || isAnswered || selected == null || question == null)
+            return;
+        SubmitAnswerToServer(question, selected.id, selectedIndex);
+    }
+
+    private void SubmitAnswerToServer(
+        QuizQuestionData question,
+        int selectedOptionID,
+        int selectedIndex)
+    {
+        if (screenObj == null || isAnswered || question == null)
             return;
 
-        isAnswered = true;
+        if (string.IsNullOrWhiteSpace(sessionID) || APIManager.Instance == null)
+        {
+            NetworkManager.Instance?.ShowToast("Session Trivia tidak tersedia. Muat ulang kuis.", true);
+            return;
+        }
 
+        isAnswered = true;
         if (timerCoroutine != null && ScreenManager.Instance != null)
         {
             ScreenManager.Instance.StopCoroutine(timerCoroutine);
             timerCoroutine = null;
         }
 
-        if (selected.is_correct)
-            correctCount++;
-
-        HighlightOptions(question, selectedIndex);
-
-        if (ScreenManager.Instance != null)
+        TriviaAnswerRequest request = new TriviaAnswerRequest
         {
-            feedbackCoroutine = ScreenManager.Instance.StartCoroutine(
-                ShowFeedbackThenNext(
-                    selected.is_correct,
-                    question.explanation
-                )
-            );
-        }
+            session_id = sessionID,
+            category_id = categoryData.id,
+            question_id = question.id,
+            selected_option_id = selectedOptionID
+        };
+
+        APIManager.Instance.PostRequest(
+            "/trivia/answer",
+            JsonUtility.ToJson(request),
+            response =>
+            {
+                if (screenObj == null)
+                    return;
+                try
+                {
+                    QuizAnswerResponse answer = JsonUtility.FromJson<QuizAnswerResponse>(response);
+                    if (answer == null || answer.question_id != question.id || answer.correct_option_id <= 0)
+                        throw new System.FormatException("Response validasi jawaban Trivia tidak sesuai.");
+
+                    if (answer.is_correct)
+                        correctCount++;
+                    HighlightOptions(question, selectedIndex, answer.correct_option_id);
+                    if (ScreenManager.Instance != null)
+                    {
+                        feedbackCoroutine = ScreenManager.Instance.StartCoroutine(
+                            ShowFeedbackThenNext(answer.is_correct, answer.explanation ?? string.Empty));
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("[Trivia] Gagal membaca validasi jawaban: " + ex.Message);
+                    isAnswered = false;
+                    timeRemaining = 5f;
+                    if (ScreenManager.Instance != null)
+                        timerCoroutine = ScreenManager.Instance.StartCoroutine(RunTimer());
+                    NetworkManager.Instance?.ShowToast("Jawaban belum dapat diverifikasi. Coba pilih lagi.", true);
+                }
+            },
+            error =>
+            {
+                if (screenObj == null)
+                    return;
+                isAnswered = false;
+                timeRemaining = 5f;
+                if (ScreenManager.Instance != null)
+                    timerCoroutine = ScreenManager.Instance.StartCoroutine(RunTimer());
+                NetworkManager.Instance?.ShowToast("Jawaban belum tersimpan. Periksa koneksi lalu pilih lagi.", true);
+                Debug.LogWarning("[Trivia] Submit jawaban gagal: " + error);
+            }
+        );
     }
+
 
     private void HighlightOptions(
         QuizQuestionData question,
-        int selectedIndex)
+        int selectedIndex,
+        int correctOptionID)
     {
-        if (optionsContainer == null ||
-            question == null ||
-            question.options == null)
+        if (optionsContainer == null || question == null || question.options == null)
             return;
 
         for (int i = 0; i < optionsContainer.transform.childCount; i++)
         {
             Transform child = optionsContainer.transform.GetChild(i);
-
-            if (i >= question.options.Count ||
-                question.options[i] == null)
+            if (i >= question.options.Count || question.options[i] == null)
                 continue;
 
             Transform faceTr = child.Find("Face");
             Image face = faceTr != null ? faceTr.GetComponent<Image>() : null;
             Button btn = child.GetComponent<Button>();
-
             Transform textTr = faceTr != null ? faceTr.Find("OptionText") : null;
-            TextMeshProUGUI txt = textTr != null
-                ? textTr.GetComponent<TextMeshProUGUI>()
-                : null;
+            TextMeshProUGUI txt = textTr != null ? textTr.GetComponent<TextMeshProUGUI>() : null;
 
             if (face != null)
             {
-                if (question.options[i].is_correct)
+                if (question.options[i].id == correctOptionID)
                 {
                     face.color = TOBATheme.OptionCorrect;
                     if (txt != null) txt.color = Color.white;
@@ -1105,17 +1147,10 @@ public class TriviaQuizScreen : BaseScreen
                 }
                 else
                 {
-                    face.color = new Color(
-                        TOBATheme.CardBG.r,
-                        TOBATheme.CardBG.g,
-                        TOBATheme.CardBG.b,
-                        0.6f
-                    );
+                    face.color = new Color(TOBATheme.CardBG.r, TOBATheme.CardBG.g, TOBATheme.CardBG.b, 0.6f);
                 }
             }
-
-            if (btn != null)
-                btn.interactable = false;
+            if (btn != null) btn.interactable = false;
         }
     }
 
@@ -1201,56 +1236,25 @@ public class TriviaQuizScreen : BaseScreen
     // ───────────────── TIMER ─────────────────
     private IEnumerator RunTimer()
     {
-        timeRemaining = timeLimit;
-
         while (timeRemaining > 0f && !isAnswered)
         {
             if (timerTxt != null)
             {
                 timerTxt.text = Mathf.CeilToInt(timeRemaining).ToString();
-                timerTxt.color = timeRemaining <= 5f
-                    ? TOBATheme.Error
-                    : TOBATheme.BatakGold;
+                timerTxt.color = timeRemaining <= 5f ? TOBATheme.Error : TOBATheme.BatakGold;
             }
-
             if (!isPaused) timeRemaining -= Time.deltaTime;
             yield return null;
         }
 
         timerCoroutine = null;
-
-        if (!isAnswered &&
-            screenObj != null &&
-            questions.Count > currentIndex)
+        if (!isAnswered && screenObj != null && questions != null && currentIndex >= 0 && currentIndex < questions.Count)
         {
-            isAnswered = true;
-
-            if (questions == null ||
-                currentIndex < 0 ||
-                currentIndex >= questions.Count)
-            {
+            QuizQuestionData question = questions[currentIndex];
+            if (question != null)
+                SubmitAnswerToServer(question, 0, -1);
+            else
                 GoToResult();
-                yield break;
-            }
-
-            QuizQuestionData q = questions[currentIndex];
-
-            if (q == null)
-            {
-                GoToResult();
-                yield break;
-            }
-
-            HighlightOptions(q, -1);
-            if (ScreenManager.Instance != null)
-            {
-                feedbackCoroutine = ScreenManager.Instance.StartCoroutine(
-                    ShowFeedbackThenNext(
-                        false,
-                        "Waktu habis! " + (q.explanation ?? "")
-                    )
-                );
-            }
         }
     }
 
@@ -1264,7 +1268,8 @@ public class TriviaQuizScreen : BaseScreen
                 container,
                 categoryData,
                 correctCount,
-                questions.Count
+                questions.Count,
+                sessionID
             )
         );
     }

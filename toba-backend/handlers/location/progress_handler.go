@@ -1,18 +1,30 @@
 package location
 
 import (
-	"toba-backend/services/location"
+	"strconv"
+
+	"toba-backend/middleware"
+	locationService "toba-backend/services/location"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetPlayerProgress(c *fiber.Ctx) error {
-	progress, err := location.GetPlayerLocationProgress(
+	playerID, err := middleware.RequirePathPlayerID(
+		c,
 		c.Params("id"),
 	)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
+		return err
+	}
+
+	progress, err := locationService.GetPlayerLocationProgress(
+		strconv.FormatUint(uint64(playerID), 10),
+	)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal mengambil progress player",
 		})
 	}

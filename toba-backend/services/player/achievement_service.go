@@ -1,4 +1,3 @@
-
 package player
 
 import (
@@ -15,12 +14,17 @@ import (
 
 // ClaimAchievementResult berisi hasil klaim reward.
 type ClaimAchievementResult struct {
-	RewardXP       int  `json:"reward_xp"`
-	RewardStars    int  `json:"reward_stars"`
-	Level          int  `json:"level"`
-	TotalXP        int  `json:"total_xp"`
-	TotalStars     int  `json:"total_stars"`
-	AlreadyClaimed bool `json:"-"`
+	RewardXP       int    `json:"reward_xp"`
+	RewardStars    int    `json:"reward_stars"`
+	PreviousLevel  int    `json:"previous_level"`
+	Level          int    `json:"level"`
+	LeveledUp      bool   `json:"leveled_up"`
+	TotalXP        int    `json:"total_xp"`
+	TotalStars     int    `json:"total_stars"`
+	XPForNext      int    `json:"xp_for_next"`
+	XPProgress     int    `json:"xp_progress"`
+	TitleName      string `json:"title_name"`
+	AlreadyClaimed bool   `json:"-"`
 }
 
 // ==========================================
@@ -90,48 +94,42 @@ func ClaimAchievement(
 		if playerAchievement.Claimed {
 
 			result.AlreadyClaimed = true
+			result.PreviousLevel = currentPlayer.Level
 			result.Level = currentPlayer.Level
 			result.TotalXP = currentPlayer.XP
 			result.TotalStars = currentPlayer.Stars
 
+			xpPerLevel, settingErr := GetXPPerLevel(tx)
+			if settingErr != nil {
+				return settingErr
+			}
+			result.XPForNext = xpPerLevel
+			result.XPProgress = currentPlayer.XP % xpPerLevel
+
+			if currentPlayer.TitleID > 0 {
+				var currentTitle models.Title
+				titleErr := tx.First(&currentTitle, currentPlayer.TitleID).Error
+				if titleErr == nil {
+					result.TitleName = currentTitle.TitleName
+				} else if !errors.Is(titleErr, gorm.ErrRecordNotFound) {
+					return titleErr
+				}
+			}
+
 			return nil
 		}
 
-		// Ambil reward.
+		// Terapkan reward melalui progression service pusat.
 		rewardXP := playerAchievement.Achievement.RewardXP
 		rewardStars := playerAchievement.Achievement.RewardStars
 
-		// Tambahkan reward ke pemain.
-		currentPlayer.XP += rewardXP
-		currentPlayer.Stars += rewardStars
-
-		// Hitung level baru.
-		newLevel := (currentPlayer.XP / 500) + 1
-
-		if newLevel > currentPlayer.Level {
-
-			currentPlayer.Level = newLevel
-
-			// Perbarui gelar berdasarkan level.
-			var title models.Title
-
-			titleErr := tx.
-				Where("minimum_level <= ?", currentPlayer.Level).
-				Order("minimum_level DESC").
-				First(&title).Error
-
-			if titleErr == nil {
-
-				currentPlayer.TitleID = int(title.ID)
-
-			} else if !errors.Is(titleErr, gorm.ErrRecordNotFound) {
-
-				return titleErr
-			}
-		}
-
-		// Simpan data pemain.
-		if err := tx.Save(&currentPlayer).Error; err != nil {
+		progression, err := ApplyRewardToLockedPlayer(
+			tx,
+			&currentPlayer,
+			rewardXP,
+			rewardStars,
+		)
+		if err != nil {
 			return err
 		}
 
@@ -146,11 +144,16 @@ func ClaimAchievement(
 		}
 
 		// Susun hasil.
-		result.RewardXP = rewardXP
-		result.RewardStars = rewardStars
-		result.Level = currentPlayer.Level
-		result.TotalXP = currentPlayer.XP
-		result.TotalStars = currentPlayer.Stars
+		result.RewardXP = progression.RewardXP
+		result.RewardStars = progression.RewardStars
+		result.PreviousLevel = progression.PreviousLevel
+		result.Level = progression.Level
+		result.LeveledUp = progression.LeveledUp
+		result.TotalXP = progression.TotalXP
+		result.TotalStars = progression.TotalStars
+		result.XPForNext = progression.XPForNext
+		result.XPProgress = progression.XPProgress
+		result.TitleName = progression.TitleName
 
 		return nil
 	})
@@ -245,6 +248,26 @@ func CheckAndUnlockAchievements(
 			return err
 		}
 
+		var activeLocationCount int64
+		if err := tx.Model(&models.Location{}).
+			Where("is_active = ? AND deleted_at IS NULL", true).
+			Count(&activeLocationCount).Error; err != nil {
+			return err
+		}
+
+		var completedActiveLocationCount int64
+		if err := tx.Model(&models.PlayerLocationProgress{}).
+			Joins("JOIN locations ON locations.id = player_location_progresses.location_id").
+			Where(
+				"player_location_progresses.player_id = ? AND player_location_progresses.is_completed = ? AND locations.is_active = ? AND locations.deleted_at IS NULL",
+				playerID,
+				true,
+				true,
+			).
+			Count(&completedActiveLocationCount).Error; err != nil {
+			return err
+		}
+
 		// ======================================
 		// EVALUASI SETIAP ACHIEVEMENT
 		// ======================================
@@ -295,6 +318,11 @@ func CheckAndUnlockAchievements(
 			case "LOCATION":
 
 				unlocked = locationCount >= required
+
+			case "ALL_LOCATION":
+
+				unlocked = activeLocationCount > 0 &&
+					completedActiveLocationCount >= activeLocationCount
 
 			case "TRIVIA":
 

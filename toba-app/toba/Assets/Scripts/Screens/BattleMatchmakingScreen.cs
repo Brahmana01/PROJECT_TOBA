@@ -362,17 +362,27 @@ public class BattleMatchmakingScreen : BaseScreen
             "/battle/status/" + res.room_code,
             (statusResponse) => {
                 if (screenObj == null) return;
-                BattleRoomStatusResponse fullRoom =
-                    JsonUtility.FromJson<BattleRoomStatusResponse>(statusResponse);
+                try
+                {
+                    BattleRoomStatusResponse fullRoom =
+                        JsonUtility.FromJson<BattleRoomStatusResponse>(statusResponse);
+                    if (fullRoom == null || fullRoom.room_id <= 0 ||
+                        fullRoom.questions == null || fullRoom.questions.Count != 10)
+                        throw new System.FormatException("Room harus memiliki tepat 10 soal valid.");
 
-                ScreenManager.Instance.ChangeScreen(
-                    new BattleQuizScreen(container, fullRoom, res.is_host));
+                    ScreenManager.Instance?.ChangeScreen(
+                        new BattleQuizScreen(container, fullRoom, res.is_host));
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError("[BattleMatchmaking] Data room tidak valid: " + ex.Message);
+                    CancelMatchedRoom(res.room_id);
+                }
             },
             (err) => {
-                // Kalau gagal fetch, pakai roomData minimal
                 if (screenObj == null) return;
-                ScreenManager.Instance.ChangeScreen(
-                    new BattleQuizScreen(container, roomData, res.is_host));
+                Debug.LogWarning("[BattleMatchmaking] Gagal mengambil soal room: " + err);
+                CancelMatchedRoom(res.room_id);
             });
     }
 
@@ -403,5 +413,25 @@ public class BattleMatchmakingScreen : BaseScreen
         isSearching = false;
         if (pollCo != null) ScreenManager.Instance.StopCoroutine(pollCo);
         base.Hide();
+    }
+
+    void CancelMatchedRoom(int roomID)
+    {
+        if (roomID > 0 && APIManager.Instance != null)
+        {
+            DisconnectBattleRequest request = new DisconnectBattleRequest
+            {
+                room_id = roomID,
+                player_id = PlayerPrefs.GetInt("PlayerID")
+            };
+            APIManager.Instance.PostRequest(
+                "/battle/disconnect",
+                JsonUtility.ToJson(request),
+                _ => { },
+                error => Debug.LogWarning("[BattleMatchmaking] Gagal membatalkan room: " + error));
+        }
+
+        NetworkManager.Instance?.ShowToast("Pertandingan gagal dimuat dan room dibatalkan.", true);
+        ScreenManager.Instance?.ChangeScreen(new BattleMenuScreen(container));
     }
 }

@@ -6,40 +6,54 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func authenticatedPlayerID(c *fiber.Ctx) (uint, bool) {
+	playerID, ok := c.Locals("player_id").(uint)
+	return playerID, ok && playerID > 0
+}
+
 func GetActiveChallenge(c *fiber.Ctx) error {
-	playerID := c.Query("player_id")
+	playerID, ok := authenticatedPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
+		})
+	}
 
-	result := challenge.GetActiveChallenge(playerID)
-
-	return c.JSON(result)
+	return c.JSON(challenge.GetActiveChallenge(playerID))
 }
 
 func SubmitChallenge(c *fiber.Ctx) error {
-	type Input struct {
-		PlayerID    uint `json:"player_id"`
+	playerID, ok := authenticatedPlayerID(c)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Sesi pemain tidak valid",
+		})
+	}
+
+	var input struct {
 		ChallengeID uint `json:"challenge_id"`
 		Score       int  `json:"score"`
 	}
-
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
+		})
+	}
+	if input.ChallengeID == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Challenge ID wajib diisi",
 		})
 	}
 
 	result, message, status := challenge.SubmitChallenge(
-		input.PlayerID,
+		playerID,
 		input.ChallengeID,
 		input.Score,
 	)
-
 	if result == nil {
 		return c.Status(status).JSON(fiber.Map{
 			"message": message,
 		})
 	}
-
-	return c.JSON(result)
+	return c.Status(status).JSON(result)
 }

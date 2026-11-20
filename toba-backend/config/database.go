@@ -39,13 +39,15 @@ func ConnectDatabase() {
 	DB = db
 	log.Println("✅ Database terkoneksi!")
 
-	// Auto migrate semua tabel
-	autoMigrate()
+	// Auto migrate semua tabel. Jangan lanjut startup jika migrasi gagal.
+	if err := autoMigrate(); err != nil {
+		log.Fatal("Gagal melakukan auto migrate: ", err)
+	}
 	log.Println("✅ Auto migrate selesai!")
 }
 
-func autoMigrate() {
-	DB.AutoMigrate(
+func autoMigrate() error {
+	return DB.AutoMigrate(
 		&models.Character{},
 		&models.Title{},
 		&models.Admin{},
@@ -74,5 +76,6 @@ func autoMigrate() {
 		&models.GameSetting{},
 		&models.WeeklyChallenge{},
 		&models.PlayerChallengeProgress{},
+		&models.QuizSession{},
 	)
 }

@@ -20,15 +20,16 @@ const BattleQuestionModal = ({ question, onClose, onSave }: {
   );
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [isActive, setIsActive] = useState(question?.is_active ?? true);
 
   const handleSave = async () => {
-    if (!q || !exp) { setMsg('Pertanyaan dan penjelasan wajib.'); return; }
-    const valid = opts.filter(o => o.option_text.trim());
-    if (valid.length < 2) { setMsg('Minimal 2 pilihan.'); return; }
-    if (!valid.some(o => o.is_correct)) { setMsg('Pilih 1 jawaban benar.'); return; }
+    if (!q.trim() || !exp.trim()) { setMsg('Pertanyaan dan penjelasan wajib.'); return; }
+    if (opts.length !== 4) { setMsg('Setiap soal wajib memiliki tepat 4 pilihan.'); return; }
+    if (opts.some(o => !o.option_text.trim())) { setMsg('Semua 4 pilihan wajib diisi.'); return; }
+    if (opts.filter(o => o.is_correct).length !== 1) { setMsg('Pilih tepat 1 jawaban benar.'); return; }
     setSaving(true);
     try {
-      const payload = { question: q, explanation: exp, is_active: true, options: valid };
+      const payload = { question: q.trim(), explanation: exp.trim(), is_active: isActive, options: opts.map(o => ({ ...o, option_text: o.option_text.trim() })) };
       if (isEdit) await adminUpdateBattleQuestion(question!.id, payload);
       else await adminCreateBattleQuestion(payload);
       onSave();
@@ -62,6 +63,12 @@ const BattleQuestionModal = ({ question, onClose, onSave }: {
               {opt.is_correct && <span style={{ color: '#4CAF50', fontSize: 12, whiteSpace: 'nowrap' }}>✓ Benar</span>}
             </div>
           ))}
+          {isEdit && (
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, color: '#F5E6C8' }}>
+              <input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} />
+              Soal aktif dan dapat dipilih untuk pertandingan baru
+            </label>
+          )}
         </div>
         <div style={styles.modalFoot}>
           <button onClick={onClose} style={styles.btnSecondary}>Batal</button>
@@ -87,7 +94,7 @@ const BattlePage: React.FC = () => {
   useEffect(() => { fetch(); }, []);
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Hapus soal ini?')) return;
+    if (!confirm('Nonaktifkan soal ini? Soal tetap tersimpan dan tidak dipilih untuk pertandingan baru.')) return;
     await adminDeleteBattleQuestion(id);
     fetch();
   };
@@ -103,7 +110,7 @@ const BattlePage: React.FC = () => {
           <div className="stat-icon-wrap"><Sword size={24}/></div>
           <div>
             <h2 style={{ margin: 0, fontSize: '1.4rem' }}>Bank Soal Battle Quiz</h2>
-            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.8 }}>{questions.length} soal tersedia</p>
+            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.8 }}>{questions.filter(q => q.is_active).length} soal aktif / {questions.length} total bank • target seed 50 • 10 soal per pertandingan</p>
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -120,7 +127,7 @@ const BattlePage: React.FC = () => {
             value={search} onChange={e => setSearch(e.target.value)}
             style={{...styles.input, flex: 1, margin: 0}} placeholder="Cari soal..."
           />
-          <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>{filtered.length} soal</span>
+          <span style={{ fontSize: '0.8rem', opacity: 0.5 }}>{filtered.filter(q => q.is_active).length} aktif / {filtered.length} total</span>
         </div>
 
         {loading ? (

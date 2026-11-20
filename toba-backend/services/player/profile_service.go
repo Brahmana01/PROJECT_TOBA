@@ -9,10 +9,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// XP yang dibutuhkan untuk naik satu level.
-// Konsisten dengan perhitungan level pada sistem game TOBA.
-const profileXPPerLevel = 500
-
 func GetProfile(playerID uint) (map[string]interface{}, error) {
 
 	// ==========================================
@@ -124,9 +120,12 @@ func GetProfile(playerID uint) (map[string]interface{}, error) {
 	// 7. HITUNG PROGRESS XP
 	// ==========================================
 
-	xpForNext := profileXPPerLevel
+	xpForNext, err := GetXPPerLevel(config.DB)
+	if err != nil {
+		return nil, err
+	}
 
-	xpProgress := currentPlayer.XP % profileXPPerLevel
+	xpProgress := currentPlayer.XP % xpForNext
 
 	if xpProgress < 0 {
 		xpProgress = 0

@@ -17,5 +17,10 @@ func GetTriviaCategories() ([]models.TriviaCategory, error) {
 		return nil, result.Error
 	}
 
+	for i := range categories {
+		categories[i].QuestionCount = models.TriviaQuestionCount
+		categories[i].MinimumQuestion = models.TriviaQuestionCount
+	}
+
 	return categories, nil
 }

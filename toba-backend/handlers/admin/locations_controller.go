@@ -1,9 +1,11 @@
 package admin
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,178 +13,255 @@ import (
 	"toba-backend/models"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 func AdminGetLocations(c *fiber.Ctx) error {
 	var locations []models.Location
-
-	config.DB.
+	if err := config.DB.
 		Where("deleted_at IS NULL").
 		Order("level_order ASC").
-		Find(&locations)
+		Find(&locations).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal mengambil daftar lokasi",
+		})
+	}
 
+	for i := range locations {
+		// question_count berarti jumlah soal per sesi, bukan jumlah bank soal.
+		locations[i].QuestionCount = models.LocationQuestionCount
+		locations[i].MinimumCorrect = models.LocationMinimumCorrect
+	}
+
+	if locations == nil {
+		locations = []models.Location{}
+	}
 	return c.JSON(locations)
 }
 
 func AdminCreateLocation(c *fiber.Ctx) error {
-	type Input struct {
-		Name           string `json:"name"`
-		Description    string `json:"description"`
-		Image          string `json:"image"`
-		RewardXP       int    `json:"reward_xp"`
-		RewardStars    int    `json:"reward_stars"`
-		QuestionCount  int    `json:"question_count"`
-		MinimumCorrect int    `json:"minimum_correct"`
-		LevelOrder     int    `json:"level_order"`
+	var input struct {
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Image       string `json:"image"`
+		RewardXP    int    `json:"reward_xp"`
+		RewardStars int    `json:"reward_stars"`
+		LevelOrder  int    `json:"level_order"`
 	}
-
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Input tidak valid",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Input lokasi tidak valid",
 		})
 	}
 
-	loc := models.Location{
-		Name:           input.Name,
-		Description:    input.Description,
-		Image:          input.Image,
-		RewardXP:       input.RewardXP,
-		RewardStars:    input.RewardStars,
-		QuestionCount:  input.QuestionCount,
-		MinimumCorrect: input.MinimumCorrect,
-		LevelOrder:     input.LevelOrder,
-		IsActive:       true,
+	input.Name = strings.TrimSpace(input.Name)
+	input.Description = strings.TrimSpace(input.Description)
+	input.Image = strings.TrimSpace(input.Image)
+	if input.Name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Nama lokasi wajib diisi",
+		})
 	}
-
-	if err := config.DB.Create(&loc).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": "Gagal membuat lokasi",
+	if input.RewardXP < 0 || input.RewardStars < 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Reward XP dan bintang tidak boleh negatif",
 		})
 	}
 
-	return c.Status(201).JSON(loc)
+	var location models.Location
+	err := config.DB.Transaction(func(tx *gorm.DB) error {
+		// Project menggunakan PostgreSQL. Lock tabel hanya selama penentuan
+		// level_order dan insert agar dua request create tidak memperoleh
+		// urutan otomatis yang sama.
+		if err := tx.Exec("LOCK TABLE locations IN EXCLUSIVE MODE").Error; err != nil {
+			return err
+		}
+
+		levelOrder := input.LevelOrder
+		if levelOrder <= 0 {
+			if err := tx.Model(&models.Location{}).
+				Select("COALESCE(MAX(level_order), 0)").
+				Scan(&levelOrder).Error; err != nil {
+				return err
+			}
+			levelOrder++
+		}
+
+		var duplicateCount int64
+		if err := tx.Model(&models.Location{}).
+			Where("level_order = ?", levelOrder).
+			Count(&duplicateCount).Error; err != nil {
+			return err
+		}
+		if duplicateCount > 0 {
+			return errors.New("LEVEL_ORDER_ALREADY_USED")
+		}
+
+		location = models.Location{
+			Name:           input.Name,
+			Description:    input.Description,
+			Image:          input.Image,
+			RewardXP:       input.RewardXP,
+			RewardStars:    input.RewardStars,
+			QuestionCount:  models.LocationQuestionCount,
+			MinimumCorrect: models.LocationMinimumCorrect,
+			LevelOrder:     levelOrder,
+			IsActive:       true,
+		}
+
+		return tx.Create(&location).Error
+	})
+	if err != nil {
+		if strings.Contains(err.Error(), "LEVEL_ORDER_ALREADY_USED") {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+				"message": "Urutan level sudah digunakan lokasi lain",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal membuat lokasi baru",
+		})
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(location)
 }
 
 func AdminUpdateLocation(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	var loc models.Location
-
-	if err := config.DB.
-		Where("id = ? AND deleted_at IS NULL", id).
-		First(&loc).Error; err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"message": "Lokasi tidak ditemukan",
+	id, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	if err != nil || id == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "ID lokasi tidak valid",
 		})
 	}
 
-	type Input struct {
-		Name           string `json:"name"`
-		Description    string `json:"description"`
-		Image          string `json:"image"`
-		RewardXP       int    `json:"reward_xp"`
-		RewardStars    int    `json:"reward_stars"`
-		QuestionCount  int    `json:"question_count"`
-		MinimumCorrect int    `json:"minimum_correct"`
-		LevelOrder     int    `json:"level_order"`
-		IsActive       bool   `json:"is_active"`
+	var input struct {
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Image       string `json:"image"`
+		RewardXP    int    `json:"reward_xp"`
+		RewardStars int    `json:"reward_stars"`
+		LevelOrder  int    `json:"level_order"`
+		IsActive    bool   `json:"is_active"`
 	}
-
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Input tidak valid",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Input lokasi tidak valid",
 		})
 	}
 
-	loc.Name = input.Name
-	loc.Description = input.Description
-	loc.Image = input.Image
-	loc.RewardXP = input.RewardXP
-	loc.RewardStars = input.RewardStars
-	loc.QuestionCount = input.QuestionCount
-	loc.MinimumCorrect = input.MinimumCorrect
-	loc.LevelOrder = input.LevelOrder
-	loc.IsActive = input.IsActive
+	input.Name = strings.TrimSpace(input.Name)
+	input.Description = strings.TrimSpace(input.Description)
+	input.Image = strings.TrimSpace(input.Image)
+	if input.Name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Nama lokasi wajib diisi",
+		})
+	}
+	if input.RewardXP < 0 || input.RewardStars < 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Reward XP dan bintang tidak boleh negatif",
+		})
+	}
 
-	config.DB.Save(&loc)
+	var location models.Location
+	err = config.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.First(&location, uint(id)).Error; err != nil {
+			return err
+		}
+		if location.DeletedAt != nil {
+			return gorm.ErrRecordNotFound
+		}
 
-	return c.JSON(loc)
+		levelOrder := input.LevelOrder
+		if levelOrder <= 0 {
+			levelOrder = location.LevelOrder
+		}
+
+		var duplicateCount int64
+		if err := tx.Model(&models.Location{}).
+			Where("level_order = ? AND id <> ?", levelOrder, uint(id)).
+			Count(&duplicateCount).Error; err != nil {
+			return err
+		}
+		if duplicateCount > 0 {
+			return errors.New("LEVEL_ORDER_ALREADY_USED")
+		}
+
+		location.Name = input.Name
+		location.Description = input.Description
+		location.Image = input.Image
+		location.RewardXP = input.RewardXP
+		location.RewardStars = input.RewardStars
+		location.LevelOrder = levelOrder
+		location.QuestionCount = models.LocationQuestionCount
+		location.MinimumCorrect = models.LocationMinimumCorrect
+		location.IsActive = input.IsActive
+
+		return tx.Save(&location).Error
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"message": "Lokasi tidak ditemukan",
+			})
+		}
+		if strings.Contains(err.Error(), "LEVEL_ORDER_ALREADY_USED") {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+				"message": "Urutan level sudah digunakan lokasi lain",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memperbarui lokasi",
+		})
+	}
+
+	return c.JSON(location)
 }
 
 func AdminDeleteLocation(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	var loc models.Location
-
-	if err := config.DB.
-		Where("id = ? AND deleted_at IS NULL", id).
-		First(&loc).Error; err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"message": "Lokasi tidak ditemukan",
-		})
-	}
-
-	now := time.Now()
-	loc.DeletedAt = &now
-
-	config.DB.Save(&loc)
-
-	return c.JSON(fiber.Map{
-		"message": "Lokasi berhasil dihapus",
+	return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+		"message": "Lokasi tidak dihapus permanen agar progres pemain tetap aman. Nonaktifkan lokasi melalui Edit Lokasi.",
 	})
 }
 
 func AdminUploadLocationImage(c *fiber.Ctx) error {
 	file, err := c.FormFile("image")
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "File tidak ditemukan",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "File gambar tidak ditemukan",
 		})
 	}
 
 	const maxImageSize = 5 * 1024 * 1024
-
 	if file.Size > maxImageSize {
-		return c.Status(400).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Ukuran gambar maksimal 5MB",
 		})
 	}
 
 	ext := strings.ToLower(filepath.Ext(file.Filename))
-
 	allowed := map[string]bool{
 		".jpg":  true,
 		".jpeg": true,
 		".png":  true,
 		".webp": true,
 	}
-
 	if !allowed[ext] {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Format file tidak didukung. Gunakan jpg/png/webp",
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Format gambar tidak didukung. Gunakan JPG, PNG, atau WEBP",
 		})
 	}
 
-	os.MkdirAll("./uploads/locations", 0755)
+	if err := os.MkdirAll("./uploads/locations", 0755); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal menyiapkan folder upload",
+		})
+	}
 
-	filename := fmt.Sprintf(
-		"loc_%d%s",
-		time.Now().UnixNano(),
-		ext,
-	)
-
-	savePath := filepath.Join(
-		"./uploads/locations",
-		filename,
-	)
-
+	filename := fmt.Sprintf("loc_%d%s", time.Now().UnixNano(), ext)
+	savePath := filepath.Join("./uploads/locations", filename)
 	if err := c.SaveFile(file, savePath); err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": "Gagal menyimpan file",
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal menyimpan gambar",
 		})
 	}
 

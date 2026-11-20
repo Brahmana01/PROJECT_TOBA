@@ -8,7 +8,7 @@ public class BattleQuizScreen : BaseScreen
     private BattleRoomStatusResponse roomData;
     private bool isHost;
     private int playerID;
-    private List<QuizQuestionData> questions = new List<QuizQuestionData>();
+    private List<BattleQuestionData> questions = new List<BattleQuestionData>();
     private int currentIndex = 0;
     private int myScore = 0;
     private int opponentScore = 0;
@@ -32,6 +32,15 @@ public class BattleQuizScreen : BaseScreen
     private string botName = "Bot Toba";
     private int botLevel = 1;
     private Coroutine botCo;
+    private Coroutine statusPollCo;
+    private bool isSubmittingAnswer = false;
+    private int pendingSelectedOptionID = -1;
+    private int pendingSelectedIndex = -1;
+    private BattleQuestionData pendingQuestion;
+    private BattleOptionData pendingSelectedOption;
+    private long pendingAnswerTimeMs;
+    private bool pendingTimeout;
+    private int pendingRetryCount = 0;
     public BattleQuizScreen(Transform parent, BattleRoomStatusResponse room, bool host)
             : base(parent, "BattleQuiz")
     {
@@ -44,59 +53,57 @@ public class BattleQuizScreen : BaseScreen
         if (screenObj == null)
             return;
 
-        if (roomData == null)
+        if (roomData == null || roomData.room_id <= 0)
         {
-            Debug.LogWarning("[BattleQuiz] Data room tidak tersedia.");
-
-            ScreenManager.Instance?.ChangeScreen(
-                new BattleMenuScreen(container)
-            );
-
+            NetworkManager.Instance?.ShowToast("Data room Battle tidak valid.", true);
+            ScreenManager.Instance?.ChangeScreen(new BattleMenuScreen(container));
             return;
         }
 
         SetBackground(TOBATheme.ForestGreen);
-        // BACA STATUS BOT
-        isBotMatch =
-            PlayerPrefs.GetInt("BattleIsBot", 0) == 1;
-        botName =
-        PlayerPrefs.GetString("BattleBotName", "Bot Toba");
-        botLevel =
-        PlayerPrefs.GetInt("BattleBotLevel", 1);
+        isBotMatch = PlayerPrefs.GetInt("BattleIsBot", 0) == 1;
+        botName = PlayerPrefs.GetString("BattleBotName", "Bot Toba");
+        botLevel = PlayerPrefs.GetInt("BattleBotLevel", 1);
+
         HeaderBar.Create(screenObj.transform, "BATTLE QUIZ", null);
         CreateScoreBoard();
         CreateProgressArea();
         CreateQuestionArea();
         CreateOptionsArea();
-        questions = roomData.questions ?? new List<QuizQuestionData>();
 
-        questions.RemoveAll(q =>
-            q == null ||
-            string.IsNullOrWhiteSpace(q.question) ||
-            q.options == null
-        );
+        questions = roomData.questions ?? new List<BattleQuestionData>();
+        questions.RemoveAll(q => q == null ||
+            string.IsNullOrWhiteSpace(q.question) || q.options == null || q.options.Count != 4);
+        foreach (BattleQuestionData q in questions)
+            q.options.RemoveAll(option => option == null || string.IsNullOrWhiteSpace(option.option_text));
+        questions.RemoveAll(q => q.options.Count != 4);
 
-        foreach (QuizQuestionData q in questions)
+        int initialHostScore = (int)roomData.host_score;
+        int initialGuestScore = (int)roomData.guest_score;
+        myScore = isHost ? initialHostScore : initialGuestScore;
+        opponentScore = isHost ? initialGuestScore : initialHostScore;
+        if (myScoreTxt != null) myScoreTxt.text = myScore.ToString();
+        if (oppScoreTxt != null) oppScoreTxt.text = opponentScore.ToString();
+
+        if (questions.Count != 10)
         {
-            q.options.RemoveAll(option =>
-                option == null ||
-                string.IsNullOrWhiteSpace(option.option_text)
-            );
+            if (questionTxt != null)
+                questionTxt.text = "Battle membutuhkan tepat 10 soal valid.";
+            NetworkManager.Instance?.ShowToast("Data soal Battle tidak lengkap.", true);
+            return;
         }
 
-        questions.RemoveAll(q =>
-            q.options.Count == 0 ||
-            !q.options.Exists(option => option.is_correct)
-        );
-
-        if (questions.Count > 0)
+        ShowQuestion(0);
+        if (!isBotMatch && APIManager.Instance != null && !APIManager.Instance.IsWSConnected())
         {
-            ShowQuestion(0);
+            APIManager.Instance.ConnectBattleWS(
+                roomData.room_code,
+                onMessage: _ => { },
+                onConnected: () => Debug.Log("[BattleQuiz] WebSocket Battle terhubung."),
+                onDisconnected: () => Debug.LogWarning("[BattleQuiz] WebSocket Battle terputus."));
         }
-        else if (questionTxt != null)
-        {
-            questionTxt.text = "Soal Battle tidak tersedia.";
-        }
+        if (!isBotMatch && statusPollCo == null && ScreenManager.Instance != null)
+            statusPollCo = ScreenManager.Instance.StartCoroutine(PollBattleStatus());
     }
     // SCOREBOARD
     void CreateScoreBoard()
@@ -124,7 +131,7 @@ public class BattleQuizScreen : BaseScreen
     void CreateProgressArea()
     {
         GameObject progressBg = UIBuilder.CreatePanel(screenObj.transform, "ProgressBg", new Color(0, 0, 0, 0.3f), new Vector2(0, 0.72f), new Vector2(1, 0.78f));
-        progressTxt = UIBuilder.CreateTextSized(progressBg.transform, "Soal 1/5", 36, TOBATheme.TextLight, TextAlignmentOptions.Left, new Vector2(400, 55), new Vector2(-250f, 0)).GetComponent<TextMeshProUGUI>();
+        progressTxt = UIBuilder.CreateTextSized(progressBg.transform, "Soal 1/10", 36, TOBATheme.TextLight, TextAlignmentOptions.Left, new Vector2(400, 55), new Vector2(-250f, 0)).GetComponent<TextMeshProUGUI>();
         timerTxt = UIBuilder.CreateTextSized(progressBg.transform, "⏱ 15", 36, TOBATheme.BatakGold, TextAlignmentOptions.Right, new Vector2(200, 55), new Vector2(350f, 0)).GetComponent<TextMeshProUGUI>();
     }
     // QUESTION
@@ -170,7 +177,7 @@ public class BattleQuizScreen : BaseScreen
             index >= questions.Count)
             return;
 
-        QuizQuestionData q = questions[index];
+        BattleQuestionData q = questions[index];
 
         if (q == null || q.options == null || q.options.Count == 0)
         {
@@ -217,7 +224,7 @@ public class BattleQuizScreen : BaseScreen
         };
         for (int i = 0; i < q.options.Count && i < 4; i++)
         {
-            QuizOptionData opt =
+            BattleOptionData opt =
                 q.options[i];
             int capturedI = i;
             CreateOptionButton(opt, labels[i], yPos[i], () =>
@@ -248,7 +255,7 @@ ScreenManager.Instance.StartCoroutine(BotAnswerCoroutine(index));
         }
     }
     // OPTION BUTTON
-    void CreateOptionButton(QuizOptionData opt, string label, float yPos, System.Action onClick)
+    void CreateOptionButton(BattleOptionData opt, string label, float yPos, System.Action onClick)
     {
         if (opt == null || optionsContainer == null)
             return;
@@ -287,75 +294,156 @@ UIBuilder.CreateTextSized(optObj.transform, opt.option_text, 34, TOBATheme.TextD
             true;
         Button btn =
             optObj.AddComponent<Button>();
+        BattleOptionButtonTag optionTag = optObj.AddComponent<BattleOptionButtonTag>();
+        optionTag.OptionID = opt.id;
         btn.onClick.AddListener(() =>
                 {
                     SoundManager.Instance?.PlaySFX("sfx_click");
                     onClick?.Invoke();
                 });
     }
-    void OnAnswerSelected(QuizOptionData selected, int selectedIndex, QuizQuestionData question)
+    void OnAnswerSelected(BattleOptionData selected, int selectedIndex, BattleQuestionData question)
     {
-    if (screenObj == null ||
-        isAnswered ||
-        selected == null ||
-        question == null ||
-        ScreenManager.Instance == null)
-        return;
-        isAnswered = true;
-        if (timerCoroutine != null)
-        {
-            ScreenManager.Instance.StopCoroutine(timerCoroutine);
-        }
-        bool isCorrect =
-            selected.is_correct;
-        if (isCorrect)
-        {
-            myScore++;
-            if (myScoreTxt != null)
-            {
-                myScoreTxt.text =
-                    myScore.ToString();
-            }
-        }
-        // KIRIM JAWABAN VIA WEBSOCKET
-        // HANYA UNTUK HUMAN MATCH
-        if (!isBotMatch)
-        {
-            SendAnswerViaWS(question, selected);
-        }
-        HighlightOptions(question, selectedIndex);
-        if (ScreenManager.Instance != null)
-        {
-            ScreenManager.Instance.StartCoroutine(
-                ShowFeedbackThenNext(
-                    isCorrect,
-                    question.explanation ?? ""
-                )
-            );
-        }
-    }
-    void SendAnswerViaWS(QuizQuestionData question, QuizOptionData selected)
-    {
-        if (question == null ||
-            selected == null ||
-            APIManager.Instance == null)
+        if (screenObj == null || selected == null || question == null || isSubmittingAnswer || pendingTimeout)
             return;
 
-        long answerTimeMs = (long)((Time.realtimeSinceStartup - _questionStartTime) * 1000f);
-        var payload = new
+        // Jika request sebelumnya gagal diterima client, hanya pilihan yang sama
+        // boleh dikirim ulang agar tidak bertentangan dengan jawaban yang mungkin
+        // sudah tersimpan di server.
+        if (pendingSelectedOptionID > 0 && selected.id != pendingSelectedOptionID)
+            return;
+
+        if (pendingSelectedOptionID > 0)
         {
-            type = "ANSWER",
-            payload = new
-            {
-                player_id = playerID,
-                question_id = question.id,
-                selected_option_id = selected.id,
-                is_correct = selected.is_correct,
-                answer_time_ms = answerTimeMs
-            }
-        };
-        APIManager.Instance.SendBattleWSMessage(JsonUtility.ToJson(payload));
+            SubmitPendingAnswer();
+            return;
+        }
+
+        long elapsed = (long)((Time.realtimeSinceStartup - _questionStartTime) * 1000f);
+        pendingSelectedOptionID = selected.id;
+        pendingSelectedIndex = selectedIndex;
+        pendingQuestion = question;
+        pendingSelectedOption = selected;
+        pendingAnswerTimeMs = System.Math.Max(200L, System.Math.Min(15000L, elapsed));
+        pendingTimeout = false;
+        pendingRetryCount = 0;
+        SubmitPendingAnswer();
     }
+
+    void SubmitPendingAnswer()
+    {
+        if (isSubmittingAnswer || pendingQuestion == null || APIManager.Instance == null)
+            return;
+
+        isSubmittingAnswer = true;
+        isAnswered = true;
+        if (timerCoroutine != null && ScreenManager.Instance != null)
+            ScreenManager.Instance.StopCoroutine(timerCoroutine);
+
+        foreach (Transform child in optionsContainer.transform)
+        {
+            Button button = child.GetComponent<Button>();
+            if (button != null) button.interactable = false;
+        }
+
+        SubmitBattleAnswerRequest request = new SubmitBattleAnswerRequest
+        {
+            room_id = roomData.room_id,
+            player_id = playerID,
+            question_id = pendingQuestion.id,
+            selected_option_id = pendingSelectedOptionID < 0 ? 0 : pendingSelectedOptionID,
+            answer_time_ms = pendingAnswerTimeMs
+        };
+
+        APIManager.Instance.PostRequest(
+            "/battle/answer",
+            JsonUtility.ToJson(request),
+            response =>
+            {
+                isSubmittingAnswer = false;
+                if (screenObj == null) return;
+
+                BattleAnswerSubmitResponse result = null;
+                try
+                {
+                    result = JsonUtility.FromJson<BattleAnswerSubmitResponse>(response);
+                    if (result == null || result.correct_option_id <= 0)
+                        throw new System.FormatException("Hasil jawaban Battle tidak valid.");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("[BattleQuiz] Response jawaban tidak valid: " + ex.Message);
+                    HandleAnswerSubmitFailure("Respons jawaban tidak valid.");
+                    return;
+                }
+
+                myScore = isHost ? (int)result.host_score : (int)result.guest_score;
+                opponentScore = isHost ? (int)result.guest_score : (int)result.host_score;
+                if (myScoreTxt != null) myScoreTxt.text = myScore.ToString();
+                if (oppScoreTxt != null) oppScoreTxt.text = opponentScore.ToString();
+
+                bool correct = result.is_correct;
+                BattleQuestionData answeredQuestion = pendingQuestion;
+                int selectedIndex = pendingSelectedIndex;
+                int correctOptionID = result.correct_option_id;
+                pendingSelectedOptionID = -1;
+                pendingSelectedIndex = -1;
+                pendingQuestion = null;
+                pendingSelectedOption = null;
+                pendingTimeout = false;
+                pendingRetryCount = 0;
+
+                HighlightOptions(answeredQuestion, selectedIndex, correctOptionID);
+                ScreenManager.Instance?.StartCoroutine(
+                    ShowFeedbackThenNext(correct, result.explanation ?? ""));
+            },
+            error =>
+            {
+                isSubmittingAnswer = false;
+                if (screenObj == null) return;
+                HandleAnswerSubmitFailure(error);
+            }
+        );
+    }
+
+    void HandleAnswerSubmitFailure(string message)
+    {
+        isAnswered = false;
+        NetworkManager.Instance?.ShowToast(
+            string.IsNullOrWhiteSpace(message) ? "Jawaban belum tersimpan. Ketuk pilihan yang sama untuk mencoba lagi." : message,
+            true);
+
+        if (pendingTimeout)
+        {
+            if (ScreenManager.Instance != null && pendingRetryCount < 3)
+                ScreenManager.Instance.StartCoroutine(RetryTimeoutAnswer());
+            return;
+        }
+
+        if (optionsContainer != null)
+        {
+            foreach (Transform child in optionsContainer.transform)
+            {
+                Button button = child.GetComponent<Button>();
+                BattleOptionButtonTag tag = child.GetComponent<BattleOptionButtonTag>();
+                if (button != null)
+                    button.interactable = tag != null && tag.OptionID == pendingSelectedOptionID;
+            }
+        }
+        if (timerTxt != null) timerTxt.text = "Pilih jawaban yang sama untuk kirim ulang";
+    }
+
+    IEnumerator RetryTimeoutAnswer()
+    {
+        pendingRetryCount++;
+        yield return new WaitForSecondsRealtime(2f);
+        if (screenObj != null && pendingTimeout && !isSubmittingAnswer)
+            SubmitPendingAnswer();
+        if (pendingRetryCount >= 3 && pendingTimeout && screenObj != null)
+            NetworkManager.Instance?.ShowToast("Koneksi gagal. Jawaban waktu habis belum tersimpan; periksa koneksi lalu coba kembali.", true);
+    }
+
+
     IEnumerator BotAnswerCoroutine(int questionIndex)
     {
         // Bot berpikir sekitar 0.7 - 1.6 detik.
@@ -403,49 +491,27 @@ UnityEngine.Random.Range(0.7f, 1.6f);
                     $" | Skor bot: {opponentScore}"
                 );
     }
-    void HighlightOptions(QuizQuestionData question, int selectedIndex)
+    void HighlightOptions(BattleQuestionData question, int selectedIndex, int correctOptionID)
     {
-    if (optionsContainer == null ||
-        question == null ||
-        question.options == null)
-        return;
-        int i = 0;
-        foreach (Transform child in optionsContainer.transform)
+        if (optionsContainer == null || question == null || question.options == null)
+            return;
+
+        for (int i = 0; i < optionsContainer.transform.childCount; i++)
         {
-            if (i < question.options.Count)
+            Transform child = optionsContainer.transform.GetChild(i);
+            Image image = child.GetComponent<Image>();
+            Button button = child.GetComponent<Button>();
+            BattleOptionButtonTag tag = child.GetComponent<BattleOptionButtonTag>();
+            if (image != null && tag != null)
             {
-                Image img =
-                    child.GetComponent<Image>();
-                if (img != null)
-                {
-                    if (question.options[i] != null &&
-                        question.options[i].is_correct)
-                    {
-                        i++;
-                        continue;
-                        img.color =
-                            TOBATheme.OptionCorrect;
-                    }
-                    else if (i == selectedIndex)
-                    {
-                        img.color =
-                            TOBATheme.OptionWrong;
-                    }
-                    else
-                    {
-                        img.color =
-new Color(TOBATheme.CardBG.r, TOBATheme.CardBG.g, TOBATheme.CardBG.b, 0.5f);
-                    }
-                    Button btn =
-                        child.GetComponent<Button>();
-                    if (btn != null)
-                    {
-                        btn.interactable =
-                            false;
-                    }
-                }
+                if (tag.OptionID == correctOptionID)
+                    image.color = TOBATheme.OptionCorrect;
+                else if (i == selectedIndex)
+                    image.color = TOBATheme.OptionWrong;
+                else
+                    image.color = new Color(TOBATheme.CardBG.r, TOBATheme.CardBG.g, TOBATheme.CardBG.b, 0.5f);
             }
-            i++;
+            if (button != null) button.interactable = false;
         }
     }
     IEnumerator ShowFeedbackThenNext(bool isCorrect, string explanation)
@@ -479,94 +545,52 @@ UIBuilder.CreateTextSized(feedbackPanel.transform, explanation, 27, Color.white,
     }
     IEnumerator RunTimer()
     {
-        while (timeRemaining > 0f &&
-            !isAnswered &&
-            screenObj != null)
+        while (timeRemaining > 0f && !isAnswered && screenObj != null)
         {
             if (timerTxt != null)
             {
-                timerTxt.text =
-                    "⏱ " + Mathf.CeilToInt(timeRemaining);
-
-                timerTxt.color = timeRemaining <= 5f
-                    ? TOBATheme.Error
-                    : TOBATheme.BatakGold;
+                timerTxt.text = "⏱ " + Mathf.CeilToInt(timeRemaining);
+                timerTxt.color = timeRemaining <= 5f ? TOBATheme.Error : TOBATheme.BatakGold;
             }
-
             timeRemaining -= Time.deltaTime;
-
             yield return null;
         }
 
-        if (isAnswered || screenObj == null)
-            yield break;
-
-        if (questions == null ||
-            currentIndex < 0 ||
-            currentIndex >= questions.Count)
+        if (isAnswered || screenObj == null) yield break;
+        if (questions == null || currentIndex < 0 || currentIndex >= questions.Count)
         {
             FinishBattle();
             yield break;
         }
 
-        QuizQuestionData q = questions[currentIndex];
-
-        if (q == null)
+        BattleQuestionData question = questions[currentIndex];
+        if (question == null)
         {
             FinishBattle();
             yield break;
         }
 
-        isAnswered = true;
-
-        HighlightOptions(q, -1);
-
-        if (ScreenManager.Instance != null)
-        {
-            ScreenManager.Instance.StartCoroutine(
-                ShowFeedbackThenNext(
-                    false,
-                    "Waktu habis! " + (q.explanation ?? "")
-                )
-            );
-        }
+        pendingSelectedOptionID = 0;
+        pendingSelectedIndex = -1;
+        pendingQuestion = question;
+        pendingSelectedOption = null;
+        pendingAnswerTimeMs = 15000;
+        pendingTimeout = true;
+        pendingRetryCount = 0;
+        SubmitPendingAnswer();
     }
     void FinishBattle()
     {
-        if (screenObj == null || isFinishing || battleFinished)
-            return;
+        if (screenObj == null || isFinishing || battleFinished) return;
+        RequestFinishBattle();
+    }
 
+    void RequestFinishBattle()
+    {
+        if (screenObj == null || isFinishing || battleFinished || APIManager.Instance == null)
+            return;
         isFinishing = true;
-
-        if (roomData == null ||
-            roomData.room_id <= 0 ||
-            playerID <= 0 ||
-            APIManager.Instance == null)
-        {
-            battleFinished = true;
-
-            bool localWin = myScore > opponentScore;
-            bool localDraw = myScore == opponentScore;
-
-            ShowBattleResult(
-                localWin,
-                localDraw,
-                myScore,
-                opponentScore
-            );
-
-            return;
-        }
-
-        if (!isBotMatch)
-        {
-            string finishMsg =
-                "{\"type\":\"FINISH\",\"payload\":{}}";
-
-            APIManager.Instance.SendBattleWSMessage(finishMsg);
-        }
-
-        FinishBattleRequest req = new FinishBattleRequest
+        FinishBattleRequest request = new FinishBattleRequest
         {
             room_id = roomData.room_id,
             player_id = playerID
@@ -574,116 +598,102 @@ UIBuilder.CreateTextSized(feedbackPanel.transform, explanation, 27, Color.white,
 
         APIManager.Instance.PostRequest(
             "/battle/finish",
-            JsonUtility.ToJson(req),
-
+            JsonUtility.ToJson(request),
             response =>
             {
-                if (screenObj == null)
-                    return;
-
+                if (screenObj == null) return;
+                isFinishing = false;
+                FinishBattleResponse result = null;
                 try
                 {
-                    if (isBotMatch)
-                    {
-                        battleFinished = true;
-
-                        bool botWin = myScore > opponentScore;
-                        bool botDraw = myScore == opponentScore;
-
-                        ShowBattleResult(
-                            botWin,
-                            botDraw,
-                            myScore,
-                            opponentScore
-                        );
-
-                        return;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(response))
-                        throw new System.FormatException(
-                            "Response hasil Battle kosong."
-                        );
-
-                    FinishBattleResponse res =
-                        JsonUtility.FromJson<FinishBattleResponse>(response);
-
-                    if (res == null)
-                        throw new System.FormatException(
-                            "Data hasil Battle tidak valid."
-                        );
-
-                    battleFinished = true;
-
-                    bool humanWin = res.winner_id == playerID;
-                    bool humanDraw = res.winner_id == 0;
-
-                    ShowBattleResult(
-                        humanWin,
-                        humanDraw,
-                        res.host_score,
-                        res.guest_score
-                    );
+                    result = JsonUtility.FromJson<FinishBattleResponse>(response);
+                    if (result == null || string.IsNullOrWhiteSpace(result.status))
+                        throw new System.FormatException("Data hasil Battle tidak valid.");
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning(
-                        "[BattleQuiz] Gagal membaca hasil: " + ex.Message
-                    );
-
-                    battleFinished = true;
-
-                    ShowBattleResult(
-                        false,
-                        true,
-                        myScore,
-                        opponentScore
-                    );
-                }
-                finally
-                {
-                    APIManager.Instance?.DisconnectBattleWS();
-                }
-            },
-
-            err =>
-            {
-                if (screenObj == null)
+                    Debug.LogWarning("[BattleQuiz] Hasil Battle tidak valid: " + ex.Message);
+                    NetworkManager.Instance?.ShowToast("Belum dapat membaca hasil Battle.", true);
                     return;
-
-                Debug.LogWarning(
-                    "[BattleQuiz] Pengiriman hasil gagal: " + err
-                );
-
-                battleFinished = true;
-
-                if (isBotMatch)
-                {
-                    bool botWin = myScore > opponentScore;
-                    bool botDraw = myScore == opponentScore;
-
-                    ShowBattleResult(
-                        botWin,
-                        botDraw,
-                        myScore,
-                        opponentScore
-                    );
-                }
-                else
-                {
-                    ShowBattleResult(
-                        false,
-                        true,
-                        myScore,
-                        opponentScore
-                    );
                 }
 
-                APIManager.Instance?.DisconnectBattleWS();
+                if (result.status == "WAITING_OPPONENT")
+                {
+                    if (timerTxt != null) timerTxt.text = "Menunggu lawan menyelesaikan 10 soal...";
+                    if (progressTxt != null) progressTxt.text = "Menunggu lawan";
+                    return;
+                }
+                ShowFinalBattleResult(result);
+            },
+            error =>
+            {
+                if (screenObj == null) return;
+                isFinishing = false;
+                NetworkManager.Instance?.ShowToast("Gagal menyelesaikan Battle: " + error, true);
             }
         );
     }
-    void ShowBattleResult(bool iWin, bool isDraw, int hostScore, int guestScore)
+
+    void ShowFinalBattleResult(FinishBattleResponse result)
+    {
+        if (result == null || screenObj == null || battleFinished) return;
+        battleFinished = true;
+        if (!isBotMatch)
+            APIManager.Instance?.DisconnectBattleWS();
+        if (statusPollCo != null && ScreenManager.Instance != null)
+            ScreenManager.Instance.StopCoroutine(statusPollCo);
+        statusPollCo = null;
+
+        if (isBotMatch)
+        {
+            bool botWin = myScore > opponentScore;
+            bool botDraw = myScore == opponentScore;
+            ShowBattleResult(botWin, botDraw, myScore, opponentScore, 0, 0);
+            return;
+        }
+
+        bool humanWin = result.winner_id == playerID;
+        bool humanDraw = result.winner_id == 0;
+        ShowBattleResult(
+            humanWin, humanDraw,
+            (int)result.host_score, (int)result.guest_score,
+            result.reward_xp, result.reward_stars);
+    }
+
+    IEnumerator PollBattleStatus()
+    {
+        while (screenObj != null && !battleFinished && !isBotMatch)
+        {
+            yield return new WaitForSecondsRealtime(2f);
+            if (screenObj == null || battleFinished || APIManager.Instance == null) yield break;
+
+            APIManager.Instance.GetRequest(
+                "/battle/status/" + roomData.room_code,
+                response =>
+                {
+                    if (screenObj == null || battleFinished) return;
+                    try
+                    {
+                        BattleRoomStatusResponse status = JsonUtility.FromJson<BattleRoomStatusResponse>(response);
+                        if (status == null) return;
+                        myScore = isHost ? (int)status.host_score : (int)status.guest_score;
+                        opponentScore = isHost ? (int)status.guest_score : (int)status.host_score;
+                        if (myScoreTxt != null) myScoreTxt.text = myScore.ToString();
+                        if (oppScoreTxt != null) oppScoreTxt.text = opponentScore.ToString();
+
+                        if (status.status == "FINISHED" && !isFinishing)
+                            RequestFinishBattle();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogWarning("[BattleQuiz] Gagal membaca status room: " + ex.Message);
+                    }
+                },
+                error => Debug.LogWarning("[BattleQuiz] Poll status gagal: " + error)
+            );
+        }
+    }
+    void ShowBattleResult(bool iWin, bool isDraw, int hostScore, int guestScore, int rewardXP = 0, int rewardStars = 0)
     {
         if (screenObj == null || roomData == null)
             return;
@@ -719,9 +729,13 @@ UIBuilder.CreatePanel(screenObj.transform, "ResultOverlay", new Color(0, 0, 0, 0
 : (isHost ? guestScore : hostScore);
         UIBuilder.CreateTextSized(overlay.transform, myName + " : " + myFinalScore, 46, TOBATheme.TextLight, TextAlignmentOptions.Center, new Vector2(800, 70), new Vector2(0, 100f));
         UIBuilder.CreateTextSized(overlay.transform, oppName + " : " + oppFinalScore, 46, TOBATheme.TextLight, TextAlignmentOptions.Center, new Vector2(800, 70), new Vector2(0, 20f));
-        if (iWin)
+        if (iWin && (rewardXP > 0 || rewardStars > 0))
         {
-            UIBuilder.CreateTextSized(overlay.transform, "✨ +50 XP  <color=#D6A84B><sprite name=\"star\" tint=1></color> +2 Bintang", 40, TOBATheme.BatakGold, TextAlignmentOptions.Center, new Vector2(800, 60), new Vector2(0, -80f));
+            UIBuilder.CreateTextSized(
+                overlay.transform,
+                "✨ +" + rewardXP + " XP  <color=#D6A84B><sprite name=\"star\" tint=1></color> +" + rewardStars + " Bintang",
+                40, TOBATheme.BatakGold, TextAlignmentOptions.Center,
+                new Vector2(800, 60), new Vector2(0, -80f));
         }
         GameObject btnBack =
 UIBuilder.CreateButton(overlay.transform, "BtnBack", "KEMBALI KE MENU", new Vector2(700, 130), TOBATheme.BtnPrimary, () =>
@@ -748,10 +762,13 @@ UIBuilder.CreateButton(overlay.transform, "BtnBack", "KEMBALI KE MENU", new Vect
 
             if (botCo != null)
                 ScreenManager.Instance.StopCoroutine(botCo);
+            if (statusPollCo != null)
+                ScreenManager.Instance.StopCoroutine(statusPollCo);
         }
 
         timerCoroutine = null;
         botCo = null;
+        statusPollCo = null;
 
         if (feedbackPanel != null)
         {
@@ -766,4 +783,11 @@ UIBuilder.CreateButton(overlay.transform, "BtnBack", "KEMBALI KE MENU", new Vect
         }
         base.Hide();
     }
+}
+
+
+[System.Serializable]
+public class BattleOptionButtonTag : MonoBehaviour
+{
+    public int OptionID;
 }

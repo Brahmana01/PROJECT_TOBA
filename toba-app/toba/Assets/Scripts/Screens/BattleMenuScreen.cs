@@ -1377,18 +1377,55 @@ public class BattleMenuScreen : BaseScreen
                     );
                 }
 
-                if (res != null && res.room_id > 0)
+                if (res != null && res.room_id > 0 && !string.IsNullOrWhiteSpace(res.room_code))
                 {
-                    if (ScreenManager.Instance != null)
-                    {
-                        ScreenManager.Instance.ChangeScreen(
-                            new BattleQuizScreen(
-                                container,
-                                res,
-                                false
-                            )
-                        );
-                    }
+                    // Join response hanya berisi data room dan snapshot soal.
+                    // Ambil status lengkap agar nama host/guest dan skor awal tersedia.
+                    APIManager.Instance.GetRequest(
+                        "/battle/status/" + res.room_code,
+                        statusResponse =>
+                        {
+                            if (screenObj == null) return;
+                            BattleRoomStatusResponse fullRoom = null;
+                            try
+                            {
+                                fullRoom = JsonUtility.FromJson<BattleRoomStatusResponse>(statusResponse);
+                                if (fullRoom == null || fullRoom.room_id <= 0 ||
+                                    fullRoom.questions == null || fullRoom.questions.Count != 10)
+                                    throw new System.FormatException("Status room atau 10 soal Battle tidak lengkap.");
+                            }
+                            catch (System.Exception ex)
+                            {
+                                Debug.LogError("[Battle] Status room tidak valid: " + ex.Message);
+                                NetworkManager.Instance?.ShowToast("Data Battle tidak lengkap. Room dibatalkan.", true);
+                                DisconnectBattleRequest disconnect = new DisconnectBattleRequest
+                                {
+                                    room_id = res.room_id,
+                                    player_id = PlayerPrefs.GetInt("PlayerID")
+                                };
+                                APIManager.Instance.PostRequest("/battle/disconnect", JsonUtility.ToJson(disconnect),
+                                    _ => { }, err => Debug.LogWarning("[Battle] Gagal membatalkan room: " + err));
+                                return;
+                            }
+
+                            ScreenManager.Instance?.ChangeScreen(
+                                new BattleQuizScreen(container, fullRoom, false)
+                            );
+                        },
+                        err =>
+                        {
+                            if (screenObj == null) return;
+                            Debug.LogError("[Battle] Gagal mengambil status room setelah join: " + err);
+                            NetworkManager.Instance?.ShowToast("Gagal memuat data pertandingan. Room dibatalkan.", true);
+                            DisconnectBattleRequest disconnect = new DisconnectBattleRequest
+                            {
+                                room_id = res.room_id,
+                                player_id = PlayerPrefs.GetInt("PlayerID")
+                            };
+                            APIManager.Instance.PostRequest("/battle/disconnect", JsonUtility.ToJson(disconnect),
+                                _ => { }, disconnectError => Debug.LogWarning("[Battle] Gagal membatalkan room: " + disconnectError));
+                        }
+                    );
                 }
                 else
                 {
