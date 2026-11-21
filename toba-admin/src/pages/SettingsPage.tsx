@@ -21,7 +21,18 @@ const SettingsPage: React.FC = () => {
 
   useEffect(() => { fetch(); }, []);
 
+  const LOCKED_KEYS = new Set([
+    'quiz_question_count',
+    'trivia_question_count',
+    'min_correct_to_pass',
+    'battle_question_count',
+    'battle_bank_question_count',
+    'xp_per_level',
+    'location_question_count',
+  ]);
+
   const handleChange = (key: string, value: string) => {
+    if (LOCKED_KEYS.has(key)) return;
     setChanged(prev => ({...prev, [key]: value}));
     setSettings(prev => prev.map(s => s.setting_key === key ? {...s, setting_value: value} : s));
   };
@@ -42,11 +53,11 @@ const SettingsPage: React.FC = () => {
   const GROUPS = [
     {
       label: '🎮 Gameplay',
-      keys: ['location_question_count','trivia_question_count','battle_question_count','xp_per_level','character_change_level'],
+      keys: ['quiz_question_count','trivia_question_count','min_correct_to_pass','battle_question_count','battle_bank_question_count','xp_per_level','location_question_count','character_change_level'],
     },
     {
       label: '⚔ Battle',
-      keys: ['battle_wait_timeout','battle_reward_xp','battle_reward_stars'],
+      keys: ['battle_time_per_question','matchmaking_timeout'],
     },
     {
       label: '📊 Pemain Baru',
@@ -99,9 +110,12 @@ const SettingsPage: React.FC = () => {
                   <input
                     type="number"
                     value={s.setting_value}
+                    disabled={LOCKED_KEYS.has(s.setting_key)}
                     onChange={e => handleChange(s.setting_key, e.target.value)}
-                    style={{ width: 110, padding: '8px 12px', background: 'rgba(0,0,0,0.4)', border: '1px solid #5C3B26', borderRadius: 6, color: '#D4AF37', fontSize: '0.95rem', textAlign: 'center', outline: 'none', fontWeight: 'bold' }}
+                    title={LOCKED_KEYS.has(s.setting_key) ? 'Aturan inti gameplay dikunci oleh sistem.' : 'Ubah nilai setting'}
+                    style={{ width: 110, padding: '8px 12px', background: LOCKED_KEYS.has(s.setting_key) ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.4)', border: '1px solid #5C3B26', borderRadius: 6, color: LOCKED_KEYS.has(s.setting_key) ? '#9E9E9E' : '#D4AF37', fontSize: '0.95rem', textAlign: 'center', outline: 'none', fontWeight: 'bold', cursor: LOCKED_KEYS.has(s.setting_key) ? 'not-allowed' : 'text' }}
                   />
+                  {LOCKED_KEYS.has(s.setting_key) && <span style={{ fontSize: '0.62rem', color: '#9E9E9E', letterSpacing: 0.5 }}>DIKUNCI</span>}
                 </div>
               ))}
             </div>
@@ -126,9 +140,11 @@ const SettingsPage: React.FC = () => {
                 <input
                   type="text"
                   value={s.setting_value}
+                  disabled={LOCKED_KEYS.has(s.setting_key)}
                   onChange={e => handleChange(s.setting_key, e.target.value)}
-                  style={{ width: 140, padding: '8px 12px', background: 'rgba(0,0,0,0.4)', border: '1px solid #5C3B26', borderRadius: 6, color: '#D4AF37', fontSize: '0.9rem', textAlign: 'center', outline: 'none' }}
+                  style={{ width: 140, padding: '8px 12px', background: LOCKED_KEYS.has(s.setting_key) ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.4)', border: '1px solid #5C3B26', borderRadius: 6, color: LOCKED_KEYS.has(s.setting_key) ? '#9E9E9E' : '#D4AF37', fontSize: '0.9rem', textAlign: 'center', outline: 'none', cursor: LOCKED_KEYS.has(s.setting_key) ? 'not-allowed' : 'text' }}
                 />
+                {LOCKED_KEYS.has(s.setting_key) && <span style={{ fontSize: '0.62rem', color: '#9E9E9E' }}>DIKUNCI</span>}
               </div>
             ))}
           </div>

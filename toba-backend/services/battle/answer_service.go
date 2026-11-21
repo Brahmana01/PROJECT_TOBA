@@ -12,13 +12,16 @@ import (
 )
 
 type BattleAnswerResult struct {
-	IsCorrect       bool   `json:"is_correct"`
-	CorrectOptionID uint   `json:"correct_option_id"`
-	Explanation     string `json:"explanation"`
-	HostScore       int64  `json:"host_score"`
-	GuestScore      int64  `json:"guest_score"`
-	AnsweredCount   int64  `json:"answered_count"`
-	TotalQuestions  int    `json:"total_questions"`
+	RoomCode         string `json:"room_code"`
+	IsCorrect        bool   `json:"is_correct"`
+	CorrectOptionID  uint   `json:"correct_option_id"`
+	Explanation      string `json:"explanation"`
+	HostScore        int64  `json:"host_score"`
+	GuestScore       int64  `json:"guest_score"`
+	AnsweredCount    int64  `json:"answered_count"`
+	TotalQuestions   int    `json:"total_questions"`
+	IsBot            bool   `json:"is_bot"`
+	BotAnsweredCount int    `json:"bot_answered_count"`
 }
 
 func battleScores(tx *gorm.DB, room models.BattleRoom) (int64, int64, error) {
@@ -30,7 +33,9 @@ func battleScores(tx *gorm.DB, room models.BattleRoom) (int64, int64, error) {
 	}
 
 	var guestScore int64
-	if room.GuestPlayerID != nil {
+	if isBotRoom(room) {
+		guestScore = int64(room.BotScore)
+	} else if room.GuestPlayerID != nil {
 		if err := tx.Model(&models.BattleAnswer{}).
 			Where("room_id = ? AND player_id = ? AND is_correct = ?", room.ID, *room.GuestPlayerID, true).
 			Count(&guestScore).Error; err != nil {
@@ -77,6 +82,10 @@ func SubmitBattleAnswer(
 		if !isHost && !isGuest {
 			businessStatus, businessMessage = 403, "Player bukan peserta battle"
 			return errors.New(businessMessage)
+		}
+
+		if isBotRoom(room) {
+			normalizeBotRoom(&room)
 		}
 
 		var assigned models.BattleRoomQuestion
@@ -155,6 +164,14 @@ func SubmitBattleAnswer(
 			response.IsCorrect = isCorrect
 		}
 
+		// Progres Bot dihitung server-side dari waktu room dimulai. Tidak ada
+		// skor atau status benar/salah Bot yang diterima dari Unity.
+		if isBotRoom(room) {
+			if _, err := advanceBotProgressTx(tx, &room, time.Now()); err != nil {
+				return err
+			}
+		}
+
 		// Penjelasan baru dikirim setelah jawaban diterima server.
 		var answeredQuestion models.BattleQuestion
 		if err := tx.First(&answeredQuestion, questionID).Error; err != nil {
@@ -182,6 +199,11 @@ func SubmitBattleAnswer(
 			return err
 		}
 		response.TotalQuestions = models.BattleQuestionCount
+		response.RoomCode = room.RoomCode
+		response.IsBot = isBotRoom(room)
+		if response.IsBot {
+			response.BotAnsweredCount = room.BotAnsweredCount
+		}
 		return nil
 	})
 

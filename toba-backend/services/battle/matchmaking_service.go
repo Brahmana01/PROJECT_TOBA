@@ -37,18 +37,26 @@ func MatchmakePlayer(playerID uint) (map[string]interface{}, string, int) {
 		} else {
 			opponentID = &activeRoom.HostPlayerID
 		}
+
+		isBot := isBotRoom(activeRoom)
 		if opponentID != nil {
 			var opponent models.Player
 			if err := config.DB.First(&opponent, *opponentID).Error; err == nil {
 				opponentName = opponent.Name
 			}
-		} else {
-			opponentName = "Bot Toba"
+		} else if isBot {
+			opponentName = activeRoom.BotName
+			if opponentName == "" {
+				opponentName = defaultBattleBotName
+			}
 		}
+
 		return map[string]interface{}{
 			"status": "MATCHED", "room_id": activeRoom.ID, "room_code": activeRoom.RoomCode,
 			"opponent_id": opponentID, "opponent_name": opponentName,
-			"is_host": isHost, "is_bot": activeRoom.GuestPlayerID == nil,
+			"is_host": isHost, "is_bot": isBot,
+			"bot_name": activeRoom.BotName, "bot_level": activeRoom.BotLevel,
+			"bot_in": 0,
 		}, "", 200
 	}
 	if activeErr != nil && !errors.Is(activeErr, gorm.ErrRecordNotFound) {
@@ -61,7 +69,15 @@ func MatchmakePlayer(playerID uint) (map[string]interface{}, string, int) {
 			RemoveMatchmakingEntry(playerID)
 			return createBotMatch(&player)
 		}
-		return map[string]interface{}{"status": "SEARCHING"}, "", 200
+		waited := int(time.Since(existing.EnteredAt).Seconds())
+		botIn := 30 - waited
+		if botIn < 0 {
+			botIn = 0
+		}
+		return map[string]interface{}{
+			"status": "SEARCHING", "waited": waited, "bot_in": botIn,
+			"message": "Mencari lawan...",
+		}, "", 200
 	}
 
 	opponent := PopMatchmakingOpponent(playerID, player.Level)
@@ -70,13 +86,14 @@ func MatchmakePlayer(playerID uint) (map[string]interface{}, string, int) {
 			PlayerID: player.ID, PlayerName: player.Name,
 			Level: player.Level, EnteredAt: time.Now(),
 		})
-		return map[string]interface{}{"status": "SEARCHING"}, "", 200
+		return map[string]interface{}{
+			"status": "SEARCHING", "waited": 0, "bot_in": 30,
+			"message": "Mencari lawan...",
+		}, "", 200
 	}
 
-	room, err := createAssignedRoom(player.ID, &opponent.PlayerID)
+	room, err := createAssignedRoom(player.ID, &opponent.PlayerID, 0)
 	if err != nil {
-		// Kembalikan kedua pemain ke antrean agar kegagalan bank soal
-		// tidak membuat pemain hilang dari matchmaking.
 		AddMatchmakingEntry(*opponent)
 		AddMatchmakingEntry(MatchEntry{
 			PlayerID: player.ID, PlayerName: player.Name,
@@ -88,16 +105,21 @@ func MatchmakePlayer(playerID uint) (map[string]interface{}, string, int) {
 	return map[string]interface{}{
 		"status": "MATCHED", "room_id": room.ID, "room_code": room.RoomCode,
 		"opponent_id": opponent.PlayerID, "opponent_name": opponent.PlayerName,
-		"is_host": true, "is_bot": false,
+		"is_host": true, "is_bot": false, "bot_in": 0,
 	}, "", 200
 }
 
-func createAssignedRoom(hostID uint, guestID *uint) (*models.BattleRoom, error) {
+func createAssignedRoom(hostID uint, guestID *uint, botLevel int) (*models.BattleRoom, error) {
 	var room models.BattleRoom
 	err := config.DB.Transaction(func(tx *gorm.DB) error {
 		room = models.BattleRoom{
 			RoomCode: GenerateRoomCode(), HostPlayerID: hostID,
 			GuestPlayerID: guestID, Status: "PLAYING",
+			IsBot: guestID == nil,
+		}
+		if guestID == nil {
+			room.BotName = defaultBattleBotName
+			room.BotLevel = botLevelForPlayer(botLevel)
 		}
 		now := time.Now()
 		room.StartedAt = &now
@@ -118,7 +140,12 @@ func createAssignedRoom(hostID uint, guestID *uint) (*models.BattleRoom, error) 
 func CheckMatchmaking(playerID uint) map[string]interface{} {
 	entry := FindMatchmakingEntry(playerID)
 	if entry != nil {
-		return map[string]interface{}{"status": "SEARCHING"}
+		waited := int(time.Since(entry.EnteredAt).Seconds())
+		botIn := 30 - waited
+		if botIn < 0 {
+			botIn = 0
+		}
+		return map[string]interface{}{"status": "SEARCHING", "waited": waited, "bot_in": botIn}
 	}
 
 	var room models.BattleRoom
@@ -136,17 +163,24 @@ func CheckMatchmaking(playerID uint) map[string]interface{} {
 	} else {
 		opponentID = &room.HostPlayerID
 	}
+	isBot := isBotRoom(room)
 	if opponentID != nil {
 		var opponent models.Player
 		if err := config.DB.First(&opponent, *opponentID).Error; err == nil {
 			opponentName = opponent.Name
+		}
+	} else if isBot {
+		opponentName = room.BotName
+		if opponentName == "" {
+			opponentName = defaultBattleBotName
 		}
 	}
 
 	return map[string]interface{}{
 		"status": "MATCHED", "room_id": room.ID, "room_code": room.RoomCode,
 		"opponent_id": opponentID, "opponent_name": opponentName,
-		"is_host": room.HostPlayerID == playerID, "is_bot": room.GuestPlayerID == nil,
+		"is_host": room.HostPlayerID == playerID, "is_bot": isBot,
+		"bot_name": room.BotName, "bot_level": room.BotLevel,
 	}
 }
 
@@ -156,7 +190,8 @@ func CancelMatchmaking(playerID uint) map[string]interface{} {
 }
 
 func createBotMatch(player *models.Player) (map[string]interface{}, string, int) {
-	room, err := createAssignedRoom(player.ID, nil)
+	botLevel := botLevelForPlayer(player.Level)
+	room, err := createAssignedRoom(player.ID, nil, botLevel)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, "Data pemain tidak ditemukan", 404
@@ -165,7 +200,8 @@ func createBotMatch(player *models.Player) (map[string]interface{}, string, int)
 	}
 	return map[string]interface{}{
 		"status": "MATCHED", "room_id": room.ID, "room_code": room.RoomCode,
-		"opponent_id": nil, "opponent_name": "Bot Toba",
+		"opponent_id": nil, "opponent_name": room.BotName,
 		"is_host": true, "is_bot": true,
+		"bot_name": room.BotName, "bot_level": room.BotLevel, "bot_in": 0,
 	}, "", 200
 }

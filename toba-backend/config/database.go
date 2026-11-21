@@ -76,6 +76,7 @@ func autoMigrate() error {
 		&models.GameSetting{},
 		&models.WeeklyChallenge{},
 		&models.PlayerChallengeProgress{},
+		&models.WeeklyChallengeSession{},
 		&models.QuizSession{},
 	)
 }

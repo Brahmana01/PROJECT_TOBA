@@ -8,13 +8,13 @@ using System.Collections.Generic;
 public class CategorizeCategory
 {
     public string name;
-    public List<string> items;
 }
 
 [System.Serializable]
 public class CategorizeData
 {
     public List<CategorizeCategory> categories;
+    public List<string> items;
 }
 
 public class ChallengeCategorizeScreen : BaseScreen
@@ -22,11 +22,10 @@ public class ChallengeCategorizeScreen : BaseScreen
     private ChallengeData challenge;
     private List<CategorizeCategory> categories;
 
-    private readonly Dictionary<string, string> correctMap =
-        new Dictionary<string, string>();
-
     private readonly Dictionary<string, string> playerMap =
         new Dictionary<string, string>();
+
+    private List<string> items = new List<string>();
 
     private string selectedItem = null;
     private GameObject selectedCard = null;
@@ -73,8 +72,8 @@ public class ChallengeCategorizeScreen : BaseScreen
         );
 
         // Reset state agar aman jika Show dipanggil kembali.
-        correctMap.Clear();
         playerMap.Clear();
+        items.Clear();
         selectedItem = null;
         selectedCard = null;
         isSubmitting = false;
@@ -104,124 +103,51 @@ public class ChallengeCategorizeScreen : BaseScreen
             );
         }
 
-        if (data == null || data.categories == null)
+        if (data == null || data.categories == null || data.items == null)
         {
-            ShowInvalidData(
-                "Data kategori tidak tersedia",
-                "Hubungi admin"
-            );
+            ShowInvalidData("Data kategori tidak tersedia", "Hubungi admin");
             return;
         }
 
-        // Hapus kategori yang tidak memiliki struktur data valid.
         data.categories.RemoveAll(category =>
-            category == null ||
-            string.IsNullOrWhiteSpace(category.name) ||
-            category.items == null
-        );
+            category == null || string.IsNullOrWhiteSpace(category.name));
+        data.items.RemoveAll(item => string.IsNullOrWhiteSpace(item));
 
-        // Rapikan spasi pada nama kategori dan item.
         foreach (CategorizeCategory category in data.categories)
-        {
             category.name = category.name.Trim();
+        for (int i = 0; i < data.items.Count; i++)
+            data.items[i] = data.items[i].Trim();
 
-            for (int i = category.items.Count - 1; i >= 0; i--)
-            {
-                if (string.IsNullOrWhiteSpace(category.items[i]))
-                {
-                    category.items.RemoveAt(i);
-                }
-                else
-                {
-                    category.items[i] = category.items[i].Trim();
-                }
-            }
-        }
-
-        // Kategori tanpa item tidak dapat dimainkan.
-        data.categories.RemoveAll(category =>
-            category.items == null || category.items.Count == 0
-        );
-
-        if (data.categories.Count == 0)
-        {
-            ShowInvalidData(
-                "Kategori masih kosong",
-                "Hubungi admin"
-            );
-            return;
-        }
-
-        // Setiap nama kategori harus unik agar pilihan tidak ambigu.
         HashSet<string> categoryNames = new HashSet<string>(
-            System.StringComparer.OrdinalIgnoreCase
-        );
-
-        // Item harus unik karena item menjadi key pada correctMap.
-        // Item ganda sebelumnya dapat menimpa kategori yang benar.
-        HashSet<string> itemNames = new HashSet<string>(
-            System.StringComparer.OrdinalIgnoreCase
-        );
-
-        bool hasDuplicateCategory = false;
-        bool hasDuplicateItem = false;
-
+            System.StringComparer.OrdinalIgnoreCase);
         foreach (CategorizeCategory category in data.categories)
         {
             if (!categoryNames.Add(category.name))
             {
-                hasDuplicateCategory = true;
-                break;
+                ShowInvalidData("Nama kategori ganda", "Periksa kembali data kategori.");
+                return;
             }
+        }
 
-            foreach (string item in category.items)
+        HashSet<string> itemNames = new HashSet<string>(
+            System.StringComparer.OrdinalIgnoreCase);
+        foreach (string item in data.items)
+        {
+            if (!itemNames.Add(item))
             {
-                if (!itemNames.Add(item))
-                {
-                    hasDuplicateItem = true;
-                    break;
-                }
-
-                // correctMap dibangun satu kali saja.
-                correctMap.Add(item, category.name);
+                ShowInvalidData("Item budaya terduplikasi", "Setiap item harus unik.");
+                return;
             }
-
-            if (hasDuplicateItem)
-                break;
         }
 
-        if (hasDuplicateCategory)
+        if (data.categories.Count < 2 || data.items.Count < 2)
         {
-            correctMap.Clear();
-
-            ShowInvalidData(
-                "Nama kategori ganda",
-                "Periksa kembali data kategori."
-            );
-            return;
-        }
-
-        if (hasDuplicateItem)
-        {
-            correctMap.Clear();
-
-            ShowInvalidData(
-                "Item budaya terduplikasi",
-                "Setiap item harus berada pada satu kategori saja."
-            );
-            return;
-        }
-
-        if (correctMap.Count == 0)
-        {
-            ShowInvalidData(
-                "Data item tidak tersedia",
-                "Hubungi admin"
-            );
+            ShowInvalidData("Konten belum lengkap", "Hubungi admin.");
             return;
         }
 
         categories = data.categories;
+        items = data.items;
 
         // ========================================================
         // TAMPILAN ASLI DIPERTAHANKAN
@@ -259,24 +185,10 @@ public class ChallengeCategorizeScreen : BaseScreen
         if (!IsAlive || categories == null || categories.Count == 0)
             return;
 
-        // Kumpulkan semua item (shuffle).
-        List<string> allItems = new List<string>();
-
-        foreach (CategorizeCategory category in categories)
-        {
-            if (category == null || category.items == null)
-                continue;
-
-            allItems.AddRange(category.items);
-        }
-
-        if (allItems.Count == 0 || allItems.Count != correctMap.Count)
-        {
-            Debug.LogWarning(
-                "[Categorize] Jumlah item tidak konsisten dengan kunci jawaban."
-            );
+        // Item yang diterima client sudah dipisahkan dari kunci jawaban server.
+        List<string> allItems = new List<string>(items);
+        if (allItems.Count == 0)
             return;
-        }
 
         for (int i = allItems.Count - 1; i > 0; i--)
         {
@@ -451,7 +363,7 @@ public class ChallengeCategorizeScreen : BaseScreen
                 }
 
                 // Cegah item yang sama masuk ke playerMap lebih dari sekali.
-                if (!correctMap.ContainsKey(selectedItem) ||
+                if (!items.Contains(selectedItem) ||
                     playerMap.ContainsKey(selectedItem))
                 {
                     selectedItem = null;
@@ -466,22 +378,11 @@ public class ChallengeCategorizeScreen : BaseScreen
                 // Update warna item - tampilan asli dipertahankan.
                 if (selectedCard != null)
                 {
-                    bool right =
-                        correctMap.ContainsKey(selectedItem) &&
-                        correctMap[selectedItem] == capturedCat;
-
-                    Image selectedImage =
-                        selectedCard.GetComponent<Image>();
-
-                    Button selectedButton =
-                        selectedCard.GetComponent<Button>();
+                    Image selectedImage = selectedCard.GetComponent<Image>();
+                    Button selectedButton = selectedCard.GetComponent<Button>();
 
                     if (selectedImage != null)
-                    {
-                        selectedImage.color = right
-                            ? TOBATheme.OptionCorrect
-                            : TOBATheme.OptionWrong;
-                    }
+                        selectedImage.color = TOBATheme.BatakGold;
 
                     if (selectedButton != null)
                         selectedButton.interactable = false;
@@ -490,7 +391,7 @@ public class ChallengeCategorizeScreen : BaseScreen
                 selectedItem = null;
                 selectedCard = null;
 
-                if (playerMap.Count >= correctMap.Count)
+                if (playerMap.Count >= items.Count)
                 {
                     BeginFinish();
                 }
@@ -527,27 +428,27 @@ public class ChallengeCategorizeScreen : BaseScreen
         if (!IsCurrent || !isSubmitting)
             yield break;
 
-        int score = 0;
-
-        foreach (KeyValuePair<string, string> answer in correctMap)
-        {
-            string playerAnswer;
-
-            if (playerMap.TryGetValue(answer.Key, out playerAnswer) &&
-                answer.Value == playerAnswer)
-            {
-                score++;
-            }
-        }
-
         if (screenObj == null)
             yield break;
+
+        ChallengeCategorizeSubmission submission = new ChallengeCategorizeSubmission
+        {
+            assignments = new List<ChallengeCategorizeAssignment>()
+        };
+        foreach (KeyValuePair<string, string> assignment in playerMap)
+        {
+            submission.assignments.Add(new ChallengeCategorizeAssignment
+            {
+                item = assignment.Key,
+                category = assignment.Value
+            });
+        }
 
         TOBAChallengeSubmission.Submit(
             screenObj,
             container,
             challenge,
-            score
+            JsonUtility.ToJson(submission)
         );
     }
 }

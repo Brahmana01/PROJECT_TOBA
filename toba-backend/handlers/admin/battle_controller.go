@@ -25,6 +25,35 @@ type battleQuestionInput struct {
 	Options     []battleOptionInput `json:"options"`
 }
 
+type battleQuestionAdminView struct {
+	models.BattleQuestion
+	IsLocked       bool `json:"is_locked"`
+	IsInActiveRoom bool `json:"is_in_active_room"`
+}
+
+var (
+	errBattleQuestionActive  = errors.New("soal sedang digunakan room Battle yang belum selesai")
+	errBattleQuestionHistory = errors.New("soal sudah digunakan dalam riwayat Battle; buat soal baru agar riwayat tidak berubah")
+)
+
+func battleQuestionUsage(tx *gorm.DB, questionID uint) (used bool, active bool, err error) {
+	var totalCount int64
+	if err = tx.Model(&models.BattleRoomQuestion{}).
+		Where("question_id = ?", questionID).
+		Count(&totalCount).Error; err != nil {
+		return false, false, err
+	}
+
+	var activeCount int64
+	if err = tx.Table("battle_room_questions").
+		Joins("JOIN battle_rooms ON battle_rooms.id = battle_room_questions.room_id").
+		Where("battle_room_questions.question_id = ? AND battle_rooms.status IN ?", questionID, []string{"WAITING", "PLAYING"}).
+		Count(&activeCount).Error; err != nil {
+		return false, false, err
+	}
+	return totalCount > 0, activeCount > 0, nil
+}
+
 func validateBattleQuestionInput(input *battleQuestionInput) error {
 	input.Question = strings.TrimSpace(input.Question)
 	input.Explanation = strings.TrimSpace(input.Explanation)
@@ -60,7 +89,39 @@ func AdminGetBattleQuestions(c *fiber.Ctx) error {
 	if questions == nil {
 		questions = []models.BattleQuestion{}
 	}
-	return c.JSON(questions)
+
+	var usedIDs []uint
+	if err := config.DB.Model(&models.BattleRoomQuestion{}).
+		Distinct("question_id").Pluck("question_id", &usedIDs).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal memeriksa riwayat soal Battle"})
+	}
+	var activeIDs []uint
+	if err := config.DB.Table("battle_room_questions").
+		Select("DISTINCT battle_room_questions.question_id").
+		Joins("JOIN battle_rooms ON battle_rooms.id = battle_room_questions.room_id").
+		Where("battle_rooms.status IN ?", []string{"WAITING", "PLAYING"}).
+		Pluck("battle_room_questions.question_id", &activeIDs).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal memeriksa room Battle aktif"})
+	}
+
+	usedSet := make(map[uint]bool, len(usedIDs))
+	for _, id := range usedIDs {
+		usedSet[id] = true
+	}
+	activeSet := make(map[uint]bool, len(activeIDs))
+	for _, id := range activeIDs {
+		activeSet[id] = true
+	}
+
+	response := make([]battleQuestionAdminView, 0, len(questions))
+	for _, question := range questions {
+		response = append(response, battleQuestionAdminView{
+			BattleQuestion: question,
+			IsLocked:       usedSet[question.ID],
+			IsInActiveRoom: activeSet[question.ID],
+		})
+	}
+	return c.JSON(response)
 }
 
 func AdminCreateBattleQuestion(c *fiber.Ctx) error {
@@ -117,6 +178,16 @@ func AdminUpdateBattleQuestion(c *fiber.Ctx) error {
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&question, uint(id)).Error; err != nil {
 			return err
 		}
+		used, active, usageErr := battleQuestionUsage(tx, question.ID)
+		if usageErr != nil {
+			return usageErr
+		}
+		if active {
+			return errBattleQuestionActive
+		}
+		if used {
+			return errBattleQuestionHistory
+		}
 		question.Question = input.Question
 		question.Explanation = input.Explanation
 		if input.IsActive != nil {
@@ -142,6 +213,9 @@ func AdminUpdateBattleQuestion(c *fiber.Ctx) error {
 		}
 		return nil
 	}); err != nil {
+		if errors.Is(err, errBattleQuestionActive) || errors.Is(err, errBattleQuestionHistory) {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{"message": err.Error()})
+		}
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Soal Battle tidak ditemukan"})
 		}
@@ -163,13 +237,29 @@ func AdminDeleteBattleQuestion(c *fiber.Ctx) error {
 	if err != nil || id == 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "ID soal tidak valid"})
 	}
-	result := config.DB.Model(&models.BattleQuestion{}).
-		Where("id = ?", uint(id)).Update("is_active", false)
-	if result.Error != nil {
+
+	var question models.BattleQuestion
+	err = config.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&question, uint(id)).Error; err != nil {
+			return err
+		}
+		_, active, err := battleQuestionUsage(tx, question.ID)
+		if err != nil {
+			return err
+		}
+		if active {
+			return errBattleQuestionActive
+		}
+		return tx.Model(&question).Update("is_active", false).Error
+	})
+	if err != nil {
+		if errors.Is(err, errBattleQuestionActive) {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{"message": err.Error()})
+		}
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Soal Battle tidak ditemukan"})
+		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal menonaktifkan soal Battle"})
-	}
-	if result.RowsAffected == 0 {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Soal Battle tidak ditemukan"})
 	}
 	return c.JSON(fiber.Map{"message": "Soal Battle berhasil dinonaktifkan"})
 }

@@ -33,7 +33,9 @@ const BattleQuestionModal = ({ question, onClose, onSave }: {
       if (isEdit) await adminUpdateBattleQuestion(question!.id, payload);
       else await adminCreateBattleQuestion(payload);
       onSave();
-    } catch { setMsg('Gagal menyimpan.'); }
+    } catch (error: any) {
+      setMsg(error?.response?.data?.message || 'Gagal menyimpan soal Battle.');
+    }
     finally { setSaving(false); }
   };
 
@@ -94,9 +96,14 @@ const BattlePage: React.FC = () => {
   useEffect(() => { fetch(); }, []);
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Nonaktifkan soal ini? Soal tetap tersimpan dan tidak dipilih untuk pertandingan baru.')) return;
-    await adminDeleteBattleQuestion(id);
-    fetch();
+    if (!confirm('Nonaktifkan soal ini? Data dan riwayat pertandingan tetap disimpan.')) return;
+    try {
+      await adminDeleteBattleQuestion(id);
+      fetch();
+    } catch (error: any) {
+      alert(error?.response?.data?.message || 'Soal tidak dapat dinonaktifkan saat ini.');
+      fetch();
+    }
   };
 
   const filtered = questions.filter(q =>
@@ -146,8 +153,20 @@ const BattlePage: React.FC = () => {
               </div>
               <div style={{ display: 'flex', gap: 4, flexShrink: 0, alignItems: 'center' }}>
                 <span className={`badge ${q.is_active ? 'green' : 'orange'}`} style={{ fontSize: 9 }}>{q.is_active ? 'Aktif' : 'Nonaktif'}</span>
-                <button onClick={() => { setEditQ(q); setShowModal(true); }} style={{ background: 'none', border: 'none', color: '#D4AF37', cursor: 'pointer' }}><Edit2 size={14}/></button>
-                <button onClick={() => handleDelete(q.id)} style={{ background: 'none', border: 'none', color: '#F44336', cursor: 'pointer' }}><Trash2 size={14}/></button>
+                {q.is_in_active_room && <span className="badge orange" style={{ fontSize: 9 }}>Sedang dipakai</span>}
+                {!q.is_in_active_room && q.is_locked && <span className="badge orange" style={{ fontSize: 9 }}>Riwayat terkunci</span>}
+                <button
+                  onClick={() => { setEditQ(q); setShowModal(true); }}
+                  disabled={!!q.is_locked}
+                  title={q.is_locked ? 'Soal sudah digunakan. Buat soal baru agar riwayat tetap utuh.' : 'Edit soal'}
+                  style={{ background: 'none', border: 'none', color: '#D4AF37', cursor: q.is_locked ? 'not-allowed' : 'pointer', opacity: q.is_locked ? 0.35 : 1 }}
+                ><Edit2 size={14}/></button>
+                <button
+                  onClick={() => handleDelete(q.id)}
+                  disabled={!!q.is_in_active_room}
+                  title={q.is_in_active_room ? 'Soal sedang dipakai room yang belum selesai.' : 'Nonaktifkan soal'}
+                  style={{ background: 'none', border: 'none', color: '#F44336', cursor: q.is_in_active_room ? 'not-allowed' : 'pointer', opacity: q.is_in_active_room ? 0.35 : 1 }}
+                ><Trash2 size={14}/></button>
               </div>
             </div>
             <div style={{ padding: '0 16px 12px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>

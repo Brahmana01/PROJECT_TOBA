@@ -8,17 +8,17 @@ using System.Collections.Generic;
 public class OrderData
 {
     public string question;
-    public List<string> correct_order;
+    public List<string> items;
 }
 
 public class ChallengeOrderScreen : BaseScreen
 {
     private ChallengeData challenge;
     private List<string> currentOrder = new List<string>();
-    private List<string> correctOrder = new List<string>();
     private string question;
     private List<GameObject> itemCards = new List<GameObject>();
     private int selectedIdx = -1;
+    private bool isSubmitting = false;
 
     public ChallengeOrderScreen(Transform parent, ChallengeData ch)
         : base(parent, "ChallengeOrder") { challenge = ch; }
@@ -49,7 +49,7 @@ public class ChallengeOrderScreen : BaseScreen
             Debug.LogWarning("[ChallengeOrder] JSON tidak valid: " + ex.Message);
         }
 
-        if (data == null || data.correct_order == null)
+        if (data == null || data.items == null)
         {
             EmptyState.Show(
                 screenObj.transform,
@@ -60,11 +60,11 @@ public class ChallengeOrderScreen : BaseScreen
             return;
         }
 
-        data.correct_order.RemoveAll(
+        data.items.RemoveAll(
             item => string.IsNullOrWhiteSpace(item)
         );
 
-        if (data.correct_order.Count < 2)
+        if (data.items.Count < 2)
         {
             EmptyState.Show(
                 screenObj.transform,
@@ -76,9 +76,8 @@ public class ChallengeOrderScreen : BaseScreen
         }
 
 
-        question     = data.question;
-        correctOrder = new List<string>(data.correct_order);
-        currentOrder = new List<string>(data.correct_order);
+        question = data.question;
+        currentOrder = new List<string>(data.items);
 
         // Shuffle urutan
         for (int i = currentOrder.Count-1; i > 0; i--)
@@ -192,25 +191,17 @@ public class ChallengeOrderScreen : BaseScreen
 
     void CheckOrder()
     {
-        if (screenObj == null ||
-            currentOrder == null ||
-            correctOrder == null ||
-            currentOrder.Count != correctOrder.Count ||
-            currentOrder.Count == 0)
+        if (screenObj == null || isSubmitting || currentOrder == null || currentOrder.Count < 2)
             return;
-        bool correct = true;
-        for (int i = 0; i < correctOrder.Count; i++)
-            if (currentOrder[i] != correctOrder[i]) { correct = false; break; }
 
-        SoundManager.Instance?.PlaySFX(correct ? "sfx_correct" : "sfx_wrong");
-        HapticManager.Instance?.Vibrate(correct ? HapticType.Success : HapticType.Error);
-
+        isSubmitting = true;
+        SoundManager.Instance?.PlaySFX("sfx_click");
+        HapticManager.Instance?.Vibrate(HapticType.Light);
         NetworkManager.Instance?.ShowToast(
-            correct ? "✅ Urutan benar! Hebat!" : "❌ Belum tepat, coba lagi!",
-            !correct);
+            "Urutan dikirim untuk diperiksa.", false);
 
-        if (correct && ScreenManager.Instance != null)
-            ScreenManager.Instance?.StartCoroutine(FinishDelay());
+        if (ScreenManager.Instance != null)
+            ScreenManager.Instance.StartCoroutine(FinishDelay());
     }
 
     IEnumerator FinishDelay()
@@ -220,11 +211,15 @@ public class ChallengeOrderScreen : BaseScreen
         if (screenObj == null)
             yield break;
 
+        ChallengeOrderSubmission submission = new ChallengeOrderSubmission
+        {
+            ordered_items = currentOrder
+        };
         TOBAChallengeSubmission.Submit(
             screenObj,
             container,
             challenge,
-            1
+            JsonUtility.ToJson(submission)
         );
     }
 }

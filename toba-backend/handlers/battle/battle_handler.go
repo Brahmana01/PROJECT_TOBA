@@ -1,8 +1,11 @@
 package battle
 
 import (
+	"toba-backend/config"
 	"toba-backend/middleware"
+	"toba-backend/models"
 	battleService "toba-backend/services/battle"
+	battleWS "toba-backend/websocket"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,6 +44,9 @@ func FinishBattle(c *fiber.Ctx) error {
 		})
 	}
 
+	if result.Status == "FINISHED" {
+		battleWS.Hub.BroadcastFinish(result.RoomCode, result)
+	}
 	return c.Status(status).JSON(result)
 }
 
@@ -78,9 +84,19 @@ func DisconnectBattle(c *fiber.Ctx) error {
 		})
 	}
 
+	var room models.BattleRoom
+	if err := config.DB.Select("room_code").First(&room, input.RoomID).Error; err == nil {
+		battleWS.Hub.BroadcastDisconnect(room.RoomCode, fiber.Map{
+			"room_code":     room.RoomCode,
+			"status":        "FINISHED",
+			"winner_id":     winnerID,
+			"finish_reason": "DISCONNECT",
+		})
+	}
+
 	return c.JSON(fiber.Map{
 		"status":    "FINISHED",
 		"winner_id": winnerID,
-		"message":   "Lawan disconnect. Kamu menang!",
+		"message":   "Battle dihentikan karena salah satu pemain keluar.",
 	})
 }

@@ -13,6 +13,109 @@ import (
 	"gorm.io/gorm"
 )
 
+// SeedGameplayRules menjalankan hanya data yang perlu diselaraskan untuk aturan
+// gameplay terbaru. Tidak menghapus data pemain dan tidak menjalankan seed
+// achievement, gallery, admin, atau weekly challenge yang tidak diperlukan.
+func SeedGameplayRules() error {
+	SeedLocations()
+	SeedTriviaCategories()
+
+	// Semua lokasi aktif mengikuti konfigurasi sesi terbaru, termasuk lokasi
+	// tambahan yang dibuat Admin. Bank soal dan progres tidak disentuh.
+	if err := config.DB.Model(&models.Location{}).Where("is_active = ?", true).Updates(map[string]interface{}{
+		"question_count":  10,
+		"minimum_correct": 6,
+	}).Error; err != nil {
+		return fmt.Errorf("gagal menyelaraskan aturan lokasi aktif: %w", err)
+	}
+
+	SeedTriviaQuestions()
+	SeedBattleQuestions()
+	SeedGameSettings()
+	if err := verifyGameplaySeed(); err != nil {
+		return err
+	}
+	log.Println("✅ Verifikasi seed gameplay berhasil.")
+	return nil
+}
+
+func SeedBattleRules() error {
+	SeedBattleQuestions()
+	SeedGameSettings()
+	if err := verifyBattleSeed(); err != nil {
+		return err
+	}
+	log.Println("✅ Verifikasi seed Battle berhasil.")
+	return nil
+}
+
+func verifyBattleSeed() error {
+	var activeBattle int64
+	if err := config.DB.Model(&models.BattleQuestion{}).Where("is_active = ?", true).Count(&activeBattle).Error; err != nil {
+		return err
+	}
+	if activeBattle < int64(models.BattleBankQuestionCount) {
+		return fmt.Errorf("bank Battle aktif %d; target minimal %d", activeBattle, models.BattleBankQuestionCount)
+	}
+	var setting models.GameSetting
+	if err := config.DB.Where("setting_key = ?", "battle_question_count").First(&setting).Error; err != nil {
+		return fmt.Errorf("setting battle_question_count belum tersedia: %w", err)
+	}
+	if setting.SettingValue != "10" {
+		return fmt.Errorf("battle_question_count bernilai %s, seharusnya 10", setting.SettingValue)
+	}
+	return nil
+}
+
+func verifyGameplaySeed() error {
+	if err := verifyBattleSeed(); err != nil {
+		return err
+	}
+	var misconfiguredLocations int64
+	if err := config.DB.Model(&models.Location{}).
+		Where("is_active = ? AND (question_count <> ? OR minimum_correct <> ?)", true, 10, 6).
+		Count(&misconfiguredLocations).Error; err != nil {
+		return err
+	}
+	if misconfiguredLocations > 0 {
+		return fmt.Errorf("masih ada %d lokasi aktif dengan aturan sesi yang tidak sesuai", misconfiguredLocations)
+	}
+	var configuredCategories int64
+	if err := config.DB.Model(&models.TriviaCategory{}).
+		Where("is_active = ? AND question_count = ? AND minimum_question = ?", true, 10, 10).
+		Count(&configuredCategories).Error; err != nil {
+		return err
+	}
+	if configuredCategories < 5 {
+		return fmt.Errorf("hanya %d kategori Trivia yang memiliki konfigurasi 10 soal per sesi; dibutuhkan 5", configuredCategories)
+	}
+	for categoryID := uint(1); categoryID <= 5; categoryID++ {
+		var activeTrivia int64
+		if err := config.DB.Model(&models.TriviaQuestion{}).
+			Where("category_id = ? AND is_active = ?", categoryID, true).
+			Count(&activeTrivia).Error; err != nil {
+			return err
+		}
+		if activeTrivia < 15 {
+			return fmt.Errorf("kategori Trivia %d hanya memiliki %d soal aktif; target minimal 15", categoryID, activeTrivia)
+		}
+	}
+	for key, expected := range map[string]string{
+		"quiz_question_count":   "10",
+		"min_correct_to_pass":   "6",
+		"battle_question_count": "10",
+	} {
+		var setting models.GameSetting
+		if err := config.DB.Where("setting_key = ?", key).First(&setting).Error; err != nil {
+			return fmt.Errorf("setting %s belum tersedia: %w", key, err)
+		}
+		if setting.SettingValue != expected {
+			return fmt.Errorf("setting %s bernilai %s, seharusnya %s", key, setting.SettingValue, expected)
+		}
+	}
+	return nil
+}
+
 func SeedAll() {
 	SeedCharacters()
 	SeedTitles()
@@ -100,22 +203,29 @@ func SeedTitles() {
 // ============================================================
 func SeedLocations() {
 	locations := []models.Location{
-		{ID: 1, Name: "IT Del", LevelOrder: 1, Description: "Institut Teknologi Del adalah kampus asri di Laguboti, Kabupaten Toba. Berdiri di tepi Danau Toba, kampus ini menjadi simbol pendidikan teknologi terbaik di Sumatera Utara.", Image: "itdel.png", RewardXP: 50, RewardStars: 1, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 2, Name: "Taman Eden 100", LevelOrder: 2, Description: "Kawasan wisata alam di Kabupaten Toba yang menawarkan hutan tropis, air terjun, dan pemandangan alam yang memukau. Paru-paru hijau kawasan Danau Toba.", Image: "tamaneden.png", RewardXP: 60, RewardStars: 1, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 3, Name: "Kaldera Toba", LevelOrder: 3, Description: "Supervolcano terbesar di dunia yang kini menjadi danau vulkanik terbesar. Kawasan ini sering menjadi tempat pelaksanaan upacara adat penting masyarakat Batak Toba.", Image: "kalderatoba.png", RewardXP: 70, RewardStars: 1, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 4, Name: "Parapat", LevelOrder: 4, Description: "Kota wisata di tepi Danau Toba yang terkenal dengan kuliner khas Batak, souvenir, dan pemandangan danau yang memukau. Pintu gerbang utama menuju Pulau Samosir.", Image: "parapat.png", RewardXP: 80, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 5, Name: "Ajibata", LevelOrder: 5, Description: "Pelabuhan utama di sisi Parapat yang menghubungkan Sumatera dengan Pulau Samosir melalui kapal ferry. Pemandangan Danau Toba dari sini sangat memesona.", Image: "ajibata.png", RewardXP: 90, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 6, Name: "Tomok", LevelOrder: 6, Description: "Desa wisata di Pulau Samosir terkenal dengan pasar souvenir khas Batak dan pertunjukan tari Sigale-gale. Terdapat pula makam Raja Sidabutar yang bersejarah.", Image: "tomok.png", RewardXP: 100, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 7, Name: "Tuktuk", LevelOrder: 7, Description: "Semenanjung di Pulau Samosir dengan pemandangan Danau Toba yang spektakuler. Pusat wisata dengan berbagai penginapan, restoran, dan budaya lokal yang kaya.", Image: "tuktuk.png", RewardXP: 110, RewardStars: 2, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 8, Name: "Batuhoda", LevelOrder: 8, Description: "Pantai indah di Pulau Samosir dengan pasir putih bersih dan air danau yang jernih. Cocok untuk berenang dan menikmati keindahan Danau Toba.", Image: "batuhoda.png", RewardXP: 120, RewardStars: 3, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 9, Name: "Tanah Ponggol", LevelOrder: 9, Description: "Kawasan di Samosir dengan jembatan ikonik penghubung daratan ke Pulau Samosir. Dari sini wisatawan bisa memasuki pulau tanpa naik kapal ferry.", Image: "tanahponggol.png", RewardXP: 130, RewardStars: 3, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
-		{ID: 10, Name: "Sibea-bea", LevelOrder: 10, Description: "Destinasi ikonik di Pulau Samosir dengan patung Yesus Kristus setinggi 61 meter. Pemandangan Danau Toba dari ketinggian ini sangat memukau wisatawan.", Image: "sibeabea.png", RewardXP: 150, RewardStars: 3, QuestionCount: 5, MinimumCorrect: 3, IsActive: true},
+		{ID: 1, Name: "IT Del", LevelOrder: 1, Description: "Institut Teknologi Del adalah kampus asri di Laguboti, Kabupaten Toba. Berdiri di tepi Danau Toba, kampus ini menjadi simbol pendidikan teknologi terbaik di Sumatera Utara.", Image: "itdel.png", RewardXP: 50, RewardStars: 1, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 2, Name: "Taman Eden 100", LevelOrder: 2, Description: "Kawasan wisata alam di Kabupaten Toba yang menawarkan hutan tropis, air terjun, dan pemandangan alam yang memukau. Paru-paru hijau kawasan Danau Toba.", Image: "tamaneden.png", RewardXP: 60, RewardStars: 1, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 3, Name: "Kaldera Toba", LevelOrder: 3, Description: "Supervolcano terbesar di dunia yang kini menjadi danau vulkanik terbesar. Kawasan ini sering menjadi tempat pelaksanaan upacara adat penting masyarakat Batak Toba.", Image: "kalderatoba.png", RewardXP: 70, RewardStars: 1, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 4, Name: "Parapat", LevelOrder: 4, Description: "Kota wisata di tepi Danau Toba yang terkenal dengan kuliner khas Batak, souvenir, dan pemandangan danau yang memukau. Pintu gerbang utama menuju Pulau Samosir.", Image: "parapat.png", RewardXP: 80, RewardStars: 2, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 5, Name: "Ajibata", LevelOrder: 5, Description: "Pelabuhan utama di sisi Parapat yang menghubungkan Sumatera dengan Pulau Samosir melalui kapal ferry. Pemandangan Danau Toba dari sini sangat memesona.", Image: "ajibata.png", RewardXP: 90, RewardStars: 2, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 6, Name: "Tomok", LevelOrder: 6, Description: "Desa wisata di Pulau Samosir terkenal dengan pasar souvenir khas Batak dan pertunjukan tari Sigale-gale. Terdapat pula makam Raja Sidabutar yang bersejarah.", Image: "tomok.png", RewardXP: 100, RewardStars: 2, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 7, Name: "Tuktuk", LevelOrder: 7, Description: "Semenanjung di Pulau Samosir dengan pemandangan Danau Toba yang spektakuler. Pusat wisata dengan berbagai penginapan, restoran, dan budaya lokal yang kaya.", Image: "tuktuk.png", RewardXP: 110, RewardStars: 2, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 8, Name: "Batuhoda", LevelOrder: 8, Description: "Pantai indah di Pulau Samosir dengan pasir putih bersih dan air danau yang jernih. Cocok untuk berenang dan menikmati keindahan Danau Toba.", Image: "batuhoda.png", RewardXP: 120, RewardStars: 3, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 9, Name: "Tanah Ponggol", LevelOrder: 9, Description: "Kawasan di Samosir dengan jembatan ikonik penghubung daratan ke Pulau Samosir. Dari sini wisatawan bisa memasuki pulau tanpa naik kapal ferry.", Image: "tanahponggol.png", RewardXP: 130, RewardStars: 3, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
+		{ID: 10, Name: "Sibea-bea", LevelOrder: 10, Description: "Destinasi ikonik di Pulau Samosir dengan patung Yesus Kristus setinggi 61 meter. Pemandangan Danau Toba dari ketinggian ini sangat memukau wisatawan.", Image: "sibeabea.png", RewardXP: 150, RewardStars: 3, QuestionCount: 10, MinimumCorrect: 6, IsActive: true},
 	}
 	for _, l := range locations {
 		var existing models.Location
 		result := config.DB.Where("level_order = ?", l.LevelOrder).First(&existing)
 		if result.Error == nil {
-			log.Printf("ℹ️  Location sudah ada: %s", l.Name)
+			if err := config.DB.Model(&existing).Updates(map[string]interface{}{
+				"question_count":  10,
+				"minimum_correct": 6,
+			}).Error; err != nil {
+				log.Printf("❌ Gagal memperbarui aturan lokasi %s: %v", l.Name, err)
+				continue
+			}
+			log.Printf("ℹ️  Location dipertahankan; aturan sesi disesuaikan 10 soal/6 benar: %s", l.Name)
 			continue
 		}
 		if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -514,6 +624,11 @@ func SeedTriviaCategories() {
 		},
 	}
 
+	for i := range categories {
+		categories[i].QuestionCount = 10
+		categories[i].MinimumQuestion = 10
+	}
+
 	for _, c := range categories {
 		var existing models.TriviaCategory
 		err := config.DB.First(&existing, c.ID).Error
@@ -533,10 +648,12 @@ func SeedTriviaCategories() {
 		}
 
 		if err := config.DB.Model(&existing).Updates(map[string]interface{}{
-			"name":          c.Name,
-			"description":   c.Description,
-			"display_order": c.DisplayOrder,
-			"is_active":     c.IsActive,
+			"name":             c.Name,
+			"description":      c.Description,
+			"question_count":   c.QuestionCount,
+			"minimum_question": c.MinimumQuestion,
+			"display_order":    c.DisplayOrder,
+			"is_active":        c.IsActive,
 		}).Error; err != nil {
 			log.Printf("❌ Gagal memperbarui kategori %s: %v", c.Name, err)
 			continue
@@ -550,7 +667,7 @@ func SeedTriviaCategories() {
 
 // ============================================================
 // TRIVIA QUESTIONS
-// 5 soal per kategori = 25 soal
+// 15 soal per kategori = 75 soal; 10 soal acak per sesi
 // Sumber dan kunci jawaban sudah ditinjau
 // ============================================================
 func SeedTriviaQuestions() {
@@ -867,133 +984,176 @@ func SeedTriviaQuestions() {
 				{"Pargonsi", false},
 			},
 		},
+
+		// ====================================================
+		// TAMBAHAN KATEGORI 1: BAHASA DAN KOSAKATA BATAK
+		// ====================================================
+		{1, "Apa arti kata 'bagas' dalam Bahasa Batak Toba?", "Bagas berarti rumah atau tempat tinggal.", []Opt{{"Rumah", true}, {"Pasar", false}, {"Hutan", false}, {"Danau", false}}},
+		{1, "Apa arti kata 'aek' dalam Bahasa Batak Toba?", "Aek berarti air.", []Opt{{"Tanah", false}, {"Air", true}, {"Api", false}, {"Angin", false}}},
+		{1, "Apa arti kata 'dolok' dalam Bahasa Batak Toba?", "Dolok berarti gunung atau bukit.", []Opt{{"Sungai", false}, {"Laut", false}, {"Gunung", true}, {"Lembah", false}}},
+		{1, "Apa arti kata 'huta' dalam Bahasa Batak Toba?", "Huta berarti kampung atau desa.", []Opt{{"Kampung", true}, {"Sekolah", false}, {"Sawah", false}, {"Pelabuhan", false}}},
+		{1, "Apa arti kata 'manjaha' dalam Bahasa Batak Toba?", "Manjaha berarti membaca.", []Opt{{"Menulis", false}, {"Membaca", true}, {"Menghitung", false}, {"Menyanyi", false}}},
+		{1, "Apa arti kata 'manurat' dalam Bahasa Batak Toba?", "Manurat berarti menulis.", []Opt{{"Membaca", false}, {"Berjalan", false}, {"Menulis", true}, {"Mendengar", false}}},
+		{1, "Apa arti kata 'marsiajar' dalam Bahasa Batak Toba?", "Marsiajar berarti belajar.", []Opt{{"Bekerja", false}, {"Belajar", true}, {"Bermain", false}, {"Beristirahat", false}}},
+		{1, "Apa arti kata 'modom' dalam Bahasa Batak Toba?", "Modom berarti tidur.", []Opt{{"Makan", false}, {"Minum", false}, {"Tidur", true}, {"Berlari", false}}},
+		{1, "Apa arti kata 'naeng' dalam Bahasa Batak Toba?", "Naeng berarti mau atau ingin.", []Opt{{"Sudah", false}, {"Belum", false}, {"Mau atau ingin", true}, {"Tidak pernah", false}}},
+		{1, "Apa arti kata 'mangan' dalam Bahasa Batak Toba?", "Mangan berarti makan.", []Opt{{"Minum", false}, {"Makan", true}, {"Tidur", false}, {"Pergi", false}}},
+
+		// ====================================================
+		// TAMBAHAN KATEGORI 2: MAKANAN DAN UNSUR ADAT BATAK TOBA
+		// ====================================================
+		{2, "Bumbu khas Batak Toba yang dikenal memberi sensasi getir dan aroma khas pada masakan adalah ...", "Andaliman merupakan rempah khas kawasan Batak yang sering digunakan dalam masakan tradisional.", []Opt{{"Ketumbar", false}, {"Andaliman", true}, {"Kayu manis", false}, {"Cengkih", false}}},
+		{2, "Apa bahan utama yang umum digunakan untuk membuat dekke naniura?", "Dekke naniura umumnya dibuat dari ikan air tawar, terutama ikan mas, yang diolah dengan bumbu dan bahan pengasam tanpa pemasakan panas.", []Opt{{"Ikan mas", true}, {"Daging ayam", false}, {"Daging sapi", false}, {"Udang", false}}},
+		{2, "Bagaimana cara pengolahan ikan pada hidangan dekke natinombur?", "Dalam pengolahan natinombur, ikan dipanggang terlebih dahulu kemudian disajikan dengan bumbu.", []Opt{{"Dikukus tanpa bumbu", false}, {"Dipanggang lalu diberi bumbu", true}, {"Diasinkan hingga kering", false}, {"Direbus dengan santan", false}}},
+		{2, "Dali ni horbo merupakan olahan tradisional yang bahan utamanya berasal dari ...", "Dali ni horbo dikenal sebagai olahan tradisional berbahan susu kerbau.", []Opt{{"Susu kambing", false}, {"Susu sapi", false}, {"Susu kerbau", true}, {"Santan kelapa", false}}},
+		{2, "Lapet merupakan makanan tradisional yang umumnya dimasak dengan cara ...", "Lapet dibungkus menggunakan daun, kemudian dimatangkan dengan cara dikukus.", []Opt{{"Dipanggang langsung di bara", false}, {"Dikukus dalam bungkus daun", true}, {"Digoreng dengan minyak", false}, {"Dibakar tanpa pembungkus", false}}},
+		{2, "Pakkat yang dikenal dalam kuliner tradisional Batak berasal dari bagian tanaman ...", "Pakkat merupakan pucuk atau tunas muda rotan yang diolah sebagai bahan pangan.", []Opt{{"Bambu", false}, {"Rotan", true}, {"Kelapa", false}, {"Pisang", false}}},
+		{2, "Sasagun dikenal sebagai kudapan tradisional yang bahan utamanya berupa ...", "Sasagun dibuat dari beras atau tepung beras yang disangrai dan diolah menjadi kudapan.", []Opt{{"Tepung beras", true}, {"Tepung sagu", false}, {"Tepung jagung", false}, {"Tepung singkong", false}}},
+		{2, "Apa fungsi tudu-tudu sipanganon dalam kegiatan adat Batak Toba?", "Tudu-tudu sipanganon merupakan sajian makanan adat yang disampaikan dalam rangkaian kegiatan adat sebagai bentuk penghormatan.", []Opt{{"Sajian makanan dalam rangkaian adat", true}, {"Alat musik pengiring tortor", false}, {"Perlengkapan untuk menenun ulos", false}, {"Hiasan pada rumah adat", false}}},
+		{2, "Mie gomak dikenal sebagai salah satu kuliner khas dari kawasan ...", "Mie gomak merupakan hidangan mi yang dikenal luas sebagai kuliner khas Batak di Sumatera Utara.", []Opt{{"Sumatera Utara", true}, {"Sulawesi Selatan", false}, {"Jawa Tengah", false}, {"Kalimantan Timur", false}}},
+		{2, "Dalam adat pernikahan Batak Toba, istilah sinamot berkaitan dengan ...", "Sinamot merupakan pemberian atau mas kawin yang dibicarakan oleh keluarga calon pengantin dalam adat pernikahan.", []Opt{{"Pembagian tanah", false}, {"Mas kawin", true}, {"Pemberian nama anak", false}, {"Upacara panen", false}}},
+
+		// ====================================================
+		// TAMBAHAN KATEGORI 3: MUSIK TRADISIONAL
+		// ====================================================
+		{3, "Tortor merupakan bentuk seni tradisional Batak Toba berupa ...", "Tortor merupakan tarian tradisional Batak Toba yang kerap hadir dalam kegiatan adat.", []Opt{{"Tarian", true}, {"Lagu pop", false}, {"Seni ukir", false}, {"Permainan rakyat", false}}},
+		{3, "Dalam kegiatan gondang, sebutan bagi pemain musik tradisional adalah ...", "Pargonsi merupakan sebutan bagi pemain musik atau pemusik dalam tradisi Batak Toba.", []Opt{{"Pargonsi", true}, {"Parhata", false}, {"Parhobas", false}, {"Parumaen", false}}},
+		{3, "Garantung merupakan alat musik tradisional Batak Toba yang sumber bunyinya berasal dari ...", "Garantung memiliki bilah-bilah kayu yang dipukul untuk menghasilkan nada.", []Opt{{"Bilah kayu yang dipukul", true}, {"Senar yang digesek", false}, {"Membran yang ditiup", false}, {"Lempeng logam yang digoyang", false}}},
+		{3, "Ogung dalam ansambel musik Batak Toba termasuk alat musik ...", "Ogung merupakan gong yang dimainkan dengan cara dipukul.", []Opt{{"Alat musik petik", false}, {"Alat musik tiup", false}, {"Alat musik gong", true}, {"Alat musik gesek", false}}},
+		{3, "Sarune Bolon dimainkan dengan teknik ...", "Sarune Bolon merupakan alat musik tiup tradisional dalam ansambel Batak Toba.", []Opt{{"Dipetik", false}, {"Ditiup", true}, {"Digesek", false}, {"Digoyangkan", false}}},
+		{3, "Hasapi merupakan alat musik berdawai yang dimainkan dengan cara ...", "Hasapi dimainkan dengan cara dipetik.", []Opt{{"Dipukul", false}, {"Digesek", false}, {"Dipetik", true}, {"Ditiup", false}}},
+		{3, "Sulim merupakan alat musik tiup tradisional Batak Toba yang umumnya dibuat dari ...", "Sulim merupakan alat musik tiup berbentuk seruling yang dibuat dari bambu.", []Opt{{"Bambu", true}, {"Besi", false}, {"Kulit", false}, {"Batu", false}}},
+		{3, "Dalam ansambel musik, alat musik hesek terutama berfungsi membantu menjaga ...", "Hesek berperan sebagai alat perkusi sederhana yang membantu menjaga ketukan atau ritme.", []Opt{{"Ketukan atau ritme", true}, {"Nada bass", false}, {"Lirik lagu", false}, {"Gerakan penari", false}}},
+		{3, "Gondang Sabangunan dikenal sebagai ...", "Gondang Sabangunan merupakan salah satu ansambel musik tradisional Batak Toba.", []Opt{{"Ansambel musik tradisional", true}, {"Jenis kain ulos", false}, {"Nama upacara pernikahan", false}, {"Bentuk rumah adat", false}}},
+		{3, "Marsiulak hosa dalam permainan Sarune Bolon berkaitan dengan teknik ...", "Marsiulak hosa dikenal sebagai teknik pernapasan melingkar atau circular breathing untuk mempertahankan aliran bunyi.", []Opt{{"Pemetikan senar", false}, {"Pernapasan melingkar", true}, {"Pemukulan gong", false}, {"Pengaturan gerak tari", false}}},
+
+		// ====================================================
+		// TAMBAHAN KATEGORI 4: ULOS DAN ADAT PERNIKAHAN
+		// ====================================================
+		{4, "Apa arti istilah sinamot dalam adat pernikahan Batak Toba?", "Sinamot merupakan mas kawin atau pemberian yang dibicarakan dan disepakati oleh keluarga calon pengantin.", []Opt{{"Mas kawin", true}, {"Pakaian pengantin", false}, {"Tempat pesta", false}, {"Hidangan penutup", false}}},
+		{4, "Marhata sinamot merupakan tahapan adat yang membahas ...", "Marhata sinamot merupakan pertemuan atau pembicaraan keluarga mengenai sinamot dalam rangkaian perkawinan.", []Opt{{"Pembagian warisan", false}, {"Pembicaraan sinamot", true}, {"Pembuatan ulos", false}, {"Pemilihan rumah adat", false}}},
+		{4, "Martumpol dalam rangkaian perkawinan Batak Toba berkaitan dengan ...", "Martumpol merupakan upacara pertunangan atau pengikatan janji perkawinan dalam tradisi Batak Toba Kristen.", []Opt{{"Upacara pertunangan", true}, {"Upacara panen", false}, {"Upacara kematian", false}, {"Upacara pemberian nama", false}}},
+		{4, "Paranak merupakan sebutan untuk pihak keluarga ... dalam adat pernikahan Batak Toba.", "Paranak adalah pihak keluarga pengantin laki-laki.", []Opt{{"Pengantin laki-laki", true}, {"Pengantin perempuan", false}, {"Saksi pernikahan", false}, {"Pemimpin upacara", false}}},
+		{4, "Parboru merupakan sebutan untuk pihak keluarga ... dalam adat pernikahan Batak Toba.", "Parboru adalah pihak keluarga pengantin perempuan.", []Opt{{"Pengantin laki-laki", false}, {"Pengantin perempuan", true}, {"Pemain musik", false}, {"Tamu undangan", false}}},
+		{4, "Apa sebutan untuk prosesi pemberian kain ulos kepada seseorang dalam adat Batak Toba?", "Mangulosi adalah tindakan memberikan ulos sebagai ungkapan kasih, doa, atau restu sesuai konteks adat.", []Opt{{"Mangulosi", true}, {"Manortor", false}, {"Marhata", false}, {"Marhusip", false}}},
+		{4, "Kain ulos tradisional Batak Toba dibuat melalui teknik ...", "Ulos merupakan kain tradisional yang dibuat dengan teknik menenun.", []Opt{{"Menenun", true}, {"Mengukir", false}, {"Mencetak", false}, {"Merajut logam", false}}},
+		{4, "Pesta unjuk dalam tradisi Batak Toba berkaitan dengan kegiatan ...", "Pesta unjuk merupakan bagian dari rangkaian adat perkawinan Batak Toba.", []Opt{{"Pernikahan", true}, {"Panen raya", false}, {"Pembangunan rumah", false}, {"Penyambutan tahun baru", false}}},
+		{4, "Apa arti kata pasu-pasu dalam konteks adat Batak?", "Pasu-pasu berarti berkat atau doa restu.", []Opt{{"Hukuman", false}, {"Berkat atau doa restu", true}, {"Perjanjian dagang", false}, {"Pembagian tanah", false}}},
+		{4, "Dalam adat Batak Toba, ulos dapat diberikan sebagai lambang ...", "Pemberian ulos dapat menjadi ungkapan kasih, doa, dan restu dalam hubungan kekerabatan maupun kegiatan adat.", []Opt{{"Kasih dan doa restu", true}, {"Persaingan antarmarga", false}, {"Kewajiban membayar pajak", false}, {"Tanda kepemilikan tanah", false}}},
+
+		// ====================================================
+		// TAMBAHAN KATEGORI 5: KEKERABATAN DAN FALSAFAH ADAT
+		// ====================================================
+		{5, "Apa istilah yang digunakan untuk menyebut silsilah keluarga dalam masyarakat Batak Toba?", "Tarombo merupakan silsilah atau catatan garis keturunan dalam masyarakat Batak.", []Opt{{"Tarombo", true}, {"Gorga", false}, {"Gondang", false}, {"Ulos", false}}},
+		{5, "Dalam istilah kekerabatan Batak Toba, saudara laki-laki dari ibu disebut ...", "Tulang merupakan istilah kekerabatan untuk saudara laki-laki dari pihak ibu.", []Opt{{"Amang", false}, {"Tulang", true}, {"Boru", false}, {"Dongan tubu", false}}},
+		{5, "Dalam istilah kekerabatan Batak Toba, saudara perempuan dari ayah disebut ...", "Namboru merupakan istilah kekerabatan untuk saudara perempuan dari pihak ayah.", []Opt{{"Namboru", true}, {"Tulang", false}, {"Hula-hula", false}, {"Pariban", false}}},
+		{5, "Apa istilah untuk keluarga dari pihak pemberi istri dalam Dalihan Na Tolu?", "Hula-hula adalah pihak keluarga pemberi istri dalam sistem kekerabatan Dalihan Na Tolu.", []Opt{{"Boru", false}, {"Dongan tubu", false}, {"Hula-hula", true}, {"Paranak", false}}},
+		{5, "Apa istilah untuk pihak penerima istri dalam Dalihan Na Tolu?", "Boru adalah pihak penerima perempuan atau pihak yang mengambil istri dalam hubungan kekerabatan Dalihan Na Tolu.", []Opt{{"Boru", true}, {"Hula-hula", false}, {"Dongan tubu", false}, {"Pargonsi", false}}},
+		{5, "Kerabat yang berasal dari kelompok marga sendiri dalam Dalihan Na Tolu disebut ...", "Dongan tubu merujuk pada kerabat semarga atau satu kelompok marga.", []Opt{{"Hula-hula", false}, {"Dongan tubu", true}, {"Boru", false}, {"Parboru", false}}},
+		{5, "Apa istilah untuk tata cara mengenali dan menyebut hubungan kekerabatan dalam masyarakat Batak?", "Partuturan merupakan tata cara menyebut dan mengenali hubungan kekerabatan.", []Opt{{"Partuturan", true}, {"Parjambaron", false}, {"Mangulosi", false}, {"Manortor", false}}},
+		{5, "Dalam pesta adat Batak Toba, jambar biasanya merujuk pada ...", "Jambar merupakan bagian atau pembagian tertentu dari sajian adat, khususnya daging, sesuai aturan kekerabatan.", []Opt{{"Bagian sajian adat", true}, {"Alat musik tiup", false}, {"Kain tenun", false}, {"Rumah tempat pesta", false}}},
+		{5, "Apa istilah untuk proses pembagian jambar dalam pesta adat Batak Toba?", "Parjambaron adalah proses pembagian jambar berdasarkan aturan adat dan kedudukan kekerabatan.", []Opt{{"Parjambaron", true}, {"Martumpol", false}, {"Marsiulak hosa", false}, {"Mangapuli", false}}},
+		{5, "Apa makna harfiah Dalihan Na Tolu?", "Dalihan Na Tolu berarti tungku yang berkaki tiga dan menjadi lambang sistem relasi sosial Batak Toba.", []Opt{{"Tiga tungku", true}, {"Empat marga", false}, {"Dua keluarga", false}, {"Lima upacara", false}}},
 	}
 
-	// Validasi jumlah soal dan jawaban sebelum masuk database.
+	// Validasi seluruh bank: 15 soal per kategori, empat opsi, tepat satu kunci.
+	categoryCounts := make(map[uint]int)
+	seen := make(map[string]bool)
 	for _, q := range questions {
-		if len(q.Opts) != 4 {
-			log.Printf("❌ Soal tidak memiliki 4 opsi: %s", q.Question)
+		key := fmt.Sprintf("%d|%s", q.CatID, strings.TrimSpace(q.Question))
+		if q.CatID < 1 || q.CatID > 5 || q.Question == "" || q.Explanation == "" || seen[key] {
+			log.Printf("❌ Soal Trivia kosong, kategori tidak valid, atau duplikat: %s", q.Question)
 			return
 		}
-
+		seen[key] = true
+		categoryCounts[q.CatID]++
+		if len(q.Opts) != 4 {
+			log.Printf("❌ Soal Trivia harus memiliki 4 opsi: %s", q.Question)
+			return
+		}
 		correctCount := 0
+		optionSet := make(map[string]bool)
 		for _, opt := range q.Opts {
+			text := strings.TrimSpace(opt.Text)
+			if text == "" || optionSet[text] {
+				log.Printf("❌ Opsi Trivia kosong atau duplikat: %s", q.Question)
+				return
+			}
+			optionSet[text] = true
 			if opt.Correct {
 				correctCount++
 			}
 		}
-
 		if correctCount != 1 {
-			log.Printf("❌ Soal harus memiliki tepat 1 jawaban benar: %s", q.Question)
+			log.Printf("❌ Soal Trivia harus memiliki tepat satu jawaban benar: %s", q.Question)
+			return
+		}
+	}
+	if len(questions) != 75 {
+		log.Printf("❌ Bank seed Trivia harus 75 soal, ditemukan %d", len(questions))
+		return
+	}
+	for categoryID := uint(1); categoryID <= 5; categoryID++ {
+		if categoryCounts[categoryID] != 15 {
+			log.Printf("❌ Kategori Trivia %d harus memiliki 15 soal seed, ditemukan %d", categoryID, categoryCounts[categoryID])
 			return
 		}
 	}
 
-	// Tandai soal lama yang tidak termasuk bank soal V2 sebagai nonaktif.
-	wanted := make(map[string]bool)
-	for _, q := range questions {
-		wanted[fmt.Sprintf("%d|%s", q.CatID, q.Question)] = true
-	}
-
+	// Seed bersifat additive dan idempotent. Soal Admin/custom dan riwayat lama
+	// tidak dinonaktifkan atau dihapus. Jika prompt sudah ada, konten existing
+	// dipertahankan agar edit Admin tidak tertimpa saat seed dijalankan ulang.
 	if err := config.DB.Transaction(func(tx *gorm.DB) error {
-		var activeQuestions []models.TriviaQuestion
-
-		if err := tx.Where("is_active = ?", true).Find(&activeQuestions).Error; err != nil {
-			return err
-		}
-
-		for _, oldQ := range activeQuestions {
-			key := fmt.Sprintf("%d|%s", oldQ.CategoryID, oldQ.Question)
-
-			if !wanted[key] {
-				if err := tx.Model(&oldQ).Update("is_active", false).Error; err != nil {
-					return err
-				}
-			}
-		}
-
 		for _, q := range questions {
 			var existing models.TriviaQuestion
-
-			err := tx.Where(
-				"category_id = ? AND question = ? AND is_active = ?",
-				q.CatID,
-				q.Question,
-				true,
-			).First(&existing).Error
-
+			err := tx.Where("category_id = ? AND question = ?", q.CatID, q.Question).First(&existing).Error
 			if err == nil {
-				var oldOptions []models.TriviaQuestionOption
-
-				if err := tx.Where(
-					"question_id = ?",
-					existing.ID,
-				).Order("id ASC").Find(&oldOptions).Error; err != nil {
-					return err
-				}
-
-				same := existing.Explanation == q.Explanation &&
-					len(oldOptions) == len(q.Opts)
-
-				if same {
-					for i, opt := range q.Opts {
-						if oldOptions[i].OptionText != opt.Text ||
-							oldOptions[i].IsCorrect != opt.Correct {
-							same = false
-							break
-						}
-					}
-				}
-
-				if same {
-					continue
-				}
-
-				// Versi lama dinonaktifkan, riwayat jawabannya tetap tersimpan.
-				if err := tx.Model(&existing).Update("is_active", false).Error; err != nil {
-					return err
-				}
-
-			} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+				continue
+			}
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				return err
 			}
 
 			newQ := models.TriviaQuestion{
-				CategoryID:  q.CatID,
-				Question:    q.Question,
-				Explanation: q.Explanation,
-				IsActive:    true,
+				CategoryID: q.CatID, Question: q.Question,
+				Explanation: q.Explanation, IsActive: true,
 			}
-
 			if err := tx.Create(&newQ).Error; err != nil {
 				return err
 			}
-
 			for _, opt := range q.Opts {
 				newOpt := models.TriviaQuestionOption{
-					QuestionID: newQ.ID,
-					OptionText: opt.Text,
-					IsCorrect:  opt.Correct,
+					QuestionID: newQ.ID, OptionText: opt.Text, IsCorrect: opt.Correct,
 				}
-
 				if err := tx.Create(&newOpt).Error; err != nil {
 					return err
 				}
 			}
 		}
 
+		for categoryID := uint(1); categoryID <= 5; categoryID++ {
+			var activeCount int64
+			if err := tx.Model(&models.TriviaQuestion{}).
+				Where("category_id = ? AND is_active = ?", categoryID, true).
+				Count(&activeCount).Error; err != nil {
+				return err
+			}
+			if activeCount < int64(models.TriviaQuestionCount) {
+				return fmt.Errorf("kategori Trivia %d hanya memiliki %d soal aktif; minimal %d diperlukan untuk satu sesi", categoryID, activeCount, models.TriviaQuestionCount)
+			}
+		}
 		return nil
 	}); err != nil {
-		log.Printf("❌ Gagal menjalankan Trivia Questions V2: %v", err)
+		log.Printf("❌ Gagal menjalankan Trivia seed additive: %v", err)
 		return
 	}
 
-	log.Println("✅ Trivia Questions V2 selesai (25 soal, 5 kategori)")
+	log.Println("✅ Trivia seed selesai (75 soal seed; 15 per kategori; 10 soal acak per sesi; data custom dipertahankan)")
 }
 
 // ============================================================
-// BATTLE QUESTIONS (25 SOAL BANK)
-// 5 soal dipilih untuk setiap pertandingan
+// BATTLE QUESTIONS (50 SOAL BANK)
+// 10 soal acak dipilih untuk setiap pertandingan
 // ============================================================
 func SeedBattleQuestions() {
 	type Opt struct {
@@ -1010,7 +1170,7 @@ func SeedBattleQuestions() {
 	questions := []Q{
 
 		// ====================================================
-		// SOAL 1-15: BANK SOAL LAMA (DIPERTAHANKAN)
+		// SOAL 1-25: BANK SOAL LAMA (DIPERTAHANKAN)
 		// ====================================================
 
 		{
@@ -1269,213 +1429,223 @@ func SeedBattleQuestions() {
 				{"Kedudukan adat dan sosial-ekonomi orang yang meninggal", true},
 			},
 		},
+
+		// ====================================================
+		// SOAL 26-50: TAMBAHAN BANK BATTLE
+		// ====================================================
+		{
+			"Apa nama tarian tradisional Batak Toba yang sering ditampilkan dalam kegiatan adat?",
+			"Tortor merupakan tarian tradisional Batak Toba yang hadir dalam berbagai kegiatan adat dan budaya.",
+			[]Opt{{"Tortor", true}, {"Piring", false}, {"Jaipong", false}, {"Kecak", false}},
+		},
+		{
+			"Apa istilah untuk silsilah atau garis keturunan keluarga dalam masyarakat Batak Toba?",
+			"Tarombo merupakan silsilah keluarga yang mencatat garis keturunan dan hubungan antarmarga.",
+			[]Opt{{"Tarombo", true}, {"Gorga", false}, {"Gondang", false}, {"Ulos", false}},
+		},
+		{
+			"Dalam adat pernikahan Batak Toba, istilah sinamot berkaitan dengan ...",
+			"Sinamot merupakan mas kawin atau pemberian yang dibicarakan oleh keluarga calon pengantin.",
+			[]Opt{{"Mas kawin", true}, {"Pakaian pengantin", false}, {"Tempat pesta", false}, {"Alat musik", false}},
+		},
+		{
+			"Apa sebutan untuk proses pemberian kain ulos dalam kegiatan adat Batak Toba?",
+			"Mangulosi adalah tindakan memberikan ulos sebagai ungkapan kasih, doa, atau restu sesuai konteks adat.",
+			[]Opt{{"Mangulosi", true}, {"Manortor", false}, {"Marhusip", false}, {"Marhata", false}},
+		},
+		{
+			"Apa istilah untuk saudara laki-laki dari pihak ibu dalam kekerabatan Batak Toba?",
+			"Tulang merupakan istilah kekerabatan untuk saudara laki-laki dari pihak ibu.",
+			[]Opt{{"Tulang", true}, {"Namboru", false}, {"Boru", false}, {"Pargonsi", false}},
+		},
+		{
+			"Apa istilah untuk saudara perempuan dari pihak ayah dalam kekerabatan Batak Toba?",
+			"Namboru merupakan istilah kekerabatan untuk saudara perempuan dari pihak ayah.",
+			[]Opt{{"Namboru", true}, {"Tulang", false}, {"Hula-hula", false}, {"Paranak", false}},
+		},
+		{
+			"Apa nama alat musik tradisional Batak Toba yang dimainkan dengan cara dipetik dan memiliki dawai?",
+			"Hasapi merupakan alat musik berdawai tradisional Batak Toba yang dimainkan dengan cara dipetik.",
+			[]Opt{{"Hasapi", true}, {"Ogung", false}, {"Taganing", false}, {"Hesek", false}},
+		},
+		{
+			"Apa nama alat musik gong dalam ansambel musik tradisional Batak Toba?",
+			"Ogung merupakan kelompok alat musik gong yang dimainkan dengan cara dipukul.",
+			[]Opt{{"Ogung", true}, {"Sulim", false}, {"Hasapi", false}, {"Tulila", false}},
+		},
+		{
+			"Apa nama alat musik tiup tradisional Batak Toba yang berbentuk seruling bambu?",
+			"Sulim merupakan alat musik tiup tradisional Batak Toba yang umumnya dibuat dari bambu.",
+			[]Opt{{"Sulim", true}, {"Taganing", false}, {"Garantung", false}, {"Ogung", false}},
+		},
+		{
+			"Apa sebutan bagi pemain musik dalam tradisi gondang Batak Toba?",
+			"Pargonsi merupakan sebutan bagi pemain musik atau pemusik dalam tradisi Batak Toba.",
+			[]Opt{{"Pargonsi", true}, {"Parboru", false}, {"Paranak", false}, {"Parhata", false}},
+		},
+		{
+			"Rempah khas Batak yang dikenal memberi sensasi getir dan aroma khas pada masakan adalah ...",
+			"Andaliman merupakan rempah khas kawasan Batak yang sering digunakan dalam masakan tradisional.",
+			[]Opt{{"Andaliman", true}, {"Kayu manis", false}, {"Cengkih", false}, {"Kapulaga", false}},
+		},
+		{
+			"Apa bahan utama yang umum digunakan untuk membuat dekke naniura?",
+			"Dekke naniura umumnya dibuat dari ikan air tawar, terutama ikan mas, yang diolah dengan bumbu dan bahan pengasam tanpa pemasakan panas.",
+			[]Opt{{"Ikan mas", true}, {"Daging ayam", false}, {"Daging sapi", false}, {"Udang", false}},
+		},
+		{
+			"Dali ni horbo merupakan olahan tradisional yang bahan utamanya berasal dari ...",
+			"Dali ni horbo dikenal sebagai olahan tradisional berbahan susu kerbau.",
+			[]Opt{{"Susu kerbau", true}, {"Susu kambing", false}, {"Santan kelapa", false}, {"Susu kedelai", false}},
+		},
+		{
+			"Pakkat yang dikenal dalam kuliner tradisional Batak berasal dari bagian tanaman ...",
+			"Pakkat merupakan pucuk atau tunas muda rotan yang diolah sebagai bahan pangan.",
+			[]Opt{{"Rotan", true}, {"Bambu", false}, {"Kelapa", false}, {"Pisang", false}},
+		},
+		{
+			"Apa istilah untuk pihak keluarga pemberi istri dalam sistem kekerabatan Dalihan Na Tolu?",
+			"Hula-hula adalah pihak keluarga pemberi istri dalam sistem kekerabatan Dalihan Na Tolu.",
+			[]Opt{{"Hula-hula", true}, {"Boru", false}, {"Dongan tubu", false}, {"Paranak", false}},
+		},
+		{
+			"Apa istilah untuk pihak penerima istri dalam sistem kekerabatan Dalihan Na Tolu?",
+			"Boru merupakan pihak penerima perempuan atau pihak yang mengambil istri dalam hubungan Dalihan Na Tolu.",
+			[]Opt{{"Boru", true}, {"Hula-hula", false}, {"Dongan tubu", false}, {"Pargonsi", false}},
+		},
+		{
+			"Kerabat yang berasal dari kelompok marga sendiri dalam Dalihan Na Tolu disebut ...",
+			"Dongan tubu merujuk pada kerabat semarga atau satu kelompok marga.",
+			[]Opt{{"Dongan tubu", true}, {"Hula-hula", false}, {"Boru", false}, {"Parboru", false}},
+		},
+		{
+			"Apa arti istilah martumpol dalam rangkaian perkawinan Batak Toba?",
+			"Martumpol merupakan upacara pertunangan atau pengikatan janji perkawinan dalam tradisi Batak Toba Kristen.",
+			[]Opt{{"Upacara pertunangan", true}, {"Upacara kematian", false}, {"Upacara panen", false}, {"Upacara pemberian nama", false}},
+		},
+		{
+			"Apa yang dibicarakan dalam tahapan marhata sinamot?",
+			"Marhata sinamot merupakan pembicaraan keluarga mengenai sinamot dalam rangkaian perkawinan.",
+			[]Opt{{"Mas kawin", true}, {"Pembagian tanah", false}, {"Pembangunan rumah", false}, {"Pemilihan alat musik", false}},
+		},
+		{
+			"Apa arti kata pasu-pasu dalam konteks adat Batak?",
+			"Pasu-pasu berarti berkat atau doa restu.",
+			[]Opt{{"Berkat atau doa restu", true}, {"Hukuman adat", false}, {"Pembagian warisan", false}, {"Perjanjian dagang", false}},
+		},
+		{
+			"Apa istilah untuk tata cara mengenali dan menyebut hubungan kekerabatan dalam masyarakat Batak?",
+			"Partuturan merupakan tata cara menyebut dan mengenali hubungan kekerabatan.",
+			[]Opt{{"Partuturan", true}, {"Parjambaron", false}, {"Mangulosi", false}, {"Manortor", false}},
+		},
+		{
+			"Dalam pesta adat Batak Toba, jambar biasanya merujuk pada ...",
+			"Jambar merupakan bagian atau pembagian tertentu dari sajian adat, khususnya daging, sesuai aturan kekerabatan.",
+			[]Opt{{"Bagian sajian adat", true}, {"Alat musik tiup", false}, {"Kain tenun", false}, {"Rumah tempat pesta", false}},
+		},
+		{
+			"Apa nama ibu kota Kabupaten Samosir?",
+			"Pangururan merupakan ibu kota Kabupaten Samosir di Provinsi Sumatera Utara.",
+			[]Opt{{"Pangururan", true}, {"Balige", false}, {"Tarutung", false}, {"Parapat", false}},
+		},
+		{
+			"Apa nama ibu kota Kabupaten Toba?",
+			"Balige merupakan ibu kota Kabupaten Toba di Provinsi Sumatera Utara.",
+			[]Opt{{"Balige", true}, {"Pangururan", false}, {"Pematangsiantar", false}, {"Kabanjahe", false}},
+		},
+		{
+			"Institut Teknologi Del berada di kawasan kecamatan ...",
+			"Kampus Institut Teknologi Del berada di Laguboti, Kabupaten Toba, Sumatera Utara.",
+			[]Opt{{"Laguboti", true}, {"Pangururan", false}, {"Ajibata", false}, {"Tomok", false}},
+		},
 	}
 
 	// ========================================================
 	// VALIDASI BANK SOAL SEBELUM DISIMPAN
 	// ========================================================
-
-	if len(questions) != 25 {
-		log.Printf("❌ Jumlah Battle Questions harus 25, ditemukan %d", len(questions))
+	if len(questions) != models.BattleBankQuestionCount {
+		log.Printf("❌ Seed Battle harus berisi %d soal, ditemukan %d", models.BattleBankQuestionCount, len(questions))
 		return
 	}
-
 	seenQuestions := make(map[string]bool)
-
 	for _, q := range questions {
-		if q.Question == "" || q.Explanation == "" {
-			log.Printf("❌ Pertanyaan atau penjelasan kosong: %s", q.Question)
-			return
-		}
-
-		if seenQuestions[q.Question] {
-			log.Printf("❌ Pertanyaan duplikat: %s", q.Question)
+		if strings.TrimSpace(q.Question) == "" || strings.TrimSpace(q.Explanation) == "" || seenQuestions[q.Question] {
+			log.Printf("❌ Pertanyaan Battle kosong atau duplikat: %s", q.Question)
 			return
 		}
 		seenQuestions[q.Question] = true
-
 		if len(q.Opts) != 4 {
-			log.Printf("❌ Soal harus memiliki 4 opsi: %s", q.Question)
+			log.Printf("❌ Soal Battle harus memiliki tepat 4 opsi: %s", q.Question)
 			return
 		}
-
 		correctCount := 0
-		seenOptions := make(map[string]bool)
-
+		optionSet := make(map[string]bool)
 		for _, opt := range q.Opts {
-			if opt.Text == "" || seenOptions[opt.Text] {
-				log.Printf("❌ Opsi kosong atau duplikat: %s", q.Question)
+			text := strings.TrimSpace(opt.Text)
+			if text == "" || optionSet[text] {
+				log.Printf("❌ Opsi Battle kosong atau duplikat: %s", q.Question)
 				return
 			}
-
-			seenOptions[opt.Text] = true
-
+			optionSet[text] = true
 			if opt.Correct {
 				correctCount++
 			}
 		}
-
 		if correctCount != 1 {
-			log.Printf("❌ Soal harus memiliki tepat 1 jawaban benar: %s", q.Question)
+			log.Printf("❌ Soal Battle harus memiliki tepat satu jawaban benar: %s", q.Question)
 			return
 		}
 	}
 
-	// ========================================================
-	// SINKRONISASI BANK SOAL BATTLE (25 SOAL AKTIF)
-	// Riwayat pertandingan lama tetap dipertahankan.
-	// ========================================================
-
-	wanted := make(map[string]struct{}, len(questions))
-	for _, q := range questions {
-		wanted[q.Question] = struct{}{}
-	}
-
+	// Seed Battle hanya menambahkan prompt yang belum ada. Tidak ada soal lama
+	// atau soal buatan Admin yang dihapus/dinonaktifkan/diubah. Pertanyaan yang
+	// pernah dipakai room juga tidak disentuh sehingga histori pertandingan aman.
 	if err := config.DB.Transaction(func(tx *gorm.DB) error {
-
-		// 1. Nonaktifkan soal lama yang tidak masuk bank terbaru.
-		var allQuestions []models.BattleQuestion
-
-		if err := tx.Find(&allQuestions).Error; err != nil {
-			return err
-		}
-
-		for _, oldQ := range allQuestions {
-			if _, exists := wanted[oldQ.Question]; !exists && oldQ.IsActive {
-				if err := tx.Model(&models.BattleQuestion{}).
-					Where("id = ?", oldQ.ID).
-					Update("is_active", false).Error; err != nil {
-					return fmt.Errorf("gagal mengarsipkan soal ID %d: %w", oldQ.ID, err)
-				}
-			}
-		}
-
-		// 2. Sinkronkan setiap soal dalam bank terbaru.
 		for _, q := range questions {
-
-			var candidates []models.BattleQuestion
-
-			if err := tx.Where(
-				"question = ?",
-				q.Question,
-			).Order("id DESC").Find(&candidates).Error; err != nil {
+			var existing models.BattleQuestion
+			err := tx.Where("question = ?", q.Question).Order("id ASC").First(&existing).Error
+			if err == nil {
+				continue
+			}
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				return err
 			}
 
-			var exactMatch *models.BattleQuestion
-
-			// Cari versi soal yang konten dan opsinya identik.
-			for i := range candidates {
-
-				var oldOptions []models.BattleQuestionOption
-
-				if err := tx.Where(
-					"question_id = ?",
-					candidates[i].ID,
-				).Order("id ASC").Find(&oldOptions).Error; err != nil {
+			newQ := models.BattleQuestion{
+				Question: q.Question, Explanation: q.Explanation, IsActive: true,
+			}
+			if err := tx.Create(&newQ).Error; err != nil {
+				return err
+			}
+			for _, opt := range q.Opts {
+				newOpt := models.BattleQuestionOption{
+					QuestionID: newQ.ID, OptionText: opt.Text, IsCorrect: opt.Correct,
+				}
+				if err := tx.Create(&newOpt).Error; err != nil {
 					return err
 				}
-
-				same := candidates[i].Explanation == q.Explanation &&
-					len(oldOptions) == len(q.Opts)
-
-				if same {
-					for j, opt := range q.Opts {
-						if oldOptions[j].OptionText != opt.Text ||
-							oldOptions[j].IsCorrect != opt.Correct {
-							same = false
-							break
-						}
-					}
-				}
-
-				if same {
-					if exactMatch == nil ||
-						(!exactMatch.IsActive && candidates[i].IsActive) {
-
-						candidate := candidates[i]
-						exactMatch = &candidate
-					}
-				}
-			}
-
-			// 3. Nonaktifkan versi lain dari pertanyaan yang sama.
-			for _, oldQ := range candidates {
-				if oldQ.IsActive &&
-					(exactMatch == nil || oldQ.ID != exactMatch.ID) {
-
-					if err := tx.Model(&models.BattleQuestion{}).
-						Where("id = ?", oldQ.ID).
-						Update("is_active", false).Error; err != nil {
-						return err
-					}
-				}
-			}
-
-			// 4. Gunakan kembali soal jika kontennya identik.
-			if exactMatch != nil {
-
-				if !exactMatch.IsActive {
-					if err := tx.Model(&models.BattleQuestion{}).
-						Where("id = ?", exactMatch.ID).
-						Update("is_active", true).Error; err != nil {
-						return err
-					}
-				}
-
-				continue
-			}
-
-			// 5. Buat versi baru jika belum ada konten identik.
-			newQ := models.BattleQuestion{
-				Question:    q.Question,
-				Explanation: q.Explanation,
-				IsActive:    true,
-			}
-
-			if err := tx.Create(&newQ).Error; err != nil {
-				return fmt.Errorf("gagal membuat soal Battle: %w", err)
-			}
-
-			for _, opt := range q.Opts {
-
-				newOpt := models.BattleQuestionOption{
-					QuestionID: newQ.ID,
-					OptionText: opt.Text,
-					IsCorrect:  opt.Correct,
-				}
-
-				if err := tx.Create(&newOpt).Error; err != nil {
-					return fmt.Errorf("gagal membuat opsi Battle: %w", err)
-				}
 			}
 		}
 
-		// 6. Pastikan jumlah soal aktif tepat 25.
 		var activeCount int64
-
-		if err := tx.Model(&models.BattleQuestion{}).
-			Where("is_active = ?", true).
-			Count(&activeCount).Error; err != nil {
+		if err := tx.Model(&models.BattleQuestion{}).Where("is_active = ?", true).Count(&activeCount).Error; err != nil {
 			return err
 		}
-
-		if activeCount != int64(len(questions)) {
-			return fmt.Errorf(
-				"jumlah soal Battle aktif harus %d, ditemukan %d",
-				len(questions),
-				activeCount,
-			)
+		if activeCount < int64(models.BattleBankQuestionCount) {
+			return fmt.Errorf("bank Battle memiliki %d soal aktif; minimal %d diperlukan", activeCount, models.BattleBankQuestionCount)
 		}
-
 		return nil
-
 	}); err != nil {
-		log.Printf("❌ Gagal menjalankan Battle Questions V2: %v", err)
+		log.Printf("❌ Gagal menjalankan Battle seed additive: %v", err)
 		return
 	}
 
-	log.Println("✅ Battle Questions V2 selesai (25 soal aktif)")
+	var activeCount int64
+	if err := config.DB.Model(&models.BattleQuestion{}).Where("is_active = ?", true).Count(&activeCount).Error; err != nil {
+		log.Printf("❌ Gagal menghitung soal Battle aktif: %v", err)
+		return
+	}
+	log.Printf("✅ Battle seed selesai (%d soal seed; %d soal aktif di bank; 10 soal acak per pertandingan; data lama dipertahankan)", len(questions), activeCount)
 }
 
 // ============================================================
@@ -1607,21 +1777,42 @@ func SeedGalleryCards() {
 func SeedGameSettings() {
 	settings := []models.GameSetting{
 		{SettingKey: "quiz_time_limit", SettingValue: "15", Description: "Batas waktu soal quiz dalam detik"},
-		{SettingKey: "quiz_question_count", SettingValue: "5", Description: "Jumlah soal per sesi quiz"},
-		{SettingKey: "min_correct_to_pass", SettingValue: "3", Description: "Jumlah minimum jawaban benar untuk lulus"},
-		{SettingKey: "battle_question_count", SettingValue: "5", Description: "Jumlah soal per sesi battle"},
-		{SettingKey: "battle_time_per_question", SettingValue: "15", Description: "Batas waktu per soal battle dalam detik"},
+		{SettingKey: "quiz_question_count", SettingValue: "10", Description: "Jumlah soal yang ditampilkan per sesi Jelajah dan Trivia"},
+		{SettingKey: "min_correct_to_pass", SettingValue: "6", Description: "Jumlah minimum jawaban benar untuk menyelesaikan Jelajah"},
+		{SettingKey: "battle_question_count", SettingValue: "10", Description: "Jumlah soal acak per pertandingan Battle"},
+		{SettingKey: "battle_time_per_question", SettingValue: "15", Description: "Batas waktu per soal Battle dalam detik"},
 		{SettingKey: "xp_per_level", SettingValue: "500", Description: "XP yang dibutuhkan untuk naik satu level"},
 		{SettingKey: "matchmaking_timeout", SettingValue: "30", Description: "Waktu tunggu matchmaking sebelum vs Bot dalam detik"},
 		{SettingKey: "app_version", SettingValue: "1.0.0", Description: "Versi aplikasi saat ini"},
 	}
-	for _, s := range settings {
+	for _, setting := range settings {
 		var existing models.GameSetting
-		if config.DB.Where("setting_key = ?", s.SettingKey).First(&existing).Error != nil {
-			config.DB.Create(&s)
+		err := config.DB.Where("setting_key = ?", setting.SettingKey).First(&existing).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			if err := config.DB.Create(&setting).Error; err != nil {
+				log.Printf("❌ Gagal menambahkan setting %s: %v", setting.SettingKey, err)
+			}
+			continue
+		}
+		if err != nil {
+			log.Printf("❌ Gagal membaca setting %s: %v", setting.SettingKey, err)
+			continue
+		}
+
+		// Hanya nilai aturan gameplay yang dikunci yang diperbarui. Setting lain
+		// yang mungkin diubah operator tetap dipertahankan.
+		if setting.SettingKey == "quiz_question_count" ||
+			setting.SettingKey == "min_correct_to_pass" ||
+			setting.SettingKey == "battle_question_count" {
+			if err := config.DB.Model(&existing).Updates(map[string]interface{}{
+				"setting_value": setting.SettingValue,
+				"description":   setting.Description,
+			}).Error; err != nil {
+				log.Printf("❌ Gagal memperbarui setting %s: %v", setting.SettingKey, err)
+			}
 		}
 	}
-	log.Println("✅ Game Settings selesai")
+	log.Println("✅ Game Settings selesai (Jelajah/Trivia 10 soal; Jelajah minimal 6 benar; Battle 10 soal)")
 }
 
 // ============================================================

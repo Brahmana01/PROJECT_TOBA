@@ -4,10 +4,15 @@ import { adminGetAchievements, adminCreateAchievement, adminUpdateAchievement, a
 import type { Achievement } from '../types';
 import { styles } from '../styles/shared';
 
-const CONDITIONS = ['LEVEL','STAR','XP','LOCATION','TRIVIA','BATTLE'];
+const CONDITIONS = ['LEVEL','STAR','XP','LOCATION','ALL_LOCATION','TRIVIA','TRIVIA_CORRECT','BATTLE','BATTLE_WIN','CHALLENGE','CHALLENGE_SCORE','ALL_ACHIEVEMENT'];
 const CONDITION_LABELS: Record<string,string> = {
   LEVEL:'Capai Level', STAR:'Kumpulkan Bintang', XP:'Kumpulkan XP',
-  LOCATION:'Selesaikan Lokasi', TRIVIA:'Main Trivia', BATTLE:'Menang Battle'
+  LOCATION:'Selesaikan Lokasi', ALL_LOCATION:'Selesaikan Semua Lokasi',
+  TRIVIA:'Main Trivia', TRIVIA_CORRECT:'Jawaban Trivia Benar',
+  BATTLE:'Menang Battle', BATTLE_WIN:'Menang Battle',
+  CHALLENGE:'Selesaikan Weekly Challenge',
+  CHALLENGE_SCORE:'Kumpulkan Skor Weekly Challenge',
+  ALL_ACHIEVEMENT:'Buka Achievement Lain'
 };
 
 const AchievementModal = ({ ach, onClose, onSave }: {

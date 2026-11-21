@@ -5,6 +5,7 @@ import (
 
 	"toba-backend/middleware"
 	battleService "toba-backend/services/battle"
+	battleWS "toba-backend/websocket"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -99,10 +100,23 @@ func GetRoomStatus(c *fiber.Ctx) error {
 		})
 	}
 
+	if result.ScoreChanged {
+		battleWS.Hub.BroadcastScoreUpdate(result.RoomCode, fiber.Map{
+			"room_code":            result.RoomCode,
+			"host_score":           result.HostScore,
+			"guest_score":          result.GuestScore,
+			"host_answered_count":  result.HostAnsweredCount,
+			"guest_answered_count": result.GuestAnsweredCount,
+			"total_questions":      10,
+			"is_bot":               result.IsBot,
+			"bot_name":             result.BotName,
+			"bot_level":            result.BotLevel,
+			"bot_answered_count":   result.BotAnsweredCount,
+		})
+	}
 	return c.Status(status).JSON(result)
 }
 
-// Fungsi ini belum didaftarkan pada route aktif.
 // Tetap gunakan pemeriksaan kepemilikan jika nantinya digunakan.
 func GetRoomQuestions(c *fiber.Ctx) error {
 	playerID, ok := middleware.AuthenticatedPlayerID(c)

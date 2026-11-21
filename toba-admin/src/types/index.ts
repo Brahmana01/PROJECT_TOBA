@@ -59,7 +59,8 @@ export interface TriviaQuestion {
 
 export interface BattleQuestion {
   id: number; question: string; explanation: string;
-  is_active: boolean; options: QuestionOption[];
+  is_active: boolean; is_locked?: boolean; is_in_active_room?: boolean;
+  options: QuestionOption[];
 }
 
 export interface Achievement {

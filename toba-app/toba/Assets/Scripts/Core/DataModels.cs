@@ -538,6 +538,7 @@ public class ChallengeData
     public string game_type;
     public int    reward_xp;
     public int    reward_stars;
+    public string session_id;
     public string data_json;
 }
 
@@ -547,20 +548,62 @@ public class ActiveChallengeResponse
     public bool          has_challenge;
     public bool          is_completed;
     public ChallengeData challenge;
+    public ChallengeSessionInfo session;
+}
+
+[System.Serializable]
+public class ChallengeSessionInfo
+{
+    public string session_id;
+    public string started_at;
+    public string expires_at;
 }
 
 [System.Serializable]
 public class SubmitChallengeRequest
 {
-    public int player_id;
-    public int challenge_id;
+    public string session_id;
+    public string answers_json;
+}
+
+[System.Serializable]
+public class ChallengeSubmitResponse
+{
+    public string message;
     public int score;
+    public int total_questions;
+    public int score_percent;
+    public int reward_xp;
+    public int reward_stars;
+    public int level;
+    public bool leveled_up;
 }
 
 [System.Serializable]
 public class MatchPair { public string batak; public string indo; }
-[System.Serializable]   
-public class MatchingData { public List<MatchPair> pairs; }
+[System.Serializable]
+public class MatchingPublicData { public List<string> batak_words; public List<string> indo_words; }
+[System.Serializable]
+public class MatchingSubmissionData { public List<MatchPair> pairs; }
+
+[System.Serializable]
+public class ChallengeGuessImageAnswer { public int question_index; public string selected_option; }
+[System.Serializable]
+public class ChallengeGuessImageSubmission { public List<ChallengeGuessImageAnswer> answers; }
+[System.Serializable]
+public class ChallengeWordArrangeAnswer { public int question_index; public string answer; }
+[System.Serializable]
+public class ChallengeWordArrangeSubmission { public List<ChallengeWordArrangeAnswer> answers; }
+[System.Serializable]
+public class ChallengeMemoryCardMatch { public string first_card_id; public string second_card_id; }
+[System.Serializable]
+public class ChallengeMemoryCardSubmission { public List<ChallengeMemoryCardMatch> matches; }
+[System.Serializable]
+public class ChallengeOrderSubmission { public List<string> ordered_items; }
+[System.Serializable]
+public class ChallengeCategorizeAssignment { public string item; public string category; }
+[System.Serializable]
+public class ChallengeCategorizeSubmission { public List<ChallengeCategorizeAssignment> assignments; }
 
 [System.Serializable]
 public class VersionResponse

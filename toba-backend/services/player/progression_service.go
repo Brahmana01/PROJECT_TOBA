@@ -2,9 +2,6 @@ package player
 
 import (
 	"errors"
-	"fmt"
-	"strconv"
-	"strings"
 
 	"toba-backend/models"
 
@@ -27,28 +24,11 @@ type ProgressionResult struct {
 	TitleName     string `json:"title_name"`
 }
 
-// GetXPPerLevel reads the progression threshold from GameSettings.
-// Existing installations without the setting retain the historical 500 XP default.
+// GetXPPerLevel returns the locked gameplay threshold. GameSettings cannot override it.
 func GetXPPerLevel(db *gorm.DB) (int, error) {
-	if db == nil {
-		return DefaultXPPerLevel, errors.New("database belum tersedia")
-	}
-
-	var setting models.GameSetting
-	err := db.Where("setting_key = ?", "xp_per_level").First(&setting).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return DefaultXPPerLevel, nil
-	}
-	if err != nil {
-		return 0, err
-	}
-
-	value, err := strconv.Atoi(strings.TrimSpace(setting.SettingValue))
-	if err != nil || value <= 0 {
-		return 0, fmt.Errorf("nilai GameSetting xp_per_level tidak valid: %q", setting.SettingValue)
-	}
-
-	return value, nil
+	// XP per level is a locked gameplay rule. A stale database setting must
+	// never override the authoritative 500 XP threshold.
+	return models.DefaultXPPerLevel, nil
 }
 
 // ApplyRewardToLockedPlayer applies XP and stars using the caller's transaction.

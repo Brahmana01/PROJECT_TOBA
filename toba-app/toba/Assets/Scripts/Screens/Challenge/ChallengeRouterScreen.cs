@@ -41,7 +41,9 @@ public class ChallengeRouterScreen : BaseScreen
         }
 
         // Validasi data challenge.
-        if (challenge == null || challenge.id <= 0)
+        if (challenge == null ||
+            challenge.id <= 0 ||
+            string.IsNullOrWhiteSpace(challenge.session_id))
         {
             Debug.LogWarning(
                 "[ChallengeRouter] Data challenge tidak valid."

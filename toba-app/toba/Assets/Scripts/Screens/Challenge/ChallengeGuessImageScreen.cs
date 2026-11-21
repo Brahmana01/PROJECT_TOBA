@@ -23,7 +23,7 @@ public class ChallengeGuessImageScreen : BaseScreen
     private ChallengeData challenge;
     private List<GuessImageQuestion> questions;
     private int currentIndex = 0;
-    private int correctCount = 0;
+    private readonly List<ChallengeGuessImageAnswer> submittedAnswers = new List<ChallengeGuessImageAnswer>();
 
     private TextMeshProUGUI progressTxt;
     private GameObject imageArea;
@@ -62,10 +62,10 @@ public class ChallengeGuessImageScreen : BaseScreen
 
         questions = data?.questions ?? new List<GuessImageQuestion>();
 
+        submittedAnswers.Clear();
         questions.RemoveAll(q =>
             q == null ||
             string.IsNullOrWhiteSpace(q.image) ||
-            string.IsNullOrWhiteSpace(q.answer) ||
             q.options == null
         );
 
@@ -76,16 +76,7 @@ public class ChallengeGuessImageScreen : BaseScreen
             );
         }
 
-        questions.RemoveAll(q =>
-            q.options.Count == 0 ||
-            !q.options.Exists(option =>
-                string.Equals(
-                    option.Trim(),
-                    q.answer.Trim(),
-                    System.StringComparison.OrdinalIgnoreCase
-                )
-            )
-        );
+        questions.RemoveAll(q => q.options.Count < 2);
 
         if (questions.Count == 0)
         {
@@ -141,7 +132,6 @@ public class ChallengeGuessImageScreen : BaseScreen
 
         if (q == null ||
             string.IsNullOrWhiteSpace(q.image) ||
-            string.IsNullOrWhiteSpace(q.answer) ||
             q.options == null)
             return;
 
@@ -161,7 +151,7 @@ public class ChallengeGuessImageScreen : BaseScreen
         if (imgSprite == null)
         {
             GameObject lbl = UIBuilder.CreateTextSized(imageArea.transform,
-                "[ " + q.answer + " ]", 38, new Color(1f,1f,1f,0.4f),
+                "[ Gambar budaya ]", 38, new Color(1f,1f,1f,0.4f),
                 TextAlignmentOptions.Center, new Vector2(660, 80), Vector2.zero);
             lbl.name = "ImgLabel";
             lbl.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Normal;
@@ -188,11 +178,11 @@ public class ChallengeGuessImageScreen : BaseScreen
             float x = col == 0 ? -(btnW/2f + gapX/2f) : (btnW/2f + gapX/2f);
             float y = row == 0 ? (btnH/2f + gapY/2f) : -(btnH/2f + gapY/2f);
             string opt = opts[i];
-            CreateOptionBtn(opt, new Vector2(x, y), btnW, btnH, q.answer);
+            CreateOptionBtn(opt, new Vector2(x, y), btnW, btnH);
         }
     }
 
-    void CreateOptionBtn(string text, Vector2 pos, float w, float h, string correct)
+    void CreateOptionBtn(string text, Vector2 pos, float w, float h)
     {
         Sprite wp = TOBATheme.LoadSprite("panel_wood");
         GameObject btn = new GameObject("Opt_" + text);
@@ -213,11 +203,18 @@ public class ChallengeGuessImageScreen : BaseScreen
         Button b = btn.AddComponent<Button>();
         b.targetGraphic = img;
         b.onClick.AddListener(() => {
-            bool right = text == correct;
-            img.color = right ? TOBATheme.OptionCorrect : TOBATheme.OptionWrong;
-            SoundManager.Instance?.PlaySFX(right ? "sfx_correct" : "sfx_wrong");
-            HapticManager.Instance?.Vibrate(right ? HapticType.Success : HapticType.Error);
-            if (right) correctCount++;
+            if (currentIndex < 0 || currentIndex >= questions.Count)
+                return;
+
+            submittedAnswers.RemoveAll(a => a.question_index == currentIndex);
+            submittedAnswers.Add(new ChallengeGuessImageAnswer
+            {
+                question_index = currentIndex,
+                selected_option = text
+            });
+            img.color = TOBATheme.BatakGold;
+            SoundManager.Instance?.PlaySFX("sfx_click");
+            HapticManager.Instance?.Vibrate(HapticType.Light);
             // Disable semua tombol
             if (optionsContainer != null)
             {
@@ -244,11 +241,15 @@ public class ChallengeGuessImageScreen : BaseScreen
 
     void SubmitResult()
     {
+        ChallengeGuessImageSubmission submission = new ChallengeGuessImageSubmission
+        {
+            answers = submittedAnswers
+        };
         TOBAChallengeSubmission.Submit(
             screenObj,
             container,
             challenge,
-            correctCount
+            JsonUtility.ToJson(submission)
         );
     }
 }

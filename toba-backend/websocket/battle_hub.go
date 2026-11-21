@@ -232,6 +232,44 @@ func (h *BattleHub) handleMessage(cm *ClientMessage) {
 	}
 }
 
+// BroadcastScoreUpdate mengirim skor yang sudah dihitung dan disimpan backend
+// kepada seluruh koneksi aktif di room. Client tidak dapat mengirim skor.
+func (h *BattleHub) BroadcastScoreUpdate(roomCode string, payload interface{}) {
+	if roomCode == "" {
+		return
+	}
+	h.mu.RLock()
+	room := h.Rooms[roomCode]
+	h.mu.RUnlock()
+	if room != nil {
+		room.Broadcast(buildMsg(MsgTypeScoreUpdate, payload))
+	}
+}
+
+func (h *BattleHub) BroadcastFinish(roomCode string, payload interface{}) {
+	if roomCode == "" {
+		return
+	}
+	h.mu.RLock()
+	room := h.Rooms[roomCode]
+	h.mu.RUnlock()
+	if room != nil {
+		room.Broadcast(buildMsg(MsgTypeFinish, payload))
+	}
+}
+
+func (h *BattleHub) BroadcastDisconnect(roomCode string, payload interface{}) {
+	if roomCode == "" {
+		return
+	}
+	h.mu.RLock()
+	room := h.Rooms[roomCode]
+	h.mu.RUnlock()
+	if room != nil {
+		room.Broadcast(buildMsg(MsgTypeDisconnect, payload))
+	}
+}
+
 func buildMsg(msgType string, payload interface{}) []byte {
 	p, _ := json.Marshal(payload)
 	data, _ := json.Marshal(WSMessage{Type: msgType, Payload: p})

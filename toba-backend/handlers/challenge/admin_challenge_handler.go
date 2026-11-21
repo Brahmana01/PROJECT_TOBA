@@ -37,7 +37,11 @@ func AdminCreateChallenge(c *fiber.Ctx) error {
 		})
 	}
 
-	challenge, err := challenge.AdminCreateChallenge(
+	if err := challenge.ValidateChallengeContent(input.GameType, input.DataJSON); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": err.Error()})
+	}
+
+	created, err := challenge.AdminCreateChallenge(
 		input.Title,
 		input.Description,
 		input.GameType,
@@ -48,12 +52,10 @@ func AdminCreateChallenge(c *fiber.Ctx) error {
 	)
 
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{
-			"message": "Gagal membuat tantangan",
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": err.Error()})
 	}
 
-	return c.Status(201).JSON(challenge)
+	return c.Status(fiber.StatusCreated).JSON(created)
 }
 
 func AdminUpdateChallenge(c *fiber.Ctx) error {
@@ -62,6 +64,7 @@ func AdminUpdateChallenge(c *fiber.Ctx) error {
 	type Input struct {
 		Title       string `json:"title"`
 		Description string `json:"description"`
+		GameType    string `json:"game_type"`
 		RewardXP    int    `json:"reward_xp"`
 		RewardStars int    `json:"reward_stars"`
 		DataJSON    string `json:"data_json"`
@@ -80,6 +83,7 @@ func AdminUpdateChallenge(c *fiber.Ctx) error {
 		id,
 		input.Title,
 		input.Description,
+		input.GameType,
 		input.RewardXP,
 		input.RewardStars,
 		input.DataJSON,

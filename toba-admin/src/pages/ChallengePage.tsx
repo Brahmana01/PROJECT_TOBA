@@ -9,16 +9,20 @@ interface Challenge {
   is_active: boolean; start_date: string; end_date: string; data_json: string;
 }
 
+const PLAYABLE_GAME_TYPES = new Set([
+  'MATCHING', 'GUESS_IMAGE', 'WORD_ARRANGE', 'MEMORY_CARD', 'ORDER', 'CATEGORIZE',
+]);
+
 const GAME_TYPES = [
-  { value: 'MATCHING',     label: 'Cocokkan Bahasa Batak' },
-  { value: 'GUESS_IMAGE',  label: 'Tebak Gambar Budaya' },
-  { value: 'WORD_ARRANGE', label: 'Susun Kata Batak' },
-  { value: 'MEMORY_CARD',  label: 'Memory Card Budaya' },
-  { value: 'CATEGORIZE',   label: 'Kelompokkan Benda Budaya' },
-  { value: 'ORDER',        label: 'Susun Urutan' },
-  { value: 'FIND_OBJECT',  label: 'Cari Benda Budaya' },
-  { value: 'PUZZLE',       label: 'Puzzle Gambar Budaya' },
-  { value: 'GUESS_SOUND',  label: 'Tebak Suara Budaya' },
+  { value: 'MATCHING',     label: 'Cocokkan Bahasa Batak' , disabled: false },
+  { value: 'GUESS_IMAGE',  label: 'Tebak Gambar Budaya' , disabled: false },
+  { value: 'WORD_ARRANGE', label: 'Susun Kata Batak' , disabled: false },
+  { value: 'MEMORY_CARD',  label: 'Memory Card Budaya' , disabled: false },
+  { value: 'ORDER',        label: 'Susun Urutan' , disabled: false },
+  { value: 'CATEGORIZE',   label: 'Kelompokkan Benda Budaya' , disabled: false },
+  { value: 'FIND_OBJECT',  label: 'Cari Benda Budaya (Belum tersedia)', disabled: true },
+  { value: 'PUZZLE',       label: 'Puzzle Gambar Budaya (Belum tersedia)', disabled: true },
+  { value: 'GUESS_SOUND',  label: 'Tebak Suara Budaya (Belum tersedia)', disabled: true },
 ];
 
 const DATA_JSON_TEMPLATES: Record<string, string> = {
@@ -38,6 +42,24 @@ const DATA_JSON_TEMPLATES: Record<string, string> = {
   WORD_ARRANGE: JSON.stringify({
     words: [
       { scrambled: "SOLU", answer: "ULOS", hint: "Kain tenun khas Batak" }
+    ]
+  }, null, 2),
+  MEMORY_CARD: JSON.stringify({
+    cards: [
+      { id: "taganing", label: "Taganing", emoji: "🥁" },
+      { id: "hasapi", label: "Hasapi", emoji: "🎸" },
+      { id: "ulos", label: "Ulos", emoji: "🧣" },
+      { id: "gondang", label: "Gondang", emoji: "🎵" }
+    ]
+  }, null, 2),
+  ORDER: JSON.stringify({
+    question: "Susun urutan kegiatan berikut sesuai alur acara adat.",
+    correct_order: ["Persiapan keluarga", "Pembicaraan adat", "Pelaksanaan acara"]
+  }, null, 2),
+  CATEGORIZE: JSON.stringify({
+    categories: [
+      { name: "Alat Musik", items: ["Hasapi", "Taganing"] },
+      { name: "Unsur Budaya", items: ["Ulos", "Gorga"] }
     ]
   }, null, 2),
 };
@@ -67,6 +89,10 @@ const ChallengeModal = ({ challenge, onClose, onSave }: {
 
   const handleSave = async () => {
     if (!form.title) { setMsg('Judul wajib diisi.'); return; }
+    if (!PLAYABLE_GAME_TYPES.has(form.game_type)) {
+      setMsg('Tipe mini-game ini masih placeholder dan belum dapat dipublikasikan.');
+      return;
+    }
     try { JSON.parse(form.data_json); }
     catch { setMsg('Format Data JSON tidak valid.'); return; }
     setSaving(true);
@@ -109,7 +135,7 @@ const ChallengeModal = ({ challenge, onClose, onSave }: {
             <select style={styles.input} value={form.game_type}
               onChange={e => handleGameTypeChange(e.target.value)}>
               {GAME_TYPES.map(g => (
-                <option key={g.value} value={g.value}>{g.label}</option>
+                <option key={g.value} value={g.value} disabled={!!g.disabled}>{g.label}</option>
               ))}
             </select>
           </div>
@@ -232,7 +258,7 @@ const ChallengePage: React.FC = () => {
                   {ch.is_active ? '🟢 AKTIF' : 'Nonaktif'}
                 </span>
                 <span style={{ fontSize: '0.75rem', opacity: 0.5 }}>
-                  {GAME_TYPES.find(g => g.value === ch.game_type)?.label}
+                  {GAME_TYPES.find(g => g.value === ch.game_type)?.label ?? ch.game_type}
                 </span>
               </div>
               <div style={{ fontWeight: 'bold', fontSize: '1rem',

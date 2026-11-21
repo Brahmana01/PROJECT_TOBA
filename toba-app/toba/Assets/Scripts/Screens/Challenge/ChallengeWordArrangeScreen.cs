@@ -23,7 +23,7 @@ public class ChallengeWordArrangeScreen : BaseScreen
     private ChallengeData challenge;
     private List<WordArrangeItem> words;
     private int currentIndex = 0;
-    private int correctCount = 0;
+    private readonly List<ChallengeWordArrangeAnswer> submittedAnswers = new List<ChallengeWordArrangeAnswer>();
 
     private TextMeshProUGUI progressTxt;
     private TextMeshProUGUI hintTxt;
@@ -61,11 +61,11 @@ public class ChallengeWordArrangeScreen : BaseScreen
         }
 
         words = data?.words ?? new List<WordArrangeItem>();
+        submittedAnswers.Clear();
 
         words.RemoveAll(word =>
             word == null ||
-            string.IsNullOrWhiteSpace(word.scrambled) ||
-            string.IsNullOrWhiteSpace(word.answer)
+            string.IsNullOrWhiteSpace(word.scrambled)
         );
         if (words.Count == 0)
         {
@@ -135,7 +135,6 @@ public class ChallengeWordArrangeScreen : BaseScreen
         WordArrangeItem w = words[index];
 
         if (w == null ||
-            string.IsNullOrWhiteSpace(w.answer) ||
             string.IsNullOrWhiteSpace(w.scrambled))
             return;
 
@@ -192,7 +191,7 @@ public class ChallengeWordArrangeScreen : BaseScreen
                 b.interactable = false;
                 img.color = new Color(0.6f, 0.6f, 0.6f, 0.5f);
                 UpdateAnswerDisplay();
-                CheckAnswer(words[currentIndex].answer);
+                CheckAnswer();
             });
             letterBtns.Add(lb);
         }
@@ -207,7 +206,7 @@ public class ChallengeWordArrangeScreen : BaseScreen
                     currentIndex >= 0 &&
                     currentIndex < words.Count &&
                     words[currentIndex] != null
-                ? words[currentIndex].answer.Length
+                ? words[currentIndex].scrambled.Length
                 : 4;
             answerDisplayTxt.text = string.Join(" ", new string('_', len).ToCharArray());
             return;
@@ -239,21 +238,29 @@ public class ChallengeWordArrangeScreen : BaseScreen
         }
     }
 
-    void CheckAnswer(string correct)
+    void CheckAnswer()
     {
-        if (currentAnswer.Length < correct.Length) return;
+        if (words == null || currentIndex < 0 || currentIndex >= words.Count)
+            return;
 
-        bool right = currentAnswer.ToUpper() == correct.ToUpper();
-        SoundManager.Instance?.PlaySFX(right ? "sfx_correct" : "sfx_wrong");
-        HapticManager.Instance?.Vibrate(right ? HapticType.Success : HapticType.Error);
+        int requiredLength = words[currentIndex].scrambled.Length;
+        if (currentAnswer.Length < requiredLength)
+            return;
 
+        submittedAnswers.RemoveAll(a => a.question_index == currentIndex);
+        submittedAnswers.Add(new ChallengeWordArrangeAnswer
+        {
+            question_index = currentIndex,
+            answer = currentAnswer
+        });
+
+        SoundManager.Instance?.PlaySFX("sfx_click");
+        HapticManager.Instance?.Vibrate(HapticType.Light);
         if (answerDisplayTxt)
-            answerDisplayTxt.color = right ? TOBATheme.OptionCorrect : TOBATheme.OptionWrong;
-
-        if (right) correctCount++;
+            answerDisplayTxt.color = TOBATheme.BatakGold;
 
         if (ScreenManager.Instance != null)
-            ScreenManager.Instance?.StartCoroutine(NextWordDelay());
+            ScreenManager.Instance.StartCoroutine(NextWordDelay());
     }
 
     IEnumerator NextWordDelay()
@@ -268,11 +275,15 @@ public class ChallengeWordArrangeScreen : BaseScreen
 
     void SubmitResult()
     {
+        ChallengeWordArrangeSubmission submission = new ChallengeWordArrangeSubmission
+        {
+            answers = submittedAnswers
+        };
         TOBAChallengeSubmission.Submit(
             screenObj,
             container,
             challenge,
-            correctCount
+            JsonUtility.ToJson(submission)
         );
     }
 }

@@ -23,14 +23,53 @@ func main() {
 	// ============================================================
 	config.ConnectDatabase()
 
-	// Seed tidak lagi dijalankan otomatis setiap server start.
-	// Ini mencegah perubahan konten soal Admin tertimpa/nonaktif saat restart.
-	// Jalankan seed secara sengaja ketika bank soal final sudah siap:
-	// TOBA_RUN_SEED=true
-	if strings.EqualFold(strings.TrimSpace(os.Getenv("TOBA_RUN_SEED")), "true") {
+	// Seed tidak dijalankan otomatis setiap server start. Seed terarah dapat
+	// dipanggil satu kali dengan: ./toba-backend seed gameplay
+	// Mode: gameplay (aturan + Trivia + Battle), battle (Battle + settings), all.
+	if len(os.Args) > 1 && strings.EqualFold(strings.TrimSpace(os.Args[1]), "seed") {
+		mode := "gameplay"
+		if len(os.Args) > 2 && strings.TrimSpace(os.Args[2]) != "" {
+			mode = strings.ToLower(strings.TrimSpace(os.Args[2]))
+		}
+		switch mode {
+		case "gameplay":
+			if err := database.SeedGameplayRules(); err != nil {
+				fmt.Println("Seed gameplay gagal:", err)
+				os.Exit(1)
+			}
+		case "battle":
+			if err := database.SeedBattleRules(); err != nil {
+				fmt.Println("Seed Battle gagal:", err)
+				os.Exit(1)
+			}
+		case "all":
+			database.SeedAll()
+		default:
+			fmt.Println("Mode seed tidak dikenal. Gunakan gameplay, battle, atau all.")
+			os.Exit(2)
+		}
+		fmt.Println("Seed selesai. Proses berhenti tanpa menjalankan HTTP server.")
+		return
+	}
+
+	// Kompatibilitas untuk deployment lama. Nilai true berarti all; nilai
+	// gameplay/battle menjalankan seed terarah. Env harus dilepas setelah satu kali.
+	seedMode := strings.ToLower(strings.TrimSpace(os.Getenv("TOBA_RUN_SEED")))
+	switch seedMode {
+	case "true", "all":
 		database.SeedAll()
-	} else {
-		fmt.Println("ℹ️ Seed otomatis dilewati. Set TOBA_RUN_SEED=true hanya saat memang ingin menjalankan seed.")
+	case "gameplay":
+		if err := database.SeedGameplayRules(); err != nil {
+			fmt.Println("Seed gameplay gagal:", err)
+			os.Exit(1)
+		}
+	case "battle":
+		if err := database.SeedBattleRules(); err != nil {
+			fmt.Println("Seed Battle gagal:", err)
+			os.Exit(1)
+		}
+	default:
+		fmt.Println("ℹ️ Seed otomatis dilewati. Gunakan perintah 'seed gameplay' untuk menjalankan seed terarah.")
 	}
 
 	// ============================================================
@@ -45,8 +84,12 @@ func main() {
 
 	app.Use(logger.New())
 
+	corsOrigins := strings.TrimSpace(os.Getenv("CORS_ALLOW_ORIGINS"))
+	if corsOrigins == "" {
+		corsOrigins = "http://localhost:5173,http://127.0.0.1:5173"
+	}
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:5173, http://127.0.0.1:5173",
+		AllowOrigins: corsOrigins,
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS",
 	}))
@@ -81,7 +124,7 @@ func main() {
 	fmt.Println("   WebSocket: ws://localhost:8080/ws/")
 	fmt.Println("   API Rate Limit: 60 request/menit/IP")
 	fmt.Println("   Auth Rate Limit: 5 request/menit/IP")
-	fmt.Println("   Player Protected Routes: AKTIF")
+	fmt.Println("   Player Protected Routes: AKTIF")	
 	fmt.Println("   Admin Protected Routes: AKTIF")
 	fmt.Println("========================================")
 	fmt.Println()

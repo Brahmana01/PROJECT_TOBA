@@ -1,24 +1,48 @@
 package admin
 
 import (
+	"strings"
+
 	"toba-backend/config"
 	"toba-backend/models"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
+
+var supportedAchievementConditions = map[string]bool{
+	"LEVEL": true, "STAR": true, "STARS": true, "XP": true,
+	"LOCATION": true, "ALL_LOCATION": true,
+	"TRIVIA": true, "TRIVIA_CORRECT": true,
+	"BATTLE": true, "BATTLE_WIN": true,
+	"CHALLENGE": true, "CHALLENGE_SCORE": true,
+	"ALL_ACHIEVEMENT": true,
+}
 
 func AdminGetAchievements(c *fiber.Ctx) error {
 	var achievements []models.Achievement
-
-	config.DB.
-		Where("is_active = ?", true).
-		Find(&achievements)
-
+	if err := config.DB.Where("is_active = ?", true).Order("id ASC").Find(&achievements).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal mengambil achievement"})
+	}
 	return c.JSON(achievements)
 }
 
+func validateAchievementInput(name, description, conditionType string, conditionValue, rewardXP, rewardStars int) string {
+	conditionType = strings.ToUpper(strings.TrimSpace(conditionType))
+	if strings.TrimSpace(name) == "" || strings.TrimSpace(description) == "" {
+		return "Nama dan deskripsi achievement wajib diisi"
+	}
+	if !supportedAchievementConditions[conditionType] {
+		return "Tipe kondisi achievement tidak didukung"
+	}
+	if conditionValue <= 0 || rewardXP < 0 || rewardStars < 0 {
+		return "Nilai kondisi harus lebih dari 0 dan reward tidak boleh negatif"
+	}
+	return ""
+}
+
 func AdminCreateAchievement(c *fiber.Ctx) error {
-	type Input struct {
+	var input struct {
 		Name           string `json:"name"`
 		Description    string `json:"description"`
 		Icon           string `json:"icon"`
@@ -27,43 +51,36 @@ func AdminCreateAchievement(c *fiber.Ctx) error {
 		RewardXP       int    `json:"reward_xp"`
 		RewardStars    int    `json:"reward_stars"`
 	}
-
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Input tidak valid",
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Input tidak valid"})
+	}
+	if message := validateAchievementInput(input.Name, input.Description, input.ConditionType, input.ConditionValue, input.RewardXP, input.RewardStars); message != "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": message})
 	}
 
-	ach := models.Achievement{
-		Name:           input.Name,
-		Description:    input.Description,
-		Icon:           input.Icon,
-		ConditionType:  input.ConditionType,
-		ConditionValue: input.ConditionValue,
-		RewardXP:       input.RewardXP,
-		RewardStars:    input.RewardStars,
-		IsActive:       true,
+	achievement := models.Achievement{
+		Name: strings.TrimSpace(input.Name), Description: strings.TrimSpace(input.Description),
+		Icon: strings.TrimSpace(input.Icon), ConditionType: strings.ToUpper(strings.TrimSpace(input.ConditionType)),
+		ConditionValue: input.ConditionValue, RewardXP: input.RewardXP,
+		RewardStars: input.RewardStars, IsActive: true,
 	}
-
-	config.DB.Create(&ach)
-
-	return c.Status(201).JSON(ach)
+	if err := config.DB.Create(&achievement).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal membuat achievement"})
+	}
+	return c.Status(fiber.StatusCreated).JSON(achievement)
 }
 
 func AdminUpdateAchievement(c *fiber.Ctx) error {
 	id := c.Params("id")
-
-	var ach models.Achievement
-
-	if err := config.DB.First(&ach, id).Error; err != nil {
-		return c.Status(404).JSON(fiber.Map{
-			"message": "Achievement tidak ditemukan",
-		})
+	var achievement models.Achievement
+	if err := config.DB.First(&achievement, id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Achievement tidak ditemukan"})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal mengambil achievement"})
 	}
 
-	type Input struct {
+	var input struct {
 		Name           string `json:"name"`
 		Description    string `json:"description"`
 		Icon           string `json:"icon"`
@@ -73,38 +90,34 @@ func AdminUpdateAchievement(c *fiber.Ctx) error {
 		RewardStars    int    `json:"reward_stars"`
 		IsActive       bool   `json:"is_active"`
 	}
-
-	var input Input
-
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"message": "Input tidak valid",
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Input tidak valid"})
+	}
+	if message := validateAchievementInput(input.Name, input.Description, input.ConditionType, input.ConditionValue, input.RewardXP, input.RewardStars); message != "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": message})
 	}
 
-	ach.Name = input.Name
-	ach.Description = input.Description
-	ach.Icon = input.Icon
-	ach.ConditionType = input.ConditionType
-	ach.ConditionValue = input.ConditionValue
-	ach.RewardXP = input.RewardXP
-	ach.RewardStars = input.RewardStars
-	ach.IsActive = input.IsActive
-
-	config.DB.Save(&ach)
-
-	return c.JSON(ach)
+	achievement.Name = strings.TrimSpace(input.Name)
+	achievement.Description = strings.TrimSpace(input.Description)
+	achievement.Icon = strings.TrimSpace(input.Icon)
+	achievement.ConditionType = strings.ToUpper(strings.TrimSpace(input.ConditionType))
+	achievement.ConditionValue = input.ConditionValue
+	achievement.RewardXP = input.RewardXP
+	achievement.RewardStars = input.RewardStars
+	achievement.IsActive = input.IsActive
+	if err := config.DB.Save(&achievement).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal memperbarui achievement"})
+	}
+	return c.JSON(achievement)
 }
 
 func AdminDeleteAchievement(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	config.DB.
-		Model(&models.Achievement{}).
-		Where("id = ?", id).
-		Update("is_active", false)
-
-	return c.JSON(fiber.Map{
-		"message": "Achievement berhasil dihapus",
-	})
+	result := config.DB.Model(&models.Achievement{}).Where("id = ?", c.Params("id")).Update("is_active", false)
+	if result.Error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Gagal menonaktifkan achievement"})
+	}
+	if result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"message": "Achievement tidak ditemukan"})
+	}
+	return c.JSON(fiber.Map{"message": "Achievement berhasil dinonaktifkan"})
 }

@@ -248,6 +248,23 @@ func CheckAndUnlockAchievements(
 			return err
 		}
 
+		// Weekly Challenge achievements use only completed progress records
+		// written after the backend validates the submitted answers.
+		var challengeCount int64
+		if err := tx.Model(&models.PlayerChallengeProgress{}).
+			Where("player_id = ? AND is_completed = ? AND score_validated = ?", playerID, true, true).
+			Count(&challengeCount).Error; err != nil {
+			return err
+		}
+
+		var challengeScore int64
+		if err := tx.Model(&models.PlayerChallengeProgress{}).
+			Select("COALESCE(SUM(score), 0)").
+			Where("player_id = ? AND is_completed = ? AND score_validated = ?", playerID, true, true).
+			Scan(&challengeScore).Error; err != nil {
+			return err
+		}
+
 		var activeLocationCount int64
 		if err := tx.Model(&models.Location{}).
 			Where("is_active = ? AND deleted_at IS NULL", true).
@@ -335,6 +352,14 @@ func CheckAndUnlockAchievements(
 			case "BATTLE", "BATTLE_WIN":
 
 				unlocked = battleWinCount >= required
+
+			case "CHALLENGE":
+
+				unlocked = challengeCount >= required
+
+			case "CHALLENGE_SCORE":
+
+				unlocked = challengeScore >= required
 
 			case "ALL_ACHIEVEMENT":
 

@@ -20,16 +20,22 @@ type BattleQuestionOption struct {
 }
 
 type BattleRoom struct {
-	ID             uint       `gorm:"primaryKey" json:"id"`
-	RoomCode       string     `json:"room_code"`
-	HostPlayerID   uint       `json:"host_player_id"`
-	GuestPlayerID  *uint      `json:"guest_player_id,omitempty"`
-	WinnerPlayerID *uint      `json:"winner_player_id,omitempty"`
-	Status         string     `json:"status"`
-	CreatedAt      time.Time  `json:"created_at"`
-	StartedAt      *time.Time `json:"started_at,omitempty"`
-	FinishedAt     *time.Time `json:"finished_at,omitempty"`
-	ExpiredAt      *time.Time `json:"expired_at,omitempty"`
+	ID               uint       `gorm:"primaryKey" json:"id"`
+	RoomCode         string     `json:"room_code"`
+	HostPlayerID     uint       `json:"host_player_id"`
+	GuestPlayerID    *uint      `json:"guest_player_id,omitempty"`
+	WinnerPlayerID   *uint      `json:"winner_player_id,omitempty"`
+	Status           string     `json:"status"`
+	CreatedAt        time.Time  `json:"created_at"`
+	StartedAt        *time.Time `json:"started_at,omitempty"`
+	FinishedAt       *time.Time `json:"finished_at,omitempty"`
+	ExpiredAt        *time.Time `json:"expired_at,omitempty"`
+	IsBot            bool       `gorm:"not null;default:false" json:"is_bot"`
+	BotName          string     `gorm:"size:80" json:"bot_name,omitempty"`
+	BotLevel         int        `gorm:"not null;default:0" json:"bot_level"`
+	BotScore         int        `gorm:"not null;default:0" json:"bot_score"`
+	BotAnsweredCount int        `gorm:"not null;default:0" json:"bot_answered_count"`
+	FinishReason     string     `gorm:"size:24" json:"finish_reason,omitempty"`
 }
 
 type BattleRoomQuestion struct {

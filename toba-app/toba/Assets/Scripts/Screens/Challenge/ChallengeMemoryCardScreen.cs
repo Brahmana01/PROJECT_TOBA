@@ -41,10 +41,13 @@ public class ChallengeMemoryCardScreen : BaseScreen
 
     private ChallengeData challenge;
 
-    // Dua kartu dalam satu pasangan selalu memiliki ID pembanding
-    // yang sama. cardEmojis hanya menyimpan teks yang ditampilkan.
+    // cardIds berisi token unik per kartu untuk validasi server.
+    // cardValues berisi label pasangan untuk umpan balik visual lokal.
     private readonly List<string> cardValues = new List<string>();
     private readonly List<string> cardEmojis = new List<string>();
+    private readonly List<string> cardIds = new List<string>();
+    private readonly List<ChallengeMemoryCardMatch> submittedMatches =
+        new List<ChallengeMemoryCardMatch>();
 
     private readonly List<GameObject> cards = new List<GameObject>();
     private readonly List<bool> revealed = new List<bool>();
@@ -135,6 +138,8 @@ public class ChallengeMemoryCardScreen : BaseScreen
     {
         cardValues.Clear();
         cardEmojis.Clear();
+        cardIds.Clear();
+        submittedMatches.Clear();
 
         cards.Clear();
         revealed.Clear();
@@ -201,95 +206,50 @@ public class ChallengeMemoryCardScreen : BaseScreen
             return false;
         }
 
-        // Pastikan ID setiap pasangan unik.
-        HashSet<string> usedIds =
-            new HashSet<string>(
-                System.StringComparer.OrdinalIgnoreCase
-            );
-
-        List<MemoryCardItem> validCards =
-            new List<MemoryCardItem>();
+        // Server mengirim kartu individual dengan ID unik. Relasi pasangan
+        // tetap tersimpan privat di server; client hanya menerima wajah kartu.
+        HashSet<string> usedIds = new HashSet<string>(
+            System.StringComparer.OrdinalIgnoreCase);
+        List<MemoryCardItem> validCards = new List<MemoryCardItem>();
 
         foreach (MemoryCardItem card in data.cards)
         {
-            if (
-                card == null ||
+            if (card == null ||
                 string.IsNullOrWhiteSpace(card.id) ||
-                string.IsNullOrWhiteSpace(card.label)
-            )
-            {
-                Debug.LogWarning(
-                    "[MemoryCard] Kartu dilewati karena ID atau label kosong."
-                );
-
+                string.IsNullOrWhiteSpace(card.label))
                 continue;
-            }
 
             card.id = card.id.Trim();
             card.label = card.label.Trim();
-
             if (!usedIds.Add(card.id))
             {
-                Debug.LogWarning(
-                    "[MemoryCard] ID kartu duplikat dilewati: " +
-                    card.id
-                );
-
-                continue;
+                ShowDataError("ID kartu duplikat", "Hubungi admin.");
+                return false;
             }
-
             if (!string.IsNullOrWhiteSpace(card.emoji))
                 card.emoji = card.emoji.Trim();
-
             validCards.Add(card);
         }
 
-        if (validCards.Count == 0)
+        if (validCards.Count < 4 ||
+            validCards.Count > MAX_PAIRS * 2 ||
+            validCards.Count % 2 != 0)
         {
             ShowDataError(
-                "Data kartu kosong",
-                "Belum ada kartu yang dapat dimainkan."
+                "Jumlah kartu tidak valid",
+                "Permainan membutuhkan 2 sampai 8 pasangan kartu."
             );
-
             return false;
         }
 
-        // Layout yang digunakan adalah grid 4 x 4.
-        if (validCards.Count > MAX_PAIRS)
-        {
-            Debug.LogWarning(
-                "[MemoryCard] Jumlah pasangan melebihi batas maksimal 8."
-            );
-
-            ShowDataError(
-                "Terlalu banyak kartu",
-                "Permainan ini hanya mendukung maksimal 8 pasangan kartu."
-            );
-
-            return false;
-        }
-
-        totalPairs = validCards.Count;
-
-        // ========================================================
-        // BUILD PAIRS
-        // ========================================================
-
+        totalPairs = validCards.Count / 2;
         foreach (MemoryCardItem card in validCards)
         {
-            string displayEmoji =
-                string.IsNullOrWhiteSpace(card.emoji)
-                    ? card.label
-                    : card.emoji;
-
-            // Kartu pertama menampilkan nama budaya.
-            cardValues.Add(card.id);
-            cardEmojis.Add(card.label);
-
-            // Kartu kedua menampilkan emoji atau simbol.
-            // ID pembanding HARUS sama dengan kartu pertama.
-            cardValues.Add(card.id);
-            cardEmojis.Add(displayEmoji);
+            cardIds.Add(card.id);
+            cardValues.Add(card.label);
+            cardEmojis.Add(string.IsNullOrWhiteSpace(card.emoji)
+                ? card.label
+                : card.emoji);
         }
 
         ShuffleCards();
@@ -333,6 +293,10 @@ public class ChallengeMemoryCardScreen : BaseScreen
             string tempEmoji = cardEmojis[i];
             cardEmojis[i] = cardEmojis[j];
             cardEmojis[j] = tempEmoji;
+
+            string tempId = cardIds[i];
+            cardIds[i] = cardIds[j];
+            cardIds[j] = tempId;
         }
     }
 
@@ -628,7 +592,8 @@ public class ChallengeMemoryCardScreen : BaseScreen
             idx >= revealed.Count ||
             idx >= matched.Count ||
             idx >= cards.Count ||
-            idx >= cardValues.Count
+            idx >= cardValues.Count ||
+            idx >= cardIds.Count
         )
         {
             return;
@@ -792,7 +757,7 @@ public class ChallengeMemoryCardScreen : BaseScreen
             yield break;
         }
 
-        // Kedua kartu harus memiliki ID yang sama.
+        // Kedua kartu menampilkan label pasangan yang sama.
         bool isMatch = string.Equals(
             cardValues[checkingFirst],
             cardValues[checkingSecond],
@@ -801,6 +766,12 @@ public class ChallengeMemoryCardScreen : BaseScreen
 
         if (isMatch)
         {
+            submittedMatches.Add(new ChallengeMemoryCardMatch
+            {
+                first_card_id = cardIds[checkingFirst],
+                second_card_id = cardIds[checkingSecond]
+            });
+
             matched[checkingFirst] = true;
             matched[checkingSecond] = true;
 
@@ -865,6 +836,7 @@ public class ChallengeMemoryCardScreen : BaseScreen
             idx < cards.Count &&
             idx < revealed.Count &&
             idx < matched.Count &&
+            idx < cardIds.Count &&
             cards[idx] != null;
     }
 
@@ -899,11 +871,15 @@ public class ChallengeMemoryCardScreen : BaseScreen
             return;
         }
 
+        ChallengeMemoryCardSubmission submission = new ChallengeMemoryCardSubmission
+        {
+            matches = submittedMatches
+        };
         TOBAChallengeSubmission.Submit(
             screenObj,
             container,
             challenge,
-            matchedPairs
+            JsonUtility.ToJson(submission)
         );
     }
 }

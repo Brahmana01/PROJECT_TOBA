@@ -5,6 +5,7 @@ import (
 
 	"toba-backend/middleware"
 	battleService "toba-backend/services/battle"
+	battleWS "toba-backend/websocket"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -53,5 +54,16 @@ func SubmitBattleAnswer(c *fiber.Ctx) error {
 	if result == nil {
 		return c.Status(status).JSON(fiber.Map{"message": message})
 	}
+
+	battleWS.Hub.BroadcastScoreUpdate(result.RoomCode, fiber.Map{
+		"room_code":          result.RoomCode,
+		"player_id":          playerID,
+		"host_score":         result.HostScore,
+		"guest_score":        result.GuestScore,
+		"answered_count":     result.AnsweredCount,
+		"total_questions":    result.TotalQuestions,
+		"is_bot":             result.IsBot,
+		"bot_answered_count": result.BotAnsweredCount,
+	})
 	return c.Status(status).JSON(result)
 }

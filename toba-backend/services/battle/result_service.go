@@ -19,19 +19,22 @@ const (
 )
 
 type FinishBattleResult struct {
-	Status        string `json:"status"`
-	HostScore     int64  `json:"host_score"`
-	GuestScore    int64  `json:"guest_score"`
-	WinnerID      *uint  `json:"winner_id"`
-	RewardXP      int    `json:"reward_xp"`
-	RewardStars   int    `json:"reward_stars"`
-	PreviousLevel int    `json:"previous_level"`
-	Level         int    `json:"level"`
-	LeveledUp     bool   `json:"leveled_up"`
-	TotalXP       int    `json:"total_xp"`
-	TotalStars    int    `json:"total_stars"`
-	XPForNext     int    `json:"xp_for_next"`
-	XPProgress    int    `json:"xp_progress"`
+	RoomCode         string `json:"room_code"`
+	Status           string `json:"status"`
+	HostScore        int64  `json:"host_score"`
+	GuestScore       int64  `json:"guest_score"`
+	WinnerID         *uint  `json:"winner_id"`
+	WinnerType       string `json:"winner_type"`
+	BotAnsweredCount int    `json:"bot_answered_count"`
+	RewardXP         int    `json:"reward_xp"`
+	RewardStars      int    `json:"reward_stars"`
+	PreviousLevel    int    `json:"previous_level"`
+	Level            int    `json:"level"`
+	LeveledUp        bool   `json:"leveled_up"`
+	TotalXP          int    `json:"total_xp"`
+	TotalStars       int    `json:"total_stars"`
+	XPForNext        int    `json:"xp_for_next"`
+	XPProgress       int    `json:"xp_progress"`
 }
 
 func countCorrectAnswers(tx *gorm.DB, roomID uint, playerID uint) (int64, error) {
@@ -55,8 +58,11 @@ func getBattleScores(tx *gorm.DB, room models.BattleRoom) (int64, int64, error) 
 	if err != nil {
 		return 0, 0, err
 	}
+
 	var guestScore int64
-	if room.GuestPlayerID != nil {
+	if isBotRoom(room) {
+		guestScore = int64(room.BotScore)
+	} else if room.GuestPlayerID != nil {
 		guestScore, err = countCorrectAnswers(tx, room.ID, *room.GuestPlayerID)
 		if err != nil {
 			return 0, 0, err
@@ -73,6 +79,34 @@ func awardBattleWinner(tx *gorm.DB, winnerID uint) (*playerprogression.Progressi
 	return playerprogression.ApplyRewardToLockedPlayer(
 		tx, &winner, BattleWinnerRewardXP, BattleWinnerRewardStars,
 	)
+}
+
+func winnerTypeForRoom(room models.BattleRoom, hostScore, guestScore int64) string {
+	if room.FinishReason == "DISCONNECT" {
+		if isBotRoom(room) {
+			return "BOT"
+		}
+		if room.WinnerPlayerID == nil {
+			return "DRAW"
+		}
+		if *room.WinnerPlayerID == room.HostPlayerID {
+			return "HOST"
+		}
+		return "GUEST"
+	}
+	if hostScore == guestScore {
+		return "DRAW"
+	}
+	if isBotRoom(room) {
+		if hostScore > guestScore {
+			return "PLAYER"
+		}
+		return "BOT"
+	}
+	if hostScore > guestScore {
+		return "HOST"
+	}
+	return "GUEST"
 }
 
 func FinishBattle(roomID uint, playerID uint) (*FinishBattleResult, string, int) {
@@ -98,16 +132,22 @@ func FinishBattle(roomID uint, playerID uint) (*FinishBattleResult, string, int)
 			return errors.New(businessMessage)
 		}
 
+		isBot := isBotRoom(room)
+		if isBot {
+			normalizeBotRoom(&room)
+		}
+
 		if room.Status == "FINISHED" {
 			hostScore, guestScore, err := getBattleScores(tx, room)
 			if err != nil {
 				return err
 			}
 			response = FinishBattleResult{
-				Status: room.Status, HostScore: hostScore,
+				RoomCode: room.RoomCode, Status: room.Status, HostScore: hostScore,
 				GuestScore: guestScore, WinnerID: room.WinnerPlayerID,
+				WinnerType:       winnerTypeForRoom(room, hostScore, guestScore),
+				BotAnsweredCount: room.BotAnsweredCount,
 			}
-			// Nilai reward hanya dilaporkan ulang kepada pemenang; tidak diberikan lagi.
 			if room.WinnerPlayerID != nil && *room.WinnerPlayerID == playerID {
 				response.RewardXP = BattleWinnerRewardXP
 				response.RewardStars = BattleWinnerRewardStars
@@ -138,32 +178,65 @@ func FinishBattle(roomID uint, playerID uint) (*FinishBattleResult, string, int)
 			return errors.New(businessMessage)
 		}
 
-		hostScore, guestScore, err := getBattleScores(tx, room)
-		if err != nil {
-			return err
-		}
-
-		// Room tanpa guest adalah pertandingan Bot. Skor Bot tetap lokal,
-		// sehingga server menutup room tanpa memberikan reward berbasis skor client.
-		if room.GuestPlayerID != nil {
+		if isBot {
+			if _, err := advanceBotProgressTx(tx, &room, time.Now()); err != nil {
+				return err
+			}
+			if room.BotAnsweredCount < models.BattleQuestionCount {
+				hostScore, guestScore, err := getBattleScores(tx, room)
+				if err != nil {
+					return err
+				}
+				response = FinishBattleResult{
+					RoomCode: room.RoomCode, Status: "WAITING_OPPONENT", HostScore: hostScore,
+					GuestScore: guestScore, BotAnsweredCount: room.BotAnsweredCount,
+				}
+				responseStatus = 202
+				return nil
+			}
+		} else {
+			if room.GuestPlayerID == nil {
+				businessStatus, businessMessage = 409, "Peserta kedua belum bergabung"
+				return errors.New(businessMessage)
+			}
+			hostAnswers, err := countSubmittedAnswers(tx, room.ID, room.HostPlayerID)
+			if err != nil {
+				return err
+			}
 			guestAnswers, err := countSubmittedAnswers(tx, room.ID, *room.GuestPlayerID)
 			if err != nil {
 				return err
 			}
-			if guestAnswers != int64(models.BattleQuestionCount) {
+			if hostAnswers != int64(models.BattleQuestionCount) || guestAnswers != int64(models.BattleQuestionCount) {
+				hostScore, guestScore, err := getBattleScores(tx, room)
+				if err != nil {
+					return err
+				}
 				response = FinishBattleResult{
-					Status: "WAITING_OPPONENT", HostScore: hostScore, GuestScore: guestScore,
+					RoomCode: room.RoomCode, Status: "WAITING_OPPONENT", HostScore: hostScore,
+					GuestScore: guestScore,
 				}
 				responseStatus = 202
 				return nil
 			}
 		}
 
+		hostScore, guestScore, err := getBattleScores(tx, room)
+		if err != nil {
+			return err
+		}
+
 		var winnerID *uint
-		if room.GuestPlayerID != nil {
-			if hostScore > guestScore {
+		winnerType := winnerTypeForRoom(room, hostScore, guestScore)
+		if isBot {
+			if winnerType == "PLAYER" {
 				winnerID = &room.HostPlayerID
-			} else if guestScore > hostScore {
+			}
+		} else {
+			switch winnerType {
+			case "HOST":
+				winnerID = &room.HostPlayerID
+			case "GUEST":
 				winnerID = room.GuestPlayerID
 			}
 		}
@@ -171,14 +244,16 @@ func FinishBattle(roomID uint, playerID uint) (*FinishBattleResult, string, int)
 		finishedAt := time.Now()
 		room.Status = "FINISHED"
 		room.WinnerPlayerID = winnerID
+		room.FinishReason = "COMPLETED"
 		room.FinishedAt = &finishedAt
 		if err := tx.Save(&room).Error; err != nil {
 			return err
 		}
 
 		response = FinishBattleResult{
-			Status: room.Status, HostScore: hostScore,
+			RoomCode: room.RoomCode, Status: room.Status, HostScore: hostScore,
 			GuestScore: guestScore, WinnerID: winnerID,
+			WinnerType: winnerType, BotAnsweredCount: room.BotAnsweredCount,
 		}
 
 		if winnerID != nil {
@@ -208,6 +283,7 @@ func FinishBattle(roomID uint, playerID uint) (*FinishBattleResult, string, int)
 		}
 		return nil, "Gagal menyelesaikan Battle atau memberikan reward", 500
 	}
+
 	if response.Status == "FINISHED" {
 		var finishedRoom models.BattleRoom
 		if err := config.DB.First(&finishedRoom, roomID).Error; err == nil {
@@ -239,7 +315,6 @@ func DisconnectBattle(roomID uint, playerID uint) (uint, string, int) {
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&room, roomID).Error; err != nil {
 			return err
 		}
-
 		if room.Status == "FINISHED" {
 			businessMessage, businessStatus = "Battle sudah selesai", 409
 			return errors.New(businessMessage)
@@ -249,12 +324,17 @@ func DisconnectBattle(roomID uint, playerID uint) (uint, string, int) {
 			return errors.New(businessMessage)
 		}
 
+		isBot := isBotRoom(room)
+		if isBot {
+			normalizeBotRoom(&room)
+		}
 		if room.HostPlayerID == playerID {
-			if room.GuestPlayerID == nil {
-				// Bot room: tidak ada lawan manusia yang dapat menerima kemenangan.
+			if isBot || room.GuestPlayerID == nil {
 				room.Status = "FINISHED"
+				room.FinishReason = "DISCONNECT"
 				finishedAt := time.Now()
 				room.FinishedAt = &finishedAt
+				room.WinnerPlayerID = nil
 				return tx.Save(&room).Error
 			}
 			winnerID = *room.GuestPlayerID
@@ -268,11 +348,11 @@ func DisconnectBattle(roomID uint, playerID uint) (uint, string, int) {
 		finishedAt := time.Now()
 		room.Status = "FINISHED"
 		room.WinnerPlayerID = &winnerID
+		room.FinishReason = "DISCONNECT"
 		room.FinishedAt = &finishedAt
 		if err := tx.Save(&room).Error; err != nil {
 			return err
 		}
-
 		if _, err := awardBattleWinner(tx, winnerID); err != nil {
 			return err
 		}
@@ -288,9 +368,10 @@ func DisconnectBattle(roomID uint, playerID uint) (uint, string, int) {
 		}
 		return 0, "Gagal memproses disconnect Battle", 500
 	}
+
 	if winnerID > 0 {
 		if _, unlockErr := playerprogression.CheckAndUnlockAchievements(winnerID); unlockErr != nil {
-			log.Printf("[Achievement] Gagal memeriksa setelah forfeit Battle player=%d: %v", winnerID, unlockErr)
+			log.Printf("[Achievement] Gagal memeriksa setelah disconnect Battle player=%d: %v", winnerID, unlockErr)
 		}
 	}
 	return winnerID, "", 200
