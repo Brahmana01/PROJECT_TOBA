@@ -47,7 +47,7 @@ jobs:
         run: |
           install -d -m 700 "$HOME/.ssh"
 
-          printf '%s\n' "$VPS_SSH_KEY" > "$HOME/.ssh/toba_admin_deploy"
+          printf '%s' "$VPS_SSH_KEY" | base64 --decode > "$HOME/.ssh/toba_admin_deploy"
           chmod 600 "$HOME/.ssh/toba_admin_deploy"
 
           printf '%s\n' "$VPS_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
