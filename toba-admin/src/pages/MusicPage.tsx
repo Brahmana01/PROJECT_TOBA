@@ -44,7 +44,7 @@ const MusicPage: React.FC = () => {
     stopAudio();
     
     // Gunakan URL dari response API langsung
-    const audioUrl = `http://localhost:8080${file.url}`;
+    const audioUrl = file.url;
     
     try {
       const audio = new Audio(audioUrl);

@@ -1,0 +1,88 @@
+
+name: Deploy TOBA Admin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'toba-admin/**'
+      - '.github/workflows/deploy-admin.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: toba-admin-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: toba-admin/package-lock.json
+
+      - name: Install dependencies
+        working-directory: toba-admin
+        run: npm ci
+
+      - name: Build Admin
+        working-directory: toba-admin
+        run: npm run build
+
+      - name: Prepare SSH
+        shell: bash
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 "$HOME/.ssh"
+
+          printf '%s\n' "$VPS_SSH_KEY" > "$HOME/.ssh/toba_admin_deploy"
+          chmod 600 "$HOME/.ssh/toba_admin_deploy"
+
+          printf '%s\n' "$VPS_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Create release directory
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          ssh -i "$HOME/.ssh/toba_admin_deploy" \
+            -p "$VPS_PORT" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" \
+            "mkdir -p '/var/www/toba-admin/releases/${GITHUB_SHA}'"
+
+      - name: Upload Admin and activate release
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          tar -C toba-admin/dist -czf - . | \
+            ssh -i "$HOME/.ssh/toba_admin_deploy" \
+              -p "$VPS_PORT" \
+              -o IdentitiesOnly=yes \
+              -o StrictHostKeyChecking=yes \
+              "$VPS_USER@$VPS_HOST" \
+              "tar -xzf - -C '/var/www/toba-admin/releases/${GITHUB_SHA}'"
+
+          ssh -i "$HOME/.ssh/toba_admin_deploy" \
+            -p "$VPS_PORT" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" \
+            "ln -sfn '/var/www/toba-admin/releases/${GITHUB_SHA}' '/var/www/toba-admin/current'"
