@@ -4,19 +4,19 @@
   "rewrites": [
     {
       "source": "/api",
-      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/api"
+      "destination": "https://copies-species-brad-belfast.trycloudflare.com/api"
     },
     {
       "source": "/api/:path*",
-      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/api/:path*"
+      "destination": "https://copies-species-brad-belfast.trycloudflare.com/api/:path*"
     },
     {
       "source": "/uploads",
-      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/uploads"
+      "destination": "https://copies-species-brad-belfast.trycloudflare.com/uploads"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/uploads/:path*"
+      "destination": "https://copies-species-brad-belfast.trycloudflare.com/uploads/:path*"
     }
   ]
 }
