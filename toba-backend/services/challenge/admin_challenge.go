@@ -10,6 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func AdminGetChallenges() ([]models.WeeklyChallenge, error) {
@@ -62,7 +63,7 @@ func AdminCreateChallenge(title, description, gameType string, rewardXP, rewardS
 	return &created, nil
 }
 
-func AdminUpdateChallenge(id, title, description, gameType string, rewardXP, rewardStars int, dataJSON string, isActive bool) (*models.WeeklyChallenge, string, int) {
+func AdminUpdateChallenge(id, title, description, gameType string, rewardXP, rewardStars int, dataJSON string, isActive *bool) (*models.WeeklyChallenge, string, int) {
 	gameType = NormalizeGameType(gameType)
 	title = strings.TrimSpace(title)
 	description = strings.TrimSpace(description)
@@ -74,21 +75,47 @@ func AdminUpdateChallenge(id, title, description, gameType string, rewardXP, rew
 	}
 
 	var challenge models.WeeklyChallenge
-	if err := config.DB.First(&challenge, id).Error; err != nil {
+	var businessMessage string
+	var businessStatus int
+	err := config.DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&challenge, id).Error; err != nil {
+			return err
+		}
+
+		if isActive != nil {
+			if *isActive && !challenge.IsActive && time.Now().After(challenge.EndDate) {
+				businessMessage = "Tantangan sudah berakhir. Buat tantangan baru untuk periode berikutnya."
+				businessStatus = fiber.StatusConflict
+				return errors.New(businessMessage)
+			}
+			challenge.IsActive = *isActive
+		}
+
+		challenge.Title = title
+		challenge.Description = description
+		challenge.GameType = gameType
+		challenge.RewardXP = rewardXP
+		challenge.RewardStars = rewardStars
+		challenge.DataJSON = dataJSON
+
+		// Keep a single active challenge when an existing challenge is edited.
+		if challenge.IsActive {
+			if err := tx.Model(&models.WeeklyChallenge{}).
+				Where("id <> ? AND is_active = ?", challenge.ID, true).
+				Update("is_active", false).Error; err != nil {
+				return err
+			}
+		}
+
+		return tx.Save(&challenge).Error
+	})
+	if err != nil {
+		if businessStatus != 0 {
+			return nil, businessMessage, businessStatus
+		}
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, "Tantangan tidak ditemukan", fiber.StatusNotFound
 		}
-		return nil, "Gagal mengambil tantangan", fiber.StatusInternalServerError
-	}
-
-	challenge.Title = title
-	challenge.Description = description
-	challenge.GameType = gameType
-	challenge.RewardXP = rewardXP
-	challenge.RewardStars = rewardStars
-	challenge.DataJSON = dataJSON
-	challenge.IsActive = isActive
-	if err := config.DB.Save(&challenge).Error; err != nil {
 		return nil, "Gagal memperbarui tantangan", fiber.StatusInternalServerError
 	}
 	return &challenge, "", fiber.StatusOK

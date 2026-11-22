@@ -74,6 +74,8 @@ const ChallengeModal = ({ challenge, onClose, onSave }: {
     game_type:    challenge?.game_type    ?? 'MATCHING',
     reward_xp:    challenge?.reward_xp    ?? 100,
     reward_stars: challenge?.reward_stars ?? 2,
+    // Preserve the current activation state when editing. The API ignores this on create.
+    is_active:    challenge?.is_active    ?? true,
     duration_days: 7,
     data_json:    challenge?.data_json    ?? DATA_JSON_TEMPLATES['MATCHING'],
   });
@@ -201,7 +203,7 @@ const ChallengePage: React.FC = () => {
   useEffect(() => { fetch(); }, []);
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Hapus tantangan ini?')) return;
+    if (!confirm('Nonaktifkan tantangan ini? Riwayat dan sesi pemain tetap disimpan.')) return;
     await api.delete(`/admin/challenges/${id}`);
     fetch();
   };

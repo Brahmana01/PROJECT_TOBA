@@ -68,7 +68,7 @@ func AdminUpdateChallenge(c *fiber.Ctx) error {
 		RewardXP    int    `json:"reward_xp"`
 		RewardStars int    `json:"reward_stars"`
 		DataJSON    string `json:"data_json"`
-		IsActive    bool   `json:"is_active"`
+		IsActive    *bool  `json:"is_active"`
 	}
 
 	var input Input
