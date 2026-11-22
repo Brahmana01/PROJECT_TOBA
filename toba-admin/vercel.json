@@ -1,0 +1,22 @@
+
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/api",
+      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/api"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/api/:path*"
+    },
+    {
+      "source": "/uploads",
+      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/uploads"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://zum-merger-pioneer-streams.trycloudflare.com/uploads/:path*"
+    }
+  ]
+}
