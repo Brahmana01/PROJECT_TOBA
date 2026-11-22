@@ -1,0 +1,57 @@
+warning: in the working copy of 'toba-admin/src/types/index.ts', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/toba-admin/src/types/index.ts b/toba-admin/src/types/index.ts[m
+[1mindex 67b80e4..525aa85 100644[m
+[1m--- a/toba-admin/src/types/index.ts[m
+[1m+++ b/toba-admin/src/types/index.ts[m
+[36m@@ -79,4 +79,49 @@[m [mexport interface MusicFile {[m
+ [m
+ export interface GalleryCard {[m
+   id: number; location_id: number; title: string; image: string; description: string;[m
+[31m-}[m
+\ No newline at end of file[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// Request payloads used by Admin CRUD endpoints.[m
+[32m+[m[32mexport interface LocationWritePayload {[m
+[32m+[m[32m  name: string;[m
+[32m+[m[32m  description: string;[m
+[32m+[m[32m  image: string;[m
+[32m+[m[32m  reward_xp: number;[m
+[32m+[m[32m  reward_stars: number;[m
+[32m+[m[32m  level_order: number;[m
+[32m+[m[32m  is_active: boolean;[m
+[32m+[m[32m  question_count: number;[m
+[32m+[m[32m  minimum_correct: number;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport interface QuestionWritePayload {[m
+[32m+[m[32m  question: string;[m
+[32m+[m[32m  explanation: string;[m
+[32m+[m[32m  is_active: boolean;[m
+[32m+[m[32m  options: QuestionOption[];[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport interface TriviaCategoryWritePayload {[m
+[32m+[m[32m  name: string;[m
+[32m+[m[32m  description: string;[m
+[32m+[m[32m  display_order: number;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport interface AchievementWritePayload {[m
+[32m+[m[32m  name: string;[m
+[32m+[m[32m  description: string;[m
+[32m+[m[32m  icon: string;[m
+[32m+[m[32m  condition_type: string;[m
+[32m+[m[32m  condition_value: number;[m
+[32m+[m[32m  reward_xp: number;[m
+[32m+[m[32m  reward_stars: number;[m
+[32m+[m[32m  is_active: boolean;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport interface GalleryCardWritePayload {[m
+[32m+[m[32m  location_id: number;[m
+[32m+[m[32m  title: string;[m
+[32m+[m[32m  image: string;[m
+[32m+[m[32m  description: string;[m
+[32m+[m[32m}[m
+[41m+[m

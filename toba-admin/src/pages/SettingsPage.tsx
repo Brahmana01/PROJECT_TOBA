@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Settings, Save, RefreshCw } from 'lucide-react';
 import { adminGetSettings, adminUpdateSetting } from '../services/api';
 import type { GameSetting } from '../types';
@@ -11,15 +11,23 @@ const SettingsPage: React.FC = () => {
   const [saved, setSaved]       = useState(false);
   const [changed, setChanged]   = useState<Record<string, string>>({});
 
-  const fetch = () => {
+  const loadSettings = useCallback(() => {
+    return adminGetSettings()
+      .then(r => {
+        setSettings(r.data || []);
+        setChanged({});
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const refreshSettings = () => {
     setLoading(true);
-    adminGetSettings().then(r => {
-      setSettings(r.data || []);
-      setChanged({});
-    }).finally(() => setLoading(false));
+    void loadSettings();
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    void loadSettings();
+  }, [loadSettings]);
 
   const LOCKED_KEYS = new Set([
     'quiz_question_count',
@@ -76,7 +84,7 @@ const SettingsPage: React.FC = () => {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={fetch} style={styles.btnSecondary}><RefreshCw size={14}/> Reload</button>
+          <button onClick={refreshSettings} style={styles.btnSecondary}><RefreshCw size={14}/> Reload</button>
           <button onClick={handleSave} disabled={saving} style={{
             ...styles.btnPrimary,
             background: saved ? 'rgba(76,175,80,0.3)' : undefined,

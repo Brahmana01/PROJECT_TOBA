@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { adminLogin } from '../services/api';
 import topOrnament from '../assets/admin/batak-top-ornament.png';
@@ -26,8 +27,11 @@ const AdminLoginPage: React.FC = () => {
       localStorage.setItem('adminData', JSON.stringify(response.data.admin));
 
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Username atau password salah');
+    } catch (error: unknown) {
+      const message = axios.isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message
+        : undefined;
+      setError(message || 'Username atau password salah');
     } finally {
       setLoading(false);
     }

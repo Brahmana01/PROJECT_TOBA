@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 import { Sword, Plus, Edit2, Trash2, RefreshCw, X, Check } from 'lucide-react';
 import { adminGetBattleQuestions, adminCreateBattleQuestion, adminUpdateBattleQuestion, adminDeleteBattleQuestion } from '../services/api';
 import type { BattleQuestion, QuestionOption } from '../types';
@@ -33,8 +34,11 @@ const BattleQuestionModal = ({ question, onClose, onSave }: {
       if (isEdit) await adminUpdateBattleQuestion(question!.id, payload);
       else await adminCreateBattleQuestion(payload);
       onSave();
-    } catch (error: any) {
-      setMsg(error?.response?.data?.message || 'Gagal menyimpan soal Battle.');
+    } catch (error: unknown) {
+      const message = axios.isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message
+        : undefined;
+      setMsg(message || 'Gagal menyimpan soal Battle.');
     }
     finally { setSaving(false); }
   };
@@ -88,21 +92,32 @@ const BattlePage: React.FC = () => {
   const [editQ, setEditQ]         = useState<BattleQuestion | null>(null);
   const [search, setSearch]       = useState('');
 
-  const fetch = () => {
+  const loadQuestions = useCallback(() => {
+    return adminGetBattleQuestions()
+      .then(r => setQuestions(r.data || []))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const refreshQuestions = () => {
     setLoading(true);
-    adminGetBattleQuestions().then(r => setQuestions(r.data || [])).finally(() => setLoading(false));
+    void loadQuestions();
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    void loadQuestions();
+  }, [loadQuestions]);
 
   const handleDelete = async (id: number) => {
     if (!confirm('Nonaktifkan soal ini? Data dan riwayat pertandingan tetap disimpan.')) return;
     try {
       await adminDeleteBattleQuestion(id);
-      fetch();
-    } catch (error: any) {
-      alert(error?.response?.data?.message || 'Soal tidak dapat dinonaktifkan saat ini.');
-      fetch();
+      refreshQuestions();
+    } catch (error: unknown) {
+      const message = axios.isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message
+        : undefined;
+      alert(message || 'Soal tidak dapat dinonaktifkan saat ini.');
+      refreshQuestions();
     }
   };
 
@@ -121,7 +136,7 @@ const BattlePage: React.FC = () => {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={fetch} style={styles.btnSecondary}><RefreshCw size={14}/> Refresh</button>
+          <button onClick={refreshQuestions} style={styles.btnSecondary}><RefreshCw size={14}/> Refresh</button>
           <button onClick={() => { setEditQ(null); setShowModal(true); }} style={styles.btnPrimary}>
             <Plus size={14}/> Tambah Soal
           </button>
@@ -185,7 +200,7 @@ const BattlePage: React.FC = () => {
       </div>
 
       {showModal && (
-        <BattleQuestionModal question={editQ} onClose={() => setShowModal(false)} onSave={() => { setShowModal(false); fetch(); }}/>
+        <BattleQuestionModal question={editQ} onClose={() => setShowModal(false)} onSave={() => { setShowModal(false); refreshQuestions(); }}/>
       )}
     </div>
   );

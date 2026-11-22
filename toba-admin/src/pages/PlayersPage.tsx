@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Users, Search, RefreshCw } from 'lucide-react';
 import { getAllPlayers } from '../services/api';
 import type { Player } from '../types';
@@ -16,7 +16,6 @@ function useDebounce<T>(value: T, delay: number): T {
 
 const PlayersPage: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
-  const [filtered, setFiltered] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
@@ -27,55 +26,42 @@ const PlayersPage: React.FC = () => {
   // Debounce search 300ms
   const debouncedSearch = useDebounce(search, 300);
 
-  const fetchPlayers = () => {
-    setLoading(true);
-
-    getAllPlayers()
+  const loadPlayers = useCallback(() => {
+    return getAllPlayers()
       .then(res => {
-        const data = res.data?.players || [];
-        setPlayers(data);
-        setFiltered(data);
-        setPage(1);
+        setPlayers(res.data?.players || []);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
+  }, []);
+
+  const refreshPlayers = () => {
+    setPage(1);
+    setLoading(true);
+    void loadPlayers();
   };
 
   useEffect(() => {
-    fetchPlayers();
-  }, []);
+    void loadPlayers();
+  }, [loadPlayers]);
 
-  // Filter pemain setelah debounce
-  useEffect(() => {
+  // Filter is derived from the current player data and debounced search term.
+  const filtered = useMemo(() => {
     const q = debouncedSearch.toLowerCase();
-
-    setFiltered(
-      players.filter(p =>
-        p.name.toLowerCase().includes(q) ||
-        p.username.toLowerCase().includes(q)
-      )
+    return players.filter(player =>
+      player.name.toLowerCase().includes(q) ||
+      player.username.toLowerCase().includes(q)
     );
   }, [debouncedSearch, players]);
 
-  // Reset ke halaman pertama saat search berubah
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
-
-  // Pagination calculation
+  // Keep the displayed page valid without synchronizing derived state in an effect.
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const currentPage = Math.max(1, Math.min(page, totalPages || 1));
 
   const paginated = filtered.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
   );
-
-  // Pastikan page tidak melebihi total halaman
-  useEffect(() => {
-    if (totalPages > 0 && page > totalPages) {
-      setPage(totalPages);
-    }
-  }, [page, totalPages]);
 
   return (
     <div className="dashboard-container">
@@ -97,7 +83,7 @@ const PlayersPage: React.FC = () => {
         </div>
 
         <button
-          onClick={fetchPlayers}
+          onClick={refreshPlayers}
           style={{
             background: 'rgba(212,175,55,0.1)',
             border: '1px solid #D4AF37',
@@ -146,7 +132,7 @@ const PlayersPage: React.FC = () => {
               type="text"
               placeholder="Cari nama atau username..."
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={e => { setSearch(e.target.value); setPage(1); }}
               style={{
                 width: '100%',
                 padding: '10px 10px 10px 38px',
@@ -324,17 +310,17 @@ const PlayersPage: React.FC = () => {
           >
             <button
               onClick={() =>
-                setPage(p => Math.max(1, p - 1))
+                setPage(Math.max(1, currentPage - 1))
               }
-              disabled={page === 1}
+              disabled={currentPage === 1}
               style={{
                 background: 'rgba(212,175,55,0.1)',
                 border: '1px solid #D4AF37',
                 color: '#D4AF37',
                 padding: '8px 14px',
                 borderRadius: '8px',
-                cursor: page === 1 ? 'not-allowed' : 'pointer',
-                opacity: page === 1 ? 0.4 : 1
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === 1 ? 0.4 : 1
               }}
             >
               ← Prev
@@ -348,14 +334,14 @@ const PlayersPage: React.FC = () => {
                 textAlign: 'center'
               }}
             >
-              {page} / {totalPages}
+              {currentPage} / {totalPages}
             </span>
 
             <button
               onClick={() =>
-                setPage(p => Math.min(totalPages, p + 1))
+                setPage(Math.min(totalPages, currentPage + 1))
               }
-              disabled={page === totalPages}
+              disabled={currentPage === totalPages}
               style={{
                 background: 'rgba(212,175,55,0.1)',
                 border: '1px solid #D4AF37',
@@ -363,10 +349,10 @@ const PlayersPage: React.FC = () => {
                 padding: '8px 14px',
                 borderRadius: '8px',
                 cursor:
-                  page === totalPages
+                  currentPage === totalPages
                     ? 'not-allowed'
                     : 'pointer',
-                opacity: page === totalPages ? 0.4 : 1
+                opacity: currentPage === totalPages ? 0.4 : 1
               }}
             >
               Next →

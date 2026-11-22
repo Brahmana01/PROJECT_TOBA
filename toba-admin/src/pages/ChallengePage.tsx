@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Trophy, Plus, Edit2, Trash2, RefreshCw, X, Check } from 'lucide-react';
 import api from '../services/api';
 import { styles } from '../styles/shared';
@@ -193,19 +193,25 @@ const ChallengePage: React.FC = () => {
   const [showModal, setShowModal]   = useState(false);
   const [editItem, setEditItem]     = useState<Challenge | null>(null);
 
-  const fetch = () => {
-    setLoading(true);
-    api.get('/admin/challenges')
+  const loadChallenges = useCallback(() => {
+    return api.get<Challenge[]>('/admin/challenges')
       .then(r => setChallenges(r.data || []))
       .finally(() => setLoading(false));
+  }, []);
+
+  const refreshChallenges = () => {
+    setLoading(true);
+    void loadChallenges();
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    void loadChallenges();
+  }, [loadChallenges]);
 
   const handleDelete = async (id: number) => {
     if (!confirm('Nonaktifkan tantangan ini? Riwayat dan sesi pemain tetap disimpan.')) return;
     await api.delete(`/admin/challenges/${id}`);
-    fetch();
+    refreshChallenges();
   };
 
   return (
@@ -221,7 +227,7 @@ const ChallengePage: React.FC = () => {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={fetch} style={styles.btnSecondary}>
+          <button onClick={refreshChallenges} style={styles.btnSecondary}>
             <RefreshCw size={14}/> Refresh
           </button>
           <button onClick={() => { setEditItem(null); setShowModal(true); }}
@@ -292,7 +298,7 @@ const ChallengePage: React.FC = () => {
         <ChallengeModal
           challenge={editItem}
           onClose={() => setShowModal(false)}
-          onSave={() => { setShowModal(false); fetch(); }}/>
+          onSave={() => { setShowModal(false); refreshChallenges(); }}/>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Music, Upload, Trash2, RefreshCw, Play, Pause, Volume2 } from 'lucide-react';
 import { adminGetMusic, adminUploadMusic, adminDeleteMusic } from '../services/api';
 import type { MusicFile } from '../types';
@@ -13,12 +13,20 @@ const MusicPage: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fileRef  = useRef<HTMLInputElement>(null);
 
-  const fetch = () => {
+  const loadMusic = useCallback(() => {
+    return adminGetMusic()
+      .then(r => setFiles(r.data || []))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const refreshMusic = () => {
     setLoading(true);
-    adminGetMusic().then(r => setFiles(r.data || [])).finally(() => setLoading(false));
+    void loadMusic();
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    void loadMusic();
+  }, [loadMusic]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return;
@@ -26,7 +34,7 @@ const MusicPage: React.FC = () => {
     try {
       await adminUploadMusic(file);
       setMsg('✓ File berhasil diupload!');
-      fetch();
+      refreshMusic();
     } catch { setMsg('✗ Gagal upload. Pastikan format mp3/ogg/wav.'); }
     finally { setUploading(false); e.target.value = ''; }
   };
@@ -36,7 +44,7 @@ const MusicPage: React.FC = () => {
     try {
       await adminDeleteMusic(filename);
       if (playing === filename) stopAudio();
-      fetch();
+      refreshMusic();
     } catch { setMsg('Gagal menghapus file.'); }
   };
 
@@ -67,7 +75,7 @@ const MusicPage: React.FC = () => {
       audio.load();
       audio.onended = () => setPlaying(null);
       
-    } catch (err) {
+    } catch {
       setMsg('✗ Gagal memutar audio.');
     }
   };
@@ -94,7 +102,7 @@ const MusicPage: React.FC = () => {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={fetch} style={styles.btnSecondary}><RefreshCw size={14}/> Refresh</button>
+          <button onClick={refreshMusic} style={styles.btnSecondary}><RefreshCw size={14}/> Refresh</button>
           <button onClick={() => fileRef.current?.click()} style={styles.btnPrimary} disabled={uploading}>
             <Upload size={14}/> {uploading ? 'Mengupload...' : 'Upload Audio'}
           </button>

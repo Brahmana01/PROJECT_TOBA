@@ -80,3 +80,48 @@ export interface MusicFile {
 export interface GalleryCard {
   id: number; location_id: number; title: string; image: string; description: string;
 }
+
+// Request payloads used by Admin CRUD endpoints.
+export interface LocationWritePayload {
+  name: string;
+  description: string;
+  image: string;
+  reward_xp: number;
+  reward_stars: number;
+  level_order: number;
+  is_active: boolean;
+  question_count: number;
+  minimum_correct: number;
+}
+
+export interface QuestionWritePayload {
+  question: string;
+  explanation: string;
+  is_active: boolean;
+  options: QuestionOption[];
+}
+
+export interface TriviaCategoryWritePayload {
+  name: string;
+  description: string;
+  display_order: number;
+}
+
+export interface AchievementWritePayload {
+  name: string;
+  description: string;
+  icon: string;
+  condition_type: string;
+  condition_value: number;
+  reward_xp: number;
+  reward_stars: number;
+  is_active: boolean;
+}
+
+export interface GalleryCardWritePayload {
+  location_id: number;
+  title: string;
+  image: string;
+  description: string;
+}
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
@@ -51,28 +51,48 @@ function useCountUp(target: number, duration = 1200, start = false) {
 
 // ── HOOK: Intersection Observer (Fade Up) ─────────────────
 function useFadeUp(delay = 0) {
-  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const elementId = useId();
+
   useEffect(() => {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
       { threshold: 0.1 }
     );
-    if (ref.current) observer.observe(ref.current);
+
+    observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [elementId]);
+
   return {
-    ref,
+    id: elementId,
     style: {
-      opacity:    visible ? 1 : 0,
-      transform:  visible ? 'translateY(0)' : 'translateY(32px)',
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(32px)',
       transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
-    }
+    },
   };
 }
 
 // ── ANIMATED STAT CARD ────────────────────────────────────
-const StatCard = ({ label, val, sub, color, icon, animate }: any) => {
+type StatCardProps = {
+  label: string;
+  val: number | string;
+  sub: string;
+  color: string;
+  icon: React.ReactNode;
+  animate: boolean;
+};
+
+const StatCard: React.FC<StatCardProps> = ({ label, val, sub, color, icon, animate }) => {
   const numericVal = typeof val === 'string'
     ? parseInt(val.replace(/\D/g, '')) || 0
     : val;
@@ -80,7 +100,7 @@ const StatCard = ({ label, val, sub, color, icon, animate }: any) => {
   const fade  = useFadeUp(0);
 
   return (
-    <div ref={fade.ref} style={fade.style} className={`stat-card-luxury ${color}`}>
+    <div id={fade.id} style={fade.style} className={`stat-card-luxury ${color}`}>
       <div className="stat-icon-wrap">{icon}</div>
       <div className="stat-data">
         <span>{label}</span>
@@ -98,7 +118,14 @@ const StatCard = ({ label, val, sub, color, icon, animate }: any) => {
 };
 
 // ── FEED ITEM ─────────────────────────────────────────────
-const FeedItem = ({ icon, title, desc, time }: any) => (
+type FeedItemProps = {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  time: string;
+};
+
+const FeedItem: React.FC<FeedItemProps> = ({ icon, title, desc, time }) => (
   <div className="feed-item">
     <div className="stat-icon-wrap" style={{width:30, height:30}}>{icon}</div>
     <div className="feed-text">
@@ -144,7 +171,7 @@ const Dashboard: React.FC = () => {
     <div className="dashboard-container">
 
       {/* 1. HEADER */}
-      <div ref={fadeHeader.ref} style={fadeHeader.style} className="welcome-header-luxury">
+      <div id={fadeHeader.id} style={fadeHeader.style} className="welcome-header-luxury">
         {/* Background & Overlay */}
         <div className="banner-bg-layer" style={{ backgroundImage: `url(${bannerToba})` }}></div>
         <div className="banner-overlay"></div>
@@ -177,7 +204,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* 2. STATS GRID — dengan animated counter */}
-      <div ref={fadeStats.ref} style={fadeStats.style} className="stats-grid-luxury">
+      <div id={fadeStats.id} style={fadeStats.style} className="stats-grid-luxury">
         <StatCard
           label="TOTAL PEMAIN" val={loading ? '...' : totalPemain}
           sub="Data real dari database" color="green"
@@ -206,7 +233,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* 3. CHART & ACTIVITY */}
-      <div ref={fadeMiddle.ref} style={fadeMiddle.style} className="middle-row">
+      <div id={fadeMiddle.id} style={fadeMiddle.style} className="middle-row">
         <div className="wood-panel">
           <div className="panel-head">
             <h3>Statistik Pemain</h3>
@@ -356,7 +383,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* 4. TABLE & QUICK ACTIONS */}
-      <div ref={fadeBottom.ref} style={fadeBottom.style} className="bottom-row">
+      <div id={fadeBottom.id} style={fadeBottom.style} className="bottom-row">
         <div className="wood-panel">
           <div className="panel-head">
             <h3>Data Pemain</h3>

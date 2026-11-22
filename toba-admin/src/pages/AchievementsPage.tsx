@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Trophy, Plus, Edit2, Trash2, RefreshCw, X, Check } from 'lucide-react';
 import { adminGetAchievements, adminCreateAchievement, adminUpdateAchievement, adminDeleteAchievement } from '../services/api';
 import type { Achievement } from '../types';
@@ -106,17 +106,25 @@ const AchievementsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [editAch, setEditAch]   = useState<Achievement | null>(null);
 
-  const fetch = () => {
+  const loadAchievements = useCallback(() => {
+    return adminGetAchievements()
+      .then(r => setAchievements(r.data || []))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const refreshAchievements = () => {
     setLoading(true);
-    adminGetAchievements().then(r => setAchievements(r.data || [])).finally(() => setLoading(false));
+    void loadAchievements();
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    void loadAchievements();
+  }, [loadAchievements]);
 
   const handleDelete = async (id: number) => {
     if (!confirm('Nonaktifkan achievement ini?')) return;
     await adminDeleteAchievement(id);
-    fetch();
+    refreshAchievements();
   };
 
   return (
@@ -130,7 +138,7 @@ const AchievementsPage: React.FC = () => {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={fetch} style={styles.btnSecondary}><RefreshCw size={14}/> Refresh</button>
+          <button onClick={refreshAchievements} style={styles.btnSecondary}><RefreshCw size={14}/> Refresh</button>
           <button onClick={() => { setEditAch(null); setShowModal(true); }} style={styles.btnPrimary}>
             <Plus size={14}/> Tambah Achievement
           </button>
@@ -171,7 +179,7 @@ const AchievementsPage: React.FC = () => {
       </div>
 
       {showModal && (
-        <AchievementModal ach={editAch} onClose={() => setShowModal(false)} onSave={() => { setShowModal(false); fetch(); }}/>
+        <AchievementModal ach={editAch} onClose={() => setShowModal(false)} onSave={() => { setShowModal(false); refreshAchievements(); }}/>
       )}
     </div>
   );
