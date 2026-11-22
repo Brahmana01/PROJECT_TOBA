@@ -4,23 +4,23 @@
   "rewrites": [
     {
       "source": "/api",
-      "destination": "https://copies-species-brad-belfast.trycloudflare.com/api"
+      "destination": "https://vm-4-10-ubuntu.tail8157f9.ts.net:8443/api"
     },
     {
       "source": "/api/",
-      "destination": "https://copies-species-brad-belfast.trycloudflare.com/api/"
+      "destination": "https://vm-4-10-ubuntu.tail8157f9.ts.net:8443/api/"
     },
     {
       "source": "/api/:path*",
-      "destination": "https://copies-species-brad-belfast.trycloudflare.com/api/:path*"
+      "destination": "https://vm-4-10-ubuntu.tail8157f9.ts.net:8443/api/:path*"
     },
     {
       "source": "/uploads",
-      "destination": "https://copies-species-brad-belfast.trycloudflare.com/uploads"
+      "destination": "https://vm-4-10-ubuntu.tail8157f9.ts.net:8443/uploads"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://copies-species-brad-belfast.trycloudflare.com/uploads/:path*"
+      "destination": "https://vm-4-10-ubuntu.tail8157f9.ts.net:8443/uploads/:path*"
     }
   ]
 }
