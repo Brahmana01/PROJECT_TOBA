@@ -16,26 +16,32 @@ import (
 // SeedGameplayRules menjalankan hanya data yang perlu diselaraskan untuk aturan
 // gameplay terbaru. Tidak menghapus data pemain dan tidak menjalankan seed
 // achievement, gallery, admin, atau weekly challenge yang tidak diperlukan.
+
 func SeedGameplayRules() error {
 	SeedLocations()
+	SeedLocationQuestions()
 	SeedTriviaCategories()
 
-	// Semua lokasi aktif mengikuti konfigurasi sesi terbaru, termasuk lokasi
-	// tambahan yang dibuat Admin. Bank soal dan progres tidak disentuh.
-	if err := config.DB.Model(&models.Location{}).Where("is_active = ?", true).Updates(map[string]interface{}{
-		"question_count":  10,
-		"minimum_correct": 6,
-	}).Error; err != nil {
-		return fmt.Errorf("gagal menyelaraskan aturan lokasi aktif: %w", err)
+	// Semua lokasi aktif menggunakan aturan 10 soal dan minimal 6 benar.
+	if err := config.DB.Model(&models.Location{}).
+		Where("is_active = ?", true).
+		Updates(map[string]interface{}{
+			"question_count":  10,
+			"minimum_correct": 6,
+		}).Error; err != nil {
+		return fmt.Errorf("gagal menyelaraskan aturan lokasi: %w", err)
 	}
 
 	SeedTriviaQuestions()
 	SeedBattleQuestions()
 	SeedGameSettings()
+	SeedWeeklyChallenges()
+
 	if err := verifyGameplaySeed(); err != nil {
 		return err
 	}
-	log.Println("✅ Verifikasi seed gameplay berhasil.")
+
+	log.Println("✅ Verifikasi seluruh seed gameplay berhasil.")
 	return nil
 }
 
@@ -67,8 +73,75 @@ func verifyBattleSeed() error {
 	return nil
 }
 
+func verifyLocationQuestionBank() error {
+	var locations []models.Location
+
+	if err := config.DB.
+		Where("level_order BETWEEN ? AND ? AND is_active = ?", 1, 10, true).
+		Order("level_order ASC").
+		Find(&locations).Error; err != nil {
+		return fmt.Errorf("gagal memeriksa lokasi Jelajah: %w", err)
+	}
+
+	if len(locations) != 10 {
+		return fmt.Errorf(
+			"lokasi aktif Jelajah berjumlah %d; seharusnya 10",
+			len(locations),
+		)
+	}
+
+	for _, location := range locations {
+		var questions []models.LocationQuestion
+
+		if err := config.DB.
+			Preload("Options").
+			Where("location_id = ? AND is_active = ?", location.ID, true).
+			Find(&questions).Error; err != nil {
+			return fmt.Errorf(
+				"gagal memeriksa soal lokasi %s: %w",
+				location.Name, err,
+			)
+		}
+
+		if len(questions) < 15 {
+			return fmt.Errorf(
+				"lokasi %s hanya memiliki %d soal aktif; minimal 15",
+				location.Name, len(questions),
+			)
+		}
+
+		for _, question := range questions {
+			if len(question.Options) != 4 {
+				return fmt.Errorf(
+					"soal lokasi %s harus memiliki tepat 4 opsi",
+					location.Name,
+				)
+			}
+
+			correct := 0
+			for _, option := range question.Options {
+				if option.IsCorrect {
+					correct++
+				}
+			}
+
+			if correct != 1 {
+				return fmt.Errorf(
+					"soal lokasi %s harus memiliki tepat 1 jawaban benar",
+					location.Name,
+				)
+			}
+		}
+	}
+
+	return nil
+}
+
 func verifyGameplaySeed() error {
 	if err := verifyBattleSeed(); err != nil {
+		return err
+	}
+	if err := verifyLocationQuestionBank(); err != nil {
 		return err
 	}
 	var misconfiguredLocations int64
