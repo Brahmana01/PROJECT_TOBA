@@ -3,10 +3,13 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	mathrand "math/rand"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
 
 	"toba-backend/config"
 	"toba-backend/models"
@@ -91,6 +94,7 @@ func Register(c *fiber.Ctx) error {
 // ============================================================
 // POST /api/login
 // ============================================================
+
 func Login(c *fiber.Ctx) error {
 	type LoginInput struct {
 		Username string `json:"username"`
@@ -99,38 +103,122 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	input := new(LoginInput)
+
 	if err := c.BodyParser(input); err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Input tidak valid"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Input tidak valid",
+		})
+	}
+
+	input.Username = strings.TrimSpace(input.Username)
+	input.Pin = strings.TrimSpace(input.Pin)
+
+	if input.Username == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Username wajib diisi",
+		})
+	}
+
+	if len(input.Pin) != 6 {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "PIN harus 6 digit",
+		})
+	}
+
+	for _, digit := range input.Pin {
+		if digit < '0' || digit > '9' {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": "PIN harus terdiri dari 6 angka",
+			})
+		}
 	}
 
 	var player models.Player
-	if err := config.DB.Where("username = ?", input.Username).First(&player).Error; err != nil {
-		return c.Status(401).JSON(fiber.Map{"message": "Username atau PIN salah"})
+
+	err := config.DB.
+		Where("username = ?", input.Username).
+		First(&player).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Username tidak ditemukan",
+		})
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(player.PinHash), []byte(input.Pin)); err != nil {
-		return c.Status(401).JSON(fiber.Map{"message": "Username atau PIN salah"})
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memeriksa akun. Silakan coba lagi.",
+		})
 	}
+
+	if err := bcrypt.CompareHashAndPassword(
+		[]byte(player.PinHash),
+		[]byte(input.Pin),
+	); err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"message": "PIN salah",
+			})
+		}
+
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Data autentikasi akun bermasalah",
+		})
+	}
+
 	if !player.IsActive {
-		return c.Status(403).JSON(fiber.Map{"message": "Akun tidak aktif"})
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"message": "Akun tidak aktif",
+		})
 	}
 
 	now := time.Now()
 	player.LastLogin = &now
-	config.DB.Save(&player)
 
-	config.DB.Model(&models.PlayerSession{}).Where("player_id = ? AND device_id = ?", player.ID, input.DeviceID).Update("is_active", false)
+	if err := config.DB.Save(&player).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memperbarui data login",
+		})
+	}
+
+	if err := config.DB.Model(&models.PlayerSession{}).
+		Where("player_id = ? AND device_id = ?", player.ID, input.DeviceID).
+		Update("is_active", false).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memperbarui sesi perangkat",
+		})
+	}
 
 	token := generateToken(player.ID)
-	session := models.PlayerSession{PlayerID: player.ID, Token: token, DeviceID: input.DeviceID, IsActive: true, LastLogin: now}
-	config.DB.Create(&session)
+
+	session := models.PlayerSession{
+		PlayerID:  player.ID,
+		Token:     token,
+		DeviceID:  input.DeviceID,
+		IsActive:  true,
+		LastLogin: now,
+	}
+
+	if err := config.DB.Create(&session).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal membuat sesi login",
+		})
+	}
 
 	var title models.Title
 	config.DB.First(&title, player.TitleID)
 
 	return c.JSON(fiber.Map{
-		"message": "Login berhasil!", "id": player.ID, "user_code": player.UserCode,
-		"username": player.Username, "name": player.Name, "level": player.Level,
-		"xp": player.XP, "stars": player.Stars, "title_name": title.TitleName, "token": token,
+		"message":    "Login berhasil!",
+		"id":         player.ID,
+		"user_code":  player.UserCode,
+		"username":   player.Username,
+		"name":       player.Name,
+		"level":      player.Level,
+		"xp":         player.XP,
+		"stars":      player.Stars,
+		"title_name": title.TitleName,
+		"token":      token,
 	})
 }
 
