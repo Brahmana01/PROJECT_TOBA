@@ -684,7 +684,8 @@ public class APIManager : MonoBehaviour
             // disediakan backend. Pesan internal dari HTTP 5xx tetap disembunyikan.
             if ((responseCode == 400 || responseCode == 401 ||
                  responseCode == 403 || responseCode == 404 ||
-                 responseCode == 409 || responseCode == 422) &&
+                 responseCode == 409 || responseCode == 410 ||
+                 responseCode == 422) &&
                 !string.IsNullOrWhiteSpace(serverMessage))
             {
                 return serverMessage;

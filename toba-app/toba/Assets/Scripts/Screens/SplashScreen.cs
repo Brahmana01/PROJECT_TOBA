@@ -1514,7 +1514,7 @@ public class SplashScreen : BaseScreen
                 if (ver.force_update && ver.min_version != currentVersion)
                 {
                     // Tampilkan dialog wajib update
-                    LoadingOverlay.Hide();
+                    LoadingOverlay.Hide(screenObj != null ? screenObj.transform : null);
                     ShowForceUpdateDialog(ver.update_message);
                 }
             }, (_) => { /* skip kalau gagal */ });

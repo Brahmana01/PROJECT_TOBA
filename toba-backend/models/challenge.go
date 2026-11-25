@@ -30,6 +30,7 @@ type WeeklyChallengeSession struct {
 	RewardStars    int        `json:"reward_stars"`
 	PublicDataJSON string     `gorm:"type:text" json:"-"`
 	AnswerKeyJSON  string     `gorm:"type:text" json:"-"`
+	ResultJSON     string     `gorm:"type:text" json:"-"`
 	StartedAt      time.Time  `json:"started_at"`
 	ExpiresAt      time.Time  `gorm:"index" json:"expires_at"`
 	CompletedAt    *time.Time `json:"completed_at,omitempty"`

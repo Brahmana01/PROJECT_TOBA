@@ -142,32 +142,45 @@ public class SettingScreen : BaseScreen
             new Vector2(430f, 0f)
         ).GetComponent<TextMeshProUGUI>();
 
+        // Root Slider menjadi satu-satunya target raycast.
         GameObject sliderObject = new GameObject("Slider_" + label);
         sliderObject.transform.SetParent(row.transform, false);
 
         RectTransform sliderRect = sliderObject.AddComponent<RectTransform>();
         sliderRect.anchorMin = sliderRect.anchorMax = new Vector2(0.5f, 0.5f);
-        sliderRect.sizeDelta = new Vector2(380f, 36f);
+        sliderRect.sizeDelta = new Vector2(380f, 42f);
         sliderRect.anchoredPosition = new Vector2(80f, 0f);
 
-        // Graphic transparan ini adalah area raycast. Tanpanya, slider tidak menerima sentuhan.
         Image hitArea = sliderObject.AddComponent<Image>();
         hitArea.sprite = UIBuilder.GetDefaultSprite();
         hitArea.color = new Color(1f, 1f, 1f, 0.001f);
         hitArea.raycastTarget = true;
 
-        GameObject background = UIBuilder.CreatePanelSized(
-            sliderObject.transform,
-            "Background",
-            new Color(0f, 0f, 0f, 0.22f),
-            new Vector2(360f, 12f),
-            Vector2.zero
-        );
-        RectTransform backgroundRect = background.GetComponent<RectTransform>();
-        backgroundRect.anchorMin = backgroundRect.anchorMax = new Vector2(0.5f, 0.5f);
+        // Track background.
+        GameObject background = new GameObject("Background");
+        background.transform.SetParent(sliderObject.transform, false);
+        RectTransform backgroundRect = background.AddComponent<RectTransform>();
+        backgroundRect.anchorMin = new Vector2(0f, 0.35f);
+        backgroundRect.anchorMax = new Vector2(1f, 0.65f);
+        backgroundRect.offsetMin = new Vector2(14f, 0f);
+        backgroundRect.offsetMax = new Vector2(-14f, 0f);
+
+        Image backgroundImage = background.AddComponent<Image>();
+        backgroundImage.sprite = UIBuilder.GetDefaultSprite();
+        backgroundImage.color = new Color(0f, 0f, 0f, 0.22f);
+        backgroundImage.raycastTarget = false;
+
+        // Fill area dan fill harus menjadi anak langsung dari root hierarchy Slider.
+        GameObject fillArea = new GameObject("FillArea");
+        fillArea.transform.SetParent(sliderObject.transform, false);
+        RectTransform fillAreaRect = fillArea.AddComponent<RectTransform>();
+        fillAreaRect.anchorMin = new Vector2(0f, 0.35f);
+        fillAreaRect.anchorMax = new Vector2(1f, 0.65f);
+        fillAreaRect.offsetMin = new Vector2(14f, 0f);
+        fillAreaRect.offsetMax = new Vector2(-14f, 0f);
 
         GameObject fill = new GameObject("Fill");
-        fill.transform.SetParent(background.transform, false);
+        fill.transform.SetParent(fillArea.transform, false);
         RectTransform fillRect = fill.AddComponent<RectTransform>();
         fillRect.anchorMin = Vector2.zero;
         fillRect.anchorMax = new Vector2(currentValue, 1f);
@@ -179,11 +192,20 @@ public class SettingScreen : BaseScreen
         fillImage.color = TOBATheme.BatakGold;
         fillImage.raycastTarget = false;
 
+        // Handle area.
+        GameObject handleArea = new GameObject("HandleArea");
+        handleArea.transform.SetParent(sliderObject.transform, false);
+        RectTransform handleAreaRect = handleArea.AddComponent<RectTransform>();
+        handleAreaRect.anchorMin = Vector2.zero;
+        handleAreaRect.anchorMax = Vector2.one;
+        handleAreaRect.offsetMin = new Vector2(14f, 0f);
+        handleAreaRect.offsetMax = new Vector2(-14f, 0f);
+
         GameObject handle = new GameObject("Handle");
-        handle.transform.SetParent(sliderObject.transform, false);
+        handle.transform.SetParent(handleArea.transform, false);
         RectTransform handleRect = handle.AddComponent<RectTransform>();
-        handleRect.anchorMin = handleRect.anchorMax = new Vector2(0f, 0.5f);
-        handleRect.sizeDelta = new Vector2(30f, 30f);
+        handleRect.anchorMin = handleRect.anchorMax = new Vector2(currentValue, 0.5f);
+        handleRect.sizeDelta = new Vector2(32f, 32f);
         handleRect.anchoredPosition = Vector2.zero;
 
         Image handleImage = handle.AddComponent<Image>();
@@ -192,13 +214,16 @@ public class SettingScreen : BaseScreen
         handleImage.raycastTarget = false;
 
         Slider slider = sliderObject.AddComponent<Slider>();
-        slider.targetGraphic = hitArea;
+        slider.transition = Selectable.Transition.None;
+        slider.navigation = new Navigation { mode = Navigation.Mode.None };
+        slider.targetGraphic = handleImage;
         slider.fillRect = fillRect;
         slider.handleRect = handleRect;
         slider.direction = Slider.Direction.LeftToRight;
         slider.minValue = 0f;
         slider.maxValue = 1f;
         slider.wholeNumbers = false;
+        slider.interactable = true;
         slider.SetValueWithoutNotify(currentValue);
 
         slider.onValueChanged.AddListener(value =>

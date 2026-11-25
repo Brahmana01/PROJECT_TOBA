@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class GalleryScreen : BaseScreen
 {
     private GalleryResponse galleryData;
-    private GameObject loadingObj;
     private GameObject emptyStateObj;
     private int totalCards;
 
@@ -28,26 +27,14 @@ public class GalleryScreen : BaseScreen
     private void ShowLoading()
     {
         ClearEmptyState();
-        ClearLoading();
-
-        loadingObj = UIBuilder.CreateTextSized(
-            screenObj.transform,
-            "Memuat koleksi...",
-            42,
-            TOBATheme.TextLight,
-            TextAlignmentOptions.Center,
-            new Vector2(700f, 80f),
-            Vector2.zero
-        );
+        if (screenObj != null)
+            LoadingOverlay.Show(screenObj.transform, "Memuat koleksi budaya...");
     }
 
     private void ClearLoading()
     {
-        if (loadingObj != null)
-        {
-            Object.Destroy(loadingObj);
-            loadingObj = null;
-        }
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
     }
 
     private void ClearEmptyState()
@@ -245,6 +232,35 @@ public class GalleryScreen : BaseScreen
         }
     }
 
+    private Sprite LoadGallerySprite(string imageName)
+    {
+        if (string.IsNullOrWhiteSpace(imageName))
+            return null;
+
+        string resourceName = imageName.Trim().Replace("\\", "/");
+        int slashIndex = resourceName.LastIndexOf('/');
+        if (slashIndex >= 0)
+            resourceName = resourceName.Substring(slashIndex + 1);
+
+        int extensionIndex = resourceName.LastIndexOf('.');
+        if (extensionIndex > 0)
+            resourceName = resourceName.Substring(0, extensionIndex);
+
+        Sprite sprite = Resources.Load<Sprite>("gambar/" + resourceName);
+        if (sprite != null)
+            return sprite;
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>("gambar/" + resourceName);
+        if (sprites != null && sprites.Length > 0)
+            return sprites[0];
+
+        Texture2D texture = Resources.Load<Texture2D>("gambar/" + resourceName);
+        if (texture == null)
+            texture = Resources.Load<Texture2D>(resourceName);
+
+        return texture != null ? TOBATheme.TextureToSprite(texture) : null;
+    }
+
     private void CreateGalleryCard(
         Transform parent,
         PlayerGalleryCardData cardData,
@@ -254,10 +270,18 @@ public class GalleryScreen : BaseScreen
         float height,
         int slotNumber)
     {
-        bool isOwned = cardData != null && cardData.is_owned && cardData.card != null;
+        bool hasCardData = cardData != null && cardData.card != null;
+        bool isOwned = hasCardData && cardData.is_owned;
         int cardNumber = cardData != null && cardData.gallery_card_id > 0
             ? cardData.gallery_card_id
             : slotNumber;
+
+        string title = hasCardData && !string.IsNullOrWhiteSpace(cardData.card.title)
+            ? cardData.card.title
+            : "Kartu #" + cardNumber;
+        string description = hasCardData && !string.IsNullOrWhiteSpace(cardData.card.description)
+            ? cardData.card.description
+            : "Informasi kartu budaya belum tersedia.";
 
         GameObject border = UIBuilder.CreatePanelSized(
             parent,
@@ -270,94 +294,120 @@ public class GalleryScreen : BaseScreen
         GameObject card = UIBuilder.CreatePanelSized(
             border.transform,
             "Card",
-            isOwned ? TOBATheme.CardBG : new Color(0.2f, 0.2f, 0.2f, 0.9f),
+            isOwned ? TOBATheme.CardBG : new Color(0.16f, 0.18f, 0.16f, 0.96f),
             new Vector2(width, height),
             Vector2.zero
         );
 
-        if (isOwned)
+        GameObject imageArea = UIBuilder.CreatePanelSized(
+            card.transform,
+            "ImgArea",
+            TOBATheme.LakeBlue,
+            new Vector2(width - 20f, 180f),
+            new Vector2(0f, 65f)
+        );
+
+        Image galleryImage = imageArea.GetComponent<Image>();
+        Sprite gallerySprite = hasCardData
+            ? LoadGallerySprite(cardData.card.image)
+            : null;
+
+        if (galleryImage != null)
         {
-            UIBuilder.CreatePanelSized(
-                card.transform,
-                "ImgArea",
-                TOBATheme.LakeBlue,
-                new Vector2(width - 20f, 180f),
-                new Vector2(0f, 65f)
-            );
+            galleryImage.raycastTarget = false;
+            if (gallerySprite != null)
+            {
+                galleryImage.sprite = gallerySprite;
+                galleryImage.type = Image.Type.Simple;
+                galleryImage.preserveAspect = true;
+                galleryImage.color = isOwned
+                    ? Color.white
+                    : new Color(0.38f, 0.42f, 0.40f, 0.78f);
+            }
+            else
+            {
+                galleryImage.color = new Color(0.12f, 0.25f, 0.30f, 1f);
+            }
+        }
 
-            TextMeshProUGUI titleText = UIBuilder.CreateTextSized(
-                card.transform,
-                cardData.card.title,
-                34,
-                TOBATheme.WoodDark,
-                TextAlignmentOptions.Center,
-                new Vector2(width - 30f, 55f),
-                new Vector2(0f, -80f)
-            ).GetComponent<TextMeshProUGUI>();
-            titleText.fontStyle = FontStyles.Normal;
-            UIBuilder.SetWordWrap(titleText, true);
-
-            TextMeshProUGUI descriptionText = UIBuilder.CreateTextSized(
-                card.transform,
-                cardData.card.description,
-                24,
-                TOBATheme.TextGray,
-                TextAlignmentOptions.Center,
-                new Vector2(width - 30f, 60f),
-                new Vector2(0f, -135f)
-            ).GetComponent<TextMeshProUGUI>();
-            descriptionText.fontStyle = FontStyles.Normal;
-            UIBuilder.SetWordWrap(descriptionText, true);
-
-            GameObject badge = UIBuilder.CreatePanelSized(
-                card.transform,
-                "Badge",
-                TOBATheme.BtnPrimary,
-                new Vector2(160f, 45f),
-                new Vector2(110f, 140f)
-            );
-
+        if (gallerySprite == null)
+        {
             UIBuilder.CreateTextSized(
-                badge.transform,
-                "✓ DIMILIKI",
-                22,
-                Color.white,
+                imageArea.transform,
+                "GAMBAR BELUM TERSEDIA",
+                20,
+                TOBATheme.TextLight,
                 TextAlignmentOptions.Center,
-                new Vector2(155f, 42f),
+                new Vector2(width - 40f, 55f),
+                Vector2.zero
+            ).GetComponent<TextMeshProUGUI>().raycastTarget = false;
+        }
+
+        if (!isOwned)
+        {
+            GameObject lockShade = UIBuilder.CreatePanelSized(
+                imageArea.transform,
+                "LockedShade",
+                new Color(0f, 0f, 0f, 0.34f),
+                new Vector2(width - 20f, 180f),
                 Vector2.zero
             );
-        }
-        else
-        {
+            Image shadeImage = lockShade.GetComponent<Image>();
+            if (shadeImage != null)
+                shadeImage.raycastTarget = false;
+
             UIBuilder.CreateTextSized(
-                card.transform,
+                imageArea.transform,
                 "🔒",
-                80,
-                TOBATheme.Locked,
+                58,
+                TOBATheme.BatakGold,
                 TextAlignmentOptions.Center,
-                new Vector2(width, 120f),
-                new Vector2(0f, 50f)
-            );
-
-            UIBuilder.CreateTextSized(
-                card.transform,
-                "Kartu #" + cardNumber,
-                30,
-                TOBATheme.Locked,
-                TextAlignmentOptions.Center,
-                new Vector2(width - 20f, 50f),
-                new Vector2(0f, -80f)
-            );
-
-            UIBuilder.CreateTextSized(
-                card.transform,
-                "Selesaikan lokasi\nuntuk mendapatkan",
-                24,
-                new Color(0.5f, 0.5f, 0.5f),
-                TextAlignmentOptions.Center,
-                new Vector2(width - 30f, 70f),
-                new Vector2(0f, -140f)
-            ).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Normal;
+                new Vector2(100f, 100f),
+                Vector2.zero
+            ).GetComponent<TextMeshProUGUI>().raycastTarget = false;
         }
+
+        TextMeshProUGUI titleText = UIBuilder.CreateTextSized(
+            card.transform,
+            title,
+            31,
+            isOwned ? TOBATheme.WoodDark : TOBATheme.BatakGold,
+            TextAlignmentOptions.Center,
+            new Vector2(width - 30f, 55f),
+            new Vector2(0f, -80f)
+        ).GetComponent<TextMeshProUGUI>();
+        titleText.fontStyle = FontStyles.Normal;
+        UIBuilder.SetWordWrap(titleText, true);
+
+        TextMeshProUGUI descriptionText = UIBuilder.CreateTextSized(
+            card.transform,
+            description,
+            21,
+            isOwned ? TOBATheme.TextGray : new Color(0.82f, 0.82f, 0.78f),
+            TextAlignmentOptions.Center,
+            new Vector2(width - 30f, 62f),
+            new Vector2(0f, -137f)
+        ).GetComponent<TextMeshProUGUI>();
+        descriptionText.fontStyle = FontStyles.Normal;
+        UIBuilder.SetWordWrap(descriptionText, true);
+
+        GameObject badge = UIBuilder.CreatePanelSized(
+            card.transform,
+            "Badge",
+            isOwned ? TOBATheme.BtnPrimary : TOBATheme.Locked,
+            new Vector2(190f, 42f),
+            new Vector2(0f, 145f)
+        );
+
+        UIBuilder.CreateTextSized(
+            badge.transform,
+            isOwned ? "✓ DIMILIKI" : "🔒 TERKUNCI",
+            21,
+            Color.white,
+            TextAlignmentOptions.Center,
+            new Vector2(185f, 40f),
+            Vector2.zero
+        ).GetComponent<TextMeshProUGUI>().raycastTarget = false;
     }
+
 }

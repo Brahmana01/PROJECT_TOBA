@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 
@@ -6,6 +7,8 @@ public class LocationDetailScreen : BaseScreen
 {
     private LocationData locationData;
     private TextMeshProUGUI factTxt;
+    private Transform factSpinner;
+    private Coroutine factSpinnerCoroutine;
 
     private string LocationName =>
         locationData == null ||
@@ -571,6 +574,50 @@ public class LocationDetailScreen : BaseScreen
         factTxt.enableAutoSizing = true;
         factTxt.fontSizeMin = 22;
         factTxt.fontSizeMax = 30;
+
+        TextMeshProUGUI spinnerText = MakeText(
+            face,
+            "◌",
+            38,
+            TOBATheme.BatakGold,
+            TextAlignmentOptions.Center,
+            new Vector2(0.84f, 0.08f),
+            new Vector2(0.97f, 0.38f),
+            Vector4.zero,
+            FontStyles.Bold
+        );
+        factSpinner = spinnerText.transform;
+        if (ScreenManager.Instance != null)
+            factSpinnerCoroutine = ScreenManager.Instance.StartCoroutine(AnimateFactSpinner());
+    }
+
+    private IEnumerator AnimateFactSpinner()
+    {
+        while (factSpinner != null && screenObj != null)
+        {
+            factSpinner.localEulerAngles += new Vector3(
+                0f, 0f, -240f * Time.unscaledDeltaTime
+            );
+            yield return null;
+        }
+        factSpinnerCoroutine = null;
+    }
+
+    private void StopFactSpinner()
+    {
+        if (factSpinnerCoroutine != null && ScreenManager.Instance != null)
+            ScreenManager.Instance.StopCoroutine(factSpinnerCoroutine);
+
+        factSpinnerCoroutine = null;
+        if (factSpinner != null)
+            UnityEngine.Object.Destroy(factSpinner.gameObject);
+        factSpinner = null;
+    }
+
+    public override void Hide()
+    {
+        StopFactSpinner();
+        base.Hide();
     }
 
     // ───────────── TOMBOL MULAI ─────────────
@@ -660,12 +707,14 @@ public class LocationDetailScreen : BaseScreen
         if (locationData == null || locationData.id <= 0)
         {
             factTxt.text = fallbackFact;
+            StopFactSpinner();
             return;
         }
 
         if (APIManager.Instance == null)
         {
             factTxt.text = fallbackFact;
+            StopFactSpinner();
             return;
         }
 
@@ -694,6 +743,7 @@ public class LocationDetailScreen : BaseScreen
                     factTxt.text = string.IsNullOrWhiteSpace(fact)
                         ? fallbackFact
                         : fact.Trim();
+                    StopFactSpinner();
                 }
                 catch (System.Exception ex)
                 {
@@ -703,6 +753,7 @@ public class LocationDetailScreen : BaseScreen
 
                     if (factTxt != null)
                         factTxt.text = fallbackFact;
+                    StopFactSpinner();
                 }
             },
 
@@ -710,6 +761,7 @@ public class LocationDetailScreen : BaseScreen
             {
                 if (screenObj != null && factTxt != null)
                     factTxt.text = "Tidak dapat memuat fakta saat ini.";
+                StopFactSpinner();
             }
         );
     }

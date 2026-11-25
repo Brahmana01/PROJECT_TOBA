@@ -7,7 +7,6 @@ public class LeaderboardScreen : BaseScreen
 {
     private List<LeaderboardEntryData> entries = new List<LeaderboardEntryData>();
     private int myPlayerID;
-    private GameObject loadingObj;
     private GameObject emptyStateObj;
 
     // Header papan (sama dengan layar Profil)
@@ -316,17 +315,14 @@ public class LeaderboardScreen : BaseScreen
     private void ShowLoading()
     {
         ClearEmptyState();
+        if (screenObj != null)
+            LoadingOverlay.Show(screenObj.transform, "Memuat leaderboard...");
+    }
 
-        if (loadingObj != null)
-        {
-            Object.Destroy(loadingObj);
-            loadingObj = null;
-        }
-
-        loadingObj = UIBuilder.CreateTextSized(
-            screenObj.transform, "Memuat leaderboard...", 42, TOBATheme.TextLight,
-            TextAlignmentOptions.Center, new Vector2(700, 80), Vector2.zero
-        );
+    private void ClearLoading()
+    {
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
     }
 
     private void ClearEmptyState()
@@ -382,11 +378,7 @@ public class LeaderboardScreen : BaseScreen
                     invalidResponse = true;
                 }
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 if (invalidResponse)
                 {
@@ -419,11 +411,7 @@ public class LeaderboardScreen : BaseScreen
 
                 Debug.LogWarning("[Leaderboard] Gagal memuat leaderboard: " + err);
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 emptyStateObj = EmptyState.Show(
                     screenObj.transform,

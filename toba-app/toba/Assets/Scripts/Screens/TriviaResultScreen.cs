@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -19,6 +19,7 @@ public class TriviaResultScreen : BaseScreen
     private TextMeshProUGUI scoreTxt;
     private TextMeshProUGUI xpTxt;
     private TextMeshProUGUI levelTxt;
+    private TextMeshProUGUI bonusStarsTxt;
     private GameObject loadingObj;
 
     private Image[] starImages = new Image[3];
@@ -272,13 +273,23 @@ public class TriviaResultScreen : BaseScreen
             FontStyles.Bold
         );
 
+        bonusStarsTxt = MakeText(
+            card.transform,
+            "BONUS BINTANG : MENUNGGU",
+            30,
+            TOBATheme.BatakGold,
+            new Vector2(820f, 48f),
+            new Vector2(0f, -325f),
+            FontStyles.Bold
+        );
+
         loadingObj = MakeText(
             card.transform,
             "Menyimpan hasil...",
             28,
             TOBATheme.TextGray,
             new Vector2(800f, 48f),
-            new Vector2(0f, -345f),
+            new Vector2(0f, -380f),
             FontStyles.Italic
         ).gameObject;
     }
@@ -624,15 +635,14 @@ public class TriviaResultScreen : BaseScreen
         if (totalQuestions <= 0)
             return 0;
 
-        float ratio = (float)correctCount / totalQuestions;
-
-        if (ratio >= 1f)
+        // Samakan rating visual dengan ambang bonus bintang backend Trivia.
+        if (correctCount >= 10)
             return 3;
 
-        if (ratio >= 0.6f)
+        if (correctCount >= 8)
             return 2;
 
-        if (ratio >= 0.4f)
+        if (correctCount >= 6)
             return 1;
 
         return 0;
@@ -650,14 +660,10 @@ public class TriviaResultScreen : BaseScreen
         isSubmitted = true;
 
         int playerID = PlayerPrefs.GetInt("PlayerID");
-
-        if (APIManager.Instance == null ||
-            categoryData == null ||
-            categoryData.id <= 0 ||
-            playerID <= 0 ||
-            string.IsNullOrWhiteSpace(sessionID))
+        if (categoryData == null || categoryData.id <= 0 ||
+            playerID <= 0 || string.IsNullOrWhiteSpace(sessionID))
         {
-            ShowOfflineResult();
+            ShowOfflineResult(false);
             return;
         }
 
@@ -669,33 +675,42 @@ public class TriviaResultScreen : BaseScreen
 
         string jsonPayload = JsonUtility.ToJson(request);
 
+        if (APIManager.Instance == null)
+        {
+            bool queued = MainApp.QueueOfflineSubmission("/trivia/submit", jsonPayload);
+            if (!queued)
+                NetworkManager.Instance?.ShowToast("Hasil Trivia tidak dapat dimasukkan ke antrean sinkronisasi.", true);
+            ShowOfflineResult(queued);
+            return;
+        }
+
+        LoadingOverlay.Show(screenObj.transform, "Menyimpan hasil Trivia...");
+
         APIManager.Instance.PostRequest(
             "/trivia/submit",
             jsonPayload,
-            (response) =>
+            response =>
             {
+                MainApp.RemoveOfflineSubmission("/trivia/submit", jsonPayload);
                 if (screenObj == null)
                     return;
 
-                SubmitTriviaResponse result = null;
+                LoadingOverlay.Hide(screenObj.transform);
 
+                SubmitTriviaResponse result = null;
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
                         throw new System.FormatException("Response hasil Trivia kosong.");
 
                     result = JsonUtility.FromJson<SubmitTriviaResponse>(response);
-
                     if (result == null || result.level <= 0)
                         throw new System.FormatException("Data hasil Trivia tidak valid.");
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning(
-                        "[TriviaResult] Gagal membaca hasil: " + ex.Message
-                    );
-
-                    ShowOfflineResult();
+                    Debug.LogWarning("[TriviaResult] Gagal membaca hasil: " + ex.Message);
+                    ShowOfflineResult(false);
                     return;
                 }
 
@@ -705,23 +720,50 @@ public class TriviaResultScreen : BaseScreen
                 if (levelTxt != null)
                     levelTxt.text = "LEVEL : " + result.level;
 
+                if (bonusStarsTxt != null)
+                    bonusStarsTxt.text = "BONUS BINTANG : +" + Mathf.Max(0, result.reward_stars);
+
                 PlayerPrefs.SetInt("PlayerLevel", result.level);
                 PlayerPrefs.Save();
-
                 DestroyLoadingText();
-
             },
-            (error) =>
+            error =>
             {
+                bool retryable = MainApp.IsRetryableSubmissionError(error);
+                bool queued = !retryable || MainApp.QueueOfflineSubmission("/trivia/submit", jsonPayload);
+
                 if (screenObj == null)
                     return;
 
-                ShowOfflineResult();
+                LoadingOverlay.Hide(screenObj.transform);
+                if (retryable && queued)
+                {
+                    NetworkManager.Instance?.ShowToast(
+                        "Koneksi terputus. Hasil Trivia disimpan untuk sinkronisasi.",
+                        false
+                    );
+                }
+                else if (retryable)
+                {
+                    NetworkManager.Instance?.ShowToast(
+                        "Hasil Trivia tidak dapat disimpan ke antrean sinkronisasi.",
+                        true
+                    );
+                }
+                else
+                {
+                    NetworkManager.Instance?.ShowToast(
+                        "Hasil Trivia gagal disimpan: " + error,
+                        true
+                    );
+                }
+
+                ShowOfflineResult(retryable && queued);
             }
         );
     }
 
-    private void ShowOfflineResult()
+    private void ShowOfflineResult(bool queued)
     {
         if (xpTxt != null)
             xpTxt.text = "XP DIPEROLEH : OFFLINE";
@@ -729,11 +771,19 @@ public class TriviaResultScreen : BaseScreen
         if (levelTxt != null)
             levelTxt.text = "LEVEL : " + PlayerPrefs.GetInt("PlayerLevel", 1);
 
+        if (bonusStarsTxt != null)
+            bonusStarsTxt.text = queued
+                ? "BONUS BINTANG : MENUNGGU SINKRONISASI"
+                : "BONUS BINTANG : BELUM TERVERIFIKASI";
+
         DestroyLoadingText();
     }
 
     private void DestroyLoadingText()
     {
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
+
         if (loadingObj != null)
         {
             Object.Destroy(loadingObj);

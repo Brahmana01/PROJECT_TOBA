@@ -23,8 +23,19 @@ public static class TOBAChallengeSubmission
 
         if (APIManager.Instance == null)
         {
+            SubmitChallengeRequest pendingRequest = new SubmitChallengeRequest
+            {
+                session_id = challenge.session_id,
+                answers_json = answersJson
+            };
+            string pendingPayload = JsonUtility.ToJson(pendingRequest);
+            bool queued = MainApp.QueueOfflineSubmission("/challenge/submit", pendingPayload);
             NetworkManager.Instance?.ShowToast(
-                "Layanan tantangan tidak tersedia.", true);
+                queued
+                    ? "Layanan belum tersedia. Hasil tantangan disimpan untuk sinkronisasi."
+                    : "Hasil tantangan tidak dapat disimpan ke antrean sinkronisasi.",
+                !queued);
+            ScreenManager.Instance?.ChangeScreen(new MainMenuScreen(container));
             return;
         }
 
@@ -34,11 +45,14 @@ public static class TOBAChallengeSubmission
             answers_json = answersJson
         };
 
+        string payload = JsonUtility.ToJson(request);
+
         APIManager.Instance.PostRequest(
             "/challenge/submit",
-            JsonUtility.ToJson(request),
+            payload,
             response =>
             {
+                MainApp.RemoveOfflineSubmission("/challenge/submit", payload);
                 if (sourceScreen == null)
                     return;
 
@@ -52,6 +66,12 @@ public static class TOBAChallengeSubmission
                         resultMessage = "Tantangan selesai: " + result.score + "/" +
                             result.total_questions + " • +" + result.reward_xp + " XP • +" +
                             result.reward_stars + " bintang";
+
+                        if (result.level > 0)
+                        {
+                            PlayerPrefs.SetInt("PlayerLevel", result.level);
+                            PlayerPrefs.Save();
+                        }
                     }
                 }
                 catch (System.Exception ex)
@@ -64,12 +84,20 @@ public static class TOBAChallengeSubmission
             },
             error =>
             {
+                bool retryable = MainApp.IsRetryableSubmissionError(error);
+                bool queued = !retryable || MainApp.QueueOfflineSubmission("/challenge/submit", payload);
+
                 if (sourceScreen == null)
                     return;
 
                 Debug.LogWarning("[Challenge] Gagal menyimpan hasil: " + error);
                 NetworkManager.Instance?.ShowToast(
-                    "Gagal menyimpan hasil tantangan. " + error, true);
+                    retryable && queued
+                        ? "Koneksi terputus. Hasil tantangan disimpan untuk sinkronisasi."
+                        : retryable
+                            ? "Hasil tantangan tidak dapat disimpan ke antrean sinkronisasi."
+                            : "Gagal menyimpan hasil tantangan. " + error,
+                    !retryable || !queued);
                 ScreenManager.Instance?.ChangeScreen(
                     new MainMenuScreen(container));
             }

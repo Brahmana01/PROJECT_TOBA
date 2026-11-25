@@ -13,13 +13,16 @@ public class NetworkManager : MonoBehaviour
     public bool IsOnline { get; private set; } = true;
 
     private GameObject _banner;
+    private GameObject _offlineOverlay;
+    private Transform _offlineSpinner;
+    private Coroutine _offlineSpinnerCoroutine;
     private Transform _canvas;
     private Coroutine _checkLoopCoroutine;
 
     private readonly List<GameObject> _activeToasts =
         new List<GameObject>();
 
-    private const float CHECK_INTERVAL = 15f;
+    private const float CHECK_INTERVAL = 5f;
     private const int PING_TIMEOUT = 5;
 
     private string _pingUrl = "http://43.173.13.187/api/";
@@ -66,6 +69,21 @@ public class NetworkManager : MonoBehaviour
         _isShuttingDown = true;
     }
 
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused || Instance != this || _canvas == null ||
+            _isShuttingDown || !isActiveAndEnabled)
+            return;
+
+        if (_checkLoopCoroutine != null)
+        {
+            StopCoroutine(_checkLoopCoroutine);
+            _checkLoopCoroutine = null;
+        }
+
+        _checkLoopCoroutine = StartCoroutine(CheckLoop());
+    }
+
     private void OnDestroy()
     {
         if (Instance != this)
@@ -82,6 +100,7 @@ public class NetworkManager : MonoBehaviour
         StopAllCoroutines();
 
         DestroyBanner();
+        HideOfflineOverlay();
         DestroyAllToasts();
 
         _canvas = null;
@@ -117,6 +136,9 @@ public class NetworkManager : MonoBehaviour
             }
         }
 
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+            SetOnlineState(false);
+
         // Hanya satu loop pemeriksaan koneksi yang boleh berjalan.
         if (_checkLoopCoroutine != null)
         {
@@ -125,9 +147,15 @@ public class NetworkManager : MonoBehaviour
         }
 
         if (IsOnline)
+        {
             HideBanner();
+            HideOfflineOverlay();
+        }
         else
-            ShowBanner();
+        {
+            DestroyBanner();
+            ShowOfflineOverlay();
+        }
 
         if (isActiveAndEnabled && _checkLoopCoroutine == null)
             _checkLoopCoroutine = StartCoroutine(CheckLoop());
@@ -199,6 +227,13 @@ public class NetworkManager : MonoBehaviour
             if (!_isShuttingDown)
                 SetOnlineState(false);
 
+            callback?.Invoke(false);
+            yield break;
+        }
+
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            SetOnlineState(false);
             callback?.Invoke(false);
             yield break;
         }
@@ -282,9 +317,126 @@ public class NetworkManager : MonoBehaviour
     private void OnStatusChanged(bool online)
     {
         if (online)
+        {
+            HideOfflineOverlay();
             HideBanner();
+        }
         else
-            ShowBanner();
+        {
+            DestroyBanner();
+            ShowOfflineOverlay();
+        }
+    }
+
+    // Overlay koneksi berada di atas seluruh layar dan tidak bergantung
+    // pada screen aktif. Ping tetap berjalan di belakang overlay.
+    private void ShowOfflineOverlay()
+    {
+        if (_canvas == null)
+            return;
+
+        if (_offlineOverlay != null && _offlineOverlay.transform.parent == _canvas)
+            return;
+
+        HideOfflineOverlay();
+
+        _offlineOverlay = new GameObject("OfflineConnectionOverlay");
+        _offlineOverlay.transform.SetParent(_canvas, false);
+        _offlineOverlay.transform.SetAsLastSibling();
+
+        RectTransform overlayRect = _offlineOverlay.AddComponent<RectTransform>();
+        overlayRect.anchorMin = Vector2.zero;
+        overlayRect.anchorMax = Vector2.one;
+        overlayRect.offsetMin = Vector2.zero;
+        overlayRect.offsetMax = Vector2.zero;
+
+        Image shade = _offlineOverlay.AddComponent<Image>();
+        shade.sprite = UIBuilder.GetDefaultSprite();
+        shade.color = new Color(0.015f, 0.025f, 0.02f, 0.78f);
+        shade.raycastTarget = true;
+
+        GameObject panel = new GameObject("ConnectionPanel");
+        panel.transform.SetParent(_offlineOverlay.transform, false);
+
+        RectTransform panelRect = panel.AddComponent<RectTransform>();
+        panelRect.anchorMin = panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(850f, 430f);
+        panelRect.anchoredPosition = Vector2.zero;
+
+        Image panelImage = panel.AddComponent<Image>();
+        Sprite wood = TOBATheme.LoadSprite("panel_wood");
+        panelImage.sprite = wood != null ? wood : UIBuilder.GetDefaultSprite();
+        panelImage.type = wood != null ? Image.Type.Sliced : Image.Type.Simple;
+        panelImage.color = new Color(0.20f, 0.10f, 0.045f, 0.98f);
+        panelImage.raycastTarget = false;
+
+        Outline outline = panel.AddComponent<Outline>();
+        outline.effectColor = TOBATheme.BatakGold;
+        outline.effectDistance = new Vector2(5f, 5f);
+
+        GameObject spinner = UIBuilder.CreateTextSized(
+            panel.transform,
+            "◌",
+            100,
+            TOBATheme.BatakGold,
+            TextAlignmentOptions.Center,
+            new Vector2(105f, 105f),
+            new Vector2(0f, 115f)
+        );
+        spinner.name = "ConnectionSpinner";
+        TextMeshProUGUI spinnerText = spinner.GetComponent<TextMeshProUGUI>();
+        if (spinnerText != null)
+            spinnerText.raycastTarget = false;
+        _offlineSpinner = spinner.transform;
+
+        UIBuilder.CreateTextSized(
+            panel.transform,
+            "PERIKSA KONEKSI PERANGKAT ANDA",
+            32,
+            TOBATheme.BatakGold,
+            TextAlignmentOptions.Center,
+            new Vector2(790f, 70f),
+            new Vector2(0f, 15f)
+        );
+
+        UIBuilder.CreateTextSized(
+            panel.transform,
+            "Menunggu koneksi internet dan server TOBA...",
+            25,
+            TOBATheme.TextLight,
+            TextAlignmentOptions.Center,
+            new Vector2(790f, 65f),
+            new Vector2(0f, -65f)
+        );
+
+        _offlineSpinnerCoroutine = StartCoroutine(AnimateOfflineSpinner());
+    }
+
+    private IEnumerator AnimateOfflineSpinner()
+    {
+        while (_offlineSpinner != null && _offlineOverlay != null)
+        {
+            _offlineSpinner.localEulerAngles += new Vector3(
+                0f, 0f, -250f * Time.unscaledDeltaTime
+            );
+            yield return null;
+        }
+        _offlineSpinnerCoroutine = null;
+    }
+
+    private void HideOfflineOverlay()
+    {
+        if (_offlineSpinnerCoroutine != null)
+        {
+            StopCoroutine(_offlineSpinnerCoroutine);
+            _offlineSpinnerCoroutine = null;
+        }
+
+        if (_offlineOverlay != null)
+            Destroy(_offlineOverlay);
+
+        _offlineOverlay = null;
+        _offlineSpinner = null;
     }
 
     // ============================================================

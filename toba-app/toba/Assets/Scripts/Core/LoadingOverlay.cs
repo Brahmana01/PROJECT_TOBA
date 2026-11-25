@@ -7,24 +7,24 @@ public static class LoadingOverlay
 {
     private static GameObject _overlay;
     private static TextMeshProUGUI _messageText;
+    private static Transform _owner;
 
     public static void Show(Transform canvas, string msg = "Memuat...")
     {
         if (canvas == null)
             return;
 
-        // Jika overlay masih berada pada canvas yang sama, cukup perbarui pesannya.
         if (_overlay != null && _overlay.transform.parent == canvas)
         {
+            _owner = canvas;
             if (_messageText != null)
                 _messageText.text = msg;
             return;
         }
 
-        // Bersihkan overlay lama jika parent screen sudah berganti.
-        if (_overlay != null)
-            Object.Destroy(_overlay);
+        Hide();
 
+        _owner = canvas;
         _overlay = new GameObject("LoadingOverlay");
         _overlay.transform.SetParent(canvas, false);
         _overlay.transform.SetAsLastSibling();
@@ -32,7 +32,8 @@ public static class LoadingOverlay
         RectTransform rt = _overlay.AddComponent<RectTransform>();
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
-        rt.offsetMin = rt.offsetMax = Vector2.zero;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
 
         Image bg = _overlay.AddComponent<Image>();
         bg.sprite = UIBuilder.GetDefaultSprite();
@@ -45,7 +46,7 @@ public static class LoadingOverlay
 
         RectTransform panelRect = panel.AddComponent<RectTransform>();
         panelRect.anchorMin = panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-        panelRect.sizeDelta = new Vector2(560f, 220f);
+        panelRect.sizeDelta = new Vector2(650f, 250f);
         panelRect.anchoredPosition = Vector2.zero;
 
         Image panelImage = panel.AddComponent<Image>();
@@ -58,29 +59,28 @@ public static class LoadingOverlay
         outline.effectColor = TOBATheme.BatakGold;
         outline.effectDistance = new Vector2(4f, 4f);
 
-        GameObject spinner = new GameObject("Spinner");
-        spinner.transform.SetParent(panel.transform, false);
-
-        RectTransform spinnerRect = spinner.AddComponent<RectTransform>();
-        spinnerRect.anchorMin = spinnerRect.anchorMax = new Vector2(0.5f, 0.5f);
-        spinnerRect.sizeDelta = new Vector2(65f, 65f);
-        spinnerRect.anchoredPosition = new Vector2(0f, 42f);
-
-        TextMeshProUGUI spinnerText = spinner.AddComponent<TextMeshProUGUI>();
-        spinnerText.text = "◉";
-        spinnerText.fontSize = 55f;
-        spinnerText.color = TOBATheme.BatakGold;
-        spinnerText.alignment = TextAlignmentOptions.Center;
-        spinnerText.raycastTarget = false;
+        GameObject spinner = UIBuilder.CreateTextSized(
+            panel.transform,
+            "◌",
+            72,
+            TOBATheme.BatakGold,
+            TextAlignmentOptions.Center,
+            new Vector2(78f, 78f),
+            new Vector2(0f, 48f)
+        );
+        spinner.name = "Spinner";
+        TextMeshProUGUI spinnerText = spinner.GetComponent<TextMeshProUGUI>();
+        if (spinnerText != null)
+            spinnerText.raycastTarget = false;
 
         GameObject messageObject = UIBuilder.CreateTextSized(
             panel.transform,
             msg,
-            32,
+            30,
             TOBATheme.TextLight,
             TextAlignmentOptions.Center,
-            new Vector2(500f, 58f),
-            new Vector2(0f, -38f)
+            new Vector2(590f, 72f),
+            new Vector2(0f, -48f)
         );
         _messageText = messageObject.GetComponent<TextMeshProUGUI>();
         if (_messageText != null)
@@ -93,6 +93,14 @@ public static class LoadingOverlay
             ScreenManager.Instance.StartCoroutine(AnimateSpin(spinner.transform));
     }
 
+    public static void Hide(Transform owner)
+    {
+        if (owner == null || _owner != owner)
+            return;
+
+        Hide();
+    }
+
     public static void Hide()
     {
         if (_overlay != null)
@@ -100,13 +108,16 @@ public static class LoadingOverlay
 
         _overlay = null;
         _messageText = null;
+        _owner = null;
     }
 
     private static IEnumerator AnimateSpin(Transform spinner)
     {
         while (spinner != null && _overlay != null)
         {
-            spinner.localEulerAngles += new Vector3(0f, 0f, -200f * Time.unscaledDeltaTime);
+            spinner.localEulerAngles += new Vector3(
+                0f, 0f, -240f * Time.unscaledDeltaTime
+            );
             yield return null;
         }
     }

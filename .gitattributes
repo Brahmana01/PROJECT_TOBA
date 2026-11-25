@@ -1,2 +1,95 @@
-toba-app/toba/Assets/Firebase/Plugins/x86_64/FirebaseCppApp-13_16_0.bundle filter=lfs diff=lfs merge=lfs -text
-toba-app/toba/Assets/Fonts/Emoji/NotoColorEmoji_Color.asset filter=lfs diff=lfs merge=lfs -text
+# Normalize text files to LF across Windows and Linux development environments.
+* text=auto eol=lf
+
+# Unity source and serialized text assets.
+*.cs      text eol=lf
+*.cginc   text eol=lf
+*.compute text eol=lf
+*.shader  text eol=lf
+*.hlsl    text eol=lf
+*.glsl    text eol=lf
+*.asmdef  text eol=lf
+*.asmref  text eol=lf
+*.meta    text eol=lf
+*.unity   text eol=lf
+*.prefab  text eol=lf
+*.mat     text eol=lf
+*.controller text eol=lf
+*.anim    text eol=lf
+*.overrideController text eol=lf
+*.physicMaterial text eol=lf
+*.renderTexture text eol=lf
+
+# Backend, configuration, documentation, and scripts.
+*.go      text eol=lf
+*.mod     text eol=lf
+*.sum     text eol=lf
+*.json    text eol=lf
+*.xml     text eol=lf
+*.yaml    text eol=lf
+*.yml     text eol=lf
+*.toml    text eol=lf
+*.ini     text eol=lf
+*.cfg     text eol=lf
+*.conf    text eol=lf
+*.md      text eol=lf
+*.txt     text eol=lf
+*.sql     text eol=lf
+*.sh      text eol=lf
+*.ps1     text eol=lf
+*.bat     text eol=lf
+*.cmd     text eol=lf
+*.gitignore text eol=lf
+*.gitattributes text eol=lf
+
+# Binary media and generated/build artifacts: do not normalize line endings.
+*.png     binary -eol
+*.jpg     binary -eol
+*.jpeg    binary -eol
+*.gif     binary -eol
+*.webp    binary -eol
+*.bmp     binary -eol
+*.tga     binary -eol
+*.tif     binary -eol
+*.tiff    binary -eol
+*.psd     binary -eol
+*.ai      binary -eol
+*.exr     binary -eol
+*.hdr     binary -eol
+*.fbx     binary -eol
+*.obj     binary -eol
+*.blend   binary -eol
+*.dae     binary -eol
+*.3ds     binary -eol
+*.mp3     binary -eol
+*.wav     binary -eol
+*.ogg     binary -eol
+*.aiff    binary -eol
+*.flac    binary -eol
+*.mp4     binary -eol
+*.mov     binary -eol
+*.avi     binary -eol
+*.webm    binary -eol
+*.ttf     binary -eol
+*.otf     binary -eol
+*.woff    binary -eol
+*.woff2   binary -eol
+*.dll     binary -eol
+*.so      binary -eol
+*.dylib   binary -eol
+*.exe     binary -eol
+*.apk     binary -eol
+*.aab     binary -eol
+*.aar     binary -eol
+*.jar     binary -eol
+*.zip     binary -eol
+*.7z      binary -eol
+*.rar     binary -eol
+*.pdf     binary -eol
+*.db      binary -eol
+*.sqlite  binary -eol
+*.sqlite3 binary -eol
+
+# Existing Git LFS assets - keep these rules last.
+toba-app/toba/Assets/Firebase/Plugins/x86_64/FirebaseCppApp-13_16_0.bundle filter=lfs diff=lfs merge=lfs -text -eol
+toba-app/toba/Assets/Fonts/Emoji/NotoColorEmoji_Color.asset filter=lfs diff=lfs merge=lfs -text -eol

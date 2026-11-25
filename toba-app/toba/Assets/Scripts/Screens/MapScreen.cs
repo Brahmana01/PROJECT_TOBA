@@ -76,33 +76,13 @@ public class MapScreen : BaseScreen
         if (screenObj == null)
             return;
 
-        RemoveMapLoading();
-
-        GameObject loading = new GameObject("Loading");
-        loading.transform.SetParent(screenObj.transform, false);
-
-        RectTransform rt = loading.AddComponent<RectTransform>();
-        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = new Vector2(700f, 80f);
-        rt.anchoredPosition = Vector2.zero;
-
-        TextMeshProUGUI text = loading.AddComponent<TextMeshProUGUI>();
-        text.text = "Memuat peta...";
-        text.fontSize = 38f;
-        text.fontStyle = FontStyles.Bold;
-        text.color = TOBATheme.BatakGold;
-        text.alignment = TextAlignmentOptions.Center;
-        text.raycastTarget = false;
+        LoadingOverlay.Show(screenObj.transform, "Memuat peta budaya...");
     }
 
     private void RemoveMapLoading()
     {
-        if (screenObj == null)
-            return;
-
-        Transform loading = screenObj.transform.Find("Loading");
-        if (loading != null)
-            UnityEngine.Object.Destroy(loading.gameObject);
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
     }
 
     private void RemoveEmptyState()

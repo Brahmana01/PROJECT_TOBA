@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -548,7 +548,7 @@ public class QuizResultScreen : BaseScreen
 
         MakeText(
             p,
-            "BINTANG DIPEROLEH",
+            "BONUS BINTANG",
             30,
             TOBATheme.TextLight,
             new Vector2(430, 65),
@@ -997,19 +997,22 @@ public class QuizResultScreen : BaseScreen
     // OFFLINE QUEUE
     // =========================================================
 
-    private void SaveOfflineSubmission(string payload)
+    private bool SaveOfflineSubmission(string payload)
     {
-        PlayerPrefs.SetString(
-            "OfflineSubmitQueue",
+        bool saved = MainApp.QueueOfflineSubmission(
+            "/locations/submit",
             payload
         );
 
-        PlayerPrefs.SetString(
-            "OfflineSubmitEndpoint",
-            "/locations/submit"
-        );
+        if (!saved)
+        {
+            NetworkManager.Instance?.ShowToast(
+                "Hasil belum dapat disimpan untuk sinkronisasi. Jangan hapus data aplikasi.",
+                true
+            );
+        }
 
-        PlayerPrefs.Save();
+        return saved;
     }
 
     // =========================================================
@@ -1052,10 +1055,12 @@ public class QuizResultScreen : BaseScreen
         // API tidak tersedia
         if (APIManager.Instance == null)
         {
-            SaveOfflineSubmission(payload);
-            HandleOfflineResult();
+            bool queued = SaveOfflineSubmission(payload);
+            HandleOfflineResult(queued);
             return;
         }
+
+        LoadingOverlay.Show(screenObj.transform, "Menyimpan hasil Jelajah...");
 
         APIManager.Instance.PostRequest(
             "/locations/submit",
@@ -1064,12 +1069,9 @@ public class QuizResultScreen : BaseScreen
             // SUCCESS
             (response) =>
             {
+                MainApp.RemoveOfflineSubmission("/locations/submit", payload);
                 if (screenObj == null)
                     return;
-
-                PlayerPrefs.DeleteKey("OfflineSubmitQueue");
-                PlayerPrefs.DeleteKey("OfflineSubmitEndpoint");
-                PlayerPrefs.Save();
 
                 HandleSubmitResponse(response);
             },
@@ -1077,17 +1079,35 @@ public class QuizResultScreen : BaseScreen
             // ERROR / OFFLINE
             (err) =>
             {
+                bool retryable = MainApp.IsRetryableSubmissionError(err);
+                bool queued = retryable && SaveOfflineSubmission(payload);
+
                 if (screenObj == null)
                     return;
 
-                SaveOfflineSubmission(payload);
+                if (retryable && queued)
+                {
+                    NetworkManager.Instance?.ShowToast(
+                        "Koneksi terputus. Hasil disimpan dan akan disinkronkan saat online.",
+                        false
+                    );
+                }
+                else if (retryable)
+                {
+                    NetworkManager.Instance?.ShowToast(
+                        "Hasil Jelajah tidak dapat disimpan ke antrean sinkronisasi.",
+                        true
+                    );
+                }
+                else
+                {
+                    NetworkManager.Instance?.ShowToast(
+                        "Hasil Jelajah gagal disimpan: " + err,
+                        true
+                    );
+                }
 
-                NetworkManager.Instance?.ShowToast(
-                    "Offline: hasil disimpan, akan dikirim saat online.",
-                    false
-                );
-
-                HandleOfflineResult();
+                HandleOfflineResult(queued);
             }
         );
     }
@@ -1247,7 +1267,7 @@ public class QuizResultScreen : BaseScreen
     // OFFLINE RESULT
     // =========================================================
 
-    private void HandleOfflineResult()
+    private void HandleOfflineResult(bool queued = false)
     {
         if (screenObj == null)
             return;
@@ -1264,16 +1284,19 @@ public class QuizResultScreen : BaseScreen
         }
 
         if (xpTxt != null)
-            xpTxt.text = "OFFLINE";
+            xpTxt.text = queued ? "MENUNGGU SINKRONISASI" : "BELUM TERVERIFIKASI";
 
         if (starsTxt != null)
-            starsTxt.text = "OFFLINE";
+            starsTxt.text = queued ? "MENUNGGU SINKRONISASI" : "BELUM TERVERIFIKASI";
 
         RemoveLoading();
     }
 
     private void RemoveLoading()
     {
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
+
         if (loadingObj != null)
         {
             UnityEngine.Object.Destroy(loadingObj);

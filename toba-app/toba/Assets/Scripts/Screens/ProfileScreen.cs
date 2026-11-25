@@ -17,7 +17,6 @@ public class ProfileScreen : BaseScreen
     private TextMeshProUGUI galleryTxt;
     private GameObject xpBarFill;
     private GameObject emptyStateObj;
-    private GameObject loadingObj;
     GameObject contentArea;
 
     // Header papan (nilai sama dengan layar Trivia)
@@ -183,21 +182,18 @@ public class ProfileScreen : BaseScreen
         Debug.LogWarning("[Profile] Sprite bg_toba tidak ditemukan di Resources.");
         return null;
     }
-    
+
     void ShowLoading()
     {
         ClearEmptyState();
+        if (screenObj != null)
+            LoadingOverlay.Show(screenObj.transform, "Memuat profil pemain...");
+    }
 
-        if (loadingObj != null)
-        {
-            Object.Destroy(loadingObj);
-            loadingObj = null;
-        }
-
-        loadingObj = UIBuilder.CreateTextSized(
-            screenObj.transform, "Memuat profil...", 42, TOBATheme.TextLight,
-            TextAlignmentOptions.Center, new Vector2(700, 80), Vector2.zero
-        );
+    void ClearLoading()
+    {
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
     }
 
     void ClearEmptyState()
@@ -352,7 +348,7 @@ public class ProfileScreen : BaseScreen
             TextAlignmentOptions.Left, new Vector2(900, 55), new Vector2(-10f, 92f)
         );
 
-        
+
 
 
         CreateStatBox(statsCard.transform, "Lokasi", "0", -280f);
@@ -524,7 +520,7 @@ public class ProfileScreen : BaseScreen
         lblTxt.fontStyle = FontStyles.Normal;
     }
 
-    
+
     void FetchProfile()
     {
         ClearEmptyState();
@@ -533,11 +529,7 @@ public class ProfileScreen : BaseScreen
 
         if (playerID == 0)
         {
-            if (loadingObj != null)
-            {
-                Object.Destroy(loadingObj);
-                loadingObj = null;
-            }
+            ClearLoading();
 
             emptyStateObj = EmptyState.Show(
                 screenObj.transform, "<color=#F2E4C7><sprite name=\"profile\" tint=1></color>", "Profil tidak tersedia",
@@ -556,11 +548,7 @@ public class ProfileScreen : BaseScreen
 
                 profileData = JsonUtility.FromJson<ProfileResponse>(response);
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 if (profileData == null)
                 {
@@ -582,11 +570,7 @@ public class ProfileScreen : BaseScreen
 
                 Debug.LogWarning("[Profile] Gagal memuat profil: " + err);
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 emptyStateObj = EmptyState.Show(
                     screenObj.transform, "<color=#F2E4C7><sprite name=\"profile\" tint=1></color>", "Gagal memuat profil",
@@ -675,7 +659,7 @@ public class ProfileScreen : BaseScreen
                 if (screenObj == null) return;
 
                 NewAchievementResponse res = JsonUtility.FromJson<NewAchievementResponse>(response);
-                
+
                 if (res != null &&
                     res.count > 0 &&
                     res.newly_unlocked != null &&

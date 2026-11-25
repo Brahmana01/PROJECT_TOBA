@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -664,7 +664,7 @@ public class QuizScreen : BaseScreen
 
     // ───────────────── FETCH QUIZ ─────────────────
 
- 
+
     private void FetchQuiz()
     {
         if (!isScreenActive || screenObj == null)
@@ -693,11 +693,11 @@ public class QuizScreen : BaseScreen
             {
                 if (!isScreenActive || screenObj == null)
                 {
-                    LoadingOverlay.Hide();
+                    LoadingOverlay.Hide(screenObj != null ? screenObj.transform : null);
                     return;
                 }
 
-                LoadingOverlay.Hide();
+                LoadingOverlay.Hide(screenObj != null ? screenObj.transform : null);
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
@@ -762,10 +762,10 @@ public class QuizScreen : BaseScreen
             {
                 if (!isScreenActive || screenObj == null)
                 {
-                    LoadingOverlay.Hide();
+                    LoadingOverlay.Hide(screenObj != null ? screenObj.transform : null);
                     return;
                 }
-                LoadingOverlay.Hide();
+                LoadingOverlay.Hide(screenObj != null ? screenObj.transform : null);
                 if (questionTxt != null)
                     questionTxt.text = "Gagal memuat soal.\n" + err;
                 NetworkManager.Instance?.ShowToast("Gagal memuat soal. Periksa koneksi.", true);

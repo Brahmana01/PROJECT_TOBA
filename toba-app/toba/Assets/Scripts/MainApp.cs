@@ -1,13 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MainApp : MonoBehaviour
 {
     private Canvas canvas;
     private RectTransform safeAreaRoot;
 
-    private const float OFFLINE_QUEUE_INITIAL_DELAY = 6f;
+    private const float OFFLINE_QUEUE_INITIAL_DELAY = 3f;
     private const float OFFLINE_QUEUE_WAIT_INTERVAL = 3f;
+    private const float OFFLINE_QUEUE_RETRY_DELAY = 5f;
+    private const float OFFLINE_QUEUE_AUTH_RETRY_DELAY = 30f;
+    private const string OFFLINE_QUEUE_KEY = "OfflineSubmitQueueV2";
+    private const int OFFLINE_QUEUE_MAX_ITEMS = 5;
 
     // ============================================================
     // LIFECYCLE
@@ -122,7 +127,7 @@ public class MainApp : MonoBehaviour
         if (ScreenManager.Instance == null || safeAreaRoot == null)
             return;
 
-        
+
         // RESET SESI LAMA SEKALI SAJA
         if (PlayerPrefs.GetInt("TOBA_InitialSessionReset_v1", 0) == 0)
         {
@@ -163,76 +168,342 @@ public class MainApp : MonoBehaviour
 
     // ============================================================
     // OFFLINE SUBMISSION QUEUE
+    // Queue hanya menyimpan payload final yang sudah memiliki session_id
+    // dari backend. Endpoint finalisasi Jelajah, Trivia, dan Challenge
+    // menyimpan hasil idempotent sehingga retry tidak menggandakan reward.
     // ============================================================
+
+    public static bool QueueOfflineSubmission(string endpoint, string payload)
+    {
+        int playerID = PlayerPrefs.GetInt("PlayerID", 0);
+        if (playerID <= 0 || string.IsNullOrWhiteSpace(endpoint) ||
+            string.IsNullOrWhiteSpace(payload) || payload.Length > 256 * 1024)
+            return false;
+
+        OfflineSubmissionQueueData queue = LoadOfflineSubmissionQueue();
+        if (queue.items == null)
+            queue.items = new List<OfflineSubmissionItem>();
+
+        for (int i = 0; i < queue.items.Count; i++)
+        {
+            OfflineSubmissionItem existing = queue.items[i];
+            if (existing != null &&
+                existing.endpoint == endpoint &&
+                existing.payload == payload)
+            {
+                return true;
+            }
+        }
+
+        if (queue.items.Count >= OFFLINE_QUEUE_MAX_ITEMS)
+        {
+            Debug.LogWarning("[MainApp] Antrean offline penuh; hasil baru tidak ditambahkan.");
+            return false;
+        }
+
+        queue.items.Add(new OfflineSubmissionItem
+        {
+            player_id = playerID,
+            endpoint = endpoint,
+            payload = payload,
+            queued_at = System.DateTime.UtcNow.ToString("o")
+        });
+
+        SaveOfflineSubmissionQueue(queue);
+        Debug.Log("[MainApp] Hasil ditambahkan ke antrean offline: " + endpoint);
+        return true;
+    }
+
+    public static void RemoveOfflineSubmission(string endpoint, string payload)
+    {
+        OfflineSubmissionQueueData queue = LoadOfflineSubmissionQueue();
+        if (queue.items == null)
+            queue.items = new List<OfflineSubmissionItem>();
+
+        queue.items.RemoveAll(item => item != null &&
+            item.endpoint == endpoint && item.payload == payload);
+
+        SaveOfflineSubmissionQueue(queue);
+
+        // Hapus format antrean tunggal versi lama jika payload-nya sama.
+        if (PlayerPrefs.GetString("OfflineSubmitQueue", "") == payload &&
+            PlayerPrefs.GetString("OfflineSubmitEndpoint", "") == endpoint)
+        {
+            PlayerPrefs.DeleteKey("OfflineSubmitQueue");
+            PlayerPrefs.DeleteKey("OfflineSubmitEndpoint");
+            PlayerPrefs.Save();
+        }
+    }
+
+    public static bool IsRetryableSubmissionError(string error)
+    {
+        if (NetworkManager.Instance != null && !NetworkManager.Instance.IsOnline)
+            return true;
+
+        string value = (error ?? string.Empty).ToLowerInvariant();
+        return value.Contains("koneksi") ||
+               value.Contains("terhubung") ||
+               value.Contains("timeout") ||
+               value.Contains("timed out") ||
+               value.Contains("server sedang mengalami gangguan") ||
+               value.Contains("terlalu banyak permintaan") ||
+               value.Contains("gagal dimulai");
+    }
+
+    private static OfflineSubmissionQueueData LoadOfflineSubmissionQueue()
+    {
+        OfflineSubmissionQueueData queue = null;
+        string json = PlayerPrefs.GetString(OFFLINE_QUEUE_KEY, string.Empty);
+
+        if (!string.IsNullOrWhiteSpace(json))
+        {
+            try
+            {
+                queue = JsonUtility.FromJson<OfflineSubmissionQueueData>(json);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning("[MainApp] Antrean offline tidak dapat dibaca: " + ex.Message);
+            }
+        }
+
+        if (queue == null || queue.items == null)
+            queue = new OfflineSubmissionQueueData();
+
+        // Migrasi satu hasil dari versi lama ke antrean multi-item.
+        string legacyPayload = PlayerPrefs.GetString("OfflineSubmitQueue", string.Empty);
+        string legacyEndpoint = PlayerPrefs.GetString("OfflineSubmitEndpoint", string.Empty);
+        if (!string.IsNullOrWhiteSpace(legacyPayload) &&
+            !string.IsNullOrWhiteSpace(legacyEndpoint))
+        {
+            bool exists = false;
+            for (int i = 0; i < queue.items.Count; i++)
+            {
+                OfflineSubmissionItem item = queue.items[i];
+                if (item != null && item.endpoint == legacyEndpoint && item.payload == legacyPayload)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            bool migrated = exists;
+            if (!exists && queue.items.Count < OFFLINE_QUEUE_MAX_ITEMS)
+            {
+                queue.items.Add(new OfflineSubmissionItem
+                {
+                    player_id = PlayerPrefs.GetInt("PlayerID", 0),
+                    endpoint = legacyEndpoint,
+                    payload = legacyPayload,
+                    queued_at = System.DateTime.UtcNow.ToString("o")
+                });
+                migrated = true;
+            }
+
+            // Jika antrean baru penuh, jangan hapus payload lama yang belum termigrasi.
+            if (migrated)
+            {
+                PlayerPrefs.DeleteKey("OfflineSubmitQueue");
+                PlayerPrefs.DeleteKey("OfflineSubmitEndpoint");
+                SaveOfflineSubmissionQueue(queue);
+            }
+        }
+
+        return queue;
+    }
+
+    private static void SaveOfflineSubmissionQueue(OfflineSubmissionQueueData queue)
+    {
+        if (queue == null || queue.items == null || queue.items.Count == 0)
+        {
+            PlayerPrefs.DeleteKey(OFFLINE_QUEUE_KEY);
+        }
+        else
+        {
+            PlayerPrefs.SetString(OFFLINE_QUEUE_KEY, JsonUtility.ToJson(queue));
+        }
+        PlayerPrefs.Save();
+    }
+
+    private static bool IsAuthenticationSubmissionError(string error)
+    {
+        string value = (error ?? string.Empty).ToLowerInvariant();
+        return value.Contains("sesi pemain tidak valid") ||
+               value.Contains("token tidak valid") ||
+               value.Contains("sesi login") ||
+               value.Contains("login kembali");
+    }
+
+    private static bool IsPermanentSubmissionError(string error)
+    {
+        string value = (error ?? string.Empty).ToLowerInvariant();
+        return value.Contains("kedaluwarsa") ||
+               value.Contains("tidak ditemukan") ||
+               value.Contains("bukan milik") ||
+               value.Contains("tidak valid") ||
+               value.Contains("tidak aktif") ||
+               value.Contains("tidak lengkap") ||
+               value.Contains("sudah pernah") ||
+               value.Contains("wajib diisi") ||
+               value.Contains("format jawaban") ||
+               value.Contains("harus dijawab") ||
+               value.Contains("harus dikirim") ||
+               value.Contains("tidak dikenal") ||
+               value.Contains("duplikat") ||
+               value.Contains("batas ukuran") ||
+               value.Contains("tidak memiliki izin") ||
+               value.Contains("input tidak valid") ||
+               value.Contains("tidak sesuai") ||
+               value.Contains("tidak diperbolehkan") ||
+               value.Contains("format tidak valid");
+    }
+
+    private static void ApplyOfflineSubmissionResponse(string endpoint, string response)
+    {
+        int level = 0;
+
+        try
+        {
+            if (endpoint == "/locations/submit")
+            {
+                SubmitQuizResponse result = JsonUtility.FromJson<SubmitQuizResponse>(response);
+                if (result != null)
+                    level = result.level;
+            }
+            else if (endpoint == "/trivia/submit")
+            {
+                SubmitTriviaResponse result = JsonUtility.FromJson<SubmitTriviaResponse>(response);
+                if (result != null)
+                    level = result.level;
+            }
+            else if (endpoint == "/challenge/submit")
+            {
+                ChallengeSubmitResponse result = JsonUtility.FromJson<ChallengeSubmitResponse>(response);
+                if (result != null)
+                    level = result.level;
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[MainApp] Respons sinkronisasi tidak dapat dibaca: " + ex.Message);
+        }
+
+        if (level > 0)
+        {
+            PlayerPrefs.SetInt("PlayerLevel", level);
+            PlayerPrefs.Save();
+        }
+    }
 
     private IEnumerator ProcessOfflineQueue()
     {
-        // Beri waktu NetworkManager menyelesaikan pemeriksaan awal.
-        yield return new WaitForSecondsRealtime(
-            OFFLINE_QUEUE_INITIAL_DELAY
-        );
+        yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_INITIAL_DELAY);
 
-        string pendingData =
-            PlayerPrefs.GetString("OfflineSubmitQueue", "");
-
-        string pendingEndpoint =
-            PlayerPrefs.GetString("OfflineSubmitEndpoint", "");
-
-        if (string.IsNullOrWhiteSpace(pendingData) ||
-            string.IsNullOrWhiteSpace(pendingEndpoint))
+        // Loop tetap aktif agar hasil yang baru masuk saat aplikasi berjalan
+        // juga terkirim otomatis ketika koneksi kembali pulih.
+        while (true)
         {
-            yield break;
-        }
-
-        // Jika koneksi sedang offline, tunggu sampai NetworkManager
-        // menyatakan backend dapat dijangkau.
-        while (NetworkManager.Instance != null &&
-               !NetworkManager.Instance.IsOnline)
-        {
-            yield return new WaitForSecondsRealtime(
-                OFFLINE_QUEUE_WAIT_INTERVAL
-            );
-        }
-
-        if (NetworkManager.Instance == null ||
-            APIManager.Instance == null)
-        {
-            Debug.LogWarning(
-                "[MainApp] Antrean offline belum dapat dikirim. " +
-                "Data tetap disimpan di perangkat."
-            );
-            yield break;
-        }
-
-        APIManager.Instance.PostRequest(
-            pendingEndpoint,
-            pendingData,
-            response =>
+            if (NetworkManager.Instance == null || APIManager.Instance == null ||
+                !NetworkManager.Instance.IsOnline)
             {
-                // Hapus antrean hanya setelah backend mengonfirmasi sukses.
-                PlayerPrefs.DeleteKey("OfflineSubmitQueue");
-                PlayerPrefs.DeleteKey("OfflineSubmitEndpoint");
-                PlayerPrefs.Save();
+                yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_WAIT_INTERVAL);
+                continue;
+            }
 
+            OfflineSubmissionQueueData queue = LoadOfflineSubmissionQueue();
+            if (queue.items == null || queue.items.Count == 0)
+            {
+                yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_WAIT_INTERVAL);
+                continue;
+            }
+
+            int currentPlayerID = PlayerPrefs.GetInt("PlayerID", 0);
+            string currentToken = PlayerPrefs.GetString("UserToken", string.Empty);
+            if (currentPlayerID <= 0 || string.IsNullOrWhiteSpace(currentToken))
+            {
+                yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_WAIT_INTERVAL);
+                continue;
+            }
+
+            // Pilih antrean milik akun yang sedang login. Item milik akun lain
+            // tetap tersimpan dan tidak menghalangi sinkronisasi akun ini.
+            int pendingIndex = queue.items.FindIndex(item =>
+                item != null && item.player_id == currentPlayerID);
+            if (pendingIndex < 0)
+            {
+                yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_WAIT_INTERVAL);
+                continue;
+            }
+
+            OfflineSubmissionItem pending = queue.items[pendingIndex];
+            if (pending == null || string.IsNullOrWhiteSpace(pending.endpoint) ||
+                string.IsNullOrWhiteSpace(pending.payload))
+            {
+                queue.items.RemoveAt(pendingIndex);
+                SaveOfflineSubmissionQueue(queue);
+                continue;
+            }
+
+            bool requestFinished = false;
+            bool requestSucceeded = false;
+            string responseBody = string.Empty;
+            string requestError = string.Empty;
+
+            APIManager.Instance.PostRequest(
+                pending.endpoint,
+                pending.payload,
+                response =>
+                {
+                    responseBody = response;
+                    requestSucceeded = true;
+                    requestFinished = true;
+                },
+                error =>
+                {
+                    requestError = error;
+                    requestFinished = true;
+                }
+            );
+
+            while (!requestFinished)
+                yield return null;
+
+            if (requestSucceeded)
+            {
+                ApplyOfflineSubmissionResponse(pending.endpoint, responseBody);
+                RemoveOfflineSubmission(pending.endpoint, pending.payload);
                 NetworkManager.Instance?.ShowToast(
-                    "Hasil offline berhasil disinkronkan!",
+                    "Hasil permainan berhasil disinkronkan!",
                     false
                 );
-
-                Debug.Log(
-                    "[MainApp] Antrean offline berhasil disinkronkan."
-                );
-            },
-            error =>
-            {
-                // Jangan hapus data jika request gagal.
-                // Antrean dapat dicoba lagi saat aplikasi dibuka berikutnya.
-                Debug.LogWarning(
-                    "[MainApp] Sinkronisasi antrean offline gagal. " +
-                    "Data tetap disimpan."
-                );
+                Debug.Log("[MainApp] Antrean berhasil disinkronkan: " + pending.endpoint);
+                continue;
             }
-        );
+
+            Debug.LogWarning("[MainApp] Sinkronisasi gagal: " + requestError);
+
+            if (IsAuthenticationSubmissionError(requestError))
+            {
+                NetworkManager.Instance?.ShowToast(
+                    "Sesi login perlu diperbarui. Login kembali dengan akun yang sama untuk menyinkronkan hasil.",
+                    true
+                );
+                yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_AUTH_RETRY_DELAY);
+                continue;
+            }
+
+            if (IsPermanentSubmissionError(requestError))
+            {
+                RemoveOfflineSubmission(pending.endpoint, pending.payload);
+                NetworkManager.Instance?.ShowToast(
+                    "Hasil offline tidak dapat diproses: " + requestError,
+                    true
+                );
+                continue;
+            }
+
+            yield return new WaitForSecondsRealtime(OFFLINE_QUEUE_RETRY_DELAY);
+        }
     }
 
     // ============================================================

@@ -22,6 +22,7 @@ public class HapticManager : MonoBehaviour
     {
         _enabled = val;
         PlayerPrefs.SetInt("HapticEnabled", val ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public bool IsEnabled() => _enabled;
@@ -78,4 +79,4 @@ public class HapticManager : MonoBehaviour
         v.Call("vibrate", pattern, -1);
     }
 #endif
-}   
+}

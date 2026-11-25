@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -764,12 +764,15 @@ public class TriviaQuizScreen : BaseScreen
         }
 
         SetQuestionMessage("Memuat soal...");
+        LoadingOverlay.Show(screenObj.transform, "Memuat soal Trivia...");
         APIManager.Instance.GetRequest(
             "/trivia/" + categoryData.id + "/quiz",
             response =>
             {
                 if (screenObj == null)
                     return;
+
+                LoadingOverlay.Hide(screenObj.transform);
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
@@ -828,6 +831,8 @@ public class TriviaQuizScreen : BaseScreen
             {
                 if (screenObj == null)
                     return;
+
+                LoadingOverlay.Hide(screenObj.transform);
                 Debug.LogWarning("[Trivia] Request soal gagal: " + err);
                 SetQuestionMessage("Gagal memuat soal.\nPeriksa koneksi lalu coba lagi.");
             }

@@ -8,7 +8,6 @@ public class TriviaMenuScreen : BaseScreen
 {
     private List<TriviaCategoryData> categories = new List<TriviaCategoryData>();
 
-    private GameObject loadingObj;
     private GameObject emptyStateObj;
 
     // Carousel kategori: empat kartu per halaman (2 kolom x 2 baris).
@@ -751,32 +750,15 @@ public class TriviaMenuScreen : BaseScreen
     // ───────────────── LOADING ─────────────────
     private void ShowLoading()
     {
-        if (loadingObj != null)
-        {
-            Object.Destroy(loadingObj);
-            loadingObj = null;
-        }
-
         ClearEmptyState();
+        if (screenObj != null)
+            LoadingOverlay.Show(screenObj.transform, "Memuat kategori Trivia...");
+    }
 
-        Image face;
-        loadingObj = CreateFramedPill(
-            "LoadingPill",
-            new Vector2(0.18f, 0.455f),
-            new Vector2(0.82f, 0.545f),
-            TOBATheme.WoodDark,
-            out face
-        );
-
-        MakeText(
-            face.transform,
-            "Memuat kategori...",
-            40,
-            TOBATheme.BatakGold,
-            new Vector2(640f, 90f),
-            Vector2.zero,
-            FontStyles.Bold
-        );
+    private void ClearLoading()
+    {
+        if (screenObj != null)
+            LoadingOverlay.Hide(screenObj.transform);
     }
 
     private void ClearEmptyState()
@@ -796,11 +778,7 @@ public class TriviaMenuScreen : BaseScreen
         if (APIManager.Instance == null)
         {
             Debug.LogError("TriviaMenuScreen: APIManager tidak ditemukan.");
-            if (loadingObj != null)
-            {
-                Object.Destroy(loadingObj);
-                loadingObj = null;
-            }
+            ClearLoading();
 
             emptyStateObj = EmptyState.Show(
                 screenObj.transform,
@@ -841,11 +819,7 @@ public class TriviaMenuScreen : BaseScreen
                     ? res.categories.FindAll(c => c != null)
                     : new List<TriviaCategoryData>();
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 if (categories.Count == 0)
                 {
@@ -877,11 +851,7 @@ public class TriviaMenuScreen : BaseScreen
 
                 Debug.LogWarning("[Trivia] Gagal memuat kategori: " + err);
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 emptyStateObj = EmptyState.Show(
                     screenObj.transform,

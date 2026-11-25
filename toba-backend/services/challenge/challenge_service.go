@@ -1,8 +1,10 @@
 package challenge
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
+	"strings"
 	"time"
 
 	"toba-backend/config"
@@ -190,7 +192,15 @@ func SubmitChallenge(playerID uint, sessionID, answersJSON string) (fiber.Map, s
 			return gorm.ErrRecordNotFound
 		}
 		if session.CompletedAt != nil {
-			return errChallengeAlreadyCompleted
+			if strings.TrimSpace(session.ResultJSON) == "" {
+				return errChallengeAlreadyCompleted
+			}
+			var cached map[string]interface{}
+			if err := json.Unmarshal([]byte(session.ResultJSON), &cached); err != nil || cached == nil {
+				return errors.New("hasil challenge tersimpan tidak valid")
+			}
+			response = fiber.Map(cached)
+			return nil
 		}
 		if time.Now().After(session.ExpiresAt) {
 			return errChallengeSessionExpired
@@ -255,11 +265,6 @@ func SubmitChallenge(playerID uint, sessionID, answersJSON string) (fiber.Map, s
 			return err
 		}
 
-		session.CompletedAt = &now
-		if err := tx.Save(&session).Error; err != nil {
-			return err
-		}
-
 		shouldCheckAchievements = true
 		percentage := 0
 		if total > 0 {
@@ -280,6 +285,16 @@ func SubmitChallenge(playerID uint, sessionID, answersJSON string) (fiber.Map, s
 			"xp_for_next":     progression.XPForNext,
 			"xp_progress":     progression.XPProgress,
 			"title_name":      progression.TitleName,
+		}
+
+		session.CompletedAt = &now
+		resultJSON, err := json.Marshal(response)
+		if err != nil {
+			return err
+		}
+		session.ResultJSON = string(resultJSON)
+		if err := tx.Save(&session).Error; err != nil {
+			return err
 		}
 		return nil
 	})
