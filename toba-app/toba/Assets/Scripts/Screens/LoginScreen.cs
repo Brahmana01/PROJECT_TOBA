@@ -130,6 +130,21 @@ public class LoginScreen : BaseScreen
 
         pinInput.characterLimit = 6;
 
+        // Sisakan ruang di sisi kanan untuk tombol tampil/sembunyikan PIN.
+        if (pinTextRect != null)
+            pinTextRect.sizeDelta = new Vector2(270f, INPUT_VIEW_HEIGHT);
+        TMP_Text pinPlaceholder = pinInput.placeholder as TMP_Text;
+        if (pinPlaceholder != null)
+            pinPlaceholder.rectTransform.sizeDelta = new Vector2(270f, INPUT_VIEW_HEIGHT);
+
+        CreatePinVisibilityToggle(
+            panel.transform,
+            pinInput,
+            new Vector2(140f, -235f),
+            "LoginPinVisibilityToggle",
+            () => UpdateInputScroll(pinInput, pinTextRect, pinText)
+        );
+
         // ========================================================
         // STATUS
         // ========================================================
@@ -1207,6 +1222,63 @@ public class LoginScreen : BaseScreen
     }
 
     // ============================================================
+    // PIN VISIBILITY
+    // ============================================================
+
+    void CreatePinVisibilityToggle(
+        Transform parent,
+        TMP_InputField input,
+        Vector2 position,
+        string objectName,
+        System.Action afterToggle = null)
+    {
+        TMP_Text buttonLabel = null;
+
+        GameObject toggle = UIBuilder.CreateSmallButton(
+            parent,
+            objectName,
+            "LIHAT",
+            new Vector2(82f, 48f),
+            TOBATheme.WoodDark,
+            TOBATheme.BatakGold,
+            () =>
+            {
+                if (input == null)
+                    return;
+
+                bool showPin = input.contentType == TMP_InputField.ContentType.Pin;
+                string currentValue = input.text;
+                int caretPosition = input.stringPosition;
+
+                input.contentType = showPin
+                    ? TMP_InputField.ContentType.IntegerNumber
+                    : TMP_InputField.ContentType.Pin;
+
+                input.SetTextWithoutNotify(currentValue);
+                input.ForceLabelUpdate();
+                input.stringPosition = Mathf.Clamp(caretPosition, 0, currentValue.Length);
+
+                if (buttonLabel != null)
+                    buttonLabel.text = showPin ? "TUTUP" : "LIHAT";
+
+                afterToggle?.Invoke();
+            }
+        );
+
+        RectTransform toggleRect = toggle.GetComponent<RectTransform>();
+        if (toggleRect != null)
+            toggleRect.anchoredPosition = position;
+
+        buttonLabel = toggle.GetComponentInChildren<TMP_Text>();
+        if (buttonLabel != null)
+        {
+            buttonLabel.fontSize = 22f;
+            buttonLabel.fontStyle = FontStyles.Bold;
+            buttonLabel.raycastTarget = false;
+        }
+    }
+
+    // ============================================================
     // STATUS
     // Posisi tetap mengikuti tampilan sekarang.
     // ============================================================
@@ -1466,9 +1538,15 @@ public class LoginScreen : BaseScreen
         text.raycastTarget =
             false;
 
+        // Root wajib memiliki Graphic yang menerima raycast.
+        Image hitArea = root.AddComponent<Image>();
+        hitArea.sprite = UIBuilder.GetDefaultSprite();
+        hitArea.color = Color.clear;
+        hitArea.raycastTarget = true;
+
         Button button =
             root.AddComponent<Button>();
-
+        button.targetGraphic = hitArea;
         button.transition =
             Selectable.Transition.None;
 

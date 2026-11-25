@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 // ============================================================
@@ -320,17 +320,10 @@ public class BattleRoomStatusResponse
     public int host_player_id;
     public int guest_player_id;
     public int winner_id;
-    public string winner_type;
     public string host_name;
     public string guest_name;
     public int host_score;
     public int guest_score;
-    public int host_answered_count;
-    public int guest_answered_count;
-    public bool is_bot;
-    public string bot_name;
-    public int bot_level;
-    public int bot_answered_count;
     public List<BattleQuestionData> questions;
 }
 
@@ -348,7 +341,6 @@ public class SubmitBattleAnswerRequest
 [Serializable]
 public class BattleAnswerSubmitResponse
 {
-    public string room_code;
     public bool is_correct;
     public int correct_option_id;
     public string explanation;
@@ -356,8 +348,6 @@ public class BattleAnswerSubmitResponse
     public long guest_score;
     public long answered_count;
     public int total_questions;
-    public bool is_bot;
-    public int bot_answered_count;
 }
 
 [Serializable]
@@ -366,13 +356,10 @@ public class FinishBattleRequest { public int room_id; public int player_id; }
 [Serializable]
 public class FinishBattleResponse
 {
-    public string room_code;
     public string status;
     public long host_score;
     public long guest_score;
     public int winner_id;
-    public string winner_type;
-    public int bot_answered_count;
     public int reward_xp;
     public int reward_stars;
     public int previous_level;
@@ -382,30 +369,6 @@ public class FinishBattleResponse
     public int total_stars;
     public int xp_for_next;
     public int xp_progress;
-}
-
-[Serializable]
-public class BattleWebSocketMessage
-{
-    public string type;
-    public BattleWebSocketScorePayload payload;
-}
-
-[Serializable]
-public class BattleWebSocketScorePayload
-{
-    public string room_code;
-    public int player_id;
-    public long host_score;
-    public long guest_score;
-    public long answered_count;
-    public long host_answered_count;
-    public long guest_answered_count;
-    public int total_questions;
-    public bool is_bot;
-    public string bot_name;
-    public int bot_level;
-    public int bot_answered_count;
 }
 
 [Serializable]
@@ -430,6 +393,7 @@ public class PlayerGalleryCardData
     public int id;
     public int gallery_card_id;
     public string obtained_at;
+    public bool is_owned;
     public GalleryCardData card;
 }
 
@@ -575,10 +539,7 @@ public class ChallengeData
     public string game_type;
     public int    reward_xp;
     public int    reward_stars;
-    public string session_id;
     public string data_json;
-    public string start_date;
-    public string end_date;
 }
 
 [System.Serializable]
@@ -587,69 +548,37 @@ public class ActiveChallengeResponse
     public bool          has_challenge;
     public bool          is_completed;
     public ChallengeData challenge;
-    public ChallengeSessionInfo session;
-}
-
-[System.Serializable]
-public class ChallengeSessionInfo
-{
-    public string session_id;
-    public string started_at;
-    public string expires_at;
 }
 
 [System.Serializable]
 public class SubmitChallengeRequest
 {
-    public string session_id;
-    public string answers_json;
+    public int player_id;
+    public int challenge_id;
+    public int score;
 }
 
-[System.Serializable]
-public class ChallengeSubmitResponse
+
+public class ChallengeGuessImageAnswer
 {
-    public string message;
-    public int score;
-    public int total_questions;
-    public int score_percent;
-    public int reward_xp;
-    public int reward_stars;
-    public int previous_level;
-    public int level;
-    public bool leveled_up;
-    public int total_xp;
-    public int total_stars;
-    public int xp_for_next;
-    public int xp_progress;
-    public string title_name;
+    public int question_index;
+    public string selected_option;
+}
+
+public class ChallengeWordArrangeAnswer
+{
+    public int question_index;
+    public string answer;
+}
+
+public class ChallengeMemoryCardMatch
+{
+    public string first_card_id;
+    public string second_card_id;
 }
 
 [System.Serializable]
 public class MatchPair { public string batak; public string indo; }
-[System.Serializable]
-public class MatchingPublicData { public List<string> batak_words; public List<string> indo_words; }
-[System.Serializable]
-public class MatchingSubmissionData { public List<MatchPair> pairs; }
-
-[System.Serializable]
-public class ChallengeGuessImageAnswer { public int question_index; public string selected_option; }
-[System.Serializable]
-public class ChallengeGuessImageSubmission { public List<ChallengeGuessImageAnswer> answers; }
-[System.Serializable]
-public class ChallengeWordArrangeAnswer { public int question_index; public string answer; }
-[System.Serializable]
-public class ChallengeWordArrangeSubmission { public List<ChallengeWordArrangeAnswer> answers; }
-[System.Serializable]
-public class ChallengeMemoryCardMatch { public string first_card_id; public string second_card_id; }
-[System.Serializable]
-public class ChallengeMemoryCardSubmission { public List<ChallengeMemoryCardMatch> matches; }
-[System.Serializable]
-public class ChallengeOrderSubmission { public List<string> ordered_items; }
-[System.Serializable]
-public class ChallengeCategorizeAssignment { public string item; public string category; }
-[System.Serializable]
-public class ChallengeCategorizeSubmission { public List<ChallengeCategorizeAssignment> assignments; }
-
 [System.Serializable]
 public class MatchingData { public List<MatchPair> pairs; }
 

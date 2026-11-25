@@ -329,7 +329,7 @@ public class NetworkManager : MonoBehaviour
             txt.AddComponent<TextMeshProUGUI>();
 
         tmp.text =
-            "⚠  Tidak ada koneksi internet. Beberapa fitur tidak tersedia.";
+            "⚠  Server TOBA tidak dapat dijangkau. Fitur online sementara tidak tersedia.";
 
         tmp.fontSize = 26;
         tmp.color = Color.white;

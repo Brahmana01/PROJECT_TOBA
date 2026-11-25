@@ -8,7 +8,7 @@ public class GalleryScreen : BaseScreen
     private GalleryResponse galleryData;
     private GameObject loadingObj;
     private GameObject emptyStateObj;
-    private int totalCards = 20; // total kartu dari 10 lokasi (bisa dikonfigurasi)
+    private int totalCards;
 
     public GalleryScreen(Transform parent) : base(parent, "GalleryScreen") { }
 
@@ -16,7 +16,8 @@ public class GalleryScreen : BaseScreen
     {
         SetBackground(TOBATheme.ForestGreen);
 
-        HeaderBar.Create(screenObj.transform, "GALERI BUDAYA", () => {
+        HeaderBar.Create(screenObj.transform, "GALERI BUDAYA", () =>
+        {
             ScreenManager.Instance.ChangeScreen(new MainMenuScreen(container));
         });
 
@@ -24,23 +25,32 @@ public class GalleryScreen : BaseScreen
         FetchGallery();
     }
 
-    void ShowLoading()
+    private void ShowLoading()
     {
         ClearEmptyState();
+        ClearLoading();
 
+        loadingObj = UIBuilder.CreateTextSized(
+            screenObj.transform,
+            "Memuat koleksi...",
+            42,
+            TOBATheme.TextLight,
+            TextAlignmentOptions.Center,
+            new Vector2(700f, 80f),
+            Vector2.zero
+        );
+    }
+
+    private void ClearLoading()
+    {
         if (loadingObj != null)
         {
             Object.Destroy(loadingObj);
             loadingObj = null;
         }
-
-        loadingObj = UIBuilder.CreateTextSized(
-            screenObj.transform, "Memuat koleksi...", 42, TOBATheme.TextLight,
-            TextAlignmentOptions.Center, new Vector2(700, 80), Vector2.zero
-        );
     }
 
-    void ClearEmptyState()
+    private void ClearEmptyState()
     {
         if (emptyStateObj != null)
         {
@@ -49,8 +59,7 @@ public class GalleryScreen : BaseScreen
         }
     }
 
-
-    void FetchGallery()
+    private void FetchGallery()
     {
         if (screenObj == null)
             return;
@@ -58,274 +67,296 @@ public class GalleryScreen : BaseScreen
         ClearEmptyState();
 
         int playerID = PlayerPrefs.GetInt("PlayerID");
-
-        if (loadingObj != null)
-        {
-            Object.Destroy(loadingObj);
-            loadingObj = null;
-        }
-
         if (playerID <= 0 || APIManager.Instance == null)
         {
+            ClearLoading();
             emptyStateObj = EmptyState.Show(
                 screenObj.transform,
                 "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
                 "Galeri tidak tersedia",
                 "Silakan login dan periksa koneksi.",
-                () => RetryFetchGallery()
+                RetryFetchGallery
             );
             return;
         }
 
         APIManager.Instance.GetRequest(
             "/player/" + playerID + "/gallery",
-
             response =>
             {
                 if (screenObj == null)
                     return;
 
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
+                ClearLoading();
 
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response))
-                        throw new System.FormatException(
-                            "Response galeri kosong."
-                        );
+                        throw new System.FormatException("Response galeri kosong.");
 
-                    GalleryResponse parsed =
-                        JsonUtility.FromJson<GalleryResponse>(response);
-
+                    GalleryResponse parsed = JsonUtility.FromJson<GalleryResponse>(response);
                     if (parsed == null)
-                        throw new System.FormatException(
-                            "Struktur galeri tidak valid."
-                        );
+                        throw new System.FormatException("Struktur response galeri tidak valid.");
 
                     if (parsed.cards == null)
                         parsed.cards = new List<PlayerGalleryCardData>();
 
                     parsed.cards.RemoveAll(card => card == null);
-
                     parsed.total = Mathf.Max(0, parsed.total);
-
                     galleryData = parsed;
+                    totalCards = galleryData.cards.Count;
                 }
                 catch (System.Exception ex)
                 {
-                    Debug.LogWarning(
-                        "[Gallery] Gagal membaca response: " + ex.Message
-                    );
-
+                    Debug.LogWarning("[Gallery] Gagal membaca response: " + ex.Message);
                     galleryData = null;
-
+                    totalCards = 0;
                     emptyStateObj = EmptyState.Show(
                         screenObj.transform,
                         "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
                         "Data galeri bermasalah",
-                        "Silakan muat ulang koleksi.",
-                        () => RetryFetchGallery()
+                        "Silakan muat ulang katalog.",
+                        RetryFetchGallery
                     );
-
                     return;
                 }
 
-                if (galleryData.total <= 0 ||
-                    galleryData.cards.Count == 0)
+                // Katalog kosong berbeda dari pemain yang belum memiliki kartu.
+                // Jika katalog ada, kartu yang belum dimiliki tetap dibuat sebagai slot terkunci.
+                if (totalCards == 0)
                 {
                     emptyStateObj = EmptyState.Show(
                         screenObj.transform,
                         "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
-                        "Belum ada koleksi",
-                        "Selesaikan lokasi untuk mendapatkan kartu budaya.",
-                        () => RetryFetchGallery()
+                        "Katalog belum tersedia",
+                        "Kartu budaya akan muncul setelah katalog diisi oleh Admin.",
+                        RetryFetchGallery
                     );
-
                     return;
                 }
 
                 BuildGallery();
             },
-
-            err =>
+            error =>
             {
                 if (screenObj == null)
                     return;
 
-                Debug.LogWarning(
-                    "[Gallery] Gagal memuat galeri: " + err
-                );
-
-                if (loadingObj != null)
-                {
-                    Object.Destroy(loadingObj);
-                    loadingObj = null;
-                }
-
+                Debug.LogWarning("[Gallery] Gagal memuat galeri: " + error);
+                ClearLoading();
                 emptyStateObj = EmptyState.Show(
                     screenObj.transform,
                     "<color=#F2E4C7><sprite name=\"gallery\" tint=1></color>",
                     "Gagal memuat galeri",
-                    "Periksa koneksi internet.",
-                    () => RetryFetchGallery()
+                    "Periksa koneksi ke server, lalu coba lagi.",
+                    RetryFetchGallery
                 );
             }
         );
     }
 
-    void RetryFetchGallery()
+    private void RetryFetchGallery()
     {
         ClearEmptyState();
         ShowLoading();
         FetchGallery();
     }
 
-    void BuildGallery()
+    private void BuildGallery()
     {
-        if (screenObj == null) return;
+        if (screenObj == null || galleryData == null)
+            return;
 
-        int owned = galleryData != null ? galleryData.total : 0;
+        List<PlayerGalleryCardData> cards = galleryData.cards ?? new List<PlayerGalleryCardData>();
+        totalCards = cards.Count;
+
+        int owned = 0;
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i] != null && cards[i].is_owned)
+                owned++;
+        }
 
         GameObject infoBar = UIBuilder.CreatePanel(
-            screenObj.transform, "InfoBar", TOBATheme.WoodDark,
-            new Vector2(0, 0.82f), new Vector2(1, 0.88f)
+            screenObj.transform,
+            "InfoBar",
+            TOBATheme.WoodDark,
+            new Vector2(0f, 0.82f),
+            new Vector2(1f, 0.88f)
         );
 
         UIBuilder.CreateTextSized(
-            infoBar.transform, "Koleksi Kamu : " + owned + " / " + totalCards,
-            38, TOBATheme.BatakGold, TextAlignmentOptions.Center,
-            new Vector2(800, 60), Vector2.zero
+            infoBar.transform,
+            "Koleksi Kamu : " + owned + " / " + totalCards,
+            38,
+            TOBATheme.BatakGold,
+            TextAlignmentOptions.Center,
+            new Vector2(800f, 60f),
+            Vector2.zero
         );
 
-        GameObject progressBg = UIBuilder.CreatePanel(
-            screenObj.transform, "ProgressBg", new Color(0, 0, 0, 0.3f),
-            new Vector2(0, 0.78f), new Vector2(1, 0.82f)
+        GameObject progressBackground = UIBuilder.CreatePanel(
+            screenObj.transform,
+            "ProgressBg",
+            new Color(0f, 0f, 0f, 0.3f),
+            new Vector2(0f, 0.78f),
+            new Vector2(1f, 0.82f)
         );
 
         float fillRatio = totalCards > 0 ? (float)owned / totalCards : 0f;
-
         GameObject progressFill = UIBuilder.CreatePanel(
-            progressBg.transform, "Fill", TOBATheme.BatakGold,
-            Vector2.zero, new Vector2(fillRatio, 1f)
+            progressBackground.transform,
+            "Fill",
+            TOBATheme.BatakGold,
+            Vector2.zero,
+            new Vector2(fillRatio, 1f)
         );
-
         progressFill.GetComponent<Image>().raycastTarget = false;
 
         ScrollRect scroll = UIBuilder.CreateScrollView(
-            screenObj.transform, "GalleryScroll",
-            new Vector2(0, 0.1f), new Vector2(1, 0.78f)
+            screenObj.transform,
+            "GalleryScroll",
+            new Vector2(0f, 0.1f),
+            new Vector2(1f, 0.78f)
         );
 
         Transform content = scroll.content;
+        const int columns = 2;
+        const float cardWidth = 460f;
+        const float cardHeight = 340f;
+        const float horizontalPadding = 30f;
+        const float verticalPadding = 30f;
 
-        HashSet<int> ownedIDs = new HashSet<int>();
-        List<PlayerGalleryCardData> cards = new List<PlayerGalleryCardData>();
+        int rows = Mathf.CeilToInt((float)totalCards / columns);
+        float totalHeight = rows * (cardHeight + verticalPadding) + 80f;
+        content.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, totalHeight);
 
-        if (galleryData != null && galleryData.cards != null)
+        for (int i = 0; i < cards.Count; i++)
         {
-            cards = galleryData.cards;
-            foreach (var c in cards)
-        {
-            if (c != null)
-                ownedIDs.Add(c.gallery_card_id);
-        }
-        }
+            int column = i % columns;
+            int row = i / columns;
 
-        int cols = 2;
-        float cardW = 460f;
-        float cardH = 340f;
-        float padX = 30f;
-        float padY = 30f;
+            float x = column == 0
+                ? -(cardWidth / 2f + horizontalPadding / 2f)
+                : (cardWidth / 2f + horizontalPadding / 2f);
+            float y = -(row * (cardHeight + verticalPadding)) - cardHeight / 2f - 40f;
 
-        int rows = Mathf.CeilToInt((float)totalCards / cols);
-        float totalHeight = rows * (cardH + padY) + 80f;
-        content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, totalHeight);
-
-        for (int i = 0; i < totalCards; i++)
-        {
-            int col = i % cols;
-            int row = i / cols;
-
-            float xPos = col == 0
-                ? -(cardW / 2 + padX / 2)
-                : (cardW / 2 + padX / 2);
-
-            float yPos = -(row * (cardH + padY)) - cardH / 2 - 40f;
-
-            PlayerGalleryCardData cardData = i < cards.Count ? cards[i] : null;
-            CreateGalleryCard(content, cardData, xPos, yPos, cardW, cardH, i + 1);
+            CreateGalleryCard(content, cards[i], x, y, cardWidth, cardHeight, i + 1);
         }
     }
 
-    void CreateGalleryCard(Transform parent, PlayerGalleryCardData cardData, float x, float y, float w, float h, int slotNumber)
+    private void CreateGalleryCard(
+        Transform parent,
+        PlayerGalleryCardData cardData,
+        float x,
+        float y,
+        float width,
+        float height,
+        int slotNumber)
     {
-        bool isOwned = cardData != null && cardData.card != null;
+        bool isOwned = cardData != null && cardData.is_owned && cardData.card != null;
+        int cardNumber = cardData != null && cardData.gallery_card_id > 0
+            ? cardData.gallery_card_id
+            : slotNumber;
 
         GameObject border = UIBuilder.CreatePanelSized(
-            parent, "CardBorder_" + slotNumber,
+            parent,
+            "CardBorder_" + slotNumber,
             isOwned ? TOBATheme.BatakGold : TOBATheme.Locked,
-            new Vector2(w + 6, h + 6), new Vector2(x, y)
+            new Vector2(width + 6f, height + 6f),
+            new Vector2(x, y)
         );
 
         GameObject card = UIBuilder.CreatePanelSized(
-            border.transform, "Card",
+            border.transform,
+            "Card",
             isOwned ? TOBATheme.CardBG : new Color(0.2f, 0.2f, 0.2f, 0.9f),
-            new Vector2(w, h), Vector2.zero
+            new Vector2(width, height),
+            Vector2.zero
         );
 
         if (isOwned)
         {
             UIBuilder.CreatePanelSized(
-                card.transform, "ImgArea", TOBATheme.LakeBlue,
-                new Vector2(w - 20, 180), new Vector2(0, 65f)
+                card.transform,
+                "ImgArea",
+                TOBATheme.LakeBlue,
+                new Vector2(width - 20f, 180f),
+                new Vector2(0f, 65f)
             );
 
-            TextMeshProUGUI titleTmp = UIBuilder.CreateTextSized(
-                card.transform, cardData.card.title, 34, TOBATheme.WoodDark,
-                TextAlignmentOptions.Center, new Vector2(w - 30, 55), new Vector2(0, -80f)
+            TextMeshProUGUI titleText = UIBuilder.CreateTextSized(
+                card.transform,
+                cardData.card.title,
+                34,
+                TOBATheme.WoodDark,
+                TextAlignmentOptions.Center,
+                new Vector2(width - 30f, 55f),
+                new Vector2(0f, -80f)
             ).GetComponent<TextMeshProUGUI>();
+            titleText.fontStyle = FontStyles.Normal;
+            UIBuilder.SetWordWrap(titleText, true);
 
-            titleTmp.fontStyle = FontStyles.Normal;
-            UIBuilder.SetWordWrap(titleTmp, true);
-
-            TextMeshProUGUI descTmp = UIBuilder.CreateTextSized(
-                card.transform, cardData.card.description, 24, TOBATheme.TextGray,
-                TextAlignmentOptions.Center, new Vector2(w - 30, 60), new Vector2(0, -135f)
+            TextMeshProUGUI descriptionText = UIBuilder.CreateTextSized(
+                card.transform,
+                cardData.card.description,
+                24,
+                TOBATheme.TextGray,
+                TextAlignmentOptions.Center,
+                new Vector2(width - 30f, 60f),
+                new Vector2(0f, -135f)
             ).GetComponent<TextMeshProUGUI>();
-
-            descTmp.fontStyle = FontStyles.Normal;
-            UIBuilder.SetWordWrap(descTmp, true);
+            descriptionText.fontStyle = FontStyles.Normal;
+            UIBuilder.SetWordWrap(descriptionText, true);
 
             GameObject badge = UIBuilder.CreatePanelSized(
-                card.transform, "Badge", TOBATheme.BtnPrimary,
-                new Vector2(160, 45), new Vector2(110f, 140f)
+                card.transform,
+                "Badge",
+                TOBATheme.BtnPrimary,
+                new Vector2(160f, 45f),
+                new Vector2(110f, 140f)
             );
 
             UIBuilder.CreateTextSized(
-                badge.transform, "✓ DIMILIKI", 22, Color.white,
-                TextAlignmentOptions.Center, new Vector2(155, 42), Vector2.zero
+                badge.transform,
+                "✓ DIMILIKI",
+                22,
+                Color.white,
+                TextAlignmentOptions.Center,
+                new Vector2(155f, 42f),
+                Vector2.zero
             );
         }
         else
         {
             UIBuilder.CreateTextSized(
-                card.transform, "🔒", 80, TOBATheme.Locked,
-                TextAlignmentOptions.Center, new Vector2(w, 120), new Vector2(0, 50f)
+                card.transform,
+                "🔒",
+                80,
+                TOBATheme.Locked,
+                TextAlignmentOptions.Center,
+                new Vector2(width, 120f),
+                new Vector2(0f, 50f)
             );
 
             UIBuilder.CreateTextSized(
-                card.transform, "Kartu #" + slotNumber, 30, TOBATheme.Locked,
-                TextAlignmentOptions.Center, new Vector2(w - 20, 50), new Vector2(0, -80f)
+                card.transform,
+                "Kartu #" + cardNumber,
+                30,
+                TOBATheme.Locked,
+                TextAlignmentOptions.Center,
+                new Vector2(width - 20f, 50f),
+                new Vector2(0f, -80f)
             );
 
             UIBuilder.CreateTextSized(
-                card.transform, "Selesaikan lokasi\nuntuk mendapatkan", 24,
+                card.transform,
+                "Selesaikan lokasi\nuntuk mendapatkan",
+                24,
                 new Color(0.5f, 0.5f, 0.5f),
-                TextAlignmentOptions.Center, new Vector2(w - 30, 70), new Vector2(0, -140f)
+                TextAlignmentOptions.Center,
+                new Vector2(width - 30f, 70f),
+                new Vector2(0f, -140f)
             ).GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Normal;
         }
     }

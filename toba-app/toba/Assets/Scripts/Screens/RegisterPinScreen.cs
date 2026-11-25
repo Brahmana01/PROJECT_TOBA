@@ -55,6 +55,14 @@ public class RegisterPinScreen : BaseScreen
                 -75
             );
 
+        ConfigurePinFieldForVisibility(pinInput);
+        CreatePinVisibilityToggle(
+            form,
+            pinInput,
+            new Vector2(165f, -75f),
+            "RegisterPinVisibilityToggle"
+        );
+
         CreateLabel(
             form,
             "Konfirmasi PIN",
@@ -67,6 +75,14 @@ public class RegisterPinScreen : BaseScreen
                 "InputPINConfirm",
                 -245
             );
+
+        ConfigurePinFieldForVisibility(pinConfirmInput);
+        CreatePinVisibilityToggle(
+            form,
+            pinConfirmInput,
+            new Vector2(165f, -245f),
+            "RegisterPinConfirmVisibilityToggle"
+        );
 
         statusTxt =
             CreateText(
@@ -695,6 +711,75 @@ public class RegisterPinScreen : BaseScreen
 
         label.characterSpacing =
             .5f;
+    }
+
+    // ============================================================
+    // PIN VISIBILITY
+    // ============================================================
+
+    void ConfigurePinFieldForVisibility(TMP_InputField input)
+    {
+        if (input == null)
+            return;
+
+        TMP_Text text = input.textComponent;
+        TMP_Text placeholder = input.placeholder as TMP_Text;
+        if (text != null)
+            text.rectTransform.sizeDelta = new Vector2(320f, VIEW_H);
+        if (placeholder != null)
+            placeholder.rectTransform.sizeDelta = new Vector2(320f, VIEW_H);
+    }
+
+    void CreatePinVisibilityToggle(
+        Transform parent,
+        TMP_InputField input,
+        Vector2 position,
+        string objectName)
+    {
+        TMP_Text buttonLabel = null;
+
+        GameObject toggle = UIBuilder.CreateSmallButton(
+            parent,
+            objectName,
+            "LIHAT",
+            new Vector2(86f, 48f),
+            TOBATheme.WoodDark,
+            TOBATheme.BatakGold,
+            () =>
+            {
+                if (input == null)
+                    return;
+
+                bool showPin = input.contentType == TMP_InputField.ContentType.Pin;
+                string currentValue = input.text;
+                int caretPosition = input.stringPosition;
+
+                input.contentType = showPin
+                    ? TMP_InputField.ContentType.IntegerNumber
+                    : TMP_InputField.ContentType.Pin;
+
+                input.SetTextWithoutNotify(currentValue);
+                input.ForceLabelUpdate();
+                input.stringPosition = Mathf.Clamp(caretPosition, 0, currentValue.Length);
+
+                if (buttonLabel != null)
+                    buttonLabel.text = showPin ? "TUTUP" : "LIHAT";
+
+                UpdateScroll(input, input.textComponent.rectTransform);
+            }
+        );
+
+        RectTransform toggleRect = toggle.GetComponent<RectTransform>();
+        if (toggleRect != null)
+            toggleRect.anchoredPosition = position;
+
+        buttonLabel = toggle.GetComponentInChildren<TMP_Text>();
+        if (buttonLabel != null)
+        {
+            buttonLabel.fontSize = 22f;
+            buttonLabel.fontStyle = FontStyles.Bold;
+            buttonLabel.raycastTarget = false;
+        }
     }
 
     // ============================================================

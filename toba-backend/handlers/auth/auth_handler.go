@@ -9,13 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"gorm.io/gorm"
-
 	"toba-backend/config"
 	"toba-backend/models"
 
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 // ============================================================
@@ -94,7 +93,6 @@ func Register(c *fiber.Ctx) error {
 // ============================================================
 // POST /api/login
 // ============================================================
-
 func Login(c *fiber.Ctx) error {
 	type LoginInput struct {
 		Username string `json:"username"`
@@ -103,7 +101,6 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	input := new(LoginInput)
-
 	if err := c.BodyParser(input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Input tidak valid",
@@ -112,6 +109,7 @@ func Login(c *fiber.Ctx) error {
 
 	input.Username = strings.TrimSpace(input.Username)
 	input.Pin = strings.TrimSpace(input.Pin)
+	input.DeviceID = strings.TrimSpace(input.DeviceID)
 
 	if input.Username == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -124,7 +122,6 @@ func Login(c *fiber.Ctx) error {
 			"message": "PIN harus 6 digit",
 		})
 	}
-
 	for _, digit := range input.Pin {
 		if digit < '0' || digit > '9' {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -134,33 +131,24 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	var player models.Player
-
-	err := config.DB.
-		Where("username = ?", input.Username).
-		First(&player).Error
-
+	err := config.DB.Where("username = ?", input.Username).First(&player).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Username tidak ditemukan",
 		})
 	}
-
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal memeriksa akun. Silakan coba lagi.",
 		})
 	}
 
-	if err := bcrypt.CompareHashAndPassword(
-		[]byte(player.PinHash),
-		[]byte(input.Pin),
-	); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(player.PinHash), []byte(input.Pin)); err != nil {
 		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 				"message": "PIN salah",
 			})
 		}
-
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Data autentikasi akun bermasalah",
 		})
@@ -173,24 +161,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	now := time.Now()
-	player.LastLogin = &now
-
-	if err := config.DB.Save(&player).Error; err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Gagal memperbarui data login",
-		})
-	}
-
-	if err := config.DB.Model(&models.PlayerSession{}).
-		Where("player_id = ? AND device_id = ?", player.ID, input.DeviceID).
-		Update("is_active", false).Error; err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Gagal memperbarui sesi perangkat",
-		})
-	}
-
 	token := generateToken(player.ID)
-
 	session := models.PlayerSession{
 		PlayerID:  player.ID,
 		Token:     token,
@@ -199,14 +170,48 @@ func Login(c *fiber.Ctx) error {
 		LastLogin: now,
 	}
 
-	if err := config.DB.Create(&session).Error; err != nil {
+	// Perbarui waktu login, nonaktifkan sesi lama pada perangkat yang sama,
+	// dan buat sesi baru dalam satu transaksi agar tidak setengah berhasil.
+	tx := config.DB.Begin()
+	if tx.Error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memulai proses login",
+		})
+	}
+
+	player.LastLogin = &now
+	if err := tx.Save(&player).Error; err != nil {
+		tx.Rollback()
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memperbarui waktu login",
+		})
+	}
+
+	if input.DeviceID != "" {
+		if err := tx.Model(&models.PlayerSession{}).
+			Where("player_id = ? AND device_id = ?", player.ID, input.DeviceID).
+			Update("is_active", false).Error; err != nil {
+			tx.Rollback()
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Gagal memperbarui sesi perangkat",
+			})
+		}
+	}
+
+	if err := tx.Create(&session).Error; err != nil {
+		tx.Rollback()
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Gagal membuat sesi login",
 		})
 	}
+	if err := tx.Commit().Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal menyelesaikan proses login",
+		})
+	}
 
 	var title models.Title
-	config.DB.First(&title, player.TitleID)
+	_ = config.DB.First(&title, player.TitleID).Error
 
 	return c.JSON(fiber.Map{
 		"message":    "Login berhasil!",

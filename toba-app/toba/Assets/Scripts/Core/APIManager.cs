@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using NativeWebSocket;
 using System.Collections.Generic;
-using System.Collections.Generic;
 
 public class APIManager : MonoBehaviour
 {
@@ -484,10 +483,15 @@ public class APIManager : MonoBehaviour
             }
 
             LogRequestFailure("GET", request);
+            string responseBody = request.downloadHandler != null
+                ? request.downloadHandler.text
+                : string.Empty;
+
             onError?.Invoke(GetFriendlyError(
                 request.result,
                 request.responseCode,
-                request.error
+                request.error,
+                responseBody
             ));
         }
     }
@@ -594,10 +598,15 @@ public class APIManager : MonoBehaviour
             }
 
             LogRequestFailure("POST", request);
+            string responseBody = request.downloadHandler != null
+                ? request.downloadHandler.text
+                : string.Empty;
+
             onError?.Invoke(GetFriendlyError(
                 request.result,
                 request.responseCode,
-                request.error
+                request.error,
+                responseBody
             ));
         }
     }
@@ -659,8 +668,11 @@ public class APIManager : MonoBehaviour
     private string GetFriendlyError(
         UnityWebRequest.Result result,
         long responseCode,
-        string raw)
+        string raw,
+        string responseBody = null)
     {
+        string serverMessage = ExtractServerMessage(responseBody);
+
         if (result == UnityWebRequest.Result.ConnectionError)
         {
             return "Tidak dapat terhubung ke server. Periksa koneksi internet kamu.";
@@ -668,6 +680,16 @@ public class APIManager : MonoBehaviour
 
         if (result == UnityWebRequest.Result.ProtocolError)
         {
+            // Untuk error validasi/autentikasi, tampilkan pesan yang memang
+            // disediakan backend. Pesan internal dari HTTP 5xx tetap disembunyikan.
+            if ((responseCode == 400 || responseCode == 401 ||
+                 responseCode == 403 || responseCode == 404 ||
+                 responseCode == 409 || responseCode == 422) &&
+                !string.IsNullOrWhiteSpace(serverMessage))
+            {
+                return serverMessage;
+            }
+
             if (responseCode == 401)
                 return "Sesi login tidak valid. Silakan login kembali.";
 
@@ -694,6 +716,27 @@ public class APIManager : MonoBehaviour
         return string.IsNullOrWhiteSpace(raw)
             ? "Terjadi kesalahan saat menghubungi server."
             : raw;
+    }
+
+    private string ExtractServerMessage(string responseBody)
+    {
+        if (string.IsNullOrWhiteSpace(responseBody))
+            return null;
+
+        try
+        {
+            LoginErrorResponse parsed =
+                JsonUtility.FromJson<LoginErrorResponse>(responseBody);
+
+            if (parsed != null && !string.IsNullOrWhiteSpace(parsed.message))
+                return parsed.message.Trim();
+        }
+        catch (Exception)
+        {
+            // Respons bukan JSON dengan field message; gunakan pesan fallback.
+        }
+
+        return null;
     }
 
     // ============================================================

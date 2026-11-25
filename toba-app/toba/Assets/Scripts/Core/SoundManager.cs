@@ -84,21 +84,32 @@ public class SoundManager : MonoBehaviour
         bgmVolume = Mathf.Clamp01(v);
         if (bgmSource) bgmSource.volume = isMuted ? 0 : bgmVolume;
         PlayerPrefs.SetFloat("BGMVol", bgmVolume);
+        PlayerPrefs.Save();
     }
 
     public void SetSFXVolume(float v)
     {
         sfxVolume = Mathf.Clamp01(v);
-        if (sfxSource) sfxSource.volume = sfxVolume;
+        if (sfxSource) sfxSource.volume = isMuted ? 0f : sfxVolume;
         PlayerPrefs.SetFloat("SFXVol", sfxVolume);
+        PlayerPrefs.Save();
+    }
+
+
+    public void SetMuted(bool muted)
+    {
+        isMuted = muted;
+        ApplyVolume();
+
+        PlayerPrefs.SetInt("Muted", isMuted ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public void ToggleMute()
     {
-        isMuted = !isMuted;
-        ApplyVolume();
-        PlayerPrefs.SetInt("Muted", isMuted ? 1 : 0);
+        SetMuted(!isMuted);
     }
+
 
     public bool IsMuted()       => isMuted;
     public float GetBGMVolume() => bgmVolume;
